@@ -26,9 +26,33 @@ class ContextFeedback:
 # - irrelevant: Agent 显式跳过
 ```
 
+反馈记录存入 PG：
+
+```sql
+CREATE TABLE context_feedback (
+    id              BIGSERIAL PRIMARY KEY,
+    context_uri     TEXT NOT NULL REFERENCES contexts(uri),
+    session_id      TEXT NOT NULL,
+    retrieved_at    TIMESTAMPTZ DEFAULT NOW(),
+    outcome         TEXT NOT NULL,          -- 'adopted' | 'ignored' | 'corrected' | 'irrelevant'
+    metadata        JSONB
+);
+
+CREATE INDEX idx_feedback_uri ON context_feedback (context_uri);
+```
+
 ### (2) 反馈信号回写
 
-融入热度评分机制：
+融入热度评分机制。`adopted_count` 和 `ignored_count` 直接存在 `contexts` 表中，每次反馈时原子更新：
+
+```sql
+-- 反馈为 adopted 时
+UPDATE contexts SET adopted_count = adopted_count + 1 WHERE uri = $1;
+-- 反馈为 ignored 时
+UPDATE contexts SET ignored_count = ignored_count + 1 WHERE uri = $1;
+```
+
+综合评分计算：
 
 ```python
 # 原始: score = sigmoid(log1p(active_count)) * exponential_decay(updated_at)
@@ -43,7 +67,17 @@ class ContextFeedback:
 
 ### (3) 低质量上下文报告
 
-定期生成（如每周），供管理员审查：高检索+低采纳的上下文、频繁被纠正的上下文、整体质量趋势。
+定期生成（如每周），通过 PG 聚合查询：
+
+```sql
+-- 高检索 + 低采纳的上下文（噪音候选）
+SELECT uri, active_count, adopted_count, ignored_count,
+       adopted_count::float / NULLIF(adopted_count + ignored_count, 0) AS adoption_rate
+FROM contexts
+WHERE active_count > 10
+  AND adopted_count::float / NULLIF(adopted_count + ignored_count, 0) < 0.2
+ORDER BY active_count DESC;
+```
 
 ---
 
@@ -51,42 +85,82 @@ class ContextFeedback:
 
 ### 上下文状态机
 
+状态存储在 `contexts.status` 列中：
+
 ```
           创建 ──→  active  ←── 被访问/更新时重置
                       │ 标记过时(变更传播) 或 超过 N 天未访问
                       ▼
-                    stale   ←── STALE 标记的上下文
+                    stale   ←── status = 'stale'
                       │ 超过 M 天仍为 stale 且未被访问
                       ▼
-                   archived ←── 移出向量索引，保留文件
+                   archived ←── 从向量索引中移除，PG 行保留
                       │ 超过 K 天（可选）
                       ▼
-                   deleted  ←── 移至冷存储或删除
+                   deleted  ←── PG 行标记 deleted（或移至冷存储）
 ```
+
+状态转换通过 PG 操作实现：
+- `active → stale`：`UPDATE contexts SET status = 'stale'`（变更传播触发，或定时任务检测未访问）
+- `stale → active`：`UPDATE contexts SET status = 'active', last_accessed_at = NOW()`（被直接访问时自动恢复）
+- `stale → archived`：从向量库删除 embedding + `UPDATE contexts SET status = 'archived'`
+- `archived → active`：重新生成 embedding 入向量库 + `UPDATE contexts SET status = 'active'`
 
 ### 生命周期策略配置
 
-```python
-@dataclass
-class LifecyclePolicy:
-    context_type: str       # resource | memory | skill
-    scope: str              # agent | team | datalake
-    stale_after_days: int   # 未访问 N 天后标记为 stale（0 = 不自动标记）
-    archive_after_days: int # stale 状态持续 M 天后归档
-    delete_after_days: int  # 归档后 K 天删除（0 = 永不删除）
+```sql
+CREATE TABLE lifecycle_policies (
+    context_type    TEXT NOT NULL,       -- 'resource' | 'memory' | 'skill'
+    scope           TEXT NOT NULL,       -- 'agent' | 'team' | 'datalake'
+    stale_after_days INT DEFAULT 0,     -- 未访问 N 天后标记为 stale（0 = 不自动标记）
+    archive_after_days INT DEFAULT 0,   -- stale 状态持续 M 天后归档
+    delete_after_days INT DEFAULT 0,    -- 归档后 K 天删除（0 = 永不删除）
+    PRIMARY KEY (context_type, scope)
+);
 
-DEFAULT_POLICIES = [
-    LifecyclePolicy("memory", "agent",    stale_after_days=90,  archive_after_days=30, delete_after_days=180),
-    LifecyclePolicy("memory", "team",     stale_after_days=0,   archive_after_days=60, delete_after_days=0),
-    LifecyclePolicy("resource","datalake", stale_after_days=0,   archive_after_days=0,  delete_after_days=0),
-    LifecyclePolicy("skill",  "team",     stale_after_days=0,   archive_after_days=90, delete_after_days=0),
-]
+-- 默认策略
+INSERT INTO lifecycle_policies VALUES
+    ('memory', 'agent',    90, 30, 180),
+    ('memory', 'team',     0,  60, 0),
+    ('resource','datalake', 0,  0,  0),
+    ('skill',  'team',     0,  90, 0);
 ```
 
-### 归档操作
+### 定时生命周期任务
 
-归档 = 从向量索引中移除 + 在文件头部追加 ARCHIVED 标记 + 保留原始文件。如果被直接访问 → 自动恢复为 active。
+```sql
+-- 标记过期的 active 上下文为 stale
+UPDATE contexts c SET status = 'stale'
+FROM lifecycle_policies lp
+WHERE c.context_type = lp.context_type AND c.scope = lp.scope
+  AND c.status = 'active'
+  AND lp.stale_after_days > 0
+  AND c.last_accessed_at < NOW() - (lp.stale_after_days || ' days')::interval;
+
+-- 归档过期的 stale 上下文
+UPDATE contexts c SET status = 'archived'
+FROM lifecycle_policies lp
+WHERE c.context_type = lp.context_type AND c.scope = lp.scope
+  AND c.status = 'stale'
+  AND lp.archive_after_days > 0
+  AND c.updated_at < NOW() - (lp.archive_after_days || ' days')::interval;
+-- 同时从向量库中删除对应的 embedding（应用层执行）
+```
 
 ### 湖表同步删除
 
-CatalogConnector.detect_changes() 检测到表被删除 → ChangeEvent → 通知依赖方 → 该表的 L0/L1/L2 自动归档 → 引用该表的 cases/patterns 标记 STALE。
+`CatalogConnector.detect_changes()` 检测到表被删除 → 事务内处理：
+
+```python
+async def handle_table_deleted(self, table_uri: str):
+    async with self.pg.transaction():
+        # 1. 归档该表的 context
+        await self.pg.execute("UPDATE contexts SET status = 'archived' WHERE uri = $1", table_uri)
+        # 2. 发出变更事件
+        await self.pg.execute("""
+            INSERT INTO change_events (source_uri, change_type, actor)
+            VALUES ($1, 'deleted', 'catalog_sync')
+        """, table_uri)
+    # 3. 传播引擎处理：标记依赖此表的 cases/patterns 为 stale
+    await self.pg.execute("NOTIFY context_changed, $1", table_uri)
+```
