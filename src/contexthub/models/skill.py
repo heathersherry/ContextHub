@@ -29,3 +29,22 @@ class SkillSubscription(BaseModel):
     pinned_version: int | None = None
     account_id: str
     created_at: datetime | None = None
+
+
+class PublishVersionRequest(BaseModel):
+    skill_uri: str
+    content: str
+    changelog: str | None = None
+    is_breaking: bool = False
+
+
+class SubscribeRequest(BaseModel):
+    skill_uri: str
+    pinned_version: int | None = None
+
+
+class SkillContent(BaseModel):
+    content: str
+    version: int
+    status: SkillVersionStatus
+    advisory: str | None = None

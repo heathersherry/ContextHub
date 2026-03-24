@@ -6,11 +6,18 @@ from fastapi import FastAPI
 
 from contexthub.api.middleware import AuthMiddleware
 from contexthub.api.routers.contexts import router as contexts_router
+from contexthub.api.routers.memories import router as memories_router
+from contexthub.api.routers.skills import router as skills_router
 from contexthub.config import Settings
 from contexthub.db.pool import create_pool
 from contexthub.db.repository import PgRepository
+from contexthub.generation.base import ContentGenerator
+from contexthub.llm.factory import create_embedding_client
 from contexthub.services.acl_service import ACLService
 from contexthub.services.context_service import ContextService
+from contexthub.services.indexer_service import IndexerService
+from contexthub.services.memory_service import MemoryService
+from contexthub.services.skill_service import SkillService
 from contexthub.store.context_store import ContextStore
 
 
@@ -24,10 +31,20 @@ async def lifespan(app: FastAPI):
     context_store = ContextStore(acl_service)
     context_service = ContextService(context_store, acl_service)
 
+    # Task 3 services
+    embedding_client = create_embedding_client(settings)
+    content_generator = ContentGenerator()
+    indexer_service = IndexerService(content_generator, embedding_client)
+    memory_service = MemoryService(indexer_service, acl_service)
+    skill_service = SkillService(indexer_service, acl_service)
+
     app.state.settings = settings
     app.state.repo = repo
+    app.state.acl_service = acl_service
     app.state.context_store = context_store
     app.state.context_service = context_service
+    app.state.memory_service = memory_service
+    app.state.skill_service = skill_service
 
     yield
 
@@ -37,6 +54,8 @@ async def lifespan(app: FastAPI):
 app = FastAPI(title="ContextHub", lifespan=lifespan)
 app.add_middleware(AuthMiddleware)
 app.include_router(contexts_router)
+app.include_router(memories_router)
+app.include_router(skills_router)
 
 
 @app.get("/health")

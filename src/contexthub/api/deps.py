@@ -8,7 +8,10 @@ from fastapi import Depends, Header, Request
 
 from contexthub.db.repository import ScopedRepo
 from contexthub.models.request import RequestContext
+from contexthub.services.acl_service import ACLService
 from contexthub.services.context_service import ContextService
+from contexthub.services.memory_service import MemoryService
+from contexthub.services.skill_service import SkillService
 from contexthub.store.context_store import ContextStore
 
 
@@ -38,3 +41,15 @@ def get_context_service(request: Request) -> ContextService:
 
 def get_context_store(request: Request) -> ContextStore:
     return request.app.state.context_store
+
+
+def get_acl_service(request: Request) -> ACLService:
+    return request.app.state.acl_service
+
+
+def get_memory_service(request: Request) -> MemoryService:
+    return request.app.state.memory_service
+
+
+def get_skill_service(request: Request) -> SkillService:
+    return request.app.state.skill_service
