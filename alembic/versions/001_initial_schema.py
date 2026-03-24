@@ -49,6 +49,7 @@ def upgrade() -> None:
     )
     """)
     op.execute("ALTER TABLE contexts ENABLE ROW LEVEL SECURITY")
+    op.execute("ALTER TABLE contexts FORCE ROW LEVEL SECURITY")
     op.execute("""
     CREATE POLICY tenant_isolation ON contexts
         USING (account_id = current_setting('app.account_id'))
@@ -139,6 +140,7 @@ def upgrade() -> None:
     op.execute("CREATE INDEX idx_teams_parent ON teams (parent_id)")
     op.execute("CREATE INDEX idx_teams_account ON teams (account_id)")
     op.execute("ALTER TABLE teams ENABLE ROW LEVEL SECURITY")
+    op.execute("ALTER TABLE teams FORCE ROW LEVEL SECURITY")
     op.execute("""
     CREATE POLICY tenant_isolation ON teams
         USING (account_id = current_setting('app.account_id'))
@@ -186,6 +188,7 @@ def upgrade() -> None:
     op.execute("CREATE INDEX idx_subs_skill ON skill_subscriptions (skill_id)")
     op.execute("CREATE INDEX idx_subs_agent ON skill_subscriptions (agent_id)")
     op.execute("ALTER TABLE skill_subscriptions ENABLE ROW LEVEL SECURITY")
+    op.execute("ALTER TABLE skill_subscriptions FORCE ROW LEVEL SECURITY")
     op.execute("""
     CREATE POLICY tenant_isolation ON skill_subscriptions
         USING (account_id = current_setting('app.account_id'))

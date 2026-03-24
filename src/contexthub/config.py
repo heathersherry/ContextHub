@@ -1,4 +1,17 @@
-from pydantic_settings import BaseSettings
+from pathlib import Path
+
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+
+
+def _normalize_postgres_url(url: str) -> str:
+    if url.startswith("postgresql+asyncpg://"):
+        return "postgresql://" + url.removeprefix("postgresql+asyncpg://")
+    if url.startswith("postgres://"):
+        return "postgresql://" + url.removeprefix("postgres://")
+    return url
 
 
 class Settings(BaseSettings):
@@ -7,4 +20,18 @@ class Settings(BaseSettings):
     embedding_model: str = "text-embedding-3-small"
     propagation_enabled: bool = True
 
-    model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
+    model_config = SettingsConfigDict(
+        env_file=PROJECT_ROOT / ".env",
+        env_file_encoding="utf-8",
+    )
+
+    @property
+    def asyncpg_database_url(self) -> str:
+        return _normalize_postgres_url(self.database_url)
+
+    @property
+    def sqlalchemy_database_url(self) -> str:
+        url = _normalize_postgres_url(self.database_url)
+        if url.startswith("postgresql://"):
+            return "postgresql+asyncpg://" + url.removeprefix("postgresql://")
+        return url

@@ -32,5 +32,9 @@ class PgRepository:
     async def session(self, account_id: str) -> AsyncIterator[ScopedRepo]:
         async with self._pool.acquire() as conn:
             async with conn.transaction():
-                await conn.execute("SET LOCAL app.account_id = $1", account_id)
+                # asyncpg does not support bind parameters in SET statements.
+                await conn.execute(
+                    "SELECT set_config('app.account_id', $1, true)",
+                    account_id,
+                )
                 yield ScopedRepo(conn)

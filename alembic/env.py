@@ -1,15 +1,29 @@
 import asyncio
 from logging.config import fileConfig
+from pathlib import Path
+import sys
 
 from alembic import context
-from sqlalchemy import pool, text
+from sqlalchemy import pool
 from sqlalchemy.ext.asyncio import async_engine_from_config
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+SRC_DIR = PROJECT_ROOT / "src"
+if str(SRC_DIR) not in sys.path:
+    sys.path.insert(0, str(SRC_DIR))
+
+from contexthub.config import Settings
 
 config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
 target_metadata = None
+settings = Settings()
+config.set_main_option(
+    "sqlalchemy.url",
+    settings.sqlalchemy_database_url.replace("%", "%%"),
+)
 
 
 def run_migrations_offline() -> None:
