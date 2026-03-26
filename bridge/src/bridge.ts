@@ -1,109 +1,168 @@
 /**
- * ContextHubBridge: HTTP adapter implementing the OpenClaw ContextEngine interface.
+ * ContextHubBridge — ContextEngine implementation that forwards lifecycle
+ * calls to the ContextHub Python sidecar over HTTP.
  *
- * All business logic lives in the Python plugin (sidecar). This bridge only
- * does protocol forwarding and type adaptation.
+ * Type shapes here mirror the ContextEngine contract defined in
+ * openclaw/src/context-engine/types.ts. At runtime inside the OpenClaw
+ * process, `delegateCompactionToRuntime` is resolved via dynamic import
+ * from "openclaw/plugin-sdk".
  */
 
-// OpenClaw ContextEngine interface shape (from openclaw/plugin-sdk).
-// Using inline types since we don't have the real SDK package available.
-export interface ContextEngineInfo {
-  kind: string;
+// ---------------------------------------------------------------------------
+// Minimal type surface matching OpenClaw ContextEngine contract.
+// Kept inline so the bridge compiles standalone (no build-time dep on the
+// OpenClaw monorepo). Shapes verified against openclaw/src/context-engine/types.ts.
+// ---------------------------------------------------------------------------
+
+export type ContextEngineInfo = {
   id: string;
   name: string;
-}
+  version?: string;
+  ownsCompaction?: boolean;
+};
 
-export interface ContextEngine {
-  readonly info: ContextEngineInfo;
-  tools: any[];
-  ingest(params: any): Promise<any>;
-  ingestBatch?(params: any): Promise<any>;
-  assemble(params: any): Promise<any>;
-  afterTurn(params: any): Promise<void>;
-  compact(params: any): Promise<any>;
-  dispose(): Promise<void>;
-}
+export type AssembleResult = {
+  messages: unknown[];
+  estimatedTokens: number;
+  systemPromptAddition?: string;
+};
 
-export class ContextHubBridge implements ContextEngine {
+export type CompactResult = {
+  ok: boolean;
+  compacted: boolean;
+  reason?: string;
+  result?: {
+    summary?: string;
+    firstKeptEntryId?: string;
+    tokensBefore: number;
+    tokensAfter?: number;
+    details?: unknown;
+  };
+};
+
+export type IngestResult = { ingested: boolean };
+export type IngestBatchResult = { ingestedCount: number };
+
+export type AssembleParams = {
+  sessionId: string;
+  sessionKey?: string;
+  messages: unknown[];
+  tokenBudget?: number;
+};
+
+export type CompactParams = {
+  sessionId: string;
+  sessionKey?: string;
+  sessionFile: string;
+  tokenBudget?: number;
+  force?: boolean;
+  currentTokenCount?: number;
+  compactionTarget?: "budget" | "threshold";
+  customInstructions?: string;
+  runtimeContext?: Record<string, unknown>;
+};
+
+export type IngestParams = {
+  sessionId: string;
+  sessionKey?: string;
+  message: unknown;
+  isHeartbeat?: boolean;
+};
+
+export type IngestBatchParams = {
+  sessionId: string;
+  sessionKey?: string;
+  messages: unknown[];
+  isHeartbeat?: boolean;
+};
+
+export type AfterTurnParams = {
+  sessionId: string;
+  sessionKey?: string;
+  sessionFile: string;
+  messages: unknown[];
+  prePromptMessageCount: number;
+  autoCompactionSummary?: string;
+  isHeartbeat?: boolean;
+  tokenBudget?: number;
+  runtimeContext?: Record<string, unknown>;
+};
+
+// ---------------------------------------------------------------------------
+// Bridge implementation
+// ---------------------------------------------------------------------------
+
+export class ContextHubBridge {
   private sidecarUrl: string;
-  private _info: ContextEngineInfo;
-  private _tools: any[] = [];
 
   constructor(sidecarUrl: string) {
     this.sidecarUrl = sidecarUrl.replace(/\/$/, "");
-    // Default info; will be refreshed on first access via fetchInfo()
-    this._info = { kind: "context-engine", id: "contexthub", name: "contexthub" };
   }
 
   get info(): ContextEngineInfo {
-    return this._info;
+    return {
+      id: "contexthub",
+      name: "ContextHub",
+      ownsCompaction: false,
+    };
   }
 
-  /** Fetch and cache info from sidecar. Call once after construction. */
-  async fetchInfo(): Promise<void> {
-    this._info = await this.get("/info");
-  }
-
-  /** Fetch and cache tool definitions from sidecar. */
-  async fetchTools(): Promise<any[]> {
-    this._tools = await this.get("/tools");
-    return this._tools;
-  }
-
-  get tools(): any[] {
-    return this._tools;
-  }
-
-  async dispatchTool(name: string, args: Record<string, any>): Promise<any> {
-    return this.post("/dispatch", { name, args });
-  }
-
-  async ingest(params: any): Promise<any> {
+  async ingest(params: IngestParams): Promise<IngestResult> {
     return this.post("/ingest", params);
   }
 
-  async ingestBatch(params: any): Promise<any> {
-    return this.post("/ingest-batch", params);
+  async ingestBatch(params: IngestBatchParams): Promise<IngestBatchResult> {
+    const result = await this.post("/ingest-batch", params);
+    return { ingestedCount: result.ingestedCount ?? 0 };
   }
 
-  async assemble(params: any): Promise<any> {
+  async assemble(params: AssembleParams): Promise<AssembleResult> {
     return this.post("/assemble", params);
   }
 
-  async afterTurn(params: any): Promise<void> {
+  async afterTurn(params: AfterTurnParams): Promise<void> {
     await this.post("/after-turn", params);
   }
 
-  async compact(params: any): Promise<any> {
-    const result = await this.post("/compact", params);
-    if (!result.compacted) {
-      // ContextHub does not own compaction.
-      // In a real OpenClaw environment, the runtime would delegate to
-      // LegacyContextEngine here. This is a known boundary — not a fake integration.
-      // TODO: Wire up tryLegacyCompact() when OpenClaw runtime API is available.
+  /**
+   * ContextHub does not own compaction. Delegate to OpenClaw's built-in
+   * runtime compaction path via `delegateCompactionToRuntime`.
+   */
+  async compact(params: CompactParams): Promise<CompactResult> {
+    try {
+      const sdk: { delegateCompactionToRuntime: (p: CompactParams) => Promise<CompactResult> } =
+        await import("openclaw/plugin-sdk");
+      return await sdk.delegateCompactionToRuntime(params);
+    } catch {
+      return { ok: false, compacted: false, reason: "runtime delegation unavailable" };
     }
-    return result;
   }
 
   async dispose(): Promise<void> {
-    await this.post("/dispose", {});
+    try {
+      await this.post("/dispose", {});
+    } catch {
+      // Best-effort cleanup — sidecar may already be down.
+    }
   }
 
-  // --- HTTP helpers ---
-
-  private async get(path: string): Promise<any> {
-    const resp = await fetch(`${this.sidecarUrl}${path}`);
-    if (!resp.ok) throw new Error(`Sidecar GET ${path} failed: ${resp.status}`);
-    return resp.json();
+  /** Forward a ContextHub tool call to the sidecar. */
+  async dispatchTool(name: string, args: Record<string, unknown>): Promise<unknown> {
+    return this.post("/dispatch", { name, args });
   }
 
-  private async post(path: string, body: any): Promise<any> {
+  // -- HTTP helpers ----------------------------------------------------------
+
+  private async post(path: string, body: unknown): Promise<any> {
     const resp = await fetch(`${this.sidecarUrl}${path}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
     });
-    if (!resp.ok) throw new Error(`Sidecar POST ${path} failed: ${resp.status}`);
+    if (!resp.ok) {
+      const text = await resp.text().catch(() => "");
+      throw new Error(`Sidecar POST ${path} failed: ${resp.status} ${text}`);
+    }
     return resp.json();
   }
 }

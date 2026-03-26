@@ -1,12 +1,21 @@
 {
   "name": "@contexthub/openclaw-bridge",
   "version": "0.1.0",
-  "description": "TypeScript bridge: OpenClaw ContextEngine → ContextHub Python sidecar",
+  "description": "OpenClaw context-engine plugin: bridges the ContextHub Python sidecar into the OpenClaw runtime",
+  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
     "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "openclaw": "*"
+  },
+  "peerDependenciesMeta": {
+    "openclaw": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "typescript": "^5.4"

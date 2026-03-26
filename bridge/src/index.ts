@@ -1,18 +1,29 @@
 /**
- * ContextHub OpenClaw Bridge — entry point.
+ * ContextHub OpenClaw Plugin entry point.
  *
- * Usage:
- *   import { createContextEngine } from "@contexthub/openclaw-bridge";
- *   const engine = createContextEngine({ sidecarUrl: "http://localhost:9100" });
- *   await engine.fetchInfo();
+ * Loaded by OpenClaw's plugin system. Registers:
+ *   1. A ContextEngine ("contexthub") — lifecycle hooks for auto-recall / auto-capture.
+ *   2. Seven agent tools — ls, read, grep, stat, store, promote, skill_publish.
  */
 
-import { ContextHubBridge, type ContextEngine, type ContextEngineInfo } from "./bridge.js";
+import { ContextHubBridge } from "./bridge.js";
+import { createContextHubTools } from "./tools.js";
 
-export { ContextHubBridge, type ContextEngine, type ContextEngineInfo };
+const DEFAULT_SIDECAR_URL = "http://localhost:9100";
 
-export function createContextEngine(config: {
-  sidecarUrl: string;
-}): ContextHubBridge {
-  return new ContextHubBridge(config.sidecarUrl);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default function register(api: any): void {
+  const sidecarUrl: string = api.pluginConfig?.sidecarUrl ?? DEFAULT_SIDECAR_URL;
+
+  api.registerContextEngine("contexthub", () => {
+    return new ContextHubBridge(sidecarUrl);
+  });
+
+  const lazyBridge = new ContextHubBridge(sidecarUrl);
+  for (const tool of createContextHubTools(lazyBridge)) {
+    api.registerTool(() => tool);
+  }
 }
+
+export { ContextHubBridge } from "./bridge.js";
+export { createContextHubTools } from "./tools.js";

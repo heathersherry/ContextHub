@@ -1,0 +1,15 @@
+{
+  "id": "contexthub",
+  "kind": "context-engine",
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "sidecarUrl": {
+        "type": "string",
+        "default": "http://localhost:9100",
+        "description": "URL of the ContextHub Python sidecar"
+      }
+    }
+  }
+}
