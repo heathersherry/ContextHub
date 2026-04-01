@@ -1,277 +1,279 @@
-# ContextHub
-
-**Unified context governance middleware for enterprise multi-agent systems.**
 
 <div align="center">
-<img src="figures/logo2.jpeg" width="300">
-</div>
+
+<img src="figures/logo2.jpeg" width="200">
+
+### ContextHub: Unified Context Management <br> for Multi-Agent Collaboration
+
+A context-governance engine built on a **filesystem paradigm** with **LLM-native commands**.
+Agents navigate memories, skills, documents, and data-lake metadata through familiar operations
+(`ls`, `read`, `grep`, `stat`) over `ctx://` URIs — with version control, visibility boundaries,
+change propagation, and cross-agent sharing.
+
+Built on FastAPI + PostgreSQL. Single database. No external vector store. No message queue.
 
 English | [中文](README_zh.md)
+</div>
 
-## The Problem: From Memory Management to Context Governance
+---
 
-When multiple AI agents collaborate on the same business entities in an enterprise environment, their contexts — memories, skills, policy documents, schemas — are siloed, unversioned, and disconnected. Research shows **79% of multi-agent failures stem from coordination problems, not technical bugs** ([Zylos Research, 2026](https://zylos.ai/research/2026-03-09-multi-agent-memory-architectures-shared-isolated-hierarchical)), and **36.9% of failures come from inter-agent misalignment** — agents ignoring, duplicating, or contradicting each other's work ([Cemri et al., 2025](https://arxiv.org/abs/2503.13657)). These failures cannot be fixed by improving individual model capabilities; they are structural deficits in the system architecture.
+## Why ContextHub? 🔎
 
-Existing frameworks treat "agent context management" as synonymous with **memory management**. Governed Memory, Collaborative Memory, MemOS — all center on memory as the core abstraction. But enterprise agent systems need to govern far more than memory:
+When multiple AI agents collaborate on the same business entities, their contexts are siloed, unversioned, and disconnected:
 
-| Context Type | Examples | Multi-version Governance Coverage in Literature |
+> * **79% of multi-agent failures** stem from coordination problems, not technical bugs ([Zylos Research, 2026](https://zylos.ai/research/2026-03-09-multi-agent-memory-architectures-shared-isolated-hierarchical)).
+> * **36.9% of failures** come from inter-agent misalignment — agents ignoring, duplicating, or contradicting each other's work ([Cemri et al., 2025](https://arxiv.org/abs/2503.13657)).
+
+These are structural deficits in system architecture — they cannot be fixed by improving individual model capabilities. ContextHub addresses this by unifying four types of context under one governance layer.
+
+## What Does ContextHub Manage? 📦
+
+| Context Type | What It Is | Example |
 |---|---|---|
-| **Memory** | Conversation history, entity state, working memory | Relatively most covered; multi-user collaborative versioning still scarce |
-| **Skill** | Tool definitions, prompt templates, agent configs | **Near-blank** — no end-to-end lifecycle for breaking change detection + subscriber notification |
-| **Resource (RAG docs)** | Policy documents, compliance rules, knowledge bases | Only "retrieve the latest version," not "propagate changes along dependency graphs" |
-| **Structured Metadata** | Database schemas, data lake catalogs | No research in AI agent context |
+| **Memory** | Facts, patterns, and decisions an agent learns during conversations | A SQL query pattern that worked for monthly sales reports |
+| **Skill** | Reusable capabilities that agents publish, version, and subscribe to | A "SQL Generator" skill — subscribers get notified on breaking changes |
+| **Resource** | Documents that agents read, understand, and retrieve | API docs, runbooks, or policy documents referenced during tasks |
+| **Data-Lake Metadata** | Structured metadata for lakehouse tables — schemas, columns, lineage | Table `orders(user_id, amount, created_at)` and its upstream/downstream dependencies |
 
-ContextHub addresses this gap. To our knowledge, **unified version governance** of Memory, Skill, Resource, and Structured Metadata — as an end-to-end problem — has no systematic treatment in existing literature.
+All four are managed under a unified `ctx://` URI namespace with the same versioning, visibility, and propagation semantics.
 
-## Design Contributions
+> For a detailed analysis of research gaps in each context type, see [Research Positioning](docs/research/research-positioning.md).
 
-ContextHub is enterprise context governance middleware that provides a **unified context state layer** for multi-agent collaboration — encompassing shared memory, visibility boundaries, version governance, and change propagation.
+## Core Capabilities ✨
 
-| Contribution | What It Solves | Why It's New |
-|---|---|---|
-| **Skill version management + breaking change propagation** | Publisher marks `is_breaking` → subscribers get `stale` / `advisory` notifications → pinned subscribers remain stable | No existing AI agent framework handles the full lifecycle: publish → breaking flag → subscriber notification → stale marking → recovery |
-| **Dependency-graph-driven change propagation** | When an upstream policy/schema changes, all downstream agents that depend on it are automatically notified or updated | Temporal/Corrective RAG solves "retrieve the current doc" but not "who depends on this doc and needs to be notified" |
-| **Hierarchical team ownership with visibility inheritance** | Child teams see parent team content; parent teams don't see child team private content by default | Goes beyond flat user/agent/app isolation (Mem0) to enterprise org structures |
-| **L0/L1/L2 layered retrieval model** | One-line summary (L0, vector search) → structured overview (L1, rerank) → full content (L2, on-demand) | Reduces context token consumption by 60-80% vs. flat schema dumps |
-| **PostgreSQL-centric single-DB architecture** | ACID transactions, RLS tenant isolation, LISTEN/NOTIFY for change propagation, recursive CTEs for lineage, pgvector for semantic search — all in one database | Eliminates dual-write consistency problems between separate vector stores, message queues, and metadata databases |
+| Capability | What It Solves |
+|---|---|
+| **Filesystem Paradigm** | All context types managed as files under `ctx://` URIs — one model for memories, skills, documents, and table metadata |
+| **LLM-native Commands** | Agents use `ls`, `read`, `grep`, `stat` — LLMs already understand file operations, no custom API needed |
+| **Multi-Agent Collaboration** | Team hierarchy with visibility inheritance (child reads parent, parent doesn't see child); memory promotion `private → team → org` with `derived_from` lineage |
+| **Version Management** | Pin agents to stable versions; `is_breaking` flag prevents silent breakage; immutable published versions |
+| **Change Propagation** | Upstream changes auto-notify all downstream dependents — no polling, no "latest version wins" |
+| **L0/L1/L2 Layered Retrieval** | Vector search → BM25 rerank → on-demand full content; **60–80% token reduction** vs. flat retrieval |
+| **Tenant Isolation** | Row-Level Security on all tables; request-scoped tenant binding |
+| **PostgreSQL-centric Single DB** | ACID + RLS + LISTEN/NOTIFY + pgvector in one database; no dual-write, no message queue |
 
-### How It Differs from Existing Solutions
-
-| Framework | Limitation | ContextHub's Answer |
-|---|---|---|
-| **Mem0** | Flat user/agent/app isolation; no team hierarchy, no change propagation, no versioning; SaaS-only | Hierarchical teams + propagation + versions + self-hosted |
-| **CrewAI / LangGraph** | Memory systems scoped to a single framework; can't manage cross-framework, cross-team, cross-time organizational knowledge | Framework-agnostic middleware via SDK + plugin |
-| **OpenAI Agents SDK** | No built-in memory, no ACL, no tenant isolation | Full governance layer |
-| **Governed Memory (Personize.ai)** | Closest approach but focused on CRM entities (contacts/companies/deals), not general agent context | General-purpose `ctx://` URI abstraction for any context type |
-| **OpenViking** | Core context management concepts (everything-is-a-file + memory pipeline + vector search) but personal-edition only — no multi-agent isolation, team hierarchy, ACL, or change propagation | Inherits OpenViking's URI + L0/L1/L2 abstractions; extends to enterprise multi-tenant architecture |
-
-## Architecture
+## Architecture 🏛️
 
 ```
          Agents (via OpenClaw Plugin / SDK)
               │
               ▼
     ContextHub Server (FastAPI)
-    ├── ContextStore       — ctx:// URI routing (read/write/ls/stat)
-    ├── MemoryService      — promote, derived_from, team sharing
+    ├── ContextStore       — ctx:// URI routing
+    ├── MemoryService      — promote, lineage, team sharing
     ├── SkillService       — publish, subscribe, version resolution
-    ├── RetrievalService   — unified search (pgvector + BM25 rerank)
-    ├── PropagationEngine  — outbox drain, retry, dependency/subscription dispatch
-    └── ACLService         — default visibility / write permissions
+    ├── RetrievalService   — pgvector + BM25 rerank
+    ├── PropagationEngine  — outbox, retry, dependency dispatch
+    └── ACLService         — visibility / write permissions
               │
               ▼
-    PostgreSQL + pgvector
-    (metadata, content, vectors, events — all in one DB)
+    PostgreSQL + pgvector  (single DB: metadata + content + vectors + events)
 ```
 
-**Single database. No external vector store. No message queue.** PostgreSQL handles ACID transactions, RLS tenant isolation, LISTEN/NOTIFY for change propagation, recursive CTEs for lineage queries, and pgvector for semantic search. This deliberate choice eliminates dual-write consistency problems and minimizes infrastructure complexity for on-premise enterprise deployment.
+**Single database. No external vector store. No message queue.** This eliminates dual-write consistency problems and minimizes infrastructure complexity for on-premise deployment.
 
-### Design Principles
+---
 
-- **URI is a logical address, not a physical path.** `ctx://datalake/prod/orders` maps to a row in PostgreSQL, not a file on disk. Agents perceive file semantics; the system provides database guarantees.
-- **Metadata and content co-located.** L0/L1/L2 content lives in PostgreSQL TEXT columns (TOAST handles large text), updated atomically with metadata in the same transaction.
-- **Only L0 is vectorized.** L0 summaries (~100 tokens) are embedded for semantic search. L1/L2 are retrieved by URI from the same table — no cross-system overhead.
+## Quick Start 🚀
 
-## Core Capabilities
+### Prerequisites
 
-### Multi-Agent Collaboration
-- **Team ownership model** with hierarchical visibility inheritance (child reads parent; parent does not see child by default)
-- **Memory promotion** from `private → team → organization` scope, with `derived_from` lineage tracking
-- **Cross-agent knowledge reuse** — promoted memories are searchable by teammates
+- **Python 3.12+**
+- **PostgreSQL 16** with **pgvector** extension
 
-### Skill Version Management
-- Publish new versions with `is_breaking` flag
-- Subscribers choose `pinned` (stable) or `latest` (floating) resolution strategy
-- Breaking changes mark downstream dependents as `stale` with advisory notifications
-- Published versions are immutable; URI always returns latest published (pin is a perspective, not a new address)
+### Step 1: Install PostgreSQL + pgvector
 
-### Change Propagation
-- Three-tier propagation rules: pure rule (70%, zero tokens) / template substitution (20%) / LLM reasoning (10%)
-- Outbox pattern with `change_events` table as sole source of truth
-- NOTIFY for fast wake-up + periodic sweep for guaranteed delivery
-- Automatic retry with exponential backoff; crash recovery via lease timeout
-- Idempotent side effects: `mark_stale`, `auto_update`, `notify`, `advisory`
-
-### L0/L1/L2 Layered Retrieval
-- **L0**: one-line summary + embedding (vector search via pgvector)
-- **L1**: structured overview (BM25 keyword rerank)
-- **L2**: full content (on-demand loading)
-- Graceful degradation: when embedding service is unavailable, falls back to keyword search
-
-### Visibility & Tenant Isolation
-- Row-Level Security (RLS) on all agent-facing tables
-- `SET LOCAL app.account_id` scoped to each transaction via request-scoped `ScopedRepo`
-- Default visibility based on team hierarchy + scope rules; explicit ACL as post-MVP overlay
-
-## Usage
-
-ContextHub is designed as a **context engine** for AI agent runtimes. The primary integration is with [OpenClaw](https://github.com/anthropics/openclaw) — ContextHub replaces OpenClaw's built-in context engine, providing enterprise-grade context governance to every agent session.
-
-### As OpenClaw Context Engine
-
-Install ContextHub as an OpenClaw context engine plugin:
+<details>
+<summary><strong>macOS (Homebrew)</strong></summary>
 
 ```bash
-pnpm openclaw plugins install -l /path/to/ContextHub/bridge
+brew install postgresql@16
+brew install pgvector
+brew services start postgresql@16
 ```
 
-Once installed, ContextHub works transparently with every OpenClaw session:
+</details>
 
-```
-User ──► OpenClaw TUI ──► Gateway ──► ContextHub Bridge (TS)
-                                        └─► Python Sidecar (:9100)
-                                             └─► ContextHub Server (:8000)
-                                                  └─► PostgreSQL + pgvector
-```
+<details>
+<summary><strong>Linux (Ubuntu / Debian)</strong></summary>
 
-**Automatic behaviors — no agent code changes needed:**
+```bash
+# Add PostgreSQL APT repository
+sudo apt install -y curl ca-certificates
+sudo install -d /usr/share/postgresql-common/pgdg
+sudo curl -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc \
+  --fail https://www.postgresql.org/media/keys/ACCC4CF8.asc
+echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] \
+  https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" \
+  | sudo tee /etc/apt/sources.list.d/pgdg.list
 
-| Event | What ContextHub Does |
-|-------|---------------------|
-| Agent receives a prompt | `assemble()` searches all visible contexts (memories, skills, schemas) and injects relevant ones into the system prompt |
-| Agent completes a response | `afterTurn()` extracts reusable facts from the response and stores them as private memories |
-
-**Agent tools — available in every session:**
-
-| Tool | Description |
-|------|-------------|
-| `ls` | List contexts under a `ctx://` path |
-| `read` | Read context content (skills auto-resolve via version logic) |
-| `grep` | Search context content by keyword |
-| `stat` | Get metadata for a context entry |
-| `contexthub_store` | Store a new private memory |
-| `contexthub_promote` | Promote a memory from private → team scope |
-| `contexthub_skill_publish` | Publish a new skill version |
-
-### Multi-Agent Collaboration in Action
-
-Two agents in different departments — sharing knowledge through ContextHub with zero manual handoff:
-
-```
-Org Structure:
-  engineering/
-    └── engineering/backend    ← query-agent (backend engineer)
-  data/
-    └── data/analytics         ← analysis-agent (data analyst, also engineering member)
+sudo apt update
+sudo apt install -y postgresql-16 postgresql-16-pgvector
+sudo systemctl start postgresql
 ```
 
-**Scenario: cross-department knowledge reuse**
+</details>
 
-```
-1. query-agent stores a SQL pattern as private memory:
-   "JOIN orders and products, GROUP BY month for monthly sales"
+Verify PostgreSQL is running:
 
-2. query-agent promotes this memory to the engineering team:
-   → ctx://team/engineering/shared_knowledge/monthly-sales-pattern
-
-3. analysis-agent asks: "How should I query monthly sales?"
-   → ContextHub auto-recalls the promoted pattern (via assemble)
-   → analysis-agent receives the knowledge — no manual sharing needed
-
-4. query-agent publishes a breaking Skill v2 (sql-generator):
-   → analysis-agent (pinned to v1) continues using v1 stably
-   → advisory: "v2 available with breaking changes"
-   → analysis-agent upgrades at their own pace
+```bash
+pg_isready
+# Expected: "accepting connections"
 ```
 
-**What makes this different from a shared document?** ContextHub enforces visibility boundaries (private stays private unless explicitly promoted), tracks lineage (`derived_from`), and propagates changes through dependency graphs — not just "latest version wins."
+### Step 2: Create Database
 
-For the full OpenClaw integration setup (5-terminal stack), see the [OpenClaw Integration Guide](docs/openclaw-integration-guide.md).
+```bash
+# macOS (Homebrew): psql postgres
+# Linux: sudo -u postgres psql
+psql postgres
+```
 
-### Using the Python SDK
+Inside the `psql` shell:
 
-For direct programmatic access without OpenClaw:
+```sql
+CREATE USER contexthub WITH PASSWORD 'contexthub' SUPERUSER;
+CREATE DATABASE contexthub OWNER contexthub;
+\c contexthub
+CREATE EXTENSION IF NOT EXISTS vector;
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+\q
+```
+
+> `SUPERUSER` is required because the schema uses `FORCE ROW LEVEL SECURITY`. This is fine for local development.
+
+### Step 3: Install & Start ContextHub
+
+```bash
+git clone https://github.com/The-AI-Framework-and-Data-Tech-Lab-HK/ContextHub.git
+cd ContextHub
+
+python3 -m venv .venv
+source .venv/bin/activate
+
+pip install -e ".[dev]"
+pip install greenlet
+pip install -e sdk/
+
+# Run database migrations
+alembic upgrade head
+
+# Start the server
+uvicorn contexthub.main:app --port 8000
+```
+
+Verify:
+
+```bash
+curl http://localhost:8000/health
+# {"status":"ok"}
+```
+
+API docs available at http://localhost:8000/docs.
+
+### Step 4: Try the Python SDK
 
 ```python
 from contexthub_sdk import ContextHubClient
 
-client = ContextHubClient(base_url="http://localhost:8000", api_key="...")
+client = ContextHubClient(base_url="http://localhost:8000", api_key="changeme")
+
+# Store a private memory
+memory = await client.add_memory(
+    content="SELECT date_trunc('month', created_at), SUM(amount) FROM orders GROUP BY 1",
+    tags=["sql", "sales"],
+)
+
+# Promote to team-shared knowledge
+promoted = await client.promote_memory(uri=memory.uri, target_team="engineering")
 
 # Semantic search across all visible contexts
-results = await client.search("monthly sales summary", scope=["datalake"], top_k=5)
-
-# Record a successful case as private memory
-memory = await client.add_memory(content="SELECT ... GROUP BY month", tags=["sql", "sales"])
-
-# Promote to team-shared memory
-promoted = await client.promote_memory(uri=memory.uri, target_team="engineering/backend")
-
-# Publish a new skill version
-version = await client.publish_skill_version(
-    skill_uri="ctx://team/engineering/skills/sql-generator",
-    content="...",
-    changelog="Added window function support",
-    is_breaking=True,
-)
+results = await client.search("monthly sales summary", top_k=5)
 ```
 
-## Roadmap
+ContextHub also integrates directly with agent frameworks like [OpenClaw](https://github.com/anthropics/openclaw) as a drop-in context engine — making context governance transparent to agent code. See [Integration with OpenClaw](#integration-with-openclaw-) below.
 
-- [x] **Phase 1 — MVP Core** (complete)
-  - Project scaffolding, Docker, PostgreSQL + pgvector setup
-  - Core tables with RLS, triggers, seed data
-  - Request-scoped DB execution model (`PgRepository` / `ScopedRepo`)
-  - ACLService (default visibility / write permissions with recursive CTE team hierarchy)
-  - ContextStore (`ctx://` URI routing: read/write/ls/stat)
-  - MemoryService (add, list, promote with `derived_from` lineage)
-  - SkillService (publish, subscribe, pinned/latest/explicit version resolution)
-  - RetrievalService (pgvector search + BM25 rerank + ACL filtering + graceful degradation)
-  - PropagationEngine (outbox drain, three-tier rules, retry/recovery, NOTIFY + sweep)
-  - Python SDK + OpenClaw context-engine plugin
-  - Data lake carrier (MockCatalogConnector, CatalogSyncService, sql-context assembly)
-  - Tier 3 integration tests (propagation P-1~P-8, collaboration C-1~C-5, visibility A-1~A-4)
-- [ ] **Phase 2 — Explicit ACL & Audit**
-  - Explicit ACL allow/deny/field mask overlay on default visibility
-  - Audit logging (append-only `audit_log` table)
-  - Narrow-scope cross-team sharing via "reference + ACL"
-- [ ] **Phase 3 — Feedback & Lifecycle**
-  - Feedback loop (adopted/ignored signals, quality scoring)
-  - Lifecycle management (automatic stale → archived → deleted transitions)
-  - Long document retrieval extensions
-- [ ] **Phase 4 — Quantitative Evaluation (ECMB)**
-  - Tier 1 benchmarks: SQL Execution Accuracy, Table Retrieval Precision/Recall, Token per Query
-  - Tier 2 A/B experiments: L0/L1/L2 vs. flat RAG, with/without structured relations, with/without propagation
-- [ ] **Phase 5 — Production Hardening**
-  - Multi-instance deployment (`SELECT FOR UPDATE SKIP LOCKED`)
-  - MCP Server integration
-  - Real catalog connectors (Hive/Iceberg/Delta)
-  - Run snapshot / context bundle
+For the full E2E demo and integration tests, see [Local Setup & E2E Verification Guide](docs/setup/local-setup&end2end-verification-guide.md).
 
-## Documentation
+---
+
+## Integration with OpenClaw 🦞
+
+ContextHub is designed as the **context engine** for [OpenClaw](https://github.com/anthropics/openclaw) — replacing its built-in engine with enterprise-grade context governance.
+
+```bash
+# One-command install
+pnpm openclaw plugins install -l /path/to/ContextHub/bridge
+```
+
+**What happens automatically (no agent code changes):**
+
+| Event | ContextHub Action |
+|-------|-------------------|
+| Agent receives a prompt | `assemble()` — searches all visible contexts and injects relevant ones into the system prompt |
+| Agent completes a response | `afterTurn()` — extracts reusable facts and stores them as private memories |
+
+**7 agent tools available in every session:**
+
+`ls` · `read` · `grep` · `stat` · `contexthub_store` · `contexthub_promote` · `contexthub_skill_publish`
+
+### Multi-Agent Collaboration in Action
+
+```
+Org: engineering/backend  ← query-agent        Org: data/analytics  ← analysis-agent
+                                                     (also engineering member)
+```
+
+```
+1. query-agent stores a SQL pattern as private memory
+
+2. query-agent promotes it to engineering team
+   → ctx://team/engineering/shared_knowledge/monthly-sales-pattern
+
+3. analysis-agent asks "How to query monthly sales?"
+   → ContextHub auto-recalls the promoted pattern via assemble()
+   → zero manual sharing needed
+
+4. query-agent publishes breaking Skill v2
+   → analysis-agent (pinned to v1) continues using v1 stably
+   → advisory: "v2 available with breaking changes"
+```
+
+> **What makes this different from a shared document?**
+> ContextHub enforces visibility boundaries, tracks `derived_from` lineage,
+> and propagates changes through dependency graphs — not just "latest version wins."
+
+For full setup instructions, see the [OpenClaw Integration Guide](docs/setup/openclaw-integration-guide.md).
+
+---
+
+## Roadmap 🗺️
+
+- [x] **Phase 1 — MVP Core** ✅
+  Context store (`ctx://` URI routing), memory / skill / retrieval / propagation services, ACL with RLS + team hierarchy, Python SDK, OpenClaw context-engine plugin, data lake carrier, Tier 3 integration tests (P-1~P-8, C-1~C-5, A-1~A-4)
+- [ ] **Phase 2 — Explicit ACL & Audit** — ACL allow/deny/field mask overlay, audit logging, cross-team sharing
+- [ ] **Phase 3 — Feedback & Lifecycle** — Quality signals, automatic lifecycle transitions, long doc retrieval
+- [ ] **Phase 4 — Quantitative Evaluation (ECMB)** — SQL accuracy benchmarks, L0/L1/L2 vs. flat RAG A/B experiments
+- [ ] **Phase 5 — Production Hardening** — Multi-instance (`SKIP LOCKED`), MCP Server, real catalog connectors
+
+## Documentation 📄
 
 | Document | Description |
 |----------|-------------|
-| [OpenClaw Integration Guide](docs/openclaw-integration-guide.md) | Full setup for running ContextHub as OpenClaw's context engine |
-| [Local Setup & E2E Verification](docs/local-setup&end2end-verification-guide.md) | Development environment, database migrations, E2E demo |
-| [MVP Verification Plan](docs/mvp-verification-plan.md) | Three-layer verification: automated tests → API demo → runtime contract |
-| [Developer Guide](docs/development-guide.md) | API overview, tech stack, project structure |
+| [OpenClaw Integration Guide](docs/setup/openclaw-integration-guide.md) | Full 5-terminal setup for ContextHub + OpenClaw |
+| [Local Setup & E2E Verification](docs/setup/local-setup&end2end-verification-guide.md) | Dev environment, migrations, E2E demo |
+| [MVP Verification Plan](docs/mvp%20verification/mvp-verification-plan.md) | Three-layer verification: tests → API demo → runtime contract |
+| [Developer Guide](docs/design%20and%20development/development-guide.md) | API overview, SDK reference, tech stack, project structure |
 
-### Design Documents
+## References 📚
 
-The `plan/` directory contains 15 design documents covering the full system design:
-
-| Document | Topic |
-|----------|-------|
-| `00a-canonical-invariants` | Authoritative constraints: tenant uniqueness, type system, visibility rules, state machines, version immutability |
-| `01-storage-paradigm` | Unified storage: URI routing, PG core tables, pgvector, visibility SQL |
-| `02-information-model` | L0/L1/L2 three-layer model, memory classification, hotness scoring |
-| `03-datalake-management` | Data lake metadata: L2 structured sub-tables, CatalogConnector, Text-to-SQL context assembly |
-| `04-multi-agent-collaboration` | Team ownership, skill versioning, memory promotion |
-| `05-access-control-audit` | Two-layer access model (default + explicit ACL), field masking |
-| `06-change-propagation` | Event-driven propagation: outbox, three-tier rules, retry |
-| `07-feedback-lifecycle` | Feedback loop, quality signals, lifecycle governance |
-| `08-architecture` | System architecture, module responsibilities, data flows |
-| `09-implementation-plan` | MVP claim, verification matrix, tech stack |
-
-## References
-
-- [AI Agent Memory Architectures for Multi-Agent Systems](https://zylos.ai/research/2026-03-09-multi-agent-memory-architectures-shared-isolated-hierarchical) — Zylos Research, 2026
-- [How to Design Multi-Agent Memory Systems for Production](https://mem0.ai/blog/multi-agent-memory-systems) — Mem0, 2026
-- [Governed Memory: A Production Architecture for Multi-Agent Workflows](https://arxiv.org/abs/2603.17787) — Taheri, 2026
-- [Collaborative Memory: Multi-User Memory Sharing with Dynamic Access Control](https://arxiv.org/abs/2505.18279)
+- [AI Agent Memory Architectures](https://zylos.ai/research/2026-03-09-multi-agent-memory-architectures-shared-isolated-hierarchical) — Zylos Research, 2026
+- [Multi-Agent Memory Systems for Production](https://mem0.ai/blog/multi-agent-memory-systems) — Mem0, 2026
+- [Governed Memory](https://arxiv.org/abs/2603.17787) — Taheri, 2026
+- [Collaborative Memory](https://arxiv.org/abs/2505.18279) — Multi-user memory sharing with dynamic ACL
 - [OpenViking](https://github.com/volcengine/OpenViking) — Core design inspiration (personal-edition context management)
-- [Model Context Protocol (MCP)](https://www.anthropic.com/news/model-context-protocol) — Anthropic, 2024
+- [Model Context Protocol](https://www.anthropic.com/news/model-context-protocol) — Anthropic, 2024
 
-## License
+## License ⚖️
 
 [Apache License 2.0](LICENSE)

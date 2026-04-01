@@ -1,9 +1,9 @@
 # ContextHub — 开发者指南
 
-> API 参考、技术选型和项目结构，面向 ContextHub 贡献者。
+> API 参考、技术选型、SDK 使用和项目结构，面向 ContextHub 贡献者。
 >
-> 本地开发环境搭建请参考 [本地部署与端到端验证指南](local-setup&end2end-verification-guide-zh.md)。
-> OpenClaw 集成请参考 [OpenClaw 集成指南](openclaw-integration-guide-zh.md)。
+> 本地开发环境搭建请参考 [本地部署与端到端验证指南](../setup/local-setup&end2end-verification-guide-zh.md)。
+> OpenClaw 集成请参考 [OpenClaw 集成指南](../setup/openclaw-integration-guide-zh.md)。
 
 ## 快速开始
 
@@ -29,7 +29,7 @@ docker compose up -d
 
 启动 PostgreSQL 16 + pgvector，端口 5432（用户：`contexthub`，密码：`contexthub`，数据库：`contexthub`）。
 
-macOS 用户如不使用 Docker，请参考 [本地部署指南](local-setup&end2end-verification-guide-zh.md) 中的 Homebrew 安装方式。
+macOS 用户如不使用 Docker，请参考 [本地部署指南](../setup/local-setup&end2end-verification-guide-zh.md) 中的 Homebrew 安装方式。
 
 ### 3. 执行数据库迁移
 
@@ -44,6 +44,33 @@ uvicorn contexthub.main:app --reload
 ```
 
 API 地址：`http://localhost:8000`，OpenAPI 文档：`/docs`。
+
+## Python SDK
+
+无需 OpenClaw，直接通过编程方式访问：
+
+```python
+from contexthub_sdk import ContextHubClient
+
+client = ContextHubClient(base_url="http://localhost:8000", api_key="...")
+
+# 语义检索所有可见上下文
+results = await client.search("月度销售额统计", scope=["datalake"], top_k=5)
+
+# 记录成功案例为私有记忆
+memory = await client.add_memory(content="SELECT ... GROUP BY month", tags=["sql", "sales"])
+
+# 晋升为团队共享记忆
+promoted = await client.promote_memory(uri=memory.uri, target_team="engineering/backend")
+
+# 发布 Skill 新版本
+version = await client.publish_skill_version(
+    skill_uri="ctx://team/engineering/skills/sql-generator",
+    content="...",
+    changelog="新增 window function 支持",
+    is_breaking=True,
+)
+```
 
 ## API 概览
 
@@ -62,6 +89,16 @@ API 地址：`http://localhost:8000`，OpenAPI 文档：`/docs`。
 | POST | `/api/v1/skills/subscribe` | 订阅 Skill |
 | POST | `/api/v1/tools/{ls,read,grep,stat}` | Agent 工具调用端点 |
 
+## 与现有方案的差异
+
+| 框架 | 局限 | ContextHub 的解法 |
+|---|---|---|
+| **Mem0** | 平坦 user/agent/app 隔离；无团队层级、无变更传播、无版本管理；仅 SaaS | 层级团队 + 传播 + 版本 + 可私有化部署 |
+| **CrewAI / LangGraph** | 记忆系统面向单一框架内协调，无法跨框架、跨团队、跨时间管理组织级知识 | 框架无关的中间件，通过 SDK + 插件对接 |
+| **OpenAI Agents SDK** | 无内置记忆、无 ACL、无租户隔离 | 完整治理层 |
+| **Governed Memory (Personize.ai)** | 最接近，但聚焦 CRM 实体（contacts/companies/deals），非通用 Agent 上下文管理 | 通用 `ctx://` URI 抽象，支持任意上下文类型 |
+| **OpenViking** | 核心上下文管理理念（一切皆文件 + 记忆管线 + 向量检索），但定位个人版——不支持多 Agent 隔离、团队层级、ACL、变更传播 | 继承 OpenViking 的 URI + L0/L1/L2 抽象，扩展至企业多租户架构 |
+
 ## 技术选型
 
 | 组件 | 选择 | 理由 |
@@ -74,6 +111,12 @@ API 地址：`http://localhost:8000`，OpenAPI 文档：`/docs`。
 | Embedding | text-embedding-3-small (1536维) | L0 摘要级别，成本效果平衡 |
 | HTTP 客户端 | httpx | 轻量异步 HTTP，用于 embedding API 调用 |
 | 数据校验 | Pydantic v2 | 请求/响应模型自动校验 |
+
+## 设计原则
+
+- **URI 是逻辑地址，不是物理路径。** `ctx://datalake/prod/orders` 对应 PostgreSQL 中的一行，而非磁盘上的文件。Agent 感知到文件语义，系统提供数据库保证。
+- **元数据和内容同库。** L0/L1/L2 内容存在 PostgreSQL TEXT 列中（TOAST 自动处理大文本），与元数据在同一事务中原子更新。
+- **只有 L0 被向量化。** L0 摘要（~100 tokens）用于语义检索。L1/L2 通过 URI 从同一张表读取——无跨系统开销。
 
 ## 项目结构
 
@@ -129,3 +172,20 @@ bridge/
 ```
 
 Bridge 采用**双进程架构**：TS bridge 运行在 OpenClaw 的 Node.js gateway 内，通过 HTTP 将 context engine 调用转发到 Python sidecar。Sidecar 托管实际的 `ContextHubContextEngine` 插件，使用 Python SDK 与 ContextHub server 通信。这一设计避免了在 Node.js 中嵌入 Python，同时保持了插件接口的清晰。
+
+## 设计文档
+
+`plan/` 目录包含 15 篇设计文档，覆盖完整系统设计：
+
+| 文档 | 主题 |
+|------|------|
+| `00a-canonical-invariants` | 权威约束：租户唯一性、类型系统、可见性规则、状态机、版本不可变性 |
+| `01-storage-paradigm` | 统一存储：URI 路由、PG 核心表、pgvector、可见性 SQL |
+| `02-information-model` | L0/L1/L2 三层模型、记忆分类、热度评分 |
+| `03-datalake-management` | 数据湖表管理：L2 结构化子表、CatalogConnector、Text-to-SQL 上下文组装 |
+| `04-multi-agent-collaboration` | 团队所有权、Skill 版本管理、记忆晋升 |
+| `05-access-control-audit` | 两层访问模型（默认 + 显式 ACL）、字段脱敏 |
+| `06-change-propagation` | 事件驱动传播：outbox、三级规则、重试 |
+| `07-feedback-lifecycle` | 反馈闭环、质量信号、生命周期治理 |
+| `08-architecture` | 系统架构、模块职责、数据流 |
+| `09-implementation-plan` | MVP 定义、验证矩阵、技术选型 |

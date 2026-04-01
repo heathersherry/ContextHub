@@ -1,9 +1,9 @@
 # ContextHub — Developer Guide
 
-> API reference, tech stack, and project structure for ContextHub contributors.
+> API reference, tech stack, SDK usage, and project structure for ContextHub contributors.
 >
-> For local development setup, see [Local Setup & E2E Verification Guide](local-setup&end2end-verification-guide.md).
-> For OpenClaw integration setup, see [OpenClaw Integration Guide](openclaw-integration-guide.md).
+> For local development setup, see [Local Setup & E2E Verification Guide](../setup/local-setup&end2end-verification-guide.md).
+> For OpenClaw integration setup, see [OpenClaw Integration Guide](../setup/openclaw-integration-guide.md).
 
 ## Quick Start
 
@@ -29,7 +29,7 @@ docker compose up -d
 
 This starts PostgreSQL 16 with pgvector on port 5432 (user: `contexthub`, password: `contexthub`, database: `contexthub`).
 
-For macOS without Docker, see the [Local Setup Guide](local-setup&end2end-verification-guide.md) for Homebrew-based PostgreSQL installation.
+For macOS without Docker, see the [Local Setup Guide](../setup/local-setup&end2end-verification-guide.md) for Homebrew-based PostgreSQL installation.
 
 ### 3. Run database migrations
 
@@ -44,6 +44,33 @@ uvicorn contexthub.main:app --reload
 ```
 
 The API is available at `http://localhost:8000`. OpenAPI docs at `/docs`.
+
+## Python SDK
+
+For direct programmatic access without OpenClaw:
+
+```python
+from contexthub_sdk import ContextHubClient
+
+client = ContextHubClient(base_url="http://localhost:8000", api_key="...")
+
+# Semantic search across all visible contexts
+results = await client.search("monthly sales summary", scope=["datalake"], top_k=5)
+
+# Record a successful case as private memory
+memory = await client.add_memory(content="SELECT ... GROUP BY month", tags=["sql", "sales"])
+
+# Promote to team-shared memory
+promoted = await client.promote_memory(uri=memory.uri, target_team="engineering/backend")
+
+# Publish a new skill version
+version = await client.publish_skill_version(
+    skill_uri="ctx://team/engineering/skills/sql-generator",
+    content="...",
+    changelog="Added window function support",
+    is_breaking=True,
+)
+```
 
 ## API Overview
 
@@ -62,6 +89,16 @@ All requests require `X-Account-Id`, `X-Agent-Id`, and `X-API-Key` headers for t
 | POST | `/api/v1/skills/subscribe` | Subscribe to a skill |
 | POST | `/api/v1/tools/{ls,read,grep,stat}` | Agent tool-use endpoints |
 
+## How ContextHub Differs from Existing Solutions
+
+| Framework | Limitation | ContextHub's Answer |
+|---|---|---|
+| **Mem0** | Flat user/agent/app isolation; no team hierarchy, no change propagation, no versioning; SaaS-only | Hierarchical teams + propagation + versions + self-hosted |
+| **CrewAI / LangGraph** | Memory systems scoped to a single framework; can't manage cross-framework, cross-team, cross-time organizational knowledge | Framework-agnostic middleware via SDK + plugin |
+| **OpenAI Agents SDK** | No built-in memory, no ACL, no tenant isolation | Full governance layer |
+| **Governed Memory (Personize.ai)** | Closest approach but focused on CRM entities (contacts/companies/deals), not general agent context | General-purpose `ctx://` URI abstraction for any context type |
+| **OpenViking** | Core context management concepts (everything-is-a-file + memory pipeline + vector search) but personal-edition only — no multi-agent isolation, team hierarchy, ACL, or change propagation | Inherits OpenViking's URI + L0/L1/L2 abstractions; extends to enterprise multi-tenant architecture |
+
 ## Tech Stack
 
 | Component | Choice | Why |
@@ -74,6 +111,12 @@ All requests require `X-Account-Id`, `X-Agent-Id`, and `X-API-Key` headers for t
 | Embedding | text-embedding-3-small (1536-dim) | Cost-effective for L0 summaries |
 | HTTP Client | httpx | Lightweight async HTTP for embedding API calls |
 | Validation | Pydantic v2 | Request/response models with automatic validation |
+
+## Design Principles
+
+- **URI is a logical address, not a physical path.** `ctx://datalake/prod/orders` maps to a row in PostgreSQL, not a file on disk. Agents perceive file semantics; the system provides database guarantees.
+- **Metadata and content co-located.** L0/L1/L2 content lives in PostgreSQL TEXT columns (TOAST handles large text), updated atomically with metadata in the same transaction.
+- **Only L0 is vectorized.** L0 summaries (~100 tokens) are embedded for semantic search. L1/L2 are retrieved by URI from the same table — no cross-system overhead.
 
 ## Project Structure
 
@@ -129,3 +172,20 @@ bridge/
 ```
 
 The bridge uses a **two-process architecture**: the TS bridge runs inside the OpenClaw Node.js gateway, forwarding context engine calls via HTTP to a Python sidecar. The sidecar hosts the actual `ContextHubContextEngine` plugin, which uses the Python SDK to communicate with the ContextHub server. This design avoids embedding Python in Node.js while keeping the plugin interface clean.
+
+## Design Documents
+
+The `plan/` directory contains 15 design documents covering the full system design:
+
+| Document | Topic |
+|----------|-------|
+| `00a-canonical-invariants` | Authoritative constraints: tenant uniqueness, type system, visibility rules, state machines, version immutability |
+| `01-storage-paradigm` | Unified storage: URI routing, PG core tables, pgvector, visibility SQL |
+| `02-information-model` | L0/L1/L2 three-layer model, memory classification, hotness scoring |
+| `03-datalake-management` | Data lake metadata: L2 structured sub-tables, CatalogConnector, Text-to-SQL context assembly |
+| `04-multi-agent-collaboration` | Team ownership, skill versioning, memory promotion |
+| `05-access-control-audit` | Two-layer access model (default + explicit ACL), field masking |
+| `06-change-propagation` | Event-driven propagation: outbox, three-tier rules, retry |
+| `07-feedback-lifecycle` | Feedback loop, quality signals, lifecycle governance |
+| `08-architecture` | System architecture, module responsibilities, data flows |
+| `09-implementation-plan` | MVP claim, verification matrix, tech stack |
