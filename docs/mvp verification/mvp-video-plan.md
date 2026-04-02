@@ -68,8 +68,7 @@ pnpm openclaw tui
 请记住：春季促销活动规则 —— 满 300 减 50，可与会员折扣叠加，
 不可与新人专享券同时使用。活动时间 4 月 1 日至 15 日。
 ```
-
-
+<img width="1542" height="456" alt="image" src="https://github.com/user-attachments/assets/00b400f2-d7c3-472c-86e1-3fa10ec3af41" />
 
 观察 Terminal 3 sidecar 日志出现 `dispatch contexthub_store` 调用。
 
@@ -81,6 +80,9 @@ pnpm openclaw tui
 ```
 请把刚才存储的促销规则晋升到团队共享空间 engineering，让项目组所有人都能看到。
 ```
+
+<img width="1552" height="250" alt="image" src="https://github.com/user-attachments/assets/89680dba-1777-48bb-9805-fb7e1345b8d2" />
+
 
 观察 sidecar 日志出现 `dispatch contexthub_promote` 调用。
 
@@ -97,6 +99,9 @@ pnpm openclaw tui
 60%，这个底线不要对外透露。这条只留在我的私有空间，不要共享。
 ```
 
+<img width="1572" height="276" alt="image" src="https://github.com/user-attachments/assets/bdba01f5-46fd-42fa-b9c5-0d0acbdbc856" />
+
+
 观察 sidecar 日志出现 `dispatch contexthub_store`，但**不会**出现
 `contexthub_promote`。
 
@@ -107,6 +112,8 @@ pnpm openclaw tui
 ```
 请列出我的私有空间的所有记忆
 ```
+
+<img width="1852" height="488" alt="image" src="https://github.com/user-attachments/assets/f0a2fcc9-bfa8-4b5c-9a79-bfa44f70cf20" />
 
 预期：列表中包含两条记忆 —— Step D1 的促销活动规则和 Step D3 的
 供应商谈判底价。这为后续的隔离验证提供了对照基线。
@@ -145,6 +152,8 @@ pnpm openclaw tui
 比 A 方案（列表展示）高约 8%，但数据还需要二次验证，暂不对外发布。
 ```
 
+<img width="1888" height="286" alt="image" src="https://github.com/user-attachments/assets/fb2c94a4-4114-46d3-8a83-0456e3c41b5e" />
+
 观察 sidecar 日志出现 `dispatch contexthub_store`。
 
 **Step D6 — 验证隔离：数据分析师的私有空间不包含运营负责人的记忆**
@@ -154,6 +163,9 @@ pnpm openclaw tui
 ```
 请列出我的私有空间的所有记忆
 ```
+
+<img width="1900" height="346" alt="image" src="https://github.com/user-attachments/assets/bd14ff32-fe8f-4aff-8bd2-6c0754dfcd8a" />
+
 
 预期：
 - **只包含** Step D5 刚存的 A/B 测试初步结果
@@ -171,6 +183,9 @@ pnpm openclaw tui
 请列出 ctx://team/engineering/memories/shared_knowledge 下的内容
 ```
 
+<img width="1706" height="392" alt="image" src="https://github.com/user-attachments/assets/5f11fee7-51c2-4fbe-9247-8237a4b08340" />
+
+
 预期：列表中包含运营负责人在 Step D2 晋升的春季促销规则 —— 这
 证明跨 Agent 的上下文晋升在 runtime 中生效。
 
@@ -183,6 +198,9 @@ pnpm openclaw tui
 是下单高峰期，建议将促销推送时间安排在 19:30。
 然后把这条晋升到团队共享空间 engineering。
 ```
+
+<img width="1662" height="468" alt="image" src="https://github.com/user-attachments/assets/1ae15bce-8296-47e0-81f0-9a88f5e6c8dc" />
+
 
 观察 sidecar 日志依次出现 `dispatch contexthub_store` 和
 `dispatch contexthub_promote`。
@@ -198,6 +216,9 @@ pnpm openclaw tui
 ```
 请列出 ctx://team/engineering/memories/shared_knowledge 下的内容
 ```
+
+<img width="1598" height="410" alt="image" src="https://github.com/user-attachments/assets/fe4679e0-8454-49dd-8874-f8d6dbe6499a" />
+
 
 预期：
 - 包含运营负责人晋升的**春季促销规则**（来自 Step D2）
@@ -220,6 +241,9 @@ pnpm openclaw tui
 ```
 请列出 ctx://team/engineering/memories/shared_knowledge 下的内容
 ```
+
+<img width="2010" height="450" alt="image" src="https://github.com/user-attachments/assets/5d49284b-0e50-4053-b8ce-00b500241adc" />
+
 
 预期：
 - 运营负责人也能看到数据分析师在 Step D8 晋升的促销推送时间建议
