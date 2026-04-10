@@ -81,16 +81,18 @@ async def main():
 
         # ── Step 1: Seed — query-agent writes a context with sensitive data ──
         step(1, "query-agent creates a context with sensitive content")
+        supplier_content = (
+            "供应商成本明细：春季促销供货底价不低于零售价的 60%，"
+            "核心供应商 A 的折扣为 55%，供应商 B 的折扣为 58%。"
+            "谈判底线：不可接受低于 50% 的任何报价。"
+        )
         r = await http.post("/api/v1/contexts", json={
             "uri": "ctx://team/engineering/docs/supplier-costs",
             "context_type": "resource",
             "scope": "team",
             "owner_space": "engineering",
-            "l2_content": (
-                "供应商成本明细：春季促销供货底价不低于零售价的 60%，"
-                "核心供应商 A 的折扣为 55%，供应商 B 的折扣为 58%。"
-                "谈判底线：不可接受低于 50% 的任何报价。"
-            ),
+            "l1_content": supplier_content,
+            "l2_content": supplier_content,
         }, headers=qa)
         if r.status_code == 409:
             print("  Context already exists, continuing…")
@@ -111,7 +113,7 @@ async def main():
         step(2, "Admin creates DENY policy → block analysis-agent")
         r = await http.post("/api/v1/admin/policies", json={
             "resource_uri_pattern": supplier_uri,
-            "principal": "agent:analysis-agent",
+            "principal": "analysis-agent",
             "effect": "deny",
             "actions": ["read"],
             "priority": 10,
@@ -147,7 +149,7 @@ async def main():
         # Create allow policy with field_masks
         r = await http.post("/api/v1/admin/policies", json={
             "resource_uri_pattern": supplier_uri,
-            "principal": "agent:analysis-agent",
+            "principal": "analysis-agent",
             "effect": "allow",
             "actions": ["read"],
             "field_masks": ["60%", "55%", "58%", "50%", "底价", "底线"],
@@ -176,12 +178,14 @@ async def main():
 
         # Create a new context specifically for share demo
         share_target_uri = "ctx://team/engineering/docs/api-standards"
+        api_standards_content = "API 设计标准：RESTful 接口规范、分页协议、错误码体系。"
         r = await http.post("/api/v1/contexts", json={
             "uri": share_target_uri,
             "context_type": "resource",
             "scope": "team",
             "owner_space": "engineering",
-            "l2_content": "API 设计标准：RESTful 接口规范、分页协议、错误码体系。",
+            "l1_content": api_standards_content,
+            "l2_content": api_standards_content,
         }, headers=qa)
         if r.status_code == 409:
             print("  Share target context already exists, continuing…")
@@ -192,7 +196,7 @@ async def main():
         # Create share grant via /shares API
         r = await http.post("/api/v1/shares", json={
             "source_uri": share_target_uri,
-            "target_principal": "agent:analysis-agent",
+            "target_principal": "analysis-agent",
         }, headers=qa)
         assert r.status_code == 201, f"Share grant failed: {r.status_code}: {r.text}"
         share_grant = r.json()
@@ -227,7 +231,7 @@ async def main():
         # Re-create a deny policy on the supplier-costs for analysis-agent
         r = await http.post("/api/v1/admin/policies", json={
             "resource_uri_pattern": "ctx://agent/analysis-agent/memories/*",
-            "principal": "agent:analysis-agent",
+            "principal": "analysis-agent",
             "effect": "deny",
             "actions": ["read"],
             "priority": 10,
