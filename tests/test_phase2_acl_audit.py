@@ -697,6 +697,89 @@ def test_sdk_delete_patch_accept_optional_version():
     assert patch_sig.parameters["expected_version"].default is None
 
 
+# ── Regression: conditions empty-object and audit time filters ──────────
+
+
+@pytest.mark.asyncio
+async def test_http_create_policy_preserves_empty_conditions(http_client, db_pool):
+    """POST /admin/policies with conditions={} must store {} not null."""
+    async with db_pool.acquire() as conn:
+        await conn.execute("""
+            INSERT INTO team_memberships (agent_id, team_id, role, access)
+            VALUES ('query-agent', '00000000-0000-0000-0000-000000000003', 'admin', 'read_write')
+            ON CONFLICT (agent_id, team_id) DO UPDATE SET role = 'admin'
+        """)
+
+    resp = await http_client.post(
+        "/api/v1/admin/policies",
+        headers=ADMIN_HEADERS,
+        json={
+            "resource_uri_pattern": "ctx://test/empty-cond/*",
+            "principal": "query-agent",
+            "effect": "allow",
+            "actions": ["read"],
+            "conditions": {},
+        },
+    )
+    assert resp.status_code == 201
+    body = resp.json()
+    assert body["conditions"] == {}, (
+        f"Empty conditions object was lost; got {body['conditions']!r}"
+    )
+    policy_id = body["id"]
+
+    # Round-trip: GET must also return {}
+    resp = await http_client.get(
+        f"/api/v1/admin/policies/{policy_id}", headers=ADMIN_HEADERS,
+    )
+    assert resp.status_code == 200
+    assert resp.json()["conditions"] == {}
+
+    # Cleanup
+    await http_client.delete(
+        f"/api/v1/admin/policies/{policy_id}", headers=ADMIN_HEADERS,
+    )
+
+
+@pytest.mark.asyncio
+async def test_http_audit_time_filters(http_client, db_pool):
+    """GET /admin/audit with valid ISO start_time returns 200; invalid returns 422."""
+    async with db_pool.acquire() as conn:
+        await conn.execute("""
+            INSERT INTO team_memberships (agent_id, team_id, role, access)
+            VALUES ('query-agent', '00000000-0000-0000-0000-000000000003', 'admin', 'read_write')
+            ON CONFLICT (agent_id, team_id) DO UPDATE SET role = 'admin'
+        """)
+
+    # Valid ISO timestamp → 200
+    resp = await http_client.get(
+        "/api/v1/admin/audit",
+        headers=ADMIN_HEADERS,
+        params={"start_time": "2026-01-01T00:00:00Z"},
+    )
+    assert resp.status_code == 200
+    assert isinstance(resp.json(), list)
+
+    # Both start and end → 200
+    resp = await http_client.get(
+        "/api/v1/admin/audit",
+        headers=ADMIN_HEADERS,
+        params={
+            "start_time": "2026-01-01T00:00:00Z",
+            "end_time": "2026-12-31T23:59:59Z",
+        },
+    )
+    assert resp.status_code == 200
+
+    # Invalid timestamp → 422 (FastAPI validation), not 500
+    resp = await http_client.get(
+        "/api/v1/admin/audit",
+        headers=ADMIN_HEADERS,
+        params={"start_time": "not-a-time"},
+    )
+    assert resp.status_code == 422
+
+
 # ── Regression test ─────────────────────────────────────────────────────
 
 
