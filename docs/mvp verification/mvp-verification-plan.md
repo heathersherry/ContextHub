@@ -3,9 +3,13 @@
 > 本文档是最短路径的验证计划。目标：以最小投入证明 ContextHub 作为企业级
 > 多 Agent 协作上下文中间件的核心价值。
 >
-> **验证边界**：本次验证的是"企业上下文治理 MVP 内核"（隔离、共享晋升、
-> 版本治理、变更传播、运行时集成），不等同于完整 enterprise-ready 产品
->（ACL、审计、HA、合规等属于后续迭代）。
+> **验证边界**：本次验证覆盖两个阶段的能力——
+>
+> - **Phase 1 — 平台内核**：隔离、共享晋升、版本治理、变更传播、运行时集成
+> - **Phase 2 — 企业治理**：显式 ACL（读覆盖层）、关键字遮蔽、分层审计、
+>   免复制跨团队共享（Share Grant）、Admin API
+>
+> 不等同于完整 enterprise-ready 产品（HA、多区域、合规认证等属于后续迭代）。
 
 ## 前置状态
 
@@ -94,7 +98,25 @@
 | A-3 | 子团队默认不向父暴露 | PASS |
 | A-4 | promote 后跨 Agent 可见 | PASS |
 
-**结论：权限泄漏率 = 0，MVP 退出标准的功能正确性维度已满足。**
+**结论：权限泄漏率 = 0，Phase 1 MVP 退出标准的功能正确性维度已满足。**
+
+### Phase 2 企业治理正确性（A-5 ~ A-15）
+
+> 以下用例对应 Phase 2 新增能力，由 `tests/test_phase2_acl_audit.py` 覆盖。
+
+| 用例 | 描述 | 状态 |
+|------|------|------|
+| A-5 | Deny policy 覆盖默认可见性 | 待验证 |
+| A-6 | Allow policy 暴露默认不可见的内容 | 待验证 |
+| A-7 | Deny-override 优先级（allow + deny 同时存在 → deny 胜出） | 待验证 |
+| A-8 | 关键字遮蔽生效（field_masks → `[MASKED]`） | 待验证 |
+| A-9 | 无 policy 时退回 Phase 1 默认行为 | 待验证 |
+| A-10 | Tier 1 审计（写操作 fail-closed） | 待验证 |
+| A-11 | Tier 2 审计（读操作 best-effort） | 待验证 |
+| A-12 | ACL deny 产生 access_denied 审计记录 | 待验证 |
+| A-13 | Share grant / revoke 生效 | 待验证 |
+| A-14 | Share 不复制（同 URI，无新 context 行） | 待验证 |
+| A-15 | 写操作不受 read-deny 影响 | 待验证 |
 
 ### 产出物
 
@@ -173,6 +195,42 @@ print(f"  变更收敛时延: {convergence_ms:.0f}ms")
 
 - `demo_e2e.py` 的完整 stdout
 - `convergence_ms` 数值
+
+---
+
+## 第二层补充：Phase 2 治理 API 闭环 demo（待做）
+
+> 本节对应 Phase 2 新增能力，使用 `scripts/demo_phase2.py` 验证。
+> 需在第二层 `demo_e2e.py` 之后运行。
+
+目标：证明 Phase 2 的 **ACL deny、关键字遮蔽、Share Grant/Revoke、
+审计日志、写操作豁免** 在 Server 端完整跑通。
+
+### 闭环步骤（对应 demo_phase2.py）
+
+| Step | 动作 | API | 验证点 |
+|------|------|-----|--------|
+| 1 | query-agent 创建含敏感信息的上下文 | `POST /api/v1/contexts` | 创建成功，analysis-agent 默认可读（Phase 1 基线） |
+| 2 | Admin 创建 deny policy | `POST /api/v1/admin/policies` | deny 策略对 analysis-agent 生效 |
+| 3 | analysis-agent 尝试读取被 deny 的内容 | `POST /api/v1/tools/read` | 返回 403 Forbidden |
+| 4 | Admin 创建含 field_masks 的 allow 策略 | `POST /api/v1/admin/policies` | 遮蔽策略创建成功 |
+| 5 | analysis-agent 读取 → 敏感词被遮蔽 | `POST /api/v1/tools/read` | 内容中 "60%" 等被替换为 `[MASKED]` |
+| 6 | Share grant：授权 analysis-agent 读特定资源 | `POST /api/v1/shares` | 授权成功，analysis-agent 可读 |
+| 7 | Share revoke：撤销授权 | `DELETE /api/v1/shares/{id}` | 撤销成功 |
+| 8 | Read-deny 不阻止写操作 | `POST /api/v1/memories` | analysis-agent 在有 read-deny 时仍可写 |
+| 9 | 查询审计日志 | `GET /api/v1/admin/audit` | 上述操作全部有记录 |
+| 10 | 列出当前策略 | `GET /api/v1/admin/policies` | 显示活跃策略清单 |
+
+### 验收标准
+
+1. `python scripts/demo_phase2.py` 完整退出，返回码 0
+2. 输出包含：deny → 403、masking → `[MASKED]`、share → grant/revoke、
+   audit log 非空
+3. 写操作在 read-deny 下仍返回 201
+
+### 产出物
+
+- `demo_phase2.py` 的完整 stdout
 
 ---
 
@@ -686,6 +744,164 @@ pnpm openclaw tui
 | 双向协作 | D8→D9（→D10） | 共享空间同时包含促销规则 + 推送时间建议 |
 | 晋升选择性 | D3 vs D9 | 未晋升的敏感信息不出现在共享空间 |
 
+#### Phase E：企业治理全景（9 步，Phase 2 新增能力）
+
+> Phase E 演示的所有能力均来自 **Phase 2**（显式 ACL、关键字遮蔽、
+> 分层审计、免复制跨团队共享），是 Phase D（Phase 1 协作全景）的
+> 治理层升级。建议在 Phase D 之后紧接着录制。
+>
+> **双视角演示**：管理员在 curl 终端操作策略（Admin API 无 TUI 工具），
+> 数据分析师在 TUI 中实时体验效果。两个窗口同时可见，形成直观对比。
+
+##### 故事延续
+
+Phase D 结束后，运营负责人发现供应商谈判底价虽然在私有空间，
+但为了更高的安全保障，决定：
+
+1. 通过 Admin API 给供应商成本文档设置 **deny policy**，即使
+   未来误操作 promote 也不会泄漏
+2. 给已共享的促销规则设置 **关键字遮蔽**（`field_masks`），让
+   外部协作者看到规则但看不到具体折扣比例
+3. 通过 **Share Grant** 把 API 规范文档直接授权给数据分析师，
+   不需要把分析师加入整个工程部
+4. 查看 **审计日志**，确认所有操作都有记录
+
+##### 前置准备
+
+1. **先完成 Phase D**（或至少跑一次 `demo_phase2.py` 确保 query-agent
+   有 admin 角色）
+2. 保持 5 终端栈运行，Sidecar 以 `--agent-id analysis-agent` 运行
+3. 额外开一个终端（Terminal 6）用于 curl 管理员操作
+
+##### 验证步骤（curl 管理操作 + TUI 体验验证）
+
+**Step E1 — 【TUI 基线】analysis-agent 确认当前可读供应商成本**
+
+在 TUI 中输入：
+
+```
+请读取 ctx://team/engineering/docs/supplier-costs 的内容
+```
+
+预期：成功返回供应商成本明细（这是 deny 之前的基线）。
+
+**Step E2 — 【curl】管理员创建 deny policy**
+
+```bash
+curl -X POST http://localhost:8000/api/v1/admin/policies \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: changeme" \
+  -H "X-Account-Id: acme" \
+  -H "X-Agent-Id: query-agent" \
+  -d '{
+    "resource_uri_pattern": "ctx://team/engineering/docs/supplier-costs",
+    "principal": "agent:analysis-agent",
+    "effect": "deny",
+    "actions": ["read"],
+    "priority": 10
+  }'
+```
+
+预期：返回 201 + policy 对象。记录 `id`（后续删除需要）。
+
+**Step E3 — 【TUI 体验】analysis-agent 再次读取 → 被拦截**
+
+在 TUI 中输入：
+
+```
+请再读一次 ctx://team/engineering/docs/supplier-costs
+```
+
+预期：agent 调用 `read` 但失败，Server 日志出现 403。
+同一个 agent、同一条命令，设了 deny 后立刻读不到了。
+
+**Step E4 — 【curl】删除 deny + 创建遮蔽策略**
+
+```bash
+# 删除 deny
+curl -X DELETE http://localhost:8000/api/v1/admin/policies/<E2_POLICY_ID> \
+  -H "X-API-Key: changeme" -H "X-Account-Id: acme" -H "X-Agent-Id: query-agent"
+
+# 创建 allow + field_masks
+curl -X POST http://localhost:8000/api/v1/admin/policies \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: changeme" \
+  -H "X-Account-Id: acme" \
+  -H "X-Agent-Id: query-agent" \
+  -d '{
+    "resource_uri_pattern": "ctx://team/engineering/docs/supplier-costs",
+    "principal": "agent:analysis-agent",
+    "effect": "allow",
+    "actions": ["read"],
+    "field_masks": ["60%", "55%", "58%", "50%", "底价", "底线"],
+    "priority": 5
+  }'
+```
+
+**Step E5 — 【TUI 体验】analysis-agent 读到遮蔽后的内容**
+
+在 TUI 中输入：
+
+```
+请读取 ctx://team/engineering/docs/supplier-costs 的内容
+```
+
+预期：成功返回，但 "60%"、"底价" 等敏感词显示为 `[MASKED]`。
+
+**Step E6 — 【curl】Share grant 授权**
+
+```bash
+curl -X POST http://localhost:8000/api/v1/shares \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: changeme" \
+  -H "X-Account-Id: acme" \
+  -H "X-Agent-Id: query-agent" \
+  -d '{
+    "source_uri": "ctx://team/engineering/docs/api-standards",
+    "target_principal": "agent:analysis-agent"
+  }'
+```
+
+预期：返回 201 + policy 对象（`conditions.kind = "share_grant"`）。
+
+**Step E7 — 【TUI 体验】analysis-agent 读取共享的 API 规范**
+
+在 TUI 中输入：
+
+```
+请读取 ctx://team/engineering/docs/api-standards 的内容
+```
+
+预期：成功返回 API 规范内容。
+
+**Step E8 — 【TUI】analysis-agent 浏览共享空间，产生审计记录**
+
+在 TUI 中输入：
+
+```
+请列出 ctx://team/engineering/memories/shared_knowledge
+```
+
+**Step E9 — 【curl】查看审计日志**
+
+```bash
+curl "http://localhost:8000/api/v1/admin/audit?limit=20" \
+  -H "X-API-Key: changeme" \
+  -H "X-Account-Id: acme" \
+  -H "X-Agent-Id: query-agent" | python3 -m json.tool
+```
+
+预期：包含 `policy_change`、`access_denied`、`read`、`ls` 等审计记录。
+
+##### Phase E 验证要点总结
+
+| 验证点 | 管理操作（curl） | 体验验证（TUI） | 来源 |
+|--------|-----------------|-----------------|------|
+| ACL 拦截 | E2 创建 deny | E1 基线可读 → E3 被拒 | Phase 2 |
+| 关键字遮蔽 | E4 创建 masking 策略 | E5 敏感词 → `[MASKED]` | Phase 2 |
+| 免复制共享 | E6 创建 share grant | E7 原本不可见 → 可读 | Phase 2 |
+| 审计合规 | E9 查询 audit_log | E8 产生审计记录 | Phase 2 |
+
 #### TUI 录屏注意事项
 
 1. **Phase A + B（4 步）是最小展示**，足以证明跨 Agent 协作在
@@ -694,8 +910,11 @@ pnpm openclaw tui
    推荐在正式 demo 中使用；需要 1-2 次 agent 切换（Step D10
    为可选，省略则只需 1 次切换）
 3. Phase C（2 步）可独立录制，展示 skill 版本治理能力
-4. 如果模型没有主动调用工具，不代表产品失败 —— 这是 prompt
-   问题，不是 ContextHub 问题。第三层的 curl 验证才是硬性证据
+4. **Phase E（9 步）是治理层展示**（Phase 2 新增），curl + TUI 双视角，
+   演示 ACL deny、关键字遮蔽、免复制共享和审计日志，推荐在 Phase D 之后录制
+5. 如果模型没有主动调用工具，不代表产品失败 —— 这是 prompt
+   问题，不是 ContextHub 问题。可以更直接地说
+   "请调用 read 工具，URI 是 ctx://..."
 
 ### 产出物
 
@@ -707,15 +926,28 @@ pnpm openclaw tui
 
 ## 关键系统指标汇总
 
+### Phase 1 指标
+
 | 指标 | 来源 | 目标 |
 |------|------|------|
 | 传播命中率 | 第一层 P-1~P-6 全 pass → 推导 | 100% |
-| 权限泄漏率 | 第一层 A-1~A-4 全 pass → 推导 | 0% |
+| 权限泄漏率（默认 ACL） | 第一层 A-1~A-4 全 pass → 推导 | 0% |
 | pinned/latest 解析正确性 | 第一层 C-4/C-5 全 pass → 推导 | 100% |
 | 事件丢失恢复能力 | 第一层 P-7/P-8 全 pass → 推导 | 100% |
 | 变更收敛时延 | 第二层 Step 5-6 计时 → 观测 | < 2s |
 | 跨 Agent 复用信号 | 第三层 Step 3 assemble → 观测 | ≥ 1 条 |
 | 运行时合同成立 | 第三层 4 个 dispatch/assemble → 观测 | 全通过 |
+
+### Phase 2 指标
+
+| 指标 | 来源 | 目标 |
+|------|------|------|
+| ACL deny 拦截率 | 第一层 A-5~A-7 + demo_phase2.py Step 3 | 100% |
+| 关键字遮蔽生效率 | 第一层 A-8 + demo_phase2.py Step 5 | 100% |
+| 审计完整性 | 第一层 A-10~A-12 + demo_phase2.py Step 9 | 策略/拒绝/读均有记录 |
+| Share grant/revoke 正确性 | 第一层 A-13~A-14 + demo_phase2.py Step 6-7 | grant→可读, revoke→不可读, 无复制 |
+| 写操作豁免 | 第一层 A-15 + demo_phase2.py Step 8 | read-deny 不影响写 |
+| Phase 1 回归 | A-1~A-4, P-*, C-* 全部仍 pass | 0 regressions |
 
 > **不采集**：token 节省率、EX/accuracy benchmark、统计显著性收益
 >（属于 ECMB 后续工作）。
@@ -726,23 +958,28 @@ pnpm openclaw tui
 
 | 产出物 | 说明 |
 |--------|------|
-| 自动化测试报告 | `pytest -q` 原始输出（以当次实际 pass 数为准） |
-| API 闭环 demo | `demo_e2e.py` stdout + `convergence_ms` |
-| 运行时合同验证 | 4 组 curl 请求/响应 + sidecar 日志 |
-| 关键指标表 | 7 个系统指标 + 数值 |
-| 验证边界声明 | 明确列出本次未验证项（ACL、审计、HA、benchmark） |
-| TUI 录屏（可选） | 展示材料，不作为退出门槛 |
+| 自动化测试报告 | `pytest -q` 原始输出（含 Phase 1 + Phase 2 用例） |
+| Phase 1 API 闭环 demo | `demo_e2e.py` stdout + `convergence_ms` |
+| Phase 2 治理 API demo | `demo_phase2.py` stdout（ACL deny/masking/share/audit） |
+| 运行时合同验证 | 4 组 curl 请求/响应 + sidecar 日志（Phase A-D） |
+| 治理 curl 验证 | 6 组 curl 请求/响应（Phase E：ACL/masking/share/audit） |
+| 关键指标表 | Phase 1（7 项）+ Phase 2（6 项）系统指标 + 数值 |
+| 验证边界声明 | 已验证 Phase 1 + Phase 2；未验证项：HA、多区域、合规认证 |
+| TUI 录屏（可选） | Phase D + Phase E 展示材料，不作为退出门槛 |
 | 功能对比表（可选） | vs Mem0 / CrewAI / Governed Memory |
 
 ---
 
 ## 建议执行顺序
 
-1. **第一层** — 跑 `pytest -q`，截图保存原始输出（已完成，再跑一次确认）
-2. **第二层** — 给 `demo_e2e.py` 加收敛计时代码（约 10 行），然后执行
-3. **第三层** — 启动完整 5 终端栈，按顺序执行 4 个 curl
+1. **第一层** — 跑 `pytest -q`，截图保存原始输出（含 Phase 2 A-5~A-15）
+2. **第二层** — 执行 `demo_e2e.py`（Phase 1 闭环），然后执行
+   `demo_phase2.py`（Phase 2 治理闭环）
+3. **第三层** — 启动完整 5 终端栈，按顺序执行 Phase A-D（4+10 步），
+   然后执行 Phase E（6 步 curl）
 
-三层全部通过后，可以写：
+全部通过后，可以写：
 
 > ContextHub 已验证其作为企业多 Agent 协作的上下文治理中间件核心能力，
-> 包括隔离、共享晋升、版本治理、变更传播与运行时集成。
+> 包括隔离、共享晋升、版本治理、变更传播、运行时集成（Phase 1），
+> 以及显式 ACL 读控制、关键字遮蔽、分层审计、免复制跨团队共享（Phase 2）。
