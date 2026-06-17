@@ -7,10 +7,18 @@ Gate with CONTEXTHUB_INTEGRATION=1 environment variable.
 from __future__ import annotations
 
 import os
+import sys
 import uuid
+from pathlib import Path
 
 import pytest
 import pytest_asyncio
+
+_ROOT = Path(__file__).resolve().parents[1]
+_SRC = _ROOT / "src"
+for _path in (str(_ROOT), str(_SRC)):
+    if _path not in sys.path:
+        sys.path.insert(0, _path)
 
 # Skip all integration tests unless explicitly enabled
 _INTEGRATION = os.environ.get("CONTEXTHUB_INTEGRATION", "").strip()
