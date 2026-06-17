@@ -63,3 +63,5 @@ logs/
 # Project-local planning & prompts (not versioned)
 task-prompt/
 data/docs/
+plan/
+roadmap/

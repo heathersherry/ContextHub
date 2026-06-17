@@ -16,6 +16,7 @@ class AuditAction(StrEnum):
     ACCESS_DENIED = "access_denied"
     POLICY_CHANGE = "policy_change"
     LIFECYCLE_TRANSITION = "lifecycle_transition"
+    ENFORCEMENT = "enforcement"
     # Tier 2: best-effort
     READ = "read"
     SEARCH = "search"

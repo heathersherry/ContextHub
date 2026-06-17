@@ -23,6 +23,7 @@ from contexthub.services.catalog_sync_service import CatalogSyncService
 from contexthub.services.feedback_service import FeedbackService
 from contexthub.services.document_ingester import LongDocumentIngester
 from contexthub.services.share_service import ShareService
+from contexthub.enforcement.service import EnforcementService
 
 
 async def get_request_context(
@@ -103,3 +104,7 @@ def get_feedback_service(request: Request) -> FeedbackService:
 
 def get_document_ingester(request: Request) -> LongDocumentIngester:
     return request.app.state.document_ingester
+
+
+def get_enforcement_service(request: Request) -> EnforcementService:
+    return request.app.state.enforcement_service

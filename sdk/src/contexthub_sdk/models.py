@@ -328,6 +328,7 @@ class AuditAction(str, enum.Enum):
     ACCESS_DENIED = "access_denied"
     POLICY_CHANGE = "policy_change"
     LIFECYCLE_TRANSITION = "lifecycle_transition"
+    ENFORCEMENT = "enforcement"
     READ = "read"
     SEARCH = "search"
     LS = "ls"

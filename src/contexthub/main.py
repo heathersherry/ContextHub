@@ -10,12 +10,19 @@ from contexthub.api.routers.contexts import router as contexts_router
 from contexthub.api.routers.memories import router as memories_router
 from contexthub.api.routers.feedback import router as feedback_router
 from contexthub.api.routers.documents import router as documents_router
+from contexthub.api.routers.enforce import router as enforce_router
 from contexthub.api.routers.search import router as search_router
 from contexthub.api.routers.skills import router as skills_router
 from contexthub.api.routers.tools import router as tools_router
 from contexthub.config import Settings
 from contexthub.db.codecs import init_pg_connection
 from contexthub.db.repository import PgRepository
+from contexthub.enforcement.guardrails.closure import ClosureGuardrail
+from contexthub.enforcement.guardrails.flow import FlowGuardrail
+from contexthub.enforcement.guardrails.handoff import HandoffGuardrail
+from contexthub.enforcement.guardrails.tool_state import ToolStateGuardrail
+from contexthub.enforcement.service import EnforcementService
+from contexthub.enforcement.staleness import StalenessChecker
 from contexthub.generation.base import ContentGenerator
 from contexthub.llm.factory import create_chat_client, create_embedding_client
 from contexthub.retrieval.long_doc import (
@@ -71,6 +78,16 @@ async def lifespan(app: FastAPI):
         masking_service = MaskingService()
         audit_service = AuditService(pool=pool)
         share_service = ShareService(acl_service, audit=audit_service)
+        staleness_checker = StalenessChecker()
+        enforcement_service = EnforcementService(
+            [
+                HandoffGuardrail(acl=acl_service, staleness=staleness_checker),
+                ClosureGuardrail(staleness=staleness_checker),
+                ToolStateGuardrail(staleness=staleness_checker),
+                FlowGuardrail(acl=acl_service),
+            ],
+            audit=audit_service,
+        )
 
         # Task 3 services
         embedding_client = create_embedding_client(settings)
@@ -136,6 +153,7 @@ async def lifespan(app: FastAPI):
         app.state.share_service = share_service
         app.state.feedback_service = feedback_service
         app.state.document_ingester = document_ingester
+        app.state.enforcement_service = enforcement_service
 
         # Task 7: Carrier-specific services
         catalog_connector = MockCatalogConnector()
@@ -199,6 +217,7 @@ app.include_router(contexts_router)
 app.include_router(memories_router)
 app.include_router(feedback_router)
 app.include_router(documents_router)
+app.include_router(enforce_router)
 app.include_router(skills_router)
 app.include_router(search_router)
 app.include_router(tools_router)
