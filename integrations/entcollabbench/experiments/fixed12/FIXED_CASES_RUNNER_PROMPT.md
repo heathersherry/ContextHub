@@ -13,9 +13,9 @@ Repositories:
 
 Read first:
 - /Users/sherrylin/Documents/PythonProjects/ContextHub/integrations/entcollabbench/PILOT_RUNBOOK.md
-- /Users/sherrylin/Documents/PythonProjects/ContextHub/integrations/entcollabbench/FIXED_CASES_MANIFEST_12.json
+- /Users/sherrylin/Documents/PythonProjects/ContextHub/integrations/entcollabbench/experiments/fixed12/FIXED_CASES_MANIFEST_12.json
 - /Users/sherrylin/Documents/PythonProjects/ContextHub/integrations/entcollabbench/RUNTIME_WRAPPER_NOTES.md
-- /Users/sherrylin/Documents/PythonProjects/ContextHub/integrations/entcollabbench/FIXED_CASES_REPORT_TEMPLATE.md
+- /Users/sherrylin/Documents/PythonProjects/ContextHub/integrations/entcollabbench/experiments/fixed12/FIXED_CASES_REPORT_TEMPLATE.md
 
 Hard rules:
 - Do not print, inspect, or expose API keys or secret values.
@@ -28,7 +28,8 @@ Hard rules:
 - Do not overwrite existing reports or result files.
 
 Experiment boundary:
-- Run a fresh S0 benchmark using the fixed cases in FIXED_CASES_MANIFEST_12.json.
+- Run a fresh S0 benchmark using the fixed cases in
+  `experiments/fixed12/FIXED_CASES_MANIFEST_12.json`.
 - Then run ContextHub's near-online/post-run S2 diagnostic on the saved S0 result
   and trajectory artifacts.
 - S2 tool_state findings are diagnostics over observed trace events, with live
@@ -71,7 +72,7 @@ Suggested execution order:
    duration, cleanup/memory failures, and export-state compatibility issues.
 6. Run the ContextHub near-online/post-run S2 diagnostic against the saved S0
    artifacts.
-7. Fill FIXED_CASES_REPORT_TEMPLATE.md into the final report path.
+7. Fill `experiments/fixed12/FIXED_CASES_REPORT_TEMPLATE.md` into the final report path.
 
 Stop conditions:
 - Stop immediately if any API key or secret value would need to be printed.
@@ -110,8 +111,8 @@ Required return fields:
 
 ## Runner Notes
 
-- The first fixed suite is in `FIXED_CASES_MANIFEST_12.json`.
-- The report template is `FIXED_CASES_REPORT_TEMPLATE.md`.
+- The first fixed suite is in `experiments/fixed12/FIXED_CASES_MANIFEST_12.json`.
+- The report template is `experiments/fixed12/FIXED_CASES_REPORT_TEMPLATE.md`.
 - Existing reports, including `ONLINE_S2_PILOT_REPORT.md`, are prior artifacts
   and must not be overwritten.
 - If only S2 diagnostics are run from existing S0 artifacts, label the result

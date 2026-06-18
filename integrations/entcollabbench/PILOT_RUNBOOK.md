@@ -167,9 +167,12 @@ Therefore:
 
 First fixed-case boundary:
 
-- Use `FIXED_CASES_MANIFEST_12.json` for the first frozen 12-case suite.
-- Use `FIXED_CASES_RUNNER_PROMPT.md` when delegating the run to another agent.
-- Use `FIXED_CASES_REPORT_TEMPLATE.md` for the final fixed-suite report.
+- Use `experiments/fixed12/FIXED_CASES_MANIFEST_12.json` for the first frozen
+  12-case suite.
+- Use `experiments/fixed12/FIXED_CASES_RUNNER_PROMPT.md` when delegating the run
+  to another agent.
+- Use `experiments/fixed12/FIXED_CASES_REPORT_TEMPLATE.md` for the final
+  fixed-suite report.
 - The intended execution is fresh S0 benchmark plus near-online/post-run S2
   diagnostic over saved artifacts, not full online S2.
 - Do not randomize, expand, or reorder the fixed cases without explicitly
