@@ -1,0 +1,166 @@
+[
+  {
+    "type": "mcp",
+    "description": "Case-to-knowledge reuse and closure prep: NGINX Plus Variant 51",
+    "sub_task_list": [
+      {
+        "ground_truth": [
+          {
+            "mcp_server_name": "csm",
+            "tool_name": "update_case",
+            "agent": "customer_support_specialist",
+            "arguments": {
+              "case_id": 50,
+              "priority": "high",
+              "state": "in_progress",
+              "assigned_to": 795,
+              "escalation": true,
+              "escalation_reason": "breach_risk"
+            }
+          },
+          {
+            "mcp_server_name": "",
+            "tool_name": "ask_it_change_engineer_by_http",
+            "agent": "customer_support_specialist",
+            "arguments": {}
+          },
+          {
+            "mcp_server_name": "itsm",
+            "tool_name": "create_incident",
+            "agent": "it_change_engineer",
+            "arguments": {
+              "caller_id": "USER_045",
+              "short_description": "Internal escalation for CS-0000050 on NGINX Plus Variant 51",
+              "channel": "email",
+              "status": "new",
+              "category": "software",
+              "description": "Customer escalation from CS-0000050 for NGINX Plus Variant 51.",
+              "impact": "high",
+              "urgency": "high",
+              "priority": "high",
+              "assigned_to": "USER_045",
+              "assignment_group": "GROUP_002",
+              "worknotes": "Opened from CSM case CS-0000050."
+            }
+          },
+          {
+            "mcp_server_name": "itsm",
+            "tool_name": "create_problem",
+            "agent": "it_change_engineer",
+            "arguments": {
+              "problem_statement": "NGINX Plus Variant 51 is driving repeated customer escalations and needs structured RCA.",
+              "status": "assess",
+              "impact": "high",
+              "urgency": "high",
+              "priority": "high",
+              "short_description": "NGINX Plus Variant 51 customer RCA",
+              "assignment_group": "GROUP_002",
+              "assigned_to": "USER_045",
+              "category": "software",
+              "worknotes": "Opened from CS-0000050."
+            }
+          },
+          {
+            "mcp_server_name": "",
+            "tool_name": "ask_collaboration_ops_specialist_by_http",
+            "agent": "it_change_engineer",
+            "arguments": {}
+          },
+          {
+            "mcp_server_name": "email",
+            "tool_name": "send_message",
+            "agent": "collaboration_ops_specialist",
+            "arguments": {
+              "userId": "olivia.chen@techcorp.com",
+              "payload": {
+                "mimeType": "text/plain",
+                "headers": [
+                  {
+                    "name": "To",
+                    "value": "carlos.mendez@techcorp.com, nina.patel@techcorp.com, priya.nair@techcorp.com"
+                  },
+                  {
+                    "name": "Subject",
+                    "value": "CS-0000050 escalation review"
+                  }
+                ],
+                "body": {
+                  "data": "Please review CS-0000050 for NGINX Plus Variant 51. Bring the containment path, current reproduction detail, and documentation updates.",
+                  "size": 135
+                },
+                "filename": "message.txt"
+              }
+            }
+          },
+          {
+            "mcp_server_name": "calendar",
+            "tool_name": "create_event",
+            "agent": "collaboration_ops_specialist",
+            "arguments": {
+              "calendarId": "alice-primary",
+              "summary": "CS-0000050 escalation review",
+              "description": "Review the internal escalation for CS-0000050 and confirm the next actions for NGINX Plus Variant 51.",
+              "start": {
+                "dateTime": "2026-05-15T16:00:00+08:00",
+                "timeZone": "Asia/Shanghai"
+              },
+              "end": {
+                "dateTime": "2026-05-15T16:30:00+08:00",
+                "timeZone": "Asia/Shanghai"
+              },
+              "attendees": [
+                {
+                  "email": "carlos.mendez@techcorp.com",
+                  "displayName": "Carlos Mendez"
+                },
+                {
+                  "email": "nina.patel@techcorp.com",
+                  "displayName": "Nina Patel"
+                },
+                {
+                  "email": "priya.nair@techcorp.com",
+                  "displayName": "Priya Nair"
+                }
+              ],
+              "sendUpdates": "all",
+              "conferenceDataVersion": 1
+            }
+          },
+          {
+            "mcp_server_name": "",
+            "tool_name": "ask_knowledge_base_specialist_by_http",
+            "agent": "collaboration_ops_specialist",
+            "arguments": {}
+          },
+          {
+            "mcp_server_name": "csm",
+            "tool_name": "update_knowledge",
+            "agent": "knowledge_base_specialist",
+            "arguments": {
+              "knowledge_id": 107,
+              "title": "NGINX Plus Variant 51 escalation triage",
+              "state": "published",
+              "visibility": "internal",
+              "product_id": 71,
+              "owner_id": 795
+            }
+          },
+          {
+            "mcp_server_name": "csm",
+            "tool_name": "link_case_knowledge",
+            "agent": "knowledge_base_specialist",
+            "arguments": {
+              "case_id": 50,
+              "knowledge_id": 107,
+              "used_as": "suggested"
+            }
+          }
+        ],
+        "beginning_agent": "customer_support_specialist",
+        "user_prompt": "CS-0000050, which is case 50 for account 2, contact 124, and product 71, needs case-to-knowledge reuse and closure preparation. First, update the case to in progress, make it high priority, assign it to 795, and mark it as escalated for breach risk. Next, ask the IT problem/change engineer to create a new high-priority software incident for caller USER_045 through the email channel, assign it to USER_045 in assignment group GROUP_002, and use the short description Internal escalation for CS-0000050 on NGINX Plus Variant 51. Also have the engineer create a problem in assess status with high impact, high urgency, and high priority. Then ask the collaboration operations specialist to send an email from olivia.chen@techcorp.com to carlos.mendez@techcorp.com, nina.patel@techcorp.com, and priya.nair@techcorp.com with the subject CS-0000050 escalation review, and create a meeting on the alice-primary calendar from 2026-05-15 16:00:00+08:00 to 2026-05-15 16:30:00+08:00. Finally, ask the knowledge base maintenance specialist to update CSM knowledge article 107 with the title NGINX Plus Variant 51 escalation triage, publish it with internal visibility, keep it under product 71 with owner 795, and link it to case 50 as suggested.",
+        "sub_task_id": "mcp_single_67_1"
+      }
+    ],
+    "task_id": "mcp_single_67"
+  }
+]

@@ -1,0 +1,103 @@
+[
+  {
+    "type": "mcp",
+    "description": "Teams bridge checkpoint: Dell PowerEdge R750 (Config 38)",
+    "sub_task_list": [
+      {
+        "ground_truth": [
+          {
+            "mcp_server_name": "teams",
+            "tool_name": "send_channel_message",
+            "agent": "collaboration_ops_specialist",
+            "arguments": {
+              "teamId": "team_techcorp_001",
+              "channelId": "channel_shared_001",
+              "body": {
+                "contentType": "text",
+                "content": "Bridge plan prepared for CS-0000070 on Dell PowerEdge R750 (Config 38). Please route new updates through the shared channel."
+              },
+              "importance": "high"
+            }
+          },
+          {
+            "mcp_server_name": "",
+            "tool_name": "ask_customer_support_specialist_by_http",
+            "agent": "collaboration_ops_specialist",
+            "arguments": {}
+          },
+          {
+            "mcp_server_name": "csm",
+            "tool_name": "update_case",
+            "agent": "customer_support_specialist",
+            "arguments": {
+              "case_id": 70,
+              "priority": "high",
+              "state": "in_progress",
+              "assigned_to": 795,
+              "escalation": true,
+              "escalation_reason": "customer_request"
+            }
+          },
+          {
+            "mcp_server_name": "",
+            "tool_name": "ask_it_change_engineer_by_http",
+            "agent": "customer_support_specialist",
+            "arguments": {}
+          },
+          {
+            "mcp_server_name": "itsm",
+            "tool_name": "create_incident",
+            "agent": "it_change_engineer",
+            "arguments": {
+              "caller_id": "USER_045",
+              "short_description": "Bridge escalation for CS-0000070 on Dell PowerEdge R750 (Config 38)",
+              "channel": "email",
+              "status": "new",
+              "category": "software",
+              "description": "Open internal follow-up for the customer bridge created around CS-0000070.",
+              "impact": "high",
+              "urgency": "high",
+              "priority": "high",
+              "assigned_to": "USER_045",
+              "assignment_group": "GROUP_002",
+              "worknotes": "Created from collaboration bridge for CS-0000070."
+            }
+          },
+          {
+            "mcp_server_name": "",
+            "tool_name": "ask_knowledge_base_specialist_by_http",
+            "agent": "it_change_engineer",
+            "arguments": {}
+          },
+          {
+            "mcp_server_name": "csm",
+            "tool_name": "update_knowledge",
+            "agent": "knowledge_base_specialist",
+            "arguments": {
+              "knowledge_id": 187,
+              "title": "Dell PowerEdge R750 crash recovery guide",
+              "state": "published",
+              "visibility": "internal",
+              "product_id": 170,
+              "owner_id": 795
+            }
+          },
+          {
+            "mcp_server_name": "csm",
+            "tool_name": "link_case_knowledge",
+            "agent": "knowledge_base_specialist",
+            "arguments": {
+              "case_id": 70,
+              "knowledge_id": 187,
+              "used_as": "suggested"
+            }
+          }
+        ],
+        "beginning_agent": "collaboration_ops_specialist",
+        "user_prompt": "Run the Teams broadcast and bridge follow-up for CS-0000070, covering case 70, account 3, contact 1, and product 170. First, post a high-importance Teams message in team team_techcorp_001 and channel channel_shared_001 saying: Bridge plan prepared for CS-0000070 on Dell PowerEdge R750 (Config 38). Please route new updates through the shared channel. Then ask the customer support specialist to update CS-0000070 so that it is in progress, set to high priority, assigned to 795, and marked for escalation with the escalation reason customer_request. Next, ask the IT change engineer to create a new high-priority incident for caller USER_045 in the software category, assigned to group GROUP_002 and to USER_045, with the short description Bridge escalation for CS-0000070 on Dell PowerEdge R750 (Config 38). Set the channel to email, leave the status as new, set the impact and urgency to high, use the description Open internal follow-up for the customer bridge created around CS-0000070., and add the worknote Created from collaboration bridge for CS-0000070. Finally, ask the knowledge base specialist to update knowledge article 187, titled Dell PowerEdge R750 crash recovery guide, so that it is published, internally visible, tied to product 170, and owned by 795, and then link it to case 70 as suggested.",
+        "sub_task_id": "mcp_single_146_1"
+      }
+    ],
+    "task_id": "mcp_single_146"
+  }
+]

@@ -1,0 +1,111 @@
+[
+  {
+    "type": "mcp",
+    "description": "CSM and internal guidance alignment: SQL Server Patchset 27 diagnostics",
+    "sub_task_list": [
+      {
+        "ground_truth": [
+          {
+            "mcp_server_name": "csm",
+            "tool_name": "update_knowledge",
+            "agent": "knowledge_base_specialist",
+            "arguments": {
+              "knowledge_id": 141,
+              "title": "SQL Server Patchset 27 diagnostics",
+              "state": "published",
+              "visibility": "internal",
+              "product_id": 47,
+              "owner_id": 795
+            }
+          },
+          {
+            "mcp_server_name": "teams",
+            "tool_name": "send_channel_message",
+            "agent": "knowledge_base_specialist",
+            "arguments": {
+              "teamId": "team_techcorp_001",
+              "channelId": "2da4cc29dd784156a8903cc978016bd6",
+              "body": {
+                "contentType": "text",
+                "content": "Knowledge alignment update: use the refreshed guidance for INC_057, HRC0000757, and CS-0000086."
+              },
+              "importance": "high"
+            }
+          },
+          {
+            "mcp_server_name": "",
+            "tool_name": "ask_it_service_desk_l1_by_http",
+            "agent": "knowledge_base_specialist",
+            "arguments": {}
+          },
+          {
+            "mcp_server_name": "itsm",
+            "tool_name": "update_incident",
+            "agent": "it_service_desk_l1",
+            "arguments": {
+              "incident_id": "INC_057",
+              "status": "in_progress",
+              "assigned_to": "USER_022",
+              "assignment_group": "GROUP_002",
+              "worknotes": "Customer guidance linked to CSM knowledge 141 is being aligned."
+            }
+          },
+          {
+            "mcp_server_name": "",
+            "tool_name": "ask_hr_service_specialist_by_http",
+            "agent": "it_service_desk_l1",
+            "arguments": {}
+          },
+          {
+            "mcp_server_name": "hr",
+            "tool_name": "update_hr_case",
+            "agent": "hr_service_specialist",
+            "arguments": {
+              "hr_case_id": "47",
+              "number": "HRC0000757",
+              "status": "work_in_progress",
+              "assigned_to": "Helen Zhou",
+              "worknotes": "Aligned with incident INC_057 and refreshed knowledge guidance."
+            }
+          },
+          {
+            "mcp_server_name": "hr",
+            "tool_name": "create_hr_case_task",
+            "agent": "hr_service_specialist",
+            "arguments": {
+              "status": "ready",
+              "short_description": "Track aligned routing for new hire HR profile setup",
+              "assigned_to": "Helen Zhou",
+              "task_type": "checklist",
+              "parent_case": "47",
+              "worknotes": "Capture final confirmations after the knowledge alignment is published."
+            }
+          },
+          {
+            "mcp_server_name": "",
+            "tool_name": "ask_customer_support_specialist_by_http",
+            "agent": "hr_service_specialist",
+            "arguments": {}
+          },
+          {
+            "mcp_server_name": "csm",
+            "tool_name": "update_case",
+            "agent": "customer_support_specialist",
+            "arguments": {
+              "case_id": 86,
+              "priority": "high",
+              "state": "in_progress",
+              "assigned_to": 795,
+              "escalation": true,
+              "escalation_reason": "customer_request"
+            }
+          }
+        ],
+        "beginning_agent": "knowledge_base_specialist",
+        "user_prompt": "Complete the CSM and internal guidance alignment for incident INC_057, HR case HRC0000757 with HR case ID 47, and customer case CS-0000086 with case ID 86. First, update CSM knowledge article 141, titled SQL Server Patchset 27 diagnostics, so it is published, internally visible, tied to product 47, and owned by 795. Then send a high-importance Teams message to team team_techcorp_001 in channel 2da4cc29dd784156a8903cc978016bd6 saying that the knowledge alignment update is to use the refreshed guidance for INC_057, HRC0000757, and CS-0000086. Next, ask the IT service desk L1 engineer to align incident INC_057 to the new guidance. Have them update the incident to in progress, assign it to USER_022 in assignment group GROUP_002, and add worknotes saying that customer guidance linked to CSM knowledge 141 is being aligned. After that, ask the HR service specialist to update HR case 47, numbered HRC0000757, to work in progress, assign it to Helen Zhou, and add worknotes stating that it is aligned with incident INC_057 and refreshed knowledge guidance. Also have the HR service specialist create an HR case task under parent case 47, with ready status, assigned to Helen Zhou, using the checklist task type and the short description Track aligned routing for new hire HR profile setup, and add worknotes saying to capture final confirmations after the knowledge alignment is published. Finally, ask the customer support specialist to update customer case 86 so it is in progress, high priority, assigned to 795, and escalated for the reason customer_request.",
+        "sub_task_id": "mcp_single_72_1"
+      }
+    ],
+    "task_id": "mcp_single_72"
+  }
+]

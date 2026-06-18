@@ -1,0 +1,103 @@
+[
+  {
+    "type": "mcp",
+    "description": "Teams bridge checkpoint: Premium Support SLA (24x7, Tier 25)",
+    "sub_task_list": [
+      {
+        "ground_truth": [
+          {
+            "mcp_server_name": "teams",
+            "tool_name": "send_channel_message",
+            "agent": "collaboration_ops_specialist",
+            "arguments": {
+              "teamId": "team_techcorp_001",
+              "channelId": "channel_shared_001",
+              "body": {
+                "contentType": "text",
+                "content": "Bridge plan prepared for CS-0000048 on Premium Support SLA (24x7, Tier 25). Please route new updates through the shared channel."
+              },
+              "importance": "high"
+            }
+          },
+          {
+            "mcp_server_name": "",
+            "tool_name": "ask_customer_support_specialist_by_http",
+            "agent": "collaboration_ops_specialist",
+            "arguments": {}
+          },
+          {
+            "mcp_server_name": "csm",
+            "tool_name": "update_case",
+            "agent": "customer_support_specialist",
+            "arguments": {
+              "case_id": 48,
+              "priority": "high",
+              "state": "in_progress",
+              "assigned_to": 795,
+              "escalation": true,
+              "escalation_reason": "customer_request"
+            }
+          },
+          {
+            "mcp_server_name": "",
+            "tool_name": "ask_it_change_engineer_by_http",
+            "agent": "customer_support_specialist",
+            "arguments": {}
+          },
+          {
+            "mcp_server_name": "itsm",
+            "tool_name": "create_incident",
+            "agent": "it_change_engineer",
+            "arguments": {
+              "caller_id": "USER_045",
+              "short_description": "Bridge escalation for CS-0000048 on Premium Support SLA (24x7, Tier 25)",
+              "channel": "email",
+              "status": "new",
+              "category": "software",
+              "description": "Open internal follow-up for the customer bridge created around CS-0000048.",
+              "impact": "high",
+              "urgency": "high",
+              "priority": "high",
+              "assigned_to": "USER_045",
+              "assignment_group": "GROUP_002",
+              "worknotes": "Created from collaboration bridge for CS-0000048."
+            }
+          },
+          {
+            "mcp_server_name": "",
+            "tool_name": "ask_knowledge_base_specialist_by_http",
+            "agent": "it_change_engineer",
+            "arguments": {}
+          },
+          {
+            "mcp_server_name": "csm",
+            "tool_name": "update_knowledge",
+            "agent": "knowledge_base_specialist",
+            "arguments": {
+              "knowledge_id": 326,
+              "title": "Premium Support SLA Tier 25 escalation path",
+              "state": "published",
+              "visibility": "internal",
+              "product_id": 217,
+              "owner_id": 795
+            }
+          },
+          {
+            "mcp_server_name": "csm",
+            "tool_name": "link_case_knowledge",
+            "agent": "knowledge_base_specialist",
+            "arguments": {
+              "case_id": 48,
+              "knowledge_id": 326,
+              "used_as": "suggested"
+            }
+          }
+        ],
+        "beginning_agent": "collaboration_ops_specialist",
+        "user_prompt": "Although leadership keeps talking about “better cross-functional bridge hygiene,” what actually matters here is that, by the end, the internal article called **Premium Support SLA Tier 25 escalation path** must be made internally visible and published under the product tied to this matter, kept under the same owner as the assignee used earlier, and then connected back to **CS-0000048**—the one for account **2**, contact **124**, product **217**, namely case **48**—as merely a suggested reference; but that should only happen after the latter team has been prompted, through the knowledge-base maintenance route, to handle article **326**. Prior to that handoff, an internal follow-up incident should have been requested through the IT problem/change side for **USER_045**, with that same person both named as caller and assignee, placed with **GROUP_002**, treated with maximum urgency throughout, kept as a newly opened email-origin software issue, and described in a way that clearly ties it to the bridge escalation around **CS-0000048** and the **Premium Support SLA (24x7, Tier 25)**, including the internal follow-up wording and the collaboration-bridge work note. And before any of those downstream updates, have the CSM support specialist move the case itself into active work, mark it high priority, escalate it for customer request reasons, and assign it to **795**. The whole sequence should begin with a high-importance Teams note posted in **team_techcorp_001** within **channel_shared_001**, stating exactly that the bridge plan is prepared for **CS-0000048** on **Premium Support SLA (24x7, Tier 25)** and that new updates should go through the shared channel.",
+        "sub_task_id": "mcp_single_143_1"
+      }
+    ],
+    "task_id": "mcp_single_143"
+  }
+]

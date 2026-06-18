@@ -1,0 +1,143 @@
+[
+  {
+    "type": "mcp",
+    "description": "War-room email and calendar coordination: Hr Database Service Failure",
+    "sub_task_list": [
+      {
+        "ground_truth": [
+          {
+            "mcp_server_name": "email",
+            "tool_name": "send_message",
+            "agent": "collaboration_ops_specialist",
+            "arguments": {
+              "userId": "olivia.chen@techcorp.com",
+              "payload": {
+                "mimeType": "text/plain",
+                "headers": [
+                  {
+                    "name": "To",
+                    "value": "ivan.park@techcorp.com, nina.patel@techcorp.com, helen.zhou@techcorp.com"
+                  },
+                  {
+                    "name": "Subject",
+                    "value": "INC_057 war-room kickoff"
+                  }
+                ],
+                "body": {
+                  "data": "Please join the war-room kickoff for INC_057, the linked change CHG_015, and the business impact on HRC0000721.",
+                  "size": 111
+                },
+                "filename": "message.txt"
+              }
+            }
+          },
+          {
+            "mcp_server_name": "calendar",
+            "tool_name": "create_event",
+            "agent": "collaboration_ops_specialist",
+            "arguments": {
+              "calendarId": "alice-primary",
+              "summary": "INC_057 war-room kickoff",
+              "description": "Align the incident, change, and HR impact for INC_057.",
+              "start": {
+                "dateTime": "2026-05-23T09:00:00+08:00",
+                "timeZone": "Asia/Shanghai"
+              },
+              "end": {
+                "dateTime": "2026-05-23T09:30:00+08:00",
+                "timeZone": "Asia/Shanghai"
+              },
+              "attendees": [
+                {
+                  "email": "ivan.park@techcorp.com",
+                  "displayName": "Ivan Park"
+                },
+                {
+                  "email": "nina.patel@techcorp.com",
+                  "displayName": "Nina Patel"
+                },
+                {
+                  "email": "helen.zhou@techcorp.com",
+                  "displayName": "Helen Zhou"
+                }
+              ],
+              "sendUpdates": "all",
+              "conferenceDataVersion": 1
+            }
+          },
+          {
+            "mcp_server_name": "",
+            "tool_name": "ask_it_service_desk_l1_by_http",
+            "agent": "collaboration_ops_specialist",
+            "arguments": {}
+          },
+          {
+            "mcp_server_name": "itsm",
+            "tool_name": "update_incident",
+            "agent": "it_service_desk_l1",
+            "arguments": {
+              "incident_id": "INC_057",
+              "status": "in_progress",
+              "assigned_to": "USER_022",
+              "assignment_group": "GROUP_002",
+              "worknotes": "War-room started with linked change CHG_015 and business case HRC0000721."
+            }
+          },
+          {
+            "mcp_server_name": "",
+            "tool_name": "ask_it_change_engineer_by_http",
+            "agent": "it_service_desk_l1",
+            "arguments": {}
+          },
+          {
+            "mcp_server_name": "itsm",
+            "tool_name": "update_change",
+            "agent": "it_change_engineer",
+            "arguments": {
+              "change_id": "CHG_015",
+              "status": "review",
+              "assigned_to": "USER_045",
+              "assignment_group": "GROUP_002",
+              "implementation_plan": "Reconfirm the execution and communication checkpoints for emergency HR database restart."
+            }
+          },
+          {
+            "mcp_server_name": "",
+            "tool_name": "ask_hr_service_specialist_by_http",
+            "agent": "it_change_engineer",
+            "arguments": {}
+          },
+          {
+            "mcp_server_name": "hr",
+            "tool_name": "update_hr_case",
+            "agent": "hr_service_specialist",
+            "arguments": {
+              "hr_case_id": "11",
+              "number": "HRC0000721",
+              "status": "work_in_progress",
+              "assigned_to": "Helen Zhou",
+              "worknotes": "War-room started for incident INC_057 and change CHG_015."
+            }
+          },
+          {
+            "mcp_server_name": "hr",
+            "tool_name": "create_hr_case_task",
+            "agent": "hr_service_specialist",
+            "arguments": {
+              "status": "ready",
+              "short_description": "Track business impact from INC_057",
+              "assigned_to": "Helen Zhou",
+              "task_type": "checklist",
+              "parent_case": "11",
+              "worknotes": "Track approvals and follow-ups while INC_057 is active."
+            }
+          }
+        ],
+        "beginning_agent": "collaboration_ops_specialist",
+        "user_prompt": "Coordinate the war-room email and calendar activities for incident INC_057, change CHG_015, and HR case HRC0000721, which is HR case 11. First, send an email from olivia.chen@techcorp.com to ivan.park@techcorp.com, nina.patel@techcorp.com, and helen.zhou@techcorp.com with the subject INC_057 war-room kickoff, and create a meeting on the alice-primary calendar from 2026-05-23 09:00:00+08:00 to 2026-05-23 09:30:00+08:00. Then ask the IT service engineer to update incident INC_057 to in progress, assign it to USER_022 in assignment group GROUP_002, and add work notes requesting business alignment. Next, ask the IT problem/change engineer to update change CHG_015 to review, assign it to USER_045 in assignment group GROUP_002, and map change CHG_015 to incident INC_057. Finally, ask the HR service specialist to update HR case HRC0000721 to work in progress, assign it to Helen Zhou, and create an HR case task under parent case 11.",
+        "sub_task_id": "mcp_single_87_1"
+      }
+    ],
+    "task_id": "mcp_single_87"
+  }
+]
