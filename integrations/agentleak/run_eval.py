@@ -593,11 +593,19 @@ async def run_offline_real_traces(
         # Lock the realized subset on first sight; every mode is then checked
         # equal to it (all compared systems must share the same subset).
         record_realized_subset(frozen_bundle_dir, observed_scenario_ids)
+        # Model stability is checked against the model recorded IN the traces,
+        # not the offline alias in `model` (which defaults to "real-offline").
+        observed_models = sorted({m for m in trace_models if m})
+        # Single model → verify it; a mix (or none) must fail loudly, not skip
+        # the check — so pass a non-matching joined value rather than None.
+        observed_model = (
+            observed_models[0] if len(observed_models) == 1 else "+".join(observed_models) or "unknown"
+        )
         freeze_result = verify_freeze(
             bundle_dir=frozen_bundle_dir,
             protocol_path=PROTOCOL_PATH,
             observed_scenario_ids=observed_scenario_ids,
-            observed_model=model,
+            observed_model=observed_model,
         )
         freeze_meta = freeze_result.get("frozen_meta") or {}
     freeze_verified = bool(freeze_result.get("verified"))
