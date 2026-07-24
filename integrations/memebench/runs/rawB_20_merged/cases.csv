@@ -1,0 +1,24 @@
+episode_id,domain,hop,target_entity,gold_answer,before_answer,off_answer,on_answer,before_ok,off_after_ok,on_after_ok,off_trivial_pass,on_trivial_pass,oracle_calls,n_filler,edge_mode,edge_n_gold,edge_n_pred,edge_n_tp,edge_precision,edge_recall,raw_dialogue,n_superseded,error
+sw_015,software_project,1,monitoring_url,metrics.thandrel.io/aurora-prod,status.orinthal.dev/aurora,status.orinthal.dev/aurora,status.orinthal.dev/aurora,True,False,False,False,False,20,14,discovered_hard,5,24,5,0.375,1.0,True,6,
+sw_019,software_project,2,deploy_command,zephyra push --target prod,korinth release --prod,korinth release --prod,zephyra push --target prod,True,False,True,False,True,29,14,discovered_hard,5,21,5,0.5714285714285714,1.0,True,8,
+pl_008,personal_life,2,commute_method,bus,Xylorim Scooter,Walk or bus.,Xylorim Scooter,False,False,False,False,False,17,18,discovered_hard,5,31,4,0.3548387096774194,0.8,True,8,
+pl_047,personal_life,1,job_title,product manager,Designer,Designer,Product manager,True,False,True,False,True,14,18,discovered_hard,4,20,4,0.35,1.0,True,4,
+sw_032,software_project,2,middleware_config,verithos-pkce-guard v1.4,kryptal-bearer-check v2.2,kryptal-bearer-check v2.2,verithos-pkce-guard v1.4,True,False,True,False,True,6,13,discovered_hard,4,12,4,0.5833333333333334,1.0,True,3,
+sw_029,software_project,2,model_syntax,"Thalnex.document('Model', {fields})","Keldaris.object('Model', props)","Keldaris.object('Model', props)","Thalnex.document('Model', {fields})",True,False,True,False,True,13,19,discovered_hard,4,12,4,0.5833333333333334,1.0,True,7,
+sw_017,software_project,2,middleware_config,cerberix-sso-bridge v1.9,phalanx-key-guard v1.3,phalanx-key-guard v1.3,cerberix-sso-bridge v1.9,True,False,True,False,True,8,14,discovered_hard,3,17,3,0.29411764705882354,1.0,True,6,
+sw_003,software_project,1,log_drain_endpoint,sink.orinthal.dev/aurora,drain.zephyra.io/proj-42,"```
+Logs drain to drain.zephyra.io/proj-42
+What would you like to do next?
+```",sink.orinthal.dev/aurora,True,False,True,False,True,16,17,discovered_hard,5,16,5,0.5625,1.0,True,4,
+sw_028,software_project,2,deploy_command,zephyra push --target prod,korinth release --prod,korinth release --prod,zephyra push --target prod,True,False,True,False,True,18,15,discovered_hard,5,17,5,0.5294117647058824,1.0,True,6,
+sw_011,software_project,1,dev_server_command,moxira serve --hot,korvel dev --open,korvel dev --open,moxira serve --hot,True,False,True,False,True,19,16,discovered_hard,5,17,5,0.5882352941176471,1.0,True,5,
+sw_043,software_project,1,connection_string,thalnex://store-prod:8529/aurora,thalnex://store-backup:8529/aurora,thalnex://store-backup:8529/aurora,thalnex://store-prod:8529/aurora,True,False,True,False,True,12,15,discovered_hard,4,15,4,0.4666666666666667,1.0,True,4,
+pl_040,personal_life,2,fitness_facility,Pyravar CrossFit,Pyravar CrossFit,Pyravar CrossFit,Pyravar CrossFit,False,True,True,False,False,26,17,discovered_hard,4,26,3,0.2692307692307692,0.75,True,8,
+sw_032,software_project,1,token_format,Oathkeeper-mTLS-cert,Cerberix-SAML-assertion,Cerberix-SAML-assertion,Oathkeeper-mTLS-cert,True,False,True,False,True,10,13,discovered_hard,4,13,4,0.6153846153846154,1.0,True,8,
+pl_026,personal_life,1,commute_method,subway,Bike,Bike,No information available.,True,False,False,False,False,9,18,discovered_hard,2,25,2,0.12,1.0,True,4,
+pl_050,personal_life,1,fitness_facility,Zorathel Peak Gym,Pyravar CrossFit,Pyravar CrossFit,Zorathel Peak Gym,True,False,True,False,True,6,16,discovered_hard,2,22,2,0.13636363636363635,1.0,True,3,
+pl_018,personal_life,1,commute_method,commuter rail,Walking,Walking,Commuter rail,True,False,True,False,True,7,18,discovered_hard,2,20,2,0.15,1.0,True,3,
+sw_048,software_project,1,login_endpoint,/auth/kryptal/signin,/cerberix/saml/sso-init,/cerberix/saml/sso-init,/cerberix/saml/sso-init,True,False,False,False,False,6,16,discovered_hard,3,11,3,0.36363636363636365,1.0,True,4,
+pl_046,personal_life,1,dietary_restriction,nut-free,Dairy-free,Dairy-free,Nut-free,True,False,True,False,True,11,19,discovered_hard,4,23,4,0.30434782608695654,1.0,True,4,
+sw_036,software_project,1,docker_image,korinth-repo/aurora:stable,narvex-registry/aurora:latest,korinth-repo/aurora:stable,korinth-repo/aurora:stable,True,True,True,True,True,19,18,discovered_hard,5,16,5,0.6875,1.0,True,5,
+sw_046,software_project,1,build_tool,Karnex Bundler,Tarvex CLI,Karnex Bundler,Karnex Bundler,True,True,True,True,True,22,14,discovered_hard,5,19,5,0.631578947368421,1.0,True,5,

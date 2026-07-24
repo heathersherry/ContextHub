@@ -1,0 +1,92 @@
+{
+  "model": "gpt-4o-mini",
+  "edge_mode": "discovered_hard",
+  "n_total": 100,
+  "n_ok": 99,
+  "n_error": 1,
+  "overall": {
+    "n": 99,
+    "off_trivial_pass": 0.13131313131313133,
+    "on_trivial_pass": 0.7474747474747475,
+    "delta_trivial_pass": 0.6161616161616161,
+    "off_after_raw": 0.26262626262626265,
+    "on_after_raw": 0.8787878787878788,
+    "delta_after_raw": 0.6161616161616161
+  },
+  "hop1": {
+    "n": 99,
+    "off_trivial_pass": 0.13131313131313133,
+    "on_trivial_pass": 0.7474747474747475,
+    "delta_trivial_pass": 0.6161616161616161,
+    "off_after_raw": 0.26262626262626265,
+    "on_after_raw": 0.8787878787878788,
+    "delta_after_raw": 0.6161616161616161
+  },
+  "hop2": {
+    "n": 0,
+    "off_trivial_pass": null,
+    "on_trivial_pass": null,
+    "delta_trivial_pass": null,
+    "off_after_raw": null,
+    "on_after_raw": null,
+    "delta_after_raw": null
+  },
+  "edge_discovery": {
+    "overall": {
+      "n": 99,
+      "n_tp": 316,
+      "n_pred": 430,
+      "n_gold": 317,
+      "micro_precision": 0.7348837209302326,
+      "micro_recall": 0.9968454258675079,
+      "macro_precision": 0.7861992945326279,
+      "macro_recall": 0.9949494949494949
+    },
+    "hop1": {
+      "n": 99,
+      "n_tp": 316,
+      "n_pred": 430,
+      "n_gold": 317,
+      "micro_precision": 0.7348837209302326,
+      "micro_recall": 0.9968454258675079,
+      "macro_precision": 0.7861992945326279,
+      "macro_recall": 0.9949494949494949
+    },
+    "hop2": {
+      "n": 0
+    }
+  },
+  "cost": {
+    "total_oracle_calls": 415,
+    "oracle_calls_per_case": 4.191919191919192,
+    "ingest_llm": {
+      "calls": 330,
+      "prompt_tokens": 91592,
+      "completion_tokens": 13020,
+      "total_tokens": 104612,
+      "tokens_are_real": true,
+      "estimated_calls": 0
+    },
+    "inference_llm": {
+      "calls": 299,
+      "prompt_tokens": 358264,
+      "completion_tokens": 1870,
+      "total_tokens": 360134,
+      "tokens_are_real": true,
+      "estimated_calls": 0
+    },
+    "oracle_llm": {
+      "calls": 417,
+      "prompt_tokens": 58476,
+      "completion_tokens": 8718,
+      "total_tokens": 67194,
+      "tokens_are_real": true,
+      "estimated_calls": 0
+    }
+  },
+  "meme_baseline_static": {
+    "six_systems_cascade_avg_acc": 0.03,
+    "mdflat_opus47_cascade_acc": 0.32,
+    "mdflat_opus47_cost_multiple": 70
+  }
+}

@@ -1,0 +1,1238 @@
+[
+  {
+    "episode_id": "sw_015",
+    "hop": 1,
+    "n_extracted": 22,
+    "root_before_recalled": true,
+    "targets": [
+      {
+        "entity": "monitoring_url",
+        "after_value": "metrics.thandrel.io/aurora-prod",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "deploy_command",
+        "after_value": "thandrel ship --channel beta",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "staging_url",
+        "after_value": null,
+        "pre_value_recalled": null,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": null
+      },
+      {
+        "entity": "dockerfile_path",
+        "after_value": null,
+        "pre_value_recalled": null,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": null
+      },
+      {
+        "entity": "ci_config",
+        "after_value": "thandrel-flow.toml",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      }
+    ],
+    "extracted_facts": [
+      "The team's on-call rotation is follow-the-sun across timezones.",
+      "The team's package manager is Dranith Stack.",
+      "The team deploys to Velturis Edge.",
+      "The team's Docker image is orinthal-registry/aurora:deploy.",
+      "The team's standup format is Monday/Thursday sync, async rest.",
+      "Production alerts go to the #aurora-pager channel.",
+      "Logs drain to stream.velturis.io/aurora.",
+      "The team uses trunk-based development with feature flags branching.",
+      "The incident runbook is at wiki.aurora.dev/incident-response.",
+      "The team's default branch is release.",
+      "The monitoring dashboard is at status.orinthal.dev/aurora, determined by deploying on Zephyra Platform; if that changes, this would change.",
+      "The CI config is narvex-ci.yml, determined by deploying on Zephyra Platform; if that changes, this would change.",
+      "Staging is at preview.zephyra.io/aurora, determined by deploying on Zephyra Platform; if that changes, this would change.",
+      "The deploy command is narvex deploy --env prod, determined by the CI being narvex-ci.yml; if that changes, this would change.",
+      "The Dockerfile is at deploy/Dockerfile.orinthal, determined by the image being orinthal-registry/aurora:deploy; if that changes, this would change.",
+      "The user wants this exact error log remembered word for word: \"SegmentationFault at 0x00007fff5a3b2c40 in vorathis_query_planner.so. Backtrace: frame 0 query_optimize, frame 1 plan_join, frame 2 execute_select. Core dump saved to /var/crash/core.aurora.18923 on 2024-06-12T03:55:09Z. Last known good build was commit 7a4f9e2; bisect against recent migrations.\"",
+      "If we change deploy targets, the CI config will be thandrel-flow.toml.",
+      "If we change deploy targets, monitoring will be at metrics.thandrel.io/aurora-prod.",
+      "If the CI config changes, the deploy command will be thandrel ship --channel beta.",
+      "The code review policy is lead approval for core/.",
+      "The onboarding guide is at wiki.aurora.dev/getting-started.",
+      "The user asked to remove Pyronis Build (build tool) from memory."
+    ]
+  },
+  {
+    "episode_id": "sw_019",
+    "hop": 2,
+    "n_extracted": 22,
+    "root_before_recalled": false,
+    "targets": [
+      {
+        "entity": "log_drain_endpoint",
+        "after_value": "logs.korinth.dev/aurora",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "deploy_command",
+        "after_value": "zephyra push --target prod",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "monitoring_url",
+        "after_value": null,
+        "pre_value_recalled": null,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": null
+      },
+      {
+        "entity": "dockerfile_path",
+        "after_value": null,
+        "pre_value_recalled": null,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": null
+      },
+      {
+        "entity": "ci_config",
+        "after_value": "deleted",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      }
+    ],
+    "extracted_facts": [
+      "On-call rotation is volunteer-based with weekly signup.",
+      "Production releases happen monthly on the first Monday.",
+      "Production alerts go to the Slack channel #aurora-pager.",
+      "The staging environment is at staging.narvex.internal/aurora.",
+      "The changelog is kept on the GitHub Releases page.",
+      "The incident runbook is at wiki.aurora.dev/incident-response.",
+      "The team's package manager is Synthari Modules.",
+      "The team's Docker image is korinth-repo/aurora:stable.",
+      "The team meeting is every Wednesday at 10am.",
+      "The Docker image korinth-repo/aurora:stable is determined by the infrastructure; if the infrastructure changes, the image would change.",
+      "Logs drain to drain.zephyra.io/proj-42.",
+      "The monitoring dashboard is at observe.velturis.io/aurora.",
+      "The Dockerfile is at infra/korinth/Dockerfile; this is determined by the image being korinth-repo/aurora:stable, and if that changes, this would change.",
+      "The deploy command is korinth release --prod.",
+      "If deploy targets change, the CI config will be deleted.",
+      "If deploy targets change, logs will drain to logs.korinth.dev/aurora.",
+      "If the CI config changes, the deploy command will be zephyra push --target prod.",
+      "Deployment was moved to Zephyra Platform.",
+      "The test coverage target is 85% line coverage required.",
+      "The onboarding guide is at wiki.aurora.dev/getting-started.",
+      "The user asked to remove orinthal-build.yml as the CI config from memory.",
+      "The exact error log to remember: \"PanicException: thread 'tokio-runtime-worker' panicked at 'index out of bounds: the len is 0 but the index is 5', src/handlers/auth.rs:142:23. Stack trace shows recursive call in middleware_chain to request_validator to token_parser. Restart triggered automatic failover at 2024-04-02T14:18:33Z.\""
+    ]
+  },
+  {
+    "episode_id": "pl_008",
+    "hop": 2,
+    "n_extracted": 31,
+    "root_before_recalled": true,
+    "targets": [
+      {
+        "entity": "work_project",
+        "after_value": "marketing campaign",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "commute_method",
+        "after_value": "bus",
+        "pre_value_recalled": true,
+        "cur_value_recalled": false,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "insurance",
+        "after_value": null,
+        "pre_value_recalled": null,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": null
+      },
+      {
+        "entity": "favorite_restaurant",
+        "after_value": null,
+        "pre_value_recalled": null,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": null
+      },
+      {
+        "entity": "work_location",
+        "after_value": "Tesswick Bay",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      }
+    ],
+    "extracted_facts": [
+      "The user's hobby is cooking, including trying new recipes and experimenting with different cuisines.",
+      "The user recently tried making homemade sushi.",
+      "The user enjoys baking desserts, especially cakes and pastries.",
+      "The user is subscribed to a platform called Xelvoria.",
+      "Xelvoria includes cooking tutorials and food-related shows that the user finds helpful.",
+      "The user's job title is senior engineer.",
+      "The user has a college reunion coming up.",
+      "The user plays cycling to stay fit and enjoy the outdoors.",
+      "The user is subscribed to a meal kit service called Kelvimeal.",
+      "The user works at Thalwren Inc.",
+      "The user goes to Kaelstrom Fitness for workouts.",
+      "The user is planning a big purchase of a gaming PC and has been researching components and brands.",
+      "The user is part of a board game group that meets once a week.",
+      "The user's board game group plays a mix of strategy and party games, and lately cooperative games like \"Pandemic.\"",
+      "The user is subscribed to Dranthazon.",
+      "The user's commute is about 40 minutes.",
+      "The user's work hours are shift work (night).",
+      "The user's partner's name is James.",
+      "The user has an interim coverage plan for insurance through their employer; if their employer changes, this would change.",
+      "The user is working on backend migration through their employer; if their employer changes, this would change.",
+      "The user's office is in Thornvale Crossing through their employer; if their employer changes, this would change.",
+      "The user walks to work; this depends on the office being in Thornvale Crossing, and if that changes, this would change too.",
+      "The user's favorite restaurant is Zefiro's Kitchen; this depends on the office being in Thornvale Crossing, and if the user moves, this would change.",
+      "The user's life philosophy, word for word: \"Try not to become a man of success, but rather try to become a man of value. Look around at how people want to get more out of life than they put in. A man of value will give more than he receives.\"",
+      "If the user changes their employer, their office will be in Tesswick Bay.",
+      "If the user changes their employer, they will work on a marketing campaign.",
+      "If the user's work location changes, they will switch to bus for commuting.",
+      "The user just accepted a new position at Caeltura Systems.",
+      "The user's regular social meetup is pickup basketball on Saturdays.",
+      "The user requested that the Xylorim Scooter be removed from memory.",
+      "The user's current media is Thyrelion (anime)."
+    ]
+  },
+  {
+    "episode_id": "pl_047",
+    "hop": 1,
+    "n_extracted": 26,
+    "root_before_recalled": false,
+    "targets": [
+      {
+        "entity": "job_title",
+        "after_value": "product manager",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "commute_duration",
+        "after_value": "1.5 hours",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "work_location",
+        "after_value": "Quivira Springs",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "commute_method",
+        "after_value": null,
+        "pre_value_recalled": null,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": null
+      },
+      {
+        "entity": "work_location",
+        "after_value": "Quivira Springs",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      }
+    ],
+    "extracted_facts": [
+      "The user's hobby is gardening.",
+      "The user is currently growing tomatoes and peppers in their garden.",
+      "The user's current mode of transport is a Xylorim Scooter.",
+      "The user previously drove a Therwyn Compact.",
+      "The user previously drove a Vorantel SUV.",
+      "The user works on UX research.",
+      "The user's favorite restaurant is The Ondreth Pot.",
+      "The user goes to Velthari Studio for workouts.",
+      "The user is subscribed to Xelvoria.",
+      "The user is part of a book club that meets once a month to discuss books.",
+      "The user enjoys a variety of genres but is especially drawn to literary fiction and psychological thrillers.",
+      "The user has a half-marathon coming up.",
+      "The user has flexible hours at their job.",
+      "The user has an employer-provided health plan for insurance.",
+      "The user's office is in Tesswick Bay, through their employer; if their employer changes, this would change.",
+      "The user's job title is designer, through their employer; if their employer changes, this would change.",
+      "The user takes the bike to work, which depends on the office being in Tesswick Bay; if that changes, this would change too.",
+      "The user's commute is about 1 hour, which depends on where the office is in Tesswick Bay; if that changes, the distance would change.",
+      "The user's life philosophy, word for word, is: \"We are what we repeatedly do. Excellence, then, is not an act, but a habit. The whole is greater than the sum of its parts. We must become the change we wish to see in the world.\"",
+      "If the user changes their employer, their office will be in Quivira Springs.",
+      "If the user changes their employer, their job title will be product manager.",
+      "If the user's work location changes, their commute will be around 1.5 hours.",
+      "The user just accepted a new position at Dranthex Logistics.",
+      "The user's partner's name is Jordan.",
+      "The user's current media is a true crime podcast.",
+      "The user asked to forget that they are part of pickup basketball Saturdays."
+    ]
+  },
+  {
+    "episode_id": "sw_032",
+    "hop": 2,
+    "n_extracted": 22,
+    "root_before_recalled": true,
+    "targets": [
+      {
+        "entity": "token_format",
+        "after_value": "Oathkeeper-mTLS-cert",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "middleware_config",
+        "after_value": "verithos-pkce-guard v1.4",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "user_session_ttl",
+        "after_value": null,
+        "pre_value_recalled": null,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": null
+      },
+      {
+        "entity": "auth_method",
+        "after_value": "OAuth 2.0 + PKCE",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      }
+    ],
+    "extracted_facts": [
+      "The team's on-call rotation is paired oncall, with a primary and a secondary oncall person.",
+      "The team's secret manager is Orinthal Sealed.",
+      "The team previously used Sigilix Manager as its secret manager.",
+      "The team previously used Velthri Keys as its secret manager.",
+      "The login endpoint for the project is /auth/kryptal/signin.",
+      "The team's default branch is release.",
+      "Production alerts go to #aurora-alerts.",
+      "Project docs are at github.com/aurora-team/docs.",
+      "The incident runbook is at runbooks.aurora.internal/playbooks.",
+      "The onboarding guide is at notion.so/aurora-team/new-hire.",
+      "The team's code review policy is 2 approvals + security review for auth/.",
+      "The team's package manager is Zelthra Lib.",
+      "The team switched its auth provider to Zenthos ID.",
+      "The team previously used Verithos Auth for authentication.",
+      "Session TTL is 8 hours; this is determined by the auth provider, and if they switch providers, this would change.",
+      "The authentication method is JWT Bearer; this is determined by the auth provider, and if they switch providers, this would change.",
+      "The team uses Cerberix-SAML-assertion token format; this is determined by the auth provider, and if they switch providers, this would change.",
+      "The auth middleware is kryptal-bearer-check v2.2; this is determined by the fact that they use JWT Bearer, and if that changes, this would change.",
+      "If they switch auth providers, the authentication method will be OAuth 2.0 + PKCE.",
+      "If they switch auth providers, the token format will be Oathkeeper-mTLS-cert.",
+      "If they change the auth method, the middleware config will be verithos-pkce-guard v1.4.",
+      "The user wants this error log remembered word for word: \"OutOfMemoryError: Java heap space. GC overhead limit exceeded after 8 consecutive failed collections in pool 'PS Old Gen'. Heap dump written to /var/log/aurora/heap-2024-05-08.hprof at 18:42:11Z. Recommend increasing -Xmx beyond 4G or investigating memory leak in OrderProcessor.\""
+    ]
+  },
+  {
+    "episode_id": "sw_029",
+    "hop": 2,
+    "n_extracted": 27,
+    "root_before_recalled": true,
+    "targets": [
+      {
+        "entity": "connection_string",
+        "after_value": "thalnex://store-prod:8529/aurora",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "model_syntax",
+        "after_value": "Thalnex.document('Model', {fields})",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "backup_schedule",
+        "after_value": null,
+        "pre_value_recalled": null,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": null
+      },
+      {
+        "entity": "orm_library",
+        "after_value": "Thalnex Query",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      }
+    ],
+    "extracted_facts": [
+      "Project docs are at docs.aurora.internal/wiki.",
+      "The team's secret manager is now Pyronos Crypt.",
+      "The team previously used Kerberos Trove as secret manager.",
+      "The team previously used Sigilix Manager as secret manager.",
+      "The team's on-call rotation is paired oncall (primary + secondary).",
+      "The onboarding guide is at notion.so/aurora-team/new-hire.",
+      "The team uses Crysthene Migrate for migrations.",
+      "Production alerts go to #aurora-alerts.",
+      "The changelog is at CHANGELOG.md in the repo root.",
+      "The team switched its database to Pyravar Data.",
+      "The team previously used Zyndra Base as their database.",
+      "The team meeting is every Wednesday at 10am.",
+      "The team's ORM is Keldaris Link.",
+      "The ORM depends on the database; if the database changes, the ORM would change.",
+      "The database connection string is thalnex://store-backup:8529/aurora.",
+      "The connection string depends on the database; if the database changes, it would change.",
+      "Database backups run twice daily at 2am and 2pm UTC.",
+      "The backup schedule depends on the database; if the database changes, it would change.",
+      "Models are defined with Keldaris.object('Model', props).",
+      "The model definition syntax is determined by using Keldaris Link; if that changes, it would change.",
+      "If the database is changed, the ORM will be Thalnex Query.",
+      "If the database is changed, the connection string will be thalnex://store-prod:8529/aurora.",
+      "If the ORM library is changed, the model syntax will be Thalnex.document('Model', {fields}).",
+      "The team's dev channel is #aurora-dev.",
+      "The code review policy is lead approval for core/.",
+      "The user asked to delete the log drain endpoint from memory.",
+      "An exact error log to remember: \"DeadlockDetected: transactions 4821 and 4823 are deadlocked on table aurora_orders. Query 1 was UPDATE orders SET status = 'shipped' WHERE region = 'us-east'. Query 2 was DELETE FROM orders WHERE created_at < NOW() - INTERVAL '30 days'. First seen at 2024-08-04T22:33:18Z; recommend serializable isolation review.\""
+    ]
+  },
+  {
+    "episode_id": "sw_017",
+    "hop": 2,
+    "n_extracted": 21,
+    "root_before_recalled": false,
+    "targets": [
+      {
+        "entity": "auth_method",
+        "after_value": "SAML 2.0 SSO",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "middleware_config",
+        "after_value": "cerberix-sso-bridge v1.9",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "login_endpoint",
+        "after_value": null,
+        "pre_value_recalled": null,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": null
+      },
+      {
+        "entity": "auth_method",
+        "after_value": "SAML 2.0 SSO",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      }
+    ],
+    "extracted_facts": [
+      "The team's on-call rotation is paired oncall, with a primary and secondary oncall for each shift.",
+      "The sprint deadline is set for 2025 May 23.",
+      "The team uses Cerberix-SAML-assertion token format for authentication.",
+      "Session TTL is set to 24 hours.",
+      "The team's code review policy requires 2 approvals before merging any changes.",
+      "Production alerts go to the Slack channel #vortex-alerts.",
+      "The team's default branch is set to \"release,\" where all stable code should be merged before deployment.",
+      "The incident runbook is at github.com/aurora-team/runbooks.",
+      "The team uses GitHub Flow with PR reviews branching.",
+      "The login endpoint is /zenthos/id/authenticate.",
+      "The login endpoint is determined by the auth provider; if the provider switches, it would change.",
+      "The team's authentication method is API Key + HMAC.",
+      "The authentication method is determined by the auth provider; if the provider switches, it would change.",
+      "The auth middleware is phalanx-key-guard v1.3.",
+      "The auth middleware is determined by the fact that the team uses API Key + HMAC; if that changes, it would change.",
+      "If the team switches auth providers, the authentication method will be SAML 2.0 SSO.",
+      "If the team changes the auth method, the middleware config will be cerberix-sso-bridge v1.9.",
+      "The team switched its auth provider to Kryptal Auth.",
+      "The standup format is round-robin text post by 10am.",
+      "The team channel is #aurora-core.",
+      "The user encountered this error log: \"ConnectionRefusedError: [Errno 111] Connection refused. Service crysthene-db-primary on port 5432 is not accepting connections. Last successful heartbeat was at 2024-03-15T08:23:41Z. Check firewall rules and verify that max_connections has not been exceeded.\""
+    ]
+  },
+  {
+    "episode_id": "sw_003",
+    "hop": 1,
+    "n_extracted": 23,
+    "root_before_recalled": false,
+    "targets": [
+      {
+        "entity": "log_drain_endpoint",
+        "after_value": "sink.orinthal.dev/aurora",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "deploy_command",
+        "after_value": "narvex deploy --env prod",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "staging_url",
+        "after_value": null,
+        "pre_value_recalled": null,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": null
+      },
+      {
+        "entity": "dockerfile_path",
+        "after_value": null,
+        "pre_value_recalled": null,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": null
+      },
+      {
+        "entity": "ci_config",
+        "after_value": "narvex-ci.yml",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      }
+    ],
+    "extracted_facts": [
+      "The team uses trunk-based development with feature flags for branching.",
+      "The team's package manager is Synthari Modules.",
+      "The team deploys to Thandrel Infra.",
+      "The team's Docker image is zephyra-hub/aurora:prod.",
+      "The team's collaboration channel is #aurora-core.",
+      "The team's default branch is production.",
+      "Production alerts go to #zenith-incidents.",
+      "The team releases monthly on the first Monday.",
+      "The monitoring dashboard is at observe.velturis.io/aurora.",
+      "The team's test coverage target is 90% for core modules.",
+      "Logs drain to drain.zephyra.io/proj-42.",
+      "Staging is at sandbox.thandrel.io/aurora.",
+      "The team's CI config is thandrel-flow.toml.",
+      "The Dockerfile is at infra/zephyra/Dockerfile.",
+      "The deploy command is thandrel ship --channel beta.",
+      "The team's on-call rotation is follow-the-sun across timezones.",
+      "The changelog is at CHANGELOG.md in the repo root.",
+      "If deploy targets change, the CI config will be narvex-ci.yml.",
+      "If deploy targets change, logs will drain to sink.orinthal.dev/aurora.",
+      "If the CI config changes, the deploy command will be narvex deploy --env prod.",
+      "The Dockerfile location is determined by the image being zephyra-hub/aurora:prod; if that changes, the Dockerfile location would change.",
+      "The deploy command is determined by the CI being thandrel-flow.toml; if that changes, the deploy command would change.",
+      "The user wants this exact error log remembered word for word: \"SegmentationFault at 0x00007fff5a3b2c40 in vorathis_query_planner.so. Backtrace: frame 0 query_optimize, frame 1 plan_join, frame 2 execute_select. Core dump saved to /var/crash/core.aurora.18923 on 2024-06-12T03:55:09Z. Last known good build was commit 7a4f9e2; bisect against recent migrations.\""
+    ]
+  },
+  {
+    "episode_id": "sw_028",
+    "hop": 2,
+    "n_extracted": 22,
+    "root_before_recalled": false,
+    "targets": [
+      {
+        "entity": "docker_image",
+        "after_value": "thandrel-images/aurora:release",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "deploy_command",
+        "after_value": "zephyra push --target prod",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "log_drain_endpoint",
+        "after_value": null,
+        "pre_value_recalled": null,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": null
+      },
+      {
+        "entity": "dockerfile_path",
+        "after_value": null,
+        "pre_value_recalled": null,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": null
+      },
+      {
+        "entity": "ci_config",
+        "after_value": "zephyra-pipeline.json",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      }
+    ],
+    "extracted_facts": [
+      "The team uses GitHub Flow with PR reviews branching, creating branches for features and opening pull requests when ready for reviews.",
+      "The team's package manager is Veltrion Pkg.",
+      "The team deploys to Narvex Cloud.",
+      "Project docs are at github.com/aurora-team/docs.",
+      "The team's default branch is release.",
+      "Staging is at staging.narvex.internal/aurora.",
+      "The team's design system is Veltrion UI Kit v2.",
+      "The team releases monthly on the first Monday.",
+      "The monitoring dashboard is at metrics.thandrel.io/aurora-prod.",
+      "The team's secret manager is Verisigil Lock.",
+      "The Docker image is korinth-repo/aurora:stable; this is determined by the infrastructure, and if that changes, this would change.",
+      "Logs drain to drain.zephyra.io/proj-42; this is determined by the infrastructure, and if that changes, this would change.",
+      "The CI config is korinth-deploy.yaml; this is determined by the infrastructure, and if that changes, this would change.",
+      "The Dockerfile is at infra/korinth/Dockerfile; this is determined by the fact that the image is korinth-repo/aurora:stable, and if that changes, this would change.",
+      "The deploy command is korinth release --prod; this is determined by the fact that the CI is korinth-deploy.yaml, and if that changes, this would change.",
+      "An error log to remember word for word: \"CertificateVerificationError: certificate chain validation failed for crysthene-db-primary.internal. Subject CN does not match expected hostname; chain depth 2 unverified. Observed at 2024-07-22T11:09:47Z by tls_handshake_listener. Rotate the cert via Cryptara Vault and restart the connection pool to recover.\"",
+      "If the team changes deploy targets, the CI config will be zephyra-pipeline.json.",
+      "If the team changes deploy targets, the Docker image will be thandrel-images/aurora:release.",
+      "If the CI config changes, the deploy command will be zephyra push --target prod.",
+      "The changelog is at notion.so/aurora-team/releases.",
+      "The user asked to remove the on-call rotation (volunteer-based with weekly signup) from memory.",
+      "The onboarding guide is at docs.aurora.internal/onboarding."
+    ]
+  },
+  {
+    "episode_id": "sw_011",
+    "hop": 1,
+    "n_extracted": 21,
+    "root_before_recalled": true,
+    "targets": [
+      {
+        "entity": "dev_server_command",
+        "after_value": "moxira serve --hot",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "test_command",
+        "after_value": "quorix spec --run smoke",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "build_tool",
+        "after_value": null,
+        "pre_value_recalled": null,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": null
+      },
+      {
+        "entity": "build_command",
+        "after_value": null,
+        "pre_value_recalled": null,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": null
+      },
+      {
+        "entity": "test_framework",
+        "after_value": "Quorix Spec",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      }
+    ],
+    "extracted_facts": [
+      "The team's design system is Quenthar Design v1.",
+      "The team's package manager is Synthari Modules (previously Karnex Pack, then Dranith Stack).",
+      "The team migrated to a new framework called Veltrion (previously used Quenthar).",
+      "The team's default branch is release.",
+      "The team's test coverage target is no strict target; PRs are reviewed for testing.",
+      "Production alerts go to the #aurora-pager channel.",
+      "The team's code review policy is lead approval for the core/ directory.",
+      "The project follows a workspace structure with /services and /common.",
+      "The team meeting is every Friday at 9:30 am.",
+      "To run the dev server, use korvel dev --open; this is determined by using Quenthar, and if the framework switches, this would change.",
+      "The team uses Karnex Test for testing; this is determined by using Quenthar, and if the framework switches, this would change.",
+      "The build tool is Karnex Bundler; this is determined by using Quenthar, and if the framework switches, this would change.",
+      "The test command is karnex test --watch; this is determined by using Karnex Test, and if that changes, this would change.",
+      "The build command is karnex build --analyze; this is determined by using Karnex Bundler, and if that changes, this would change.",
+      "If the team switches frameworks, the test framework will be Quorix Spec.",
+      "If the team switches frameworks, the dev server command will be moxira serve --hot.",
+      "If the team changes the test framework, the test command will be quorix spec --run smoke.",
+      "The user wants this error log remembered word for word: \"CertificateVerificationError: certificate chain validation failed for crysthene-db-primary.internal. Subject CN does not match expected hostname; chain depth 2 unverified. Observed at 2024-07-22T11:09:47Z by tls_handshake_listener. Rotate the cert via Cryptara Vault and restart the connection pool to recover.\"",
+      "The team's on-call rotation is paired oncall (primary + secondary).",
+      "The user asked to remove the authentication method (Session Cookie + CSRF) from memory.",
+      "The team's secret manager is Pyronos Crypt."
+    ]
+  },
+  {
+    "episode_id": "sw_043",
+    "hop": 1,
+    "n_extracted": 20,
+    "root_before_recalled": true,
+    "targets": [
+      {
+        "entity": "connection_string",
+        "after_value": "thalnex://store-prod:8529/aurora",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "model_syntax",
+        "after_value": "Thalnex.document('Model', {fields})",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "backup_schedule",
+        "after_value": null,
+        "pre_value_recalled": null,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": null
+      },
+      {
+        "entity": "orm_library",
+        "after_value": "Thalnex Query",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      }
+    ],
+    "extracted_facts": [
+      "The team's on-call rotation is biweekly.",
+      "The team meeting is every Thursday at 2pm.",
+      "Production alerts go to #aurora-alerts.",
+      "The sprint deadline is 2025 March 28.",
+      "The incident runbook is at wiki.aurora.dev/incident-response.",
+      "The onboarding guide is at notion.so/aurora-team/new-hire.",
+      "The team's package manager is Synthari Modules (previously Tarvex Mod, then Dranith Stack).",
+      "The team uses Vorathis Evolve for migrations.",
+      "The team's database was switched to Thalnex Store (previously Crysthene DB).",
+      "The database connection string was thalnex://store-backup:8529/aurora when the database was Crysthene DB.",
+      "The ORM was Zyndra Access when the database was Crysthene DB.",
+      "Models were defined with Zyndra.struct('Model', types) when using Zyndra Access.",
+      "Database backups run twice daily at 2am and 2pm UTC (this depended on the database being Crysthene DB).",
+      "If the database changes, the connection string will be thalnex://store-prod:8529/aurora.",
+      "If the database changes, the ORM will be Thalnex Query.",
+      "If the ORM library changes, the model syntax will be Thalnex.document('Model', {fields}).",
+      "The user wants this error log remembered word for word: \"DeadlockDetected: transactions 4821 and 4823 are deadlocked on table aurora_orders. Query 1 was UPDATE orders SET status = 'shipped' WHERE region = 'us-east'. Query 2 was DELETE FROM orders WHERE created_at < NOW() - INTERVAL '30 days'. First seen at 2024-08-04T22:33:18Z; recommend serializable isolation review.\"",
+      "The standup format is async written updates in Slack.",
+      "The team channel is #aurora-core.",
+      "The user asked to remove the middleware config phalanx-key-guard v1.3 from memory."
+    ]
+  },
+  {
+    "episode_id": "pl_040",
+    "hop": 2,
+    "n_extracted": 24,
+    "root_before_recalled": true,
+    "targets": [
+      {
+        "entity": "dietary_restriction",
+        "after_value": "nut-free",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "fitness_facility",
+        "after_value": "Pyravar CrossFit",
+        "pre_value_recalled": true,
+        "cur_value_recalled": false,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "medication",
+        "after_value": null,
+        "pre_value_recalled": null,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": null
+      },
+      {
+        "entity": "exercise_routine",
+        "after_value": "pilates 3x/week",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      }
+    ],
+    "extracted_facts": [
+      "The user's hobby is woodworking.",
+      "The user has been working on furniture pieces in woodworking.",
+      "The user currently drives a Vorantel SUV.",
+      "The user uses the SUV to carry cycling gear.",
+      "The user was diagnosed with high blood pressure, which has since been treated and resolved.",
+      "The user was recently diagnosed with seasonal allergies.",
+      "The user's current media is the TV show \"Whispers of Zarinthea\".",
+      "The user plays volleyball.",
+      "The user wants to improve their volleyball serves.",
+      "The user is part of a cycling club with regular meet-ups and rides.",
+      "The user has a regular dermatologist appointment every month.",
+      "The user usually sleeps from midnight to 8am.",
+      "The user's exercise routine is swimming 2x/week, determined by their high blood pressure.",
+      "The user takes a medication called Velnorath, determined by their high blood pressure.",
+      "The user's dietary restriction is dairy-free, determined by their high blood pressure.",
+      "If the user's health condition changes, their exercise routine would likely change too.",
+      "If the user's health condition changes, their medication would likely change too.",
+      "If the user's health condition changes, their dietary restriction would likely change too.",
+      "If the user's health condition changes, their exercise routine will be pilates 3x/week.",
+      "If the user's health condition changes, their dietary restriction will be nut-free.",
+      "If the user's exercise routine changes, they will work out at Pyravar CrossFit.",
+      "The user's life philosophy, word for word: \"Twenty years from now you will be more disappointed by the things that you didn't do than by the ones you did do. So throw off the bowlines, sail away from safe harbor, catch the trade winds in your sails. Explore, dream, discover.\"",
+      "The user's regular social meetup is game night with neighbors.",
+      "The user has a tech conference coming up."
+    ]
+  },
+  {
+    "episode_id": "sw_032",
+    "hop": 1,
+    "n_extracted": 19,
+    "root_before_recalled": true,
+    "targets": [
+      {
+        "entity": "token_format",
+        "after_value": "Oathkeeper-mTLS-cert",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "middleware_config",
+        "after_value": "verithos-pkce-guard v1.4",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "user_session_ttl",
+        "after_value": null,
+        "pre_value_recalled": null,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": null
+      },
+      {
+        "entity": "auth_method",
+        "after_value": "OAuth 2.0 + PKCE",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      }
+    ],
+    "extracted_facts": [
+      "Team's on-call rotation is paired oncall, with a primary and a secondary on-call person.",
+      "The team's login endpoint is /auth/kryptal/signin.",
+      "The team's default branch is release.",
+      "Production alerts go to the #aurora-alerts channel.",
+      "The team's secret manager is Orinthal Sealed (previously Sigilix Manager, then Velthri Keys).",
+      "The team's current auth provider is Zenthos ID (previously Verithos Auth).",
+      "Project docs are at github.com/aurora-team/docs.",
+      "The incident runbook is at runbooks.aurora.internal/playbooks.",
+      "The onboarding guide is at notion.so/aurora-team/new-hire.",
+      "Session TTL is 8 hours; this is determined by the auth provider, and if they switch providers, this would change.",
+      "The authentication method is JWT Bearer; this is determined by the auth provider, and if they switch providers, this would change.",
+      "The token format is Cerberix-SAML-assertion; this is determined by the auth provider, and if they switch providers, this would change.",
+      "The auth middleware is kryptal-bearer-check v2.2; this is determined by the fact that they use JWT Bearer, and if that changes, this would change.",
+      "If they switch auth providers, the authentication method will be OAuth 2.0 + PKCE.",
+      "If they switch auth providers, the token format will be Oathkeeper-mTLS-cert.",
+      "If they change the auth method, the middleware config will be verithos-pkce-guard v1.4.",
+      "The code review policy is 2 approvals + security review for auth/.",
+      "The team's package manager is Zelthra Lib.",
+      "The user wants this exact error log remembered word for word: \"OutOfMemoryError: Java heap space. GC overhead limit exceeded after 8 consecutive failed collections in pool 'PS Old Gen'. Heap dump written to /var/log/aurora/heap-2024-05-08.hprof at 18:42:11Z. Recommend increasing -Xmx beyond 4G or investigating memory leak in OrderProcessor.\""
+    ]
+  },
+  {
+    "episode_id": "pl_026",
+    "hop": 1,
+    "n_extracted": 21,
+    "root_before_recalled": true,
+    "targets": [
+      {
+        "entity": "commute_method",
+        "after_value": "subway",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "fitness_facility",
+        "after_value": null,
+        "pre_value_recalled": null,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": null
+      }
+    ],
+    "extracted_facts": [
+      "The user's hobby is playing guitar and has been playing for a while.",
+      "The user enjoys playing a mix of classic rock and acoustic songs on guitar.",
+      "The user is subscribed to Thyranote and uses it for tracking practice sessions and learning new songs.",
+      "The user's regular social meetup is trivia night on Wednesdays.",
+      "The user plays pickleball.",
+      "The user plays pickleball at a local court.",
+      "The user is subscribed to a meal kit called Kelvimeal.",
+      "The user's commute is about 15 minutes.",
+      "The user is planning a big purchase of a road bike.",
+      "The user is part of a cycling club.",
+      "The user recently switched and is subscribed to Pyrethon Plus.",
+      "The user's favorite restaurant is Quirenth Leaf Cafe, which has many healthy options.",
+      "The user's partner's name is Jordan.",
+      "The user bikes to work, which depends on the fact that they live in Zaravel Heights; if that changes, this would change too.",
+      "The user goes to Thandrel YMCA for workouts, which depends on where they live in Zaravel Heights; if they move, this would change.",
+      "The user's life philosophy, word for word: \"In three words I can sum up everything I've learned about life: it goes on. You'll have bad times, but it will always wake you up to the stuff you weren't paying attention to.\"",
+      "If the user changes their residence location, they will switch to subway for commuting.",
+      "The user just moved to Velturis Glen.",
+      "The user's current media is Thyrelion (anime).",
+      "The user asked to remove the weekly tutoring session appointment from memory.",
+      "The user has a friend's wedding coming up."
+    ]
+  },
+  {
+    "episode_id": "pl_050",
+    "hop": 1,
+    "n_extracted": 24,
+    "root_before_recalled": true,
+    "targets": [
+      {
+        "entity": "fitness_facility",
+        "after_value": "Zorathel Peak Gym",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "commute_duration",
+        "after_value": null,
+        "pre_value_recalled": null,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": null
+      }
+    ],
+    "extracted_facts": [
+      "The user's hobby is woodworking.",
+      "The user is subscribed to Thyranote, a note-taking and organization platform.",
+      "The user uses Thyranote primarily for organizing thoughts and keeping track of important information.",
+      "The user takes the bus to work.",
+      "The user has a regular physical therapy appointment twice a week for recovery and mobility.",
+      "The user has a regular social meetup at trivia night on Wednesdays.",
+      "The user plays basketball.",
+      "The user wants to improve their shooting consistency, especially under pressure.",
+      "The user is subscribed to a meal kit service called Kelvimeal.",
+      "The user's commute is about 50 minutes; this depends on where they live in Pyresta Meadow, and if that changes, the distance would change.",
+      "The user's partner's name is Sarah.",
+      "The user is part of a volunteer group that organizes community events and helps with local projects.",
+      "The user's volunteer group focuses on organizing food drives and clean-up events in local parks.",
+      "The user is subscribed to Dranthazon.",
+      "The user finds documentaries and original series on Dranthazon particularly captivating.",
+      "The user's favorite restaurant is Thyssel Lane.",
+      "The user is planning a big purchase of a camera to get into photography more seriously.",
+      "The user is planning a housewarming party.",
+      "The user goes to Pyravar CrossFit for workouts; this depends on where they live in Pyresta Meadow, and if they move, this would change.",
+      "The user's life philosophy, word for word, is: \"Try not to become a man of success, but rather try to become a man of value. Look around at how people want to get more out of life than they put in. A man of value will give more than he receives.\"",
+      "If the user changes their residence location, they will work out at Zorathel Peak Gym.",
+      "The user just moved to Zaravel Heights.",
+      "The user's current media is Whispers of Zarinthea (TV).",
+      "The user asked to remove the fact that their housing type is a single-family house from memory."
+    ]
+  },
+  {
+    "episode_id": "pl_018",
+    "hop": 1,
+    "n_extracted": 21,
+    "root_before_recalled": true,
+    "targets": [
+      {
+        "entity": "commute_method",
+        "after_value": "commuter rail",
+        "pre_value_recalled": true,
+        "cur_value_recalled": false,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "skill_acquisition",
+        "after_value": null,
+        "pre_value_recalled": null,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": null
+      }
+    ],
+    "extracted_facts": [
+      "The user's hobby is pottery.",
+      "The user has been experimenting with different pottery techniques lately.",
+      "The user previously drove a Zyvanta Sedan for their daily commute.",
+      "The user then switched to driving a Therwyn Compact.",
+      "The user now drives a Dranthis Pickup, used for daily driving and hauling things.",
+      "The user's work hours are hybrid, with 3 days in the office and 2 days remote.",
+      "The user is subscribed to Pyrethon Plus.",
+      "The user plays volleyball.",
+      "The user wants to improve their serving technique in volleyball and has been struggling with consistency.",
+      "The user's financial goal is saving for their kids' education fund.",
+      "The user has kids.",
+      "The user's current media is Whispers of Zarinthea (TV show).",
+      "The user is part of a running club that meets regularly to train and participate in local races.",
+      "The user was studying for an MBA at Vorenthal Business School.",
+      "The user walks to work, which depends on the fact that they're studying an MBA at Vorenthal Business School; if that changes, this would change too.",
+      "The user is learning Spanish as part of their program; if their school changes, this would change.",
+      "The user's life philosophy, word for word, is: \"Twenty years from now you will be more disappointed by the things that you didn't do than by the ones you did do. So throw off the bowlines, sail away from safe harbor, catch the trade winds in your sails. Explore, dream, discover.\"",
+      "If the user changes schools, they will take commuter rail to get there.",
+      "The user just started a part-time JD at Belvona Harbor Law.",
+      "The user's partner's name is Jessica.",
+      "The user's regular social meetup is a potluck dinner group."
+    ]
+  },
+  {
+    "episode_id": "sw_048",
+    "hop": 1,
+    "n_extracted": 20,
+    "root_before_recalled": true,
+    "targets": [
+      {
+        "entity": "login_endpoint",
+        "after_value": "/auth/kryptal/signin",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "middleware_config",
+        "after_value": "verithos-oauth-middleware v2.1",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "auth_method",
+        "after_value": "OAuth 2.0 + PKCE",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "auth_method",
+        "after_value": "OAuth 2.0 + PKCE",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      }
+    ],
+    "extracted_facts": [
+      "The team uses trunk-based development with feature flags for branching.",
+      "The team's package manager is Veltrion Pkg (previously Quorix Hub, then Dranith Stack).",
+      "Session TTL is set to 8 hours.",
+      "The changelog is located at the GitHub Releases page.",
+      "The team's default branch is main.",
+      "The team meeting is every Friday at 9:30am.",
+      "The team releases weekly on Tuesday.",
+      "The team's on-call rotation is paired oncall (primary + secondary).",
+      "The team switched its auth provider to Kryptal Auth (previously Zenthos ID).",
+      "The team uses Cerberix-SAML-assertion token format for authentication.",
+      "The login endpoint is /cerberix/saml/sso-init; this is determined by the auth provider (Zenthos ID); if they switch providers, this would change.",
+      "The authentication method is SAML 2.0 SSO; this is determined by the auth provider (Zenthos ID); if they switch providers, this would change.",
+      "The auth middleware is oathkeeper-mtls-proxy v4.1; this is determined by the fact that they use SAML 2.0 SSO; if that changes, this would change.",
+      "If they switch auth providers, the authentication method will be OAuth 2.0 + PKCE.",
+      "If they switch auth providers, the login endpoint will be /auth/kryptal/signin.",
+      "If they change the auth method, the middleware config will be verithos-oauth-middleware v2.1.",
+      "The team channel is #aurora-dev.",
+      "The secret manager is Sigilix Manager.",
+      "The user asked to delete the log drain endpoint (stream.velturis.io/aurora) from memory.",
+      "The user wants this error log remembered word for word: \"DeadlockDetected: transactions 4821 and 4823 are deadlocked on table aurora_orders. Query 1 was UPDATE orders SET status = 'shipped' WHERE region = 'us-east'. Query 2 was DELETE FROM orders WHERE created_at < NOW() - INTERVAL '30 days'. First seen at 2024-08-04T22:33:18Z; recommend serializable isolation review.\""
+    ]
+  },
+  {
+    "episode_id": "pl_046",
+    "hop": 1,
+    "n_extracted": 27,
+    "root_before_recalled": true,
+    "targets": [
+      {
+        "entity": "dietary_restriction",
+        "after_value": "nut-free",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "fitness_facility",
+        "after_value": "Crysthene Pool",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "sleep_pattern",
+        "after_value": null,
+        "pre_value_recalled": null,
+        "cur_value_recalled": false,
+        "predecl_syntactic_hit": null
+      },
+      {
+        "entity": "exercise_routine",
+        "after_value": "swimming 2x/week",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      }
+    ],
+    "extracted_facts": [
+      "The user's hobby is pottery and they've been getting into it lately.",
+      "The user is subscribed to Xelvoria.",
+      "The content the user enjoys most on Xelvoria includes tutorials and tips for different art forms.",
+      "The user's partner's name is Alex.",
+      "The user plays pickleball and is still getting the hang of it.",
+      "The user has been practicing serves and volleys in pickleball but struggles with keeping shots consistent.",
+      "The user is subscribed to a meal kit service called Kelvimeal.",
+      "The user takes a multivitamin.",
+      "The user's regular social meetup is a potluck dinner group.",
+      "The user is part of a book club that meets monthly.",
+      "The user's book club is looking to choose their next book.",
+      "The user is subscribed to Dranthazon.",
+      "The user attends a weekly tutoring session focused on subjects they want to improve in.",
+      "The user is currently reading \"Xelvari Dawn.\"",
+      "The user's life philosophy, word for word: \"The only way to do great work is to love what you do. If you haven't found it yet, keep looking. Don't settle. As with all matters of the heart, you'll know when you find it.\"",
+      "The user usually sleeps 11pm-5:30am and is an early riser; this is determined by their seasonal allergies, and if their health condition changes, this would likely change too.",
+      "The user's exercise routine is weight training 4x/week; this is determined by their seasonal allergies, and if their health condition changes, this would likely change too.",
+      "The user's dietary restriction is dairy-free; this is determined by their seasonal allergies, and if their health condition changes, this would likely change too.",
+      "The user goes to Pyravar CrossFit for workouts; this is for their weight training 4x/week, and if their routine changes, they'd need a different facility.",
+      "If the user's health condition changes, their exercise routine will be swimming 2x/week.",
+      "If the user's health condition changes, their dietary restriction will be nut-free.",
+      "If the user's exercise routine changes, they will work out at Crysthene Pool.",
+      "The user's seasonal allergies have been treated and resolved.",
+      "The user was recently diagnosed with acid reflux.",
+      "The user has a concert coming up.",
+      "The user asked to forget that they go to Quivira Springs Community College.",
+      "The user is planning a big purchase of an electric car."
+    ]
+  },
+  {
+    "episode_id": "sw_036",
+    "hop": 1,
+    "n_extracted": 22,
+    "root_before_recalled": true,
+    "targets": [
+      {
+        "entity": "docker_image",
+        "after_value": "korinth-repo/aurora:stable",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "deploy_command",
+        "after_value": "orinthal publish --tier sandbox",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "staging_url",
+        "after_value": null,
+        "pre_value_recalled": null,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": null
+      },
+      {
+        "entity": "dockerfile_path",
+        "after_value": null,
+        "pre_value_recalled": null,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": null
+      },
+      {
+        "entity": "ci_config",
+        "after_value": "orinthal-build.yml",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      }
+    ],
+    "extracted_facts": [
+      "The team's on-call rotation is volunteer-based with weekly signup.",
+      "The team deploys to Narvex Cloud.",
+      "The team later moved deployment to Korinth Hosting.",
+      "Logs drain to stream.velturis.io/aurora.",
+      "The team's default branch is trunk.",
+      "Production alerts go to #zenith-incidents, the main channel for incident management.",
+      "The team's secret manager was initially Selvex Secrets, then changed to Kerberos Trove, and most recently is Orinthal Sealed.",
+      "The changelog is at notion.so/aurora-team/releases.",
+      "The incident runbook is at github.com/aurora-team/runbooks.",
+      "The monitoring dashboard is at metrics.thandrel.io/aurora-prod.",
+      "The team releases biweekly on Friday afternoon.",
+      "The Docker image is narvex-registry/aurora:latest, determined by the infrastructure (deploying on Narvex Cloud); if that changes, this would change.",
+      "The CI config is thandrel-flow.toml, determined by the infrastructure (deploying on Narvex Cloud); if that changes, this would change.",
+      "Staging is at dev.orinthal.dev/aurora, determined by the infrastructure (deploying on Narvex Cloud); if that changes, this would change.",
+      "The Dockerfile is at infra/narvex/Dockerfile, determined by the fact that the image is narvex-registry/aurora:latest; if that changes, this would change.",
+      "The deploy command is thandrel ship --channel stable, determined by the fact that the CI is thandrel-flow.toml; if that changes, this would change.",
+      "If deploy targets change, the CI config will be orinthal-build.yml.",
+      "If deploy targets change, the Docker image will be korinth-repo/aurora:stable.",
+      "If the CI config changes, the deploy command will be orinthal publish --tier sandbox.",
+      "The onboarding guide is at docs.aurora.internal/onboarding.",
+      "The user asked to remove Veltrion UI Kit v2 (the design system) from memory.",
+      "The sprint deadline is 2025 June 20."
+    ]
+  },
+  {
+    "episode_id": "sw_046",
+    "hop": 1,
+    "n_extracted": 20,
+    "root_before_recalled": true,
+    "targets": [
+      {
+        "entity": "build_tool",
+        "after_value": "Karnex Bundler",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "test_command",
+        "after_value": "zelthra assert --suite all",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "project_structure",
+        "after_value": null,
+        "pre_value_recalled": null,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": null
+      },
+      {
+        "entity": "build_command",
+        "after_value": null,
+        "pre_value_recalled": null,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": null
+      },
+      {
+        "entity": "test_framework",
+        "after_value": "Zelthra Assert",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      }
+    ],
+    "extracted_facts": [
+      "Team meeting is every Wednesday at 10am.",
+      "The team's secret manager is Orinthal Sealed.",
+      "The dev server is run with `synthari launch --hmr`.",
+      "The changelog is at the GitHub Releases page.",
+      "The team's channel is #vortex-team.",
+      "The team's package manager is Pyronis Bundle.",
+      "The team's standup format is a weekly sync plus daily async.",
+      "The team's default branch is trunk.",
+      "The team migrated to a new framework, Dravex.",
+      "The build tool is Tarvex CLI — this is determined by which framework is used (Quenthar); if the framework switches, this would change.",
+      "The project follows a workspace with /services and /common — this is determined by which framework is used (Quenthar); if the framework switches, this would change.",
+      "The team uses Dranith Probe for testing — this is determined by which framework is used (Quenthar); if the framework switches, this would change.",
+      "The build command is `tarvex compile --debug` — this is determined by the use of Tarvex CLI; if that changes, this would change.",
+      "The test command is `dranith probe --mode fast` — this is determined by the use of Dranith Probe; if that changes, this would change.",
+      "The user wants this error log remembered word for word: \"DeadlockDetected: transactions 4821 and 4823 are deadlocked on table aurora_orders. Query 1 was UPDATE orders SET status = 'shipped' WHERE region = 'us-east'. Query 2 was DELETE FROM orders WHERE created_at < NOW() - INTERVAL '30 days'. First seen at 2024-08-04T22:33:18Z; recommend serializable isolation review.\"",
+      "If the team switches frameworks, the test framework will be Zelthra Assert.",
+      "If the team switches frameworks, the build tool will be Karnex Bundler.",
+      "If the team changes the test framework, the test command will be `zelthra assert --suite all`.",
+      "The on-call rotation is follow-the-sun across timezones.",
+      "The test coverage target is 70% overall and 95% for auth."
+    ]
+  }
+]

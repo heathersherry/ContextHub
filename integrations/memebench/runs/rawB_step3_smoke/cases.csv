@@ -1,0 +1,6 @@
+episode_id,domain,hop,target_entity,gold_answer,before_answer,off_answer,on_answer,before_ok,off_after_ok,on_after_ok,off_trivial_pass,on_trivial_pass,oracle_calls,n_filler,edge_mode,edge_n_gold,edge_n_pred,edge_n_tp,edge_precision,edge_recall,raw_dialogue,n_superseded,error
+pl_001,personal_life,1,medication,multivitamin,Quelmithin,Quelmithin,multivitamin,True,False,True,False,True,8,19,discovered_hard,4,19,4,0.21052631578947367,1.0,True,2,
+pl_002,personal_life,1,commute_duration,10 min,1.5 hours,1.5 hours,10 min,True,False,True,False,True,2,20,discovered_hard,2,16,2,0.125,1.0,True,5,
+pl_003,personal_life,1,fitness_facility,Kaelstrom Fitness,Zorathel Peak Gym,Kaelstrom Fitness,Kaelstrom Fitness,True,True,True,True,True,5,20,discovered_hard,2,20,2,0.1,1.0,True,2,
+pl_004,personal_life,1,travel_plan,island getaway,island getaway,No trip planned,None,False,False,False,False,False,2,17,discovered_hard,2,8,1,0.125,0.5,True,3,
+pl_005,personal_life,1,financial_goal,saving for kids' education fund,paying off credit card debt,paying off credit card debt,engagement ring,True,False,False,False,False,6,21,discovered_hard,2,15,2,0.2,1.0,True,5,

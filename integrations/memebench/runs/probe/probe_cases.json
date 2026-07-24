@@ -1,0 +1,560 @@
+[
+  {
+    "episode_id": "pl_001",
+    "hop": 1,
+    "n_extracted": 31,
+    "root_before_recalled": true,
+    "targets": [
+      {
+        "entity": "medication",
+        "after_value": "multivitamin",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "fitness_facility",
+        "after_value": "Velthari Studio",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "regular_appointment",
+        "after_value": null,
+        "pre_value_recalled": null,
+        "cur_value_recalled": false,
+        "predecl_syntactic_hit": null
+      },
+      {
+        "entity": "exercise_routine",
+        "after_value": "cycling weekends",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      }
+    ],
+    "extracted_facts": [
+      "The user's hobby is pottery.",
+      "The user has been working on a few pottery pieces lately.",
+      "The user focuses mostly on functional pottery items.",
+      "The user has made a few bowls and vases.",
+      "The user's favorite pottery piece is a bowl with a unique glaze that changes colors in different lights.",
+      "The user initially drove a Zyvanta Sedan.",
+      "The user later switched to driving a Therwyn Compact.",
+      "The user switched again and now drives a Xylorim Scooter.",
+      "The user's dietary restriction is dairy-free.",
+      "The user enjoys a dairy-free pasta dish that uses cashew cream as a sauce.",
+      "The user requested that the fact that their partner is named James be removed from memory.",
+      "The user was reading a book called The Quorath Codex.",
+      "The user plays rock climbing.",
+      "The user enjoys both bouldering and roped climbing but focuses more on bouldering.",
+      "The user's health condition was lactose intolerance.",
+      "The user's lactose intolerance has been treated and resolved.",
+      "The user was recently diagnosed with high blood pressure.",
+      "The user is planning a big purchase of a road bike.",
+      "The user is part of a book club that meets regularly.",
+      "The user's book club generally leans towards literary fiction and mysteries.",
+      "The user's sleep varies by shift.",
+      "The user takes a medication called Quelmithin, determined by their lactose intolerance; if the health condition changes, this would likely change too.",
+      "The user's regular appointment is a weekly tutoring session, determined by their lactose intolerance; if the health condition changes, this would likely change too.",
+      "The user's exercise routine is swimming 2x/week, determined by their lactose intolerance; if the health condition changes, this would likely change too.",
+      "The user goes to Crysthene Pool for workouts, for their swimming 2x/week; if their routine changes, they'd need a different facility.",
+      "The user's life philosophy, word for word, is: \"We are what we repeatedly do. Excellence, then, is not an act, but a habit. The whole is greater than the sum of its parts. We must become the change we wish to see in the world.\"",
+      "If the user's health condition changes, their exercise routine will be cycling weekends.",
+      "If the user's health condition changes, their medication will switch to multivitamin.",
+      "If the user's exercise routine changes, they will work out at Velthari Studio.",
+      "The user's regular social meetup is trivia night on Wednesdays.",
+      "The user has a company offsite coming up."
+    ]
+  },
+  {
+    "episode_id": "pl_002",
+    "hop": 1,
+    "n_extracted": 25,
+    "root_before_recalled": true,
+    "targets": [
+      {
+        "entity": "commute_duration",
+        "after_value": "10 min",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "favorite_restaurant",
+        "after_value": null,
+        "pre_value_recalled": null,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": null
+      }
+    ],
+    "extracted_facts": [
+      "The user's hobby is knitting and has been doing it for a while.",
+      "The user usually works on scarves and blankets.",
+      "The user's regular appointment is physical therapy twice a week.",
+      "The user's regular social meetup is a potluck dinner group.",
+      "The user plays basketball.",
+      "The user goes to Pyravar CrossFit for workouts.",
+      "The user's partner's name is James.",
+      "The user is part of a board game group that meets regularly.",
+      "The user's board game group usually enjoys strategy games the most.",
+      "The user's board game group often plays \"Catan.\"",
+      "The user's board game group has recently been enjoying \"Carcassonne.\"",
+      "The user drives a Xylorim Scooter.",
+      "The user previously drove a Dranthis Pickup.",
+      "The user previously drove a Therwyn Compact.",
+      "The user takes the bus to work.",
+      "The user has a tech conference coming up.",
+      "The user's favorite restaurant is Zefiro's Kitchen; this depends on where the user lives in Cymbeline Shores, and if the user moves, this would change.",
+      "The user's commute is about 1.5 hours; this depends on where the user lives in Cymbeline Shores, and if that changes, the distance would change.",
+      "The user's life philosophy, word for word, is: \"The only way to do great work is to love what you do. If you haven't found it yet, keep looking. Don't settle. As with all matters of the heart, you'll know when you find it.\"",
+      "If the user changes residence, the user's commute will be around 10 min.",
+      "The user just moved to Orinthal Park.",
+      "The user previously lived in Cymbeline Shores.",
+      "The user is subscribed to Pyrethon Plus.",
+      "The user requested to remove the fact that their sleep pattern varies by shift from memory.",
+      "The user is planning a big purchase: an engagement ring."
+    ]
+  },
+  {
+    "episode_id": "pl_003",
+    "hop": 1,
+    "n_extracted": 21,
+    "root_before_recalled": true,
+    "targets": [
+      {
+        "entity": "fitness_facility",
+        "after_value": "Kaelstrom Fitness",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "commute_duration",
+        "after_value": null,
+        "pre_value_recalled": null,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": null
+      }
+    ],
+    "extracted_facts": [
+      "The user's hobby is playing guitar and has been playing for a while.",
+      "The user mostly enjoys playing rock and blues on guitar.",
+      "The user has been trying to learn some classic rock songs.",
+      "The user's partner's name is Alex.",
+      "The user likes to introduce their partner to new music.",
+      "The user has a regular dental appointment every 6 months.",
+      "The user takes the subway to work.",
+      "The user has a regular social meetup for pickup basketball on Saturdays.",
+      "The user does rock climbing.",
+      "The user is keen on trying out different climbing routes.",
+      "The user is part of a hiking club that explores different trails together.",
+      "The user subscribes to a Daily Journal subscription.",
+      "One of the user's favorite restaurants is Velmara Taqueria.",
+      "The user recently moved to Keldara Grove.",
+      "The user's commute is about 30 minutes, and this depends on where they live in Pyresta Meadow; if that changes, the distance would change.",
+      "The user goes to Zorathel Peak Gym for workouts, and this depends on where they live in Pyresta Meadow; if they move, this would change.",
+      "The user's life philosophy, word for word: \"Most people never run far enough on their first wind to find out they've got a second. Give your dreams all you've got and you'll be amazed at the energy that comes out of you.\"",
+      "If the user changes their residence location, they will work out at Kaelstrom Fitness.",
+      "The user has a tech conference coming up.",
+      "The user asked to remove the fact that they have a food allergy to eggs from memory.",
+      "The user's current media is Thyrelion (anime)."
+    ]
+  },
+  {
+    "episode_id": "pl_004",
+    "hop": 1,
+    "n_extracted": 17,
+    "root_before_recalled": true,
+    "targets": [
+      {
+        "entity": "travel_plan",
+        "after_value": "island getaway",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "living_arrangement",
+        "after_value": null,
+        "pre_value_recalled": null,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": null
+      }
+    ],
+    "extracted_facts": [
+      "The user's hobby is playing guitar and has been playing for a while.",
+      "The user mainly enjoys playing rock and blues on guitar.",
+      "The user plays pickleball as a hobby.",
+      "The user is part of a hiking club that explores different trails.",
+      "The user enjoys mountainous terrains the most for hiking.",
+      "The user currently drives a Xylorim Scooter, having previously driven a Therwyn Compact and then a Quorvel EV.",
+      "The user's financial goal is building an emergency fund.",
+      "The user is currently in a relationship.",
+      "The user's partner's name is Alex.",
+      "The user's home is a dormitory.",
+      "The user is currently reading a book called Xelvari Dawn.",
+      "The user is subscribed to Xelvoria.",
+      "The user has their parent's birthday coming up.",
+      "The user's life philosophy, word for word, is: \"Most people never run far enough on their first wind to find out they've got a second. Give your dreams all you've got and you'll be amazed at the energy that comes out of you.\"",
+      "The user has no travel planned — this depends on the fact that the user is dating; if that changes, this would change.",
+      "The user lives alone — this depends on the fact that the user is dating; if that changes, this would change.",
+      "If the user's relationship status changes, the user will plan an island getaway."
+    ]
+  },
+  {
+    "episode_id": "pl_005",
+    "hop": 1,
+    "n_extracted": 23,
+    "root_before_recalled": true,
+    "targets": [
+      {
+        "entity": "financial_goal",
+        "after_value": "saving for kids' education fund",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "skill_acquisition",
+        "after_value": null,
+        "pre_value_recalled": null,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": null
+      }
+    ],
+    "extracted_facts": [
+      "The user's hobby is knitting, which they find relaxing.",
+      "The user prefers to work on scarves and blankets when knitting.",
+      "The user sometimes experiments with colors and textures in knitting.",
+      "The user was watching The Veldrakon Spiral (TV).",
+      "The user is studying for an MS in CS at Quessara University.",
+      "The user bikes to work.",
+      "The user has a company offsite coming up.",
+      "The user plays basketball.",
+      "The user finds free throws challenging to practice.",
+      "The user was watching Whispers of Zarinthea (TV).",
+      "The user regularly meets college friends for brunch once a month.",
+      "The user is part of a hiking club that goes on weekend hikes.",
+      "The user's current media is The Quorath Codex (book).",
+      "The user's work hours are 10-to-7 fixed.",
+      "The user enjoys unwinding after work with hobbies or spending time outdoors.",
+      "The user's financial goal is paying off credit card debt, determined by the fact that they're studying for an MS in CS at Quessara University; if that changes, their priorities would shift.",
+      "If the user changes schools, their financial goal will be saving for kids' education fund.",
+      "The user is learning Python programming as part of their program; if their school changes, this would change.",
+      "The user's life philosophy, word for word: \"In three words I can sum up everything I've learned about life: it goes on. You'll have bad times, but it will always wake you up to the stuff you weren't paying attention to.\"",
+      "The user just started Quivira Springs Community College.",
+      "The user's partner's name is Taylor.",
+      "The user asked to remove the planned engagement ring purchase from memory.",
+      "The user is subscribed to the Daily Journal subscription."
+    ]
+  },
+  {
+    "episode_id": "pl_006",
+    "hop": 1,
+    "n_extracted": 29,
+    "root_before_recalled": true,
+    "targets": [
+      {
+        "entity": "regular_appointment",
+        "after_value": "physical therapy (2x/week)",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "fitness_facility",
+        "after_value": "Kaelstrom Fitness",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "medication",
+        "after_value": null,
+        "pre_value_recalled": null,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": null
+      },
+      {
+        "entity": "exercise_routine",
+        "after_value": "cycling weekends",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      }
+    ],
+    "extracted_facts": [
+      "The user's hobby is woodworking, and they've been getting into it more lately.",
+      "The user recently started watching a show called Whispers of Zarinthea.",
+      "The user's health condition was pre-diabetes.",
+      "The user has a dietary restriction of low-sugar.",
+      "The user's regular social meetup is pickup basketball on Saturdays.",
+      "The user plays soccer.",
+      "The user wants to improve their dribbling and shooting skills in soccer.",
+      "The user practices soccer a few times a week.",
+      "The user watches an anime called Thyrelion.",
+      "The user usually sleeps from midnight to 8am.",
+      "The user is part of a volunteer group that works on local community projects.",
+      "The user has not tried any specific strategies to promote volunteer opportunities yet.",
+      "The user's current media is a history documentary series.",
+      "The user's regular appointment was dermatologist (monthly), determined by their pre-diabetes.",
+      "If the user's health condition changes, their regular appointment will change too.",
+      "The user's exercise routine was yoga 2x/week, determined by their pre-diabetes.",
+      "The user takes a medication called Dyntheral, determined by their pre-diabetes.",
+      "If the user's health condition changes, their medication would likely change too.",
+      "The user goes to Zorathel Peak Gym for workouts, for their yoga 2x/week.",
+      "If the user's routine changes, they'd need a different facility than Zorathel Peak Gym.",
+      "The user's life philosophy, word for word: \"The only way to do great work is to love what you do. If you haven't found it yet, keep looking. Don't settle. As with all matters of the heart, you'll know when you find it.\"",
+      "If the user's health condition changes, their exercise routine will be cycling weekends.",
+      "If the user's health condition changes, their regular appointment will be physical therapy (2x/week).",
+      "If the user's exercise routine changes, they will work out at Kaelstrom Fitness.",
+      "The user's pre-diabetes has been treated and resolved.",
+      "The user was recently diagnosed with anxiety disorder.",
+      "The user's partner's name is Jordan.",
+      "The user asked to forget that they were learning/working on Spanish.",
+      "The user has a tech conference coming up."
+    ]
+  },
+  {
+    "episode_id": "pl_007",
+    "hop": 1,
+    "n_extracted": 25,
+    "root_before_recalled": true,
+    "targets": [
+      {
+        "entity": "regular_appointment",
+        "after_value": "therapy (weekly)",
+        "pre_value_recalled": true,
+        "cur_value_recalled": false,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "commute_duration",
+        "after_value": null,
+        "pre_value_recalled": null,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": null
+      }
+    ],
+    "extracted_facts": [
+      "The user's hobby is cooking.",
+      "The user enjoys experimenting with new recipes and trying different cuisines.",
+      "The user has been watching an anime called Thyrelion.",
+      "The user goes to Velthari Studio for workouts.",
+      "The user's partner's name is Sarah.",
+      "The user and Sarah enjoy trying out new activities and exploring different places together.",
+      "The user plays in a running club that meets a couple of times a week.",
+      "The user runs about three times a week.",
+      "The user runs to keep fit and enjoys the social aspect of the club.",
+      "The user is currently watching a history documentary series.",
+      "The user's favorite restaurant is The Ondreth Pot.",
+      "The user takes the commuter rail to work.",
+      "The user's regular social meetup is trivia night on Wednesdays.",
+      "The user is part of a book club that meets once a month.",
+      "The book club just switched to reading Xelvari Dawn this month.",
+      "The user has a monthly dermatologist appointment.",
+      "The user's dermatologist appointment depends on where they live in Pyresta Meadow; if they move, it would change.",
+      "The user's commute is about 20 minutes.",
+      "The user's commute distance depends on where they live in Pyresta Meadow; if that changes, the distance would change.",
+      "The user's life philosophy, word for word: \"In three words I can sum up everything I've learned about life: it goes on. You'll have bad times, but it will always wake you up to the stuff you weren't paying attention to.\"",
+      "If the user changes residence, their regular appointment will be at therapy (weekly).",
+      "The user just moved to Corenth Hills.",
+      "The user is planning a big purchase of a gaming PC.",
+      "The user asked to remove their subscription service Dranthazon from memory.",
+      "The user has a housewarming party coming up."
+    ]
+  },
+  {
+    "episode_id": "pl_008",
+    "hop": 1,
+    "n_extracted": 33,
+    "root_before_recalled": true,
+    "targets": [
+      {
+        "entity": "work_project",
+        "after_value": "marketing campaign",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "commute_method",
+        "after_value": "bus",
+        "pre_value_recalled": true,
+        "cur_value_recalled": false,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "insurance",
+        "after_value": null,
+        "pre_value_recalled": null,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": null
+      },
+      {
+        "entity": "favorite_restaurant",
+        "after_value": null,
+        "pre_value_recalled": null,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": null
+      },
+      {
+        "entity": "work_location",
+        "after_value": "Tesswick Bay",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      }
+    ],
+    "extracted_facts": [
+      "User's hobby is cooking.",
+      "User enjoys trying out new recipes and experimenting with different cuisines.",
+      "User recently tried making homemade sushi.",
+      "User enjoys baking desserts, especially cakes and pastries.",
+      "User is subscribed to a platform called Xelvoria.",
+      "Xelvoria's content includes cooking tutorials and food-related shows that the user finds helpful.",
+      "User drives a Xylorim Scooter.",
+      "User asked to have the Xylorim Scooter removed from memory.",
+      "User's job title is senior engineer.",
+      "User has a college reunion coming up.",
+      "User plays cycling.",
+      "User is subscribed to a meal kit service called Kelvimeal.",
+      "User works at Thalwren Inc.",
+      "User goes to Kaelstrom Fitness for workouts.",
+      "User is planning to buy a gaming PC.",
+      "User is part of a board game group that meets once a week.",
+      "User's board game group plays a mix of strategy and party games and has been into cooperative games like Pandemic.",
+      "User is subscribed to Dranthazon.",
+      "User's commute is about 40 minutes.",
+      "User's work hours are shift work (night).",
+      "User's partner's name is James.",
+      "User has an interim coverage plan for insurance through their employer (Thalwren Inc.); if the employer changes, this would change.",
+      "User is working on backend migration through their employer (Thalwren Inc.); if the employer changes, this would change.",
+      "User's office is in Thornvale Crossing through their employer (Thalwren Inc.); if the employer changes, this would change.",
+      "User walks to work; this depends on the office being in Thornvale Crossing; if that changes, this would change too.",
+      "User's favorite restaurant is Zefiro's Kitchen; this depends on the office being in Thornvale Crossing; if the user moves, this would change.",
+      "User's life philosophy, word for word: \"Try not to become a man of success, but rather try to become a man of value. Look around at how people want to get more out of life than they put in. A man of value will give more than he receives.\"",
+      "If the user changes their employer, their office will be in Tesswick Bay.",
+      "If the user changes their employer, they will work on a marketing campaign.",
+      "If the user's work location changes, they will switch to bus for commuting.",
+      "User accepted a new position at Caeltura Systems.",
+      "User's regular social meetup is pickup basketball on Saturdays.",
+      "User's current media is Thyrelion (anime)."
+    ]
+  },
+  {
+    "episode_id": "pl_009",
+    "hop": 1,
+    "n_extracted": 29,
+    "root_before_recalled": true,
+    "targets": [
+      {
+        "entity": "dietary_restriction",
+        "after_value": "no alcohol",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "fitness_facility",
+        "after_value": "Crysthene Pool",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "exercise_routine",
+        "after_value": "yoga 2x/week",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "exercise_routine",
+        "after_value": "yoga 2x/week",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      }
+    ],
+    "extracted_facts": [
+      "The user's hobby is cooking.",
+      "The user has been trying out new recipes lately.",
+      "The user enjoys cooking with fresh herbs and spices.",
+      "The user drives a Zyvanta Sedan (earlier).",
+      "The user later switched to a Quorvel EV.",
+      "The user later switched again and now drives a Vorantel SUV.",
+      "The user takes a multivitamin.",
+      "The user used to sleep irregularly.",
+      "The user is planning a big purchase of a new laptop.",
+      "The user has been researching different laptop models and features.",
+      "The user plays in a running club.",
+      "The user's health condition was tendinitis.",
+      "The user's tendinitis has been treated and resolved.",
+      "The user was recently diagnosed with chronic migraine.",
+      "The user is subscribed to Xelvoria, a health and fitness platform.",
+      "The user is part of a book club that reads a different book each month.",
+      "The user's book club leans towards contemporary fiction and thrillers.",
+      "The user's book club appreciates books with complex characters and moral dilemmas.",
+      "The user has a monthly brunch social meetup with college friends.",
+      "The user's dietary restriction is low-sodium, determined by tendinitis; if the health condition changes, this would likely change too.",
+      "The user's exercise routine is pilates 3x/week, determined by tendinitis; if the health condition changes, this would likely change too.",
+      "The user goes to Zorathel Peak Gym for workouts, for pilates 3x/week; if the routine changes, a different facility would be needed.",
+      "The user's life philosophy, word for word: \"We are what we repeatedly do. Excellence, then, is not an act, but a habit. The whole is greater than the sum of its parts. We must become the change we wish to see in the world.\"",
+      "If the user's health condition changes, the exercise routine will be yoga 2x/week.",
+      "If the user's health condition changes, the dietary restriction will be no alcohol.",
+      "If the user's exercise routine changes, the user will work out at Crysthene Pool.",
+      "The user's current media is The Quorath Codex (book).",
+      "The user asked to remove the weekly tutoring session appointment from memory.",
+      "The user's partner's name is Jessica."
+    ]
+  },
+  {
+    "episode_id": "pl_010",
+    "hop": 1,
+    "n_extracted": 22,
+    "root_before_recalled": true,
+    "targets": [
+      {
+        "entity": "travel_plan",
+        "after_value": "Zynthera Bay beach trip (1 week)",
+        "pre_value_recalled": true,
+        "cur_value_recalled": true,
+        "predecl_syntactic_hit": true
+      },
+      {
+        "entity": "living_arrangement",
+        "after_value": null,
+        "pre_value_recalled": null,
+        "cur_value_recalled": false,
+        "predecl_syntactic_hit": null
+      }
+    ],
+    "extracted_facts": [
+      "The user's hobby is video games.",
+      "The user has been playing a lot of video games lately.",
+      "The user has been really into RPGs recently.",
+      "The user appreciates the storytelling and character development in RPGs.",
+      "The user's home is a dormitory.",
+      "The user's dormitory is close to campus.",
+      "The user plays pickleball.",
+      "The user has been playing pickleball for a while.",
+      "The user's financial goal is paying off credit card debt.",
+      "The user is focusing on making consistent monthly payments toward debt.",
+      "The user has cut back on unnecessary expenses to free up money for debt payments.",
+      "The user is part of a board game group that meets regularly.",
+      "The user's board game group favors strategy games and also enjoys lighter party-style games.",
+      "The user has a Thanksgiving gathering coming up.",
+      "The user is planning a mountain ski trip — this depends on the fact that the user is single; if that changes, this would change.",
+      "The user lives with a roommate — this depends on the fact that the user is single; if that changes, this would change.",
+      "The user's life philosophy, word for word, is: \"Try not to become a man of success, but rather try to become a man of value. Look around at how people want to get more out of life than they put in. A man of value will give more than he receives.\"",
+      "If the user's relationship status changes, the user will plan a Zynthera Bay beach trip (1 week).",
+      "The user is now engaged.",
+      "The user's current media is a true crime podcast.",
+      "The user asked to forget that they are part of brunch with college friends monthly.",
+      "The user is planning a big purchase — an engagement ring."
+    ]
+  }
+]
