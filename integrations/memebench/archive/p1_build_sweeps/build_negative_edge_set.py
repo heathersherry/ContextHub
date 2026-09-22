@@ -221,12 +221,14 @@ async def main() -> None:
     ap.add_argument("--out", default="integrations/memebench/runs/neg_edge_set.json")
     ap.add_argument("--sample-out", default="integrations/memebench/runs/neg_edge_sample.json")
     ap.add_argument("--sample", type=int, default=60, help="edges to emit for human check")
-    ap.add_argument("--provider", default="yunwu", help="chat/oracle provider label")
+    ap.add_argument("--provider", default="openlux", help="chat/oracle provider label")
     ap.add_argument("--episodes", nargs="*", default=None,
                     help="only build these episode_ids (for refilling failed cases)")
+    ap.add_argument("--chat-model", required=True,
+                    help="answer/oracle model for build_system; no default: name the model at each run (see run_eval.py)")
     args = ap.parse_args()
 
-    system = await build_system(provider_label=args.provider)
+    system = await build_system(provider_label=args.provider, chat_model=args.chat_model)
     episodes = load_episodes(args.data)
     cases = extract_cascade_cases(episodes, hop=args.hop)
     if args.episodes:

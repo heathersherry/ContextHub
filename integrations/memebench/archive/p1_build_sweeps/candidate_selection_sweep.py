@@ -344,8 +344,8 @@ async def main() -> None:
     ap.add_argument("--data", default=str(DEFAULT_DATA_PATH),
                     help="use meme_filler32k.json so the candidate pool is large")
     ap.add_argument("--provider", default="openlux")
-    ap.add_argument("--model", default="gpt-4o-mini",
-                    help="discovery model held FIXED across filters")
+    ap.add_argument("--model", required=True,
+                    help="discovery model held FIXED across filters; no default: name the model at each run (see run_eval.py)")
     ap.add_argument("--max-filler", type=int, default=60,
                     help="cap filler pool nodes per case (keeps full-baseline runnable)")
     ap.add_argument("--filters", nargs="+",

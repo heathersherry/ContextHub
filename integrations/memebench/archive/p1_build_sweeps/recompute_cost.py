@@ -25,6 +25,13 @@ def _report(summary_path: Path) -> None:
     s = json.loads(summary_path.read_text(encoding="utf-8"))
     cost = s.get("cost", {})
     n_ok = s.get("n_ok", 0)
+    if "INVALID_REMOVED" in cost:
+        # Buckets were deleted because a --resume finish left them holding only the
+        # last process's cases. Say so loudly: a silent 0 tok/ep reads like a result.
+        print(f"\n{summary_path.parent.name}  ⚠️  COST UNAVAILABLE — buckets were removed "
+              f"as invalid (resumed run undercounted). Needs an uninterrupted rerun.")
+        print(f"  reason: {cost['INVALID_REMOVED'][:160]}...")
+        return
     buckets = {k: cost[k] for k in
                ("extract_llm", "ingest_llm", "inference_llm", "oracle_llm", "judge_llm")
                if isinstance(cost.get(k), dict)}

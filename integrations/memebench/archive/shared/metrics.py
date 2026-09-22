@@ -23,10 +23,25 @@ MEME_BASELINE = {
     "mdflat_opus47_cost_multiple": 70,       # ~70x baseline cost
 }
 
-# gpt-4.1-mini public per-token rate, MEME p12 (USD per 1M tokens, in/out).
-# Same rate for all stages since our main runs use one backbone for every role.
+# Public per-token rates, USD per 1M tokens (in, out). Verified 2026-08; see
+# ContextHub-research-plan/research/proposal/model-pricing-reference.md.
+# Cascade runs mix backbones whose rates differ ~40x, so every bucket MUST be
+# priced at its own model's rate — a single global price is wrong for them.
+PRICES: dict[str, tuple[float, float]] = {
+    "gpt-4o-mini": (0.15, 0.60),
+    "gpt-4.1-mini": (0.40, 1.60),   # MEME p12's backbone rate
+    "gpt-4o": (2.50, 10.00),
+    "gpt-5.5": (5.00, 30.00),
+    "gpt-5.6-sol": (5.00, 30.00),
+    "gpt-5.6": (5.00, 30.00),
+}
+# Fallback for an unlisted model: gpt-4.1-mini's rate (MEME's own backbone).
 PRICE_IN_PER_1M = 0.40
 PRICE_OUT_PER_1M = 1.60
+
+
+def _rate(model: str | None) -> tuple[float, float]:
+    return PRICES.get(model or "", (PRICE_IN_PER_1M, PRICE_OUT_PER_1M))
 
 
 def _usd(prompt_tokens: int, completion_tokens: int,
@@ -34,53 +49,108 @@ def _usd(prompt_tokens: int, completion_tokens: int,
     return prompt_tokens / 1e6 * price_in + completion_tokens / 1e6 * price_out
 
 
-def cost_per_episode(buckets: dict, n_ok: int, *,
-                     price_in: float = PRICE_IN_PER_1M,
-                     price_out: float = PRICE_OUT_PER_1M) -> dict:
-    """Per-episode token & USD cost under MEME's accounting, two scopes.
+def _bucket_usd(snap: dict | None) -> float:
+    """USD for one bucket, priced at ITS OWN model's public rate."""
+    if not snap:
+        return 0.0
+    pin, pout = _rate(snap.get("model"))
+    return _usd(snap.get("prompt_tokens", 0), snap.get("completion_tokens", 0), pin, pout)
 
-    Buckets map ContextHub roles onto MEME's Ingest/Retrieve/Answer stages:
-      - extract_llm  (raw-dialogue -> facts, write path)  -> Ingest
-      - ingest_llm   (dependency discovery, write path)    -> Ingest
-      - inference_llm (final answer)                       -> Answer
-      - retrieval: no LLM call (embedding only)            -> Retrieve = 0
-    Excluded from both scopes, matching MEME: embedding, GPT-4o judge.
 
-    Two scopes are reported so no information is hidden:
-      - ``meme_aligned``: Ingest + Answer only. Strictly MEME-comparable;
-        this is the "no 70x tax" headline number.
-      - ``full``: adds ``oracle_llm`` (semantic staleness propagation), a
-        stage MEME has no analogue for. Shows ContextHub's true total cost.
+# Bucket -> MEME-style stage. Retrieve is omitted (embedding only, no LLM call).
+# Propagation is OUR stage: MEME has no failure-propagation layer, so it can
+# never be folded into Ingest/Answer without breaking comparability.
+STAGE_OF_BUCKET = {
+    "extract_llm": "ingest",          # raw dialogue -> facts (write path)
+    "ingest_llm": "ingest",           # dependency discovery (non-cascade path)
+    "cascade_cheap_llm": "ingest",    # 做法甲 build-side weak tier
+    "cascade_strong_llm": "ingest",   # 做法甲 build-side strong tier
+    "inference_llm": "answer",        # final answer
+    "p2_cheap_llm": "propagation",    # 做法乙 cheap staleness gate
+    "oracle_llm": "propagation",      # staleness oracle / P2 verify tier
+}
+# Excluded from all stages, matching MEME: embedding + the GPT-4o grader.
+EXCLUDED_BUCKETS = ("judge_llm",)
+
+
+def cost_per_episode(buckets: dict, n_ok: int) -> dict:
+    """Per-episode token & USD cost under MEME's accounting, three stages.
+
+    Each bucket is priced at ITS OWN model's public per-token rate (runs mix
+    gpt-4o-mini / gpt-4.1-mini / gpt-5.5, ~40x apart), then summed into stages:
+
+      - ``ingest``      = extract + dependency discovery (incl. both 做法甲
+                          cascade tiers, which ARE the build cost under --cascade)
+      - ``answer``      = final answer
+      - ``propagation`` = P2 cheap gate + staleness oracle. **Our stage; MEME
+                          has no analogue**, so it is reported separately and
+                          never mixed into the MEME-comparable number.
+      - retrieve        = 0 (embedding only, no LLM call)
+
+    Two scopes, so nothing is hidden:
+      - ``meme_aligned``: Ingest + Answer. Strictly MEME-comparable.
+      - ``full``: + Propagation. ContextHub's true total.
     """
-    def stage(*names: str) -> tuple[int, int]:
-        pin = sum(buckets[k].get("prompt_tokens", 0) for k in names if buckets.get(k))
-        pout = sum(buckets[k].get("completion_tokens", 0) for k in names if buckets.get(k))
-        return pin, pout
+    def money_tokens(names) -> tuple[int, int, float]:
+        pin = pout = 0
+        usd = 0.0
+        for k in names:
+            snap = buckets.get(k)
+            if not snap:
+                continue
+            pin += snap.get("prompt_tokens", 0)
+            pout += snap.get("completion_tokens", 0)
+            usd += _bucket_usd(snap)
+        return pin, pout, usd
 
-    def scope(pin: int, pout: int) -> dict:
+    def scope(names) -> dict:
+        pin, pout, usd = money_tokens(names)
         tot = pin + pout
         return {
             "prompt_tokens": pin,
             "completion_tokens": pout,
             "total_tokens": tot,
             "tokens_per_episode": (tot / n_ok) if n_ok else None,
-            "usd_per_episode": (_usd(pin, pout, price_in, price_out) / n_ok) if n_ok else None,
+            "usd_total": usd,
+            "usd_per_episode": (usd / n_ok) if n_ok else None,
         }
 
-    ingest_in, ingest_out = stage("extract_llm", "ingest_llm")
-    answer_in, answer_out = stage("inference_llm")
-    oracle_in, oracle_out = stage("oracle_llm")
+    by_stage: dict[str, list[str]] = {"ingest": [], "answer": [], "propagation": []}
+    for bucket, st in STAGE_OF_BUCKET.items():
+        by_stage[st].append(bucket)
 
-    aligned = scope(ingest_in + answer_in, ingest_out + answer_out)
-    full = scope(ingest_in + answer_in + oracle_in,
-                 ingest_out + answer_out + oracle_out)
+    stages = {st: scope(names) for st, names in by_stage.items()}
+    # Per-bucket detail with the rate actually applied, so any number in the
+    # paper's cost table can be traced back to (model, tokens, rate).
+    detail = {}
+    for bucket, st in STAGE_OF_BUCKET.items():
+        snap = buckets.get(bucket)
+        if not snap or not snap.get("calls"):
+            continue
+        rin, rout = _rate(snap.get("model"))
+        detail[bucket] = {
+            "stage": st,
+            "model": snap.get("model"),
+            "price_in_per_1m": rin,
+            "price_out_per_1m": rout,
+            "calls": snap.get("calls"),
+            "prompt_tokens": snap.get("prompt_tokens", 0),
+            "completion_tokens": snap.get("completion_tokens", 0),
+            "usd_total": _bucket_usd(snap),
+            "usd_per_episode": (_bucket_usd(snap) / n_ok) if n_ok else None,
+        }
+
     return {
-        "price_in_per_1m": price_in,
-        "price_out_per_1m": price_out,
-        "stage_map": "Ingest=extract+discovery, Answer=inference, Retrieve=0 (embedding only)",
+        "priced_per_model": True,
+        "prices_used": {m: {"in": p[0], "out": p[1]} for m, p in PRICES.items()},
+        "stage_map": ("Ingest=extract+discovery(+cascade weak/strong), Answer=inference, "
+                      "Propagation=p2_cheap_gate+oracle (ours; no MEME analogue), "
+                      "Retrieve=0 (embedding only)"),
         "excluded": ["embedding", "judge"],
-        "meme_aligned": aligned,   # Ingest + Answer; MEME-comparable headline
-        "full": full,              # + oracle (propagation), no MEME analogue
+        "stages": stages,
+        "by_bucket": detail,
+        "meme_aligned": scope(by_stage["ingest"] + by_stage["answer"]),
+        "full": scope(by_stage["ingest"] + by_stage["answer"] + by_stage["propagation"]),
     }
 
 
@@ -117,9 +187,37 @@ def _edge_pr(results, hop=None) -> dict:
     }
 
 
+def _buckets_from_cases(results) -> dict | None:
+    """Sum per-case token deltas (r.tokens) into snapshot-shaped buckets.
+
+    Returns None when no ok case carries token data (old checkpoint), so the
+    caller can fall back to process-lifetime snapshots.
+    """
+    ok = [r for r in results if r.error is None and getattr(r, "tokens", None)]
+    if not ok:
+        return None
+    out: dict[str, dict] = {}
+    for r in ok:
+        for bucket, d in (r.tokens or {}).items():
+            b = out.setdefault(bucket, {
+                "model": d.get("model"), "calls": 0,
+                "prompt_tokens": 0, "completion_tokens": 0,
+                "tokens_are_real": True, "estimated_calls": 0,
+            })
+            b["calls"] += d.get("calls", 0)
+            b["prompt_tokens"] += d.get("prompt_tokens", 0)
+            b["completion_tokens"] += d.get("completion_tokens", 0)
+    for b in out.values():
+        b["total_tokens"] = b["prompt_tokens"] + b["completion_tokens"]
+    return out
+
+
 def summarize(results, answer_snap, oracle_snap, discovery_snap, *,
               model: str, edge_mode: str = "gold",
-              extract_snap: dict | None = None, judge_snap: dict | None = None) -> dict:
+              extract_snap: dict | None = None, judge_snap: dict | None = None,
+              casc_cheap_snap: dict | None = None,
+              casc_strong_snap: dict | None = None,
+              p2_cheap_snap: dict | None = None) -> dict:
     n_total = len(results)
     n_err = sum(1 for r in results if r.error)
     n_ok = n_total - n_err
@@ -140,15 +238,26 @@ def summarize(results, answer_snap, oracle_snap, discovery_snap, *,
         }
 
     total_oracle_calls = sum(r.oracle_calls for r in results if r.error is None)
-    buckets = {
+    snap_buckets = {
         # token buckets: ingest (discovery) / inference (answer) / oracle /
-        # extract (raw-dialogue fact extraction, mode B only) / judge.
+        # extract (raw-dialogue fact extraction, mode B only) / judge, plus the
+        # 做法甲 build-side cascade tiers and the 做法乙 cheap gate. Under
+        # --cascade the real build cost lives in cascade_*, NOT in ingest_llm.
         "ingest_llm": discovery_snap,
         "inference_llm": answer_snap,
         "oracle_llm": oracle_snap,
         "extract_llm": extract_snap,
         "judge_llm": judge_snap,
+        "cascade_cheap_llm": casc_cheap_snap,
+        "cascade_strong_llm": casc_strong_snap,
+        "p2_cheap_llm": p2_cheap_snap,
     }
+    # Prefer per-case token deltas: process-lifetime snapshots only cover the
+    # cases THIS process ran, so after a checkpoint resume-retry they undercount.
+    # Summing r.tokens over all ok cases is resume-safe. Falls back to snapshots
+    # for old checkpoints (r.tokens is None) or non-token-carrying runs.
+    buckets = _buckets_from_cases(results) or snap_buckets
+    tokens_source = "per_case_sum" if buckets is not snap_buckets else "process_snapshot"
     return {
         "model": model,
         "edge_mode": edge_mode,
@@ -167,6 +276,7 @@ def summarize(results, answer_snap, oracle_snap, discovery_snap, *,
         "cost": {
             "total_oracle_calls": total_oracle_calls,
             "oracle_calls_per_case": (total_oracle_calls / n_ok) if n_ok else None,
+            "tokens_source": tokens_source,
             **buckets,
             # MEME-aligned per-episode token & USD (two scopes: aligned / full).
             "per_episode": cost_per_episode(buckets, n_ok),
@@ -179,7 +289,11 @@ def _fmt(x):
     return "n/a" if x is None else f"{x:.3f}"
 
 
-def _tok(snap: dict) -> str:
+def _tok(snap: dict | None) -> str:
+    # Buckets summed from per-case deltas only exist when that role was called,
+    # so an absent bucket means "never used", not an error.
+    if not snap:
+        return "0 calls, 0 tok"
     tag = "real" if snap.get("tokens_are_real") else "est"
     return f"{snap['calls']} calls, {snap['total_tokens']} tok ({tag})"
 
@@ -208,20 +322,30 @@ def print_summary(s: dict) -> None:
     c = s["cost"]
     print("-" * 62)
     print(f"oracle calls: {c['total_oracle_calls']} total, {_fmt(c['oracle_calls_per_case'])}/case")
-    print(f"ingest    LLM (discovery): {_tok(c['ingest_llm'])}")
-    print(f"inference LLM (answer):    {_tok(c['inference_llm'])}")
-    print(f"oracle    LLM (staleness): {_tok(c['oracle_llm'])}")
+    print(f"tokens from: {c.get('tokens_source', 'process_snapshot')}")
+    print(f"ingest    LLM (discovery): {_tok(c.get('ingest_llm'))}")
+    print(f"inference LLM (answer):    {_tok(c.get('inference_llm'))}")
+    print(f"oracle    LLM (staleness): {_tok(c.get('oracle_llm'))}")
     if c.get("extract_llm"):
         print(f"extract   LLM (raw-B):     {_tok(c['extract_llm'])}")
     if c.get("judge_llm"):
         print(f"judge     LLM (grading):   {_tok(c['judge_llm'])}")
     pe = c.get("per_episode")
     if pe:
+        def _pe(d):  # n/a when no episode succeeded (tokens_per_episode is None)
+            t, u = d["tokens_per_episode"], d["usd_per_episode"]
+            return "n/a tok, $n/a" if t is None else f"{t:,.0f} tok, ${u:.5f}"
+        st = pe.get("stages") or {}
+        for name in ("ingest", "answer", "propagation"):
+            if st.get(name):
+                print(f"  stage {name:12s}: {_pe(st[name])}")
+        for bucket, d in (pe.get("by_bucket") or {}).items():
+            print(f"    {bucket:20s} {str(d['model']):14s} "
+                  f"${d['price_in_per_1m']}/${d['price_out_per_1m']} per 1M  "
+                  f"{d['calls']} calls  ${d['usd_total']:.4f}")
         a, f = pe["meme_aligned"], pe["full"]
-        print(f"per-episode (MEME-aligned, ingest+answer): "
-              f"{a['tokens_per_episode']:,.0f} tok, ${a['usd_per_episode']:.5f}")
-        print(f"per-episode (full, +oracle):               "
-              f"{f['tokens_per_episode']:,.0f} tok, ${f['usd_per_episode']:.5f}")
+        print(f"per-episode (MEME-aligned, ingest+answer): {_pe(a)}")
+        print(f"per-episode (full, +propagation):          {_pe(f)}")
     m = s["meme_baseline_static"]
     print("-" * 62)
     print(f"MEME baseline (cited): 6-sys Cascade avg={m['six_systems_cascade_avg_acc']}, "

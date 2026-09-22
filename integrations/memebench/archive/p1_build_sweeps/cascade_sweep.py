@@ -242,8 +242,8 @@ async def main() -> None:
     ap.add_argument("--data", default=str(DEFAULT_DATA_PATH),
                     help="use meme_filler32k.json so the candidate pool is large")
     ap.add_argument("--provider", default="openlux")
-    ap.add_argument("--cheap-model", default="gpt-4.1-mini")
-    ap.add_argument("--strong-model", default="claude-opus-4-8")
+    ap.add_argument("--cheap-model", required=True, help="weak tier; no default: name the model at each run (see run_eval.py)")
+    ap.add_argument("--strong-model", required=True, help="strong tier; no default: name the model at each run (see run_eval.py)")
     ap.add_argument("--taus", nargs="+", type=float,
                     default=[0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
     ap.add_argument("--k", type=int, default=10, help="embed_topk width (variable 4)")

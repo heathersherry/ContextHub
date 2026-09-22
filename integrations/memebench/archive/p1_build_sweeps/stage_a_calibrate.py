@@ -220,8 +220,8 @@ async def main() -> None:
     ap.add_argument("--hop", type=int, default=1)
     ap.add_argument("--limit", type=int, default=30, help="max cases (0 = all)")
     ap.add_argument("--data", default=str(DEFAULT_DATA_PATH))
-    ap.add_argument("--cheap-model", default="gpt-4o-mini")
-    ap.add_argument("--costly-model", default="gpt-4.1-mini")
+    ap.add_argument("--cheap-model", required=True, help="cheap judge tier; no default: name the model at each run (see run_eval.py)")
+    ap.add_argument("--costly-model", required=True, help="costly judge tier; no default: name the model at each run (see run_eval.py)")
     ap.add_argument("--out", default="integrations/memebench/runs/stage_a.json")
     args = ap.parse_args()
 
@@ -229,7 +229,7 @@ async def main() -> None:
     # Two independent counting chat clients (distinct models) so tokens attribute
     # per tier; both oracle rules share the system repo for RLS content fetch.
     from integrations.memebench.systems import load_provider, DEFAULT_PROVIDERS_PATH
-    prov = load_provider("yunwu", DEFAULT_PROVIDERS_PATH)
+    prov = load_provider("openlux", DEFAULT_PROVIDERS_PATH)
     cheap_chat = CountingChatClient(
         OpenAIChatClient(api_key=prov["api_key"], base_url=prov["base_url"], model=args.cheap_model)
     )

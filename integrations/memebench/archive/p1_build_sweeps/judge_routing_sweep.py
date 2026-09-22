@@ -62,26 +62,17 @@ from integrations.memebench.systems import (
     load_provider,
 )
 
+# Moved to integrations/memebench/common.py so this finished experiment could be archived.
+from integrations.memebench.common import judge_j1
+
 EMBED_THRESHOLDS = (0.30, 0.40, 0.50, 0.60, 0.70)
 
 # Predeclaration signature (same family as the core _CONDITIONAL_RE): a leading
 # "if ... will/would/becomes/changes" main clause. Such a dependent asserts a
 # future rule, not a present derived value, so it should NOT go stale.
-_PREDECL_RE = re.compile(r"^\s*if\b.{0,80}?\b(will|would|becomes?|changes?|switch(?:es)?)\b",
-                         re.IGNORECASE | re.DOTALL)
-
-_STOP = {
-    "the", "a", "an", "is", "are", "was", "were", "be", "been", "being", "to",
-    "of", "in", "on", "at", "for", "and", "or", "but", "if", "then", "this",
-    "that", "these", "those", "it", "its", "as", "with", "by", "from", "will",
-    "would", "my", "i", "you", "he", "she", "they", "we", "user", "s", "their",
-    "has", "have", "had", "which", "would", "likely", "change", "changes",
-}
 
 
-def _content_words(text: str) -> set[str]:
-    return {w for w in re.findall(r"[a-z0-9]+", (text or "").lower())
-            if w not in _STOP and len(w) > 2}
+
 
 
 def _cosine(a, b) -> float:
@@ -148,13 +139,6 @@ def _upstream_text(edge: dict, change_source: str) -> str:
     return edge["dependency_text"]  # edge-local: the direct upstream
 
 
-def judge_j1(upstream: str, dependent: str) -> bool:
-    """Free rule: dependent shares upstream content words AND is not a predeclaration."""
-    if _PREDECL_RE.search(dependent or ""):
-        return False
-    up_w = _content_words(upstream)
-    dep_w = _content_words(dependent)
-    return bool(up_w & dep_w)
 
 
 @dataclass
@@ -260,9 +244,11 @@ async def main() -> None:
     ap.add_argument("--limit", type=int, default=0, help="max edges (0 = all)")
     ap.add_argument("--change-source", choices=["upstream", "root"], default="upstream")
     ap.add_argument("--provider", default="openlux")
-    ap.add_argument("--cheap-model", default="gpt-4o-mini")
-    ap.add_argument("--costly-model", default="claude-opus-4-8")
+    ap.add_argument("--cheap-model", required=True, help="cheap judge tier; no default: name the model at each run (see run_eval.py)")
+    ap.add_argument("--costly-model", required=True, help="costly judge tier; no default: name the model at each run (see run_eval.py)")
     ap.add_argument("--out", default="integrations/memebench/runs/judge_routing.json")
+    ap.add_argument("--chat-model", required=True,
+                    help="answer/oracle model for build_system; no default: name the model at each run (see run_eval.py)")
     args = ap.parse_args()
 
     edges = json.load(open(args.edges, encoding="utf-8"))["edges"]
@@ -270,7 +256,7 @@ async def main() -> None:
         edges = edges[: args.limit]
     _attach_root(edges, args.data)
 
-    system = await build_system(provider_label=args.provider)
+    system = await build_system(provider_label=args.provider, chat_model=args.chat_model)
     prov = load_provider(args.provider, DEFAULT_PROVIDERS_PATH)
     cheap_chat = CountingChatClient(
         OpenAIChatClient(api_key=prov["api_key"], base_url=prov["base_url"], model=args.cheap_model))

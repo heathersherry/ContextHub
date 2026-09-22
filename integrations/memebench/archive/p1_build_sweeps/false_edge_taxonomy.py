@@ -172,9 +172,11 @@ async def main() -> None:
     ap.add_argument("--limit", type=int, default=30, help="max cases (0 = all)")
     ap.add_argument("--data", default=str(DEFAULT_DATA_PATH))
     ap.add_argument("--out", default="integrations/memebench/runs/false_edge_taxonomy.json")
+    ap.add_argument("--chat-model", required=True,
+                    help="answer/oracle model for build_system; no default: name the model at each run (see run_eval.py)")
     args = ap.parse_args()
 
-    system = await build_system()
+    system = await build_system(chat_model=args.chat_model)
     episodes = load_episodes(args.data)
     cases = extract_cascade_cases(episodes, hop=args.hop)
     if args.limit:

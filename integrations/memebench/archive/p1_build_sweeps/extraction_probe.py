@@ -182,11 +182,12 @@ async def main():
                     help="randomly sample this many cases (reproducible via --seed) "
                          "instead of taking the first --limit")
     ap.add_argument("--seed", type=int, default=0, help="RNG seed for --sample")
-    ap.add_argument("--extract-model", default="claude-opus-4-8")
+    ap.add_argument("--extract-model", required=True,
+                    help="extractor under probe; no default: name the model at each run (see run_eval.py)")
     ap.add_argument("--incremental", action="store_true",
                     help="extract each evidence session separately and union facts "
                          "(mirrors timeline ingest; before-values survive later changes)")
-    ap.add_argument("--provider-label", default="yunwu")
+    ap.add_argument("--provider-label", default="openlux")
     ap.add_argument("--out", default="integrations/memebench/runs/probe")
     args = ap.parse_args()
 

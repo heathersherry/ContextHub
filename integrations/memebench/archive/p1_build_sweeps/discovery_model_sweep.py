@@ -131,12 +131,14 @@ async def main() -> None:
     ap.add_argument("--limit", type=int, default=40, help="max cases (0 = all)")
     ap.add_argument("--data", default=str(DEFAULT_DATA_PATH))
     ap.add_argument("--provider", default="openlux")
-    ap.add_argument("--models", nargs="+",
-                    default=["gpt-4o-mini", "gpt-4o", "claude-opus-4-8"])
+    ap.add_argument("--models", nargs="+", required=True,
+                    help="discovery models to sweep; no default: name the model at each run (see run_eval.py)")
     ap.add_argument("--out", default="integrations/memebench/runs/discovery_sweep.json")
+    ap.add_argument("--chat-model", required=True,
+                    help="answer/oracle model for build_system; no default: name the model at each run (see run_eval.py)")
     args = ap.parse_args()
 
-    system = await build_system(provider_label=args.provider)
+    system = await build_system(provider_label=args.provider, chat_model=args.chat_model)
     prov = load_provider(args.provider, DEFAULT_PROVIDERS_PATH)
     episodes = load_episodes(args.data)
     cases = extract_cascade_cases(episodes, hop=args.hop)
