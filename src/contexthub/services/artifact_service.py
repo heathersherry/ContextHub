@@ -42,6 +42,12 @@ MODELS = {
 }
 
 
+def artifact_models():
+    # Lazy import avoids the discovery service -> artifact service cycle.
+    from contexthub.discovery.contracts import DiscoveryReport
+    return {**MODELS, "discovery_report": DiscoveryReport}
+
+
 def walk(value):
     yield value
     if isinstance(value, BaseModel):
@@ -77,7 +83,8 @@ class ArtifactService:
             raise ContractError("artifact_missing")
         if row["sha256"] != ref.sha256 or canonical_hash(row["payload"]) != ref.sha256:
             raise ContractError("artifact_hash_mismatch")
-        model = MODELS.get(ref.kind)
+        models = artifact_models()
+        model = models.get(ref.kind)
         if model is None or row["payload"].get("kind") != ref.kind:
             raise ContractError("reference_kind_mismatch")
         obj = model.model_validate(row["payload"])
@@ -90,7 +97,12 @@ class ArtifactService:
 
         await require_account(db, obj.account_id)
         evidence = EvidenceService(self)
-        for value in walk(obj):
+        # S4 reports retain invalid/out-of-scope model citations as audit data.
+        # They grant no evidence authority. Validate the separately sealed graph
+        # and the usable mappings, not rejected model claims/page error records.
+        from contexthub.discovery.contracts import DiscoveryReport
+        validated = (obj.shared_extraction, obj.prior_extractions, obj.graph, obj.mappings) if isinstance(obj, DiscoveryReport) else obj
+        for value in walk(validated):
             if isinstance(value, SealRef):
                 if value.account_id != obj.account_id:
                     raise ContractError("tenant_mismatch")
@@ -174,7 +186,7 @@ class ArtifactService:
         # accidentally pass a proof through the ordinary artifact entry point.
         if isinstance(obj, CommitProof):
             raise ContractError("commit_proof_requires_commit_path")
-        if type(obj) not in MODELS.values():
+        if type(obj) not in artifact_models().values():
             raise ContractError("unsupported_artifact")
         obj = type(obj).model_validate(obj.model_dump(mode="json"))
         await self.validate(db, obj)

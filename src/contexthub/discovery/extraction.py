@@ -110,8 +110,10 @@ class ExtractionService:
         recorder,
         transport=None,
         artifacts=None,
+        price=None,
     ):
         self.config, self.recorder = config, recorder
+        self.price = price
         self.artifacts = artifacts or ArtifactService()
         self.evidence = EvidenceService(self.artifacts)
         self.client = OpenAIChatClient(
@@ -183,6 +185,7 @@ class ExtractionService:
                     identity=identity,
                     policy=self.config.retry,
                     recorder=self.recorder,
+                    price=self.price,
                     validate_response=lambda raw: parse_response(raw, texts),
                 ),
             )

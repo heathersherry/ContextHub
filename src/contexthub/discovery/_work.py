@@ -71,6 +71,10 @@ class MeteredDB:
     """
 
     def __init__(self, db, work):
+        # Nested S4 orchestration delegates ownership to the innermost operation;
+        # one SQL read/write must not be counted in both parent and child costs.
+        while isinstance(db, MeteredDB):
+            db = db.db
         self.db, self.work = db, work
 
     def _observe(self, row):

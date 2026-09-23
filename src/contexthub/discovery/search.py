@@ -136,6 +136,11 @@ class CandidatePage(Contract):
         return self
 
 
+class EvidenceRead(Contract):
+    evidence: tuple[EvidenceRef, ...]
+    recoveries: tuple[SearchIssue, ...]
+
+
 class SearchService:
     def __init__(
         self, *, recorder, artifacts=None, index: CandidateIndex | None = None
@@ -211,6 +216,54 @@ class SearchService:
             raise
         await work.finish(page, page.issues[0].code if page.issues else None)
         return page
+
+    async def expand(self, db, pages, history, policy, *, identity, reason):
+        """Resume a completed local scope under the SAME manifest and policy.
+
+        No new source is authorized. Previously emitted IDs are retained; every
+        new/recovered body read still passes _admit_source. At max returns None.
+        """
+        if not pages:
+            raise ContractError("expansion_requires_pages")
+        last = pages[-1]
+        if last.cursor is not None:
+            raise ContractError("consume_cursor_before_expansion")
+        if any(p.artifact != last.artifact or p.history_sha256 != canonical_hash(history)
+               or p.policy_sha256 != canonical_hash(policy) for p in pages):
+            raise ContractError("expansion_identity_mismatch")
+        if last.at_max_scope:
+            return None
+        entries = sorted((e for e in history.entries if e.ingestion_ordinal <= history.cutoff_ordinal),
+                         key=lambda e: (e.ingestion_ordinal, str(e.source.id)),
+                         reverse=policy.ordering == "ingestion_desc")
+        size = min(len(entries), max(len(last.scope_sources) + 1,
+                                    len(last.scope_sources) * policy.expansion_factor))
+        binding = canonical_hash({"artifact": last.artifact.model_dump(mode="json"),
+            "history": history.model_dump(mode="json"), "policy": policy.model_dump(mode="json")})
+        cursor = SearchCursor(binding=binding, scope_size=size, offset=0,
+            emitted_propositions=tuple(dict.fromkeys(c.id for p in pages for c in p.candidates
+                                                    if c.kind == "batch_proposition")),
+            read_sources=last.read_sources, issues=(),
+            expansion_reasons=tuple(dict.fromkeys((*last.expansion_reasons, reason))),
+            bypass_index=False, page_no=last.page_no + 1)
+        return await self.search(db, last.artifact, history, policy, identity=identity, cursor=cursor)
+
+    async def read_evidence(self, db, refs, history):
+        """History-admitted whole-source evidence for S4, including recovery."""
+        snapshots, result, recoveries = {}, [], []
+        for ref in refs:
+            try:
+                snapshot = await self._admit_source(db, ref, history, snapshots)
+            except Exception as exc:
+                # Same single direct metadata recovery as S3's max-scope pass.
+                # Failure grants NO body permission; re-admit from scratch.
+                recoveries.append(SearchIssue(code=error_code(exc),source=ref))
+                snapshot = await self._admit_source(db, ref, history, {})
+            text = await self.evidence.read_source(db, snapshot)
+            if text:
+                result.append(await self.evidence.reference(db, ref, start=0, end=len(text),
+                                                           provenance=("manifest-scoped source read",)))
+        return EvidenceRead(evidence=tuple(result),recoveries=tuple(recoveries))
 
     async def _page(self, db, ref, history, policy, cursor, binding, work):
         work.add("retrieval_pages")

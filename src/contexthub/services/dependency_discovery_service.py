@@ -152,6 +152,10 @@ class DependencyDiscoveryService:
         self._conditional_aware = conditional_aware
         self._conditional_hard = conditional_hard
 
+    async def discover_snapshot(self, db, shared_ref, history, *, core, identity):
+        """Explicit S4 compatibility entry; never runs the legacy one-shot path."""
+        return await core.discover(db, shared_ref, history, identity=identity)
+
     @staticmethod
     def _looks_conditional(text: str) -> bool:
         return bool(_CONDITIONAL_RE.search(text or ""))

@@ -471,3 +471,28 @@ async def test_index_never_receives_unadmitted_metadata_recovery_source(batch_so
         i.code == "source_after_cutoff" and i.source == future
         for i in result[-1].issues
     )
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize('future',[False,True])
+async def test_s4_explicit_read_metadata_recovery_readmits(future):
+    from datetime import timedelta
+    from knowledge_helpers import NOW, MemorySink
+    from discovery_helpers import MemoryDB, source, history
+    from contexthub.models.knowledge import ContractError
+    db=MemoryDB(); ref=await source(db,'secret' if future else 'allowed',created=NOW+timedelta(days=1) if future else NOW)
+    hist=history((ref,),cutoff_at=NOW)
+    base=db.fetchrow; failed=False
+    async def fetch(sql,*args):
+        nonlocal failed
+        if 'knowledge_artifacts' in sql and not failed:
+            failed=True; raise TimeoutError()
+        return await base(sql,*args)
+    db.fetchrow=fetch; db.reads.clear()
+    core=SearchService(recorder=MemorySink())
+    if future:
+        with pytest.raises(ContractError,match='source_after_cutoff'):
+            await core.read_evidence(db,(ref,),hist)
+        assert not db.reads
+    else:
+        out=await core.read_evidence(db,(ref,),hist)
+        assert out.evidence[0].excerpt=='allowed' and out.recoveries[0].code=='TimeoutError'

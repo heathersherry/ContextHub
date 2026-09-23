@@ -361,3 +361,79 @@ async def test_s3_metadata_recovery_obeys_real_history_cutoff(
             )
             == 0
         )
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize('mode',['complete','pending','invalid_citation'])
+async def test_s4_extract_search_judge_seal_reread_real_db(s2_repo,mode):
+    from contexthub.discovery.service import DiscoveryConfig,DiscoveryService
+    from contexthub.discovery.adjudication import AdjudicationService
+    from contexthub.models.knowledge import canonical_hash
+    from s4_helpers import adjudication_config,judge_transport,judgment
+    account='s4-'+str(uuid4()); ledger=ExecutionLedger(s2_repo); cfg=config(); requests=[]
+    now=datetime.now(timezone.utc)+timedelta(seconds=2)
+    async with s2_repo.session(account) as db:
+        a,b,_=await seed(db,account)
+        refs=tuple([await EvidenceService().snapshot(db,account_id=account,source=cv,content_level='l2_content',cutoff_at=now) for cv in (a,b)])
+    raw=response(refs[0],'政策：上限500元。');raw['propositions']+=response(refs[1],'450元可以报销。')['propositions']
+    extractor=ExtractionService(cfg,api_key='fixture',recorder=ledger,transport=transport([raw],requests))
+    try:
+        async with s2_repo.session(account) as db:
+            artifact=await extractor.extract(db,refs,identity=call_identity(cfg,account_id=account))
+    finally: await extractor.close()
+    core_cfg=DiscoveryConfig(timeout_seconds=30,search=search_policy(lambda_p1=10,page_size=1),adjudication=adjudication_config())
+    judge_requests=[]
+    def respond(p,n):
+        if mode=='pending':return judgment(p,missing=['missing premise'])
+        if mode=='invalid_citation':
+            bad=p['evidence'][0].copy();bad['source']=dict(bad['source'],sha256='0'*64)
+            return judgment(p,citations=[bad])
+        return judgment(p,'DEPENDS' if p['left'].startswith('政策') else 'INDEPENDENT')
+    adj=AdjudicationService(core_cfg.adjudication,api_key='fixture',recorder=ledger,transport=judge_transport(judge_requests,respond))
+    core=DiscoveryService(core_cfg,search=SearchService(recorder=ledger),adjudicator=adj,recorder=ledger)
+    ident=call_identity(core_cfg,account_id=account)
+    try:
+        async with s2_repo.session(account) as db:
+            report=await core.discover(db,artifact.reference(),history(refs,cutoff_at=now),identity=ident)
+    finally:await adj.close()
+    async with s2_repo.session(account) as db:
+        assert await ArtifactService().get(db,report.reference())==report
+        graph=await ArtifactService().get(db,report.graph)
+        assert graph.reference().sha256==canonical_hash(graph)
+        assert len(graph.nodes)==2 and len({n.context_id for n in graph.nodes})==2
+        assert report.status==('complete' if mode=='complete' else 'pending')
+        assert len(graph.edges)==(1 if mode=='complete' else 0)
+        if mode!='complete': assert graph.pending
+    async with s2_repo.session('other-'+account) as db:
+        with pytest.raises(ContractError,match='tenant_mismatch'):
+            await ArtifactService().get(db,report.reference())
+    assert len(requests)==1
+    rows=await ledger.records(account,ident.call_id)
+    assert len(rows)==2 and rows[-1].local_work
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize('future',[False,True])
+async def test_s4_evidence_read_recovery_keeps_s3_r1_boundary_db(s2_repo,future):
+    account='s4-'+str(uuid4());artifacts=ArtifactService();ledger=ExecutionLedger(s2_repo)
+    now=datetime.now(timezone.utc)+timedelta(seconds=2)
+    async with s2_repo.session(account) as db:
+        a,_,_=await seed(db,account)
+        ref=await EvidenceService().snapshot(db,account_id=account,source=a,content_level='l2_content',cutoff_at=now)
+        obj=await artifacts.get(db,ref)
+        hist=history((ref,),cutoff_at=obj.ingested_at-timedelta(seconds=1) if future else now)
+        class FaultDB:
+            def __init__(self):self.failed=False;self.body_reads=0
+            async def fetchval(self,sql,*args):return await db.fetchval(sql,*args)
+            async def fetchrow(self,sql,*args):
+                if 'knowledge_artifacts' in sql and not self.failed:
+                    self.failed=True;raise TimeoutError()
+                if 'context_versions' in sql:self.body_reads+=1
+                return await db.fetchrow(sql,*args)
+        wrapped=FaultDB();core=SearchService(recorder=ledger)
+        if future:
+            with pytest.raises(ContractError,match='source_after_cutoff'):
+                await core.read_evidence(wrapped,(ref,),hist)
+            assert wrapped.body_reads==0
+        else:
+            out=await core.read_evidence(wrapped,(ref,),hist)
+            assert out.evidence and out.recoveries[0].code=='TimeoutError'
+            assert wrapped.body_reads>0
