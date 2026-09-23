@@ -54,6 +54,15 @@ class ConversationExtractionService:
         self._chat = chat_client
         self._max_tokens = max_tokens
 
+    @staticmethod
+    async def extract_snapshot(db, sources, *, core, identity, artifact_id=None):
+        """S3 compatibility bridge. Calls only the recorded, sealed core path.
+
+        Raw-text callers keep their historical API; they must supply versioned
+        sources and explicit configuration to opt into S3.
+        """
+        return await core.extract(db, sources, identity=identity, artifact_id=artifact_id)
+
     async def extract(self, conversation: str) -> list[ExtractedFact]:
         """Extract facts from one conversation. Returns [] on empty input."""
         if not (conversation or "").strip():

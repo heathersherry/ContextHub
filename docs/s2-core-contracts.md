@@ -76,3 +76,7 @@ S3 封存抽取结果；S4 封存带证据的 DAG；S5 决定失效屏障、允�
 单元：`CONTEXTHUB_INTEGRATION=0 .venv/bin/python -m pytest -q tests/test_knowledge_{contracts,artifacts,ledger,retry}.py tests/test_chat_client_retry_usage.py`。
 
 数据库：先在独立本地 PostgreSQL（带 pgvector）上跑全链迁移；设置显式 `S2_TEST_DATABASE_URL`，数据库名 `contexthub_s2*`、角色 `s2_*` 且 NOSUPERUSER/NOBYPASSRLS、明确非 5432 端口。仅运行 `CONTEXTHUB_INTEGRATION=1 .venv/bin/python -m pytest -q tests/test_integration_knowledge_storage.py`。fixture 无默认地址、不调用旧 db_pool/clean_db、不 TRUNCATE，每个用例使用独立租户 UUID。初始建库/扩展/迁移可用专用实例管理员，实际合同必须用非超级用户。具体本次建立方式、命令和结果见研究仓 S2-implementation 交接。
+
+## S3 兼容补充
+
+S3 为保存来源解析失败，仅允许无命题的 pending PropositionArtifact 保留未解析的 attempted source SealRef；仍校验租户/kind/失败原因，complete 与带命题的 pending 的引用校验不变。无 schema 或迁移变化，既有 hash 不变。使用证据、回归与新入口见 [S3 合同](s3-discovery-contracts.md)。

@@ -94,7 +94,16 @@ class ArtifactService:
             if isinstance(value, SealRef):
                 if value.account_id != obj.account_id:
                     raise ContractError("tenant_mismatch")
-                await self.get(db, value)
+                # A failed extraction must retain attempted source identities even
+                # when the source seal is missing/corrupt. This exception grants
+                # no usable evidence: only empty pending artifacts qualify.
+                if not (
+                    isinstance(obj, PropositionArtifact)
+                    and obj.status == "pending"
+                    and not obj.propositions
+                    and value in obj.sources
+                ):
+                    await self.get(db, value)
             elif isinstance(value, ContextVersion):
                 found = await db.fetchval(
                     """SELECT 1 FROM context_versions v JOIN contexts c ON c.id=v.context_id
