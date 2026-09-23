@@ -69,7 +69,7 @@ async def s2_repo():
             )
             assert not row["rolsuper"] and not row["rolbypassrls"]
             assert (
-                await conn.fetchval("SELECT version_num FROM alembic_version") == "010"
+                await conn.fetchval("SELECT version_num FROM alembic_version") == os.environ.get("S2_TEST_SCHEMA_REVISION", "010")
             )
             assert (
                 await conn.fetchval("SELECT to_regclass('propagation_recompute_work')")

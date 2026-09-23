@@ -363,7 +363,9 @@ class RetrievalService:
         if candidates:
             rows = await db.fetch(
                 """
-                SELECT id, version, status, validity_status
+                SELECT id, version, status, validity_status,
+                       EXISTS(SELECT 1 FROM context_invalidations i WHERE i.context_id=contexts.id
+                              AND i.resolved_at IS NULL) AS unresolved
                   FROM contexts
                  WHERE id = ANY($1::uuid[])
                 """,
@@ -372,15 +374,19 @@ class RetrievalService:
             current = {row["id"]: row for row in rows}
             for candidate, masks in zip(candidates, candidate_masks):
                 row = current.get(candidate["id"])
+                if row is not None and row.get("unresolved", False) and row["validity_status"] == "fresh":
+                    row = dict(row)
+                    row["validity_status"] = "stale"
                 same_version = row is not None and row["version"] == candidate.get("version")
                 serviceable = bool(
                     same_version
                     and row["status"] == "active"
                     and row["validity_status"] == "fresh"
+                    and not row.get("unresolved", False)
                 )
                 if same_version and (serviceable or request.include_stale):
                     candidate["status"] = row["status"]
-                    candidate["validity_status"] = row["validity_status"]
+                    candidate["validity_status"] = "stale" if row.get("unresolved", False) and row["validity_status"] == "fresh" else row["validity_status"]
                     revalidated.append(candidate)
                     revalidated_masks.append(masks)
                     continue
@@ -416,15 +422,18 @@ class RetrievalService:
         if request.level.value == "L2" and candidates:
             l2_rows = await db.fetch(
                 """
-                SELECT id, version, l2_content
+                SELECT id, version, l2_content, status, validity_status,
+                       EXISTS(SELECT 1 FROM context_invalidations i WHERE i.context_id=contexts.id
+                              AND i.resolved_at IS NULL) AS unresolved
                   FROM contexts
                  WHERE id = ANY($1::uuid[])
-                   AND ($2 OR (status = 'active' AND validity_status = 'fresh'))
+                   AND ($2 OR (status = 'active' AND validity_status = 'fresh'
+                        AND NOT EXISTS(SELECT 1 FROM context_invalidations i WHERE i.context_id=contexts.id AND i.resolved_at IS NULL)))
                 """,
                 [c["id"] for c in candidates],
                 request.include_stale,
             )
-            l2_map = {(r["id"], r["version"]): r["l2_content"] for r in l2_rows}
+            l2_map = {(r["id"], r["version"]): r for r in l2_rows}
             kept = [
                 (c, masks)
                 for c, masks in zip(candidates, candidate_masks)
@@ -433,7 +442,16 @@ class RetrievalService:
             candidates = [item[0] for item in kept]
             candidate_masks = [item[1] for item in kept]
             for c in candidates:
-                c["l2_content"] = l2_map[(c["id"], c.get("version"))]
+                row = l2_map[(c["id"], c.get("version"))]
+                c["l2_content"] = row["l2_content"]
+                # Body and availability must come from the same SQL snapshot.
+                # Debug may return stale text, but cannot inherit a fresh label
+                # from the earlier candidate revalidation.
+                c["status"] = row["status"]
+                c["validity_status"] = (
+                    "stale" if row["unresolved"] and row["validity_status"] == "fresh"
+                    else row["validity_status"]
+                )
 
         # 10. Update active_count
         if candidates:

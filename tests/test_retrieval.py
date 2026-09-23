@@ -82,7 +82,7 @@ class SearchFlowDB:
 
     async def fetch(self, sql, *args):
         self.fetches.append((sql, args))
-        if "context_invalidations" in sql:
+        if "FROM context_invalidations i" in sql and "SELECT id, version" not in sql:
             allowed = set(args[0])
             return [
                 row for row in self._invalidation_rows if row["context_id"] in allowed
@@ -105,6 +105,7 @@ class SearchFlowDB:
                     status=row.get("status"),
                     validity_status=row.get("validity_status")
                     or ("fresh" if row.get("status") == "active" else row.get("status")),
+                    unresolved=any(i["context_id"] == row["id"] for i in self._invalidation_rows),
                 )
                 for row in self._rows
                 if row["id"] in allowed
@@ -117,6 +118,10 @@ class SearchFlowDB:
                     id=row["id"],
                     version=by_id[row["id"]].get("version"),
                     l2_content=row["l2_content"],
+                    status=by_id[row["id"]]["status"],
+                    validity_status=by_id[row["id"]].get("validity_status")
+                    or ("fresh" if by_id[row["id"]]["status"] == "active" else by_id[row["id"]]["status"]),
+                    unresolved=any(i["context_id"] == row["id"] for i in self._invalidation_rows),
                 )
                 for row in self._l2_rows
                 if row["id"] in allowed
@@ -998,3 +1003,34 @@ async def test_keyword_search_returns_file_path_in_candidates():
     results = await keyword_search(db, "postgres", 5)
 
     assert results[0]["file_path"] == "/tmp/postgres-doc"
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "validity,unresolved,expected",
+    [("fresh", True, "stale"), ("invalid", True, "invalid"),
+     ("superseded", True, "superseded"), ("stale", False, "stale"),
+     ("fresh", False, "fresh")],
+)
+async def test_debug_l2_applies_body_availability_not_earlier_fresh(validity, unresolved, expected):
+    node = uuid.uuid4()
+
+    class BodyStateDB(SearchFlowDB):
+        async def fetch(self, sql, *args):
+            if "SELECT id, version, l2_content" in sql:
+                return [FakeRecord(id=node, version=1, l2_content="body", status="active",
+                                   validity_status=validity, unresolved=unresolved)]
+            return await super().fetch(sql, *args)
+
+    db = BodyStateDB([FakeRecord(
+        id=node, uri="ctx://racy", context_type="memory", scope="datalake",
+        owner_space=None, status="active", validity_status="fresh", version=1,
+        l0_content="racy", l1_content="racy", tags=[], cosine_similarity=0.9,
+    )])
+    response = await _make_retrieval_service().search(
+        db, SearchRequest(query="racy", level=ContextLevel.L2, include_stale=True),
+        RequestContext(account_id="acme", agent_id="query-agent"),
+    )
+    assert len(response.results) == 1
+    assert response.results[0].l2_content == "body"
+    assert response.results[0].validity_status == expected

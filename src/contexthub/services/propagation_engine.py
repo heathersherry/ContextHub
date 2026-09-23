@@ -72,7 +72,9 @@ class PropagationEngine:
         worker_id: str | None = None,
         max_event_depth: int = 64,
         max_events_per_root: int = 10_000,
+        maintenance_executor=None,
     ):
+        self._maintenance_executor = maintenance_executor
         self._repo = repo
         self._pool = pool
         self._dsn = dsn
@@ -347,6 +349,23 @@ class PropagationEngine:
                 "depth": int(event.get("depth") or 0),
             },
         )
+
+        # Durable responsibility is assigned in the source event transaction.
+        # Even an older/unconfigured worker must never send these to legacy rules.
+        metadata = event.get("metadata") or {}
+        if isinstance(metadata, str):
+            metadata = json.loads(metadata)
+        if metadata.get("s5_watches"):
+            try:
+                if self._maintenance_executor is None:
+                    raise RuntimeError("s5_executor_not_configured")
+                await self._maintenance_executor.handle_event(event)
+            except Exception:
+                await self._finish_event(event_id, success=False, terminal=True,
+                                         error="s5_initialization_stopped", lease_token=lease_token)
+            else:
+                await self._finish_event(event_id, success=True, lease_token=lease_token)
+            return
 
         # deleted 事件不传播。marked_stale 默认也不传播；
         # 仅当 cascade_on_stale 开启时沿 derived_from 边级联。幂等键绑定具体

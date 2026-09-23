@@ -45,7 +45,14 @@ MODELS = {
 def artifact_models():
     # Lazy import avoids the discovery service -> artifact service cycle.
     from contexthub.discovery.contracts import DiscoveryReport
-    return {**MODELS, "discovery_report": DiscoveryReport}
+    from contexthub.propagation.contracts import (
+        MaintenanceWatch, MaintenanceFrame, EvidenceReceipt, InputRegistration,
+    )
+    return {**MODELS, "discovery_report": DiscoveryReport, **{
+        m.model_fields["kind"].default: m for m in (
+            MaintenanceWatch, MaintenanceFrame, EvidenceReceipt, InputRegistration
+        )
+    }}
 
 
 def walk(value):
@@ -92,6 +99,21 @@ class ArtifactService:
             raise ContractError("artifact_identity_mismatch")
         return obj
 
+    async def validate_maintenance_receipt(self, db: ScopedRepo, obj):
+        """S5 seal/consumption check; no history-body reads or format changes."""
+        from contexthub.propagation.evidence import required_manifest, validate_receipt_bundle
+        from contexthub.propagation.contracts import MaintenancePolicy
+
+        await require_account(db, obj.account_id)
+        frame = await self.get(db, obj.frame)
+        if obj.required != required_manifest(frame, obj.scope):
+            raise ContractError("required_manifest_mismatch")
+        if obj.complete:
+            watch = await self.get(db, frame.watch)
+            policy = MaintenancePolicy.model_validate_json(watch.policy_json)
+            bundle = await self.get(db, obj.bundle)
+            validate_receipt_bundle(frame, obj, policy, bundle)
+
     async def validate(self, db: ScopedRepo, obj: Sealed):
         from contexthub.services.evidence_service import EvidenceService
 
@@ -102,6 +124,17 @@ class ArtifactService:
         # and the usable mappings, not rejected model claims/page error records.
         from contexthub.discovery.contracts import DiscoveryReport
         validated = (obj.shared_extraction, obj.prior_extractions, obj.graph, obj.mappings) if isinstance(obj, DiscoveryReport) else obj
+        # Preparation slots may intentionally name unavailable inputs. They are
+        # requirements, never EvidenceRef capabilities. Usable refs still validate.
+        from contexthub.propagation.contracts import (
+            MaintenanceFrame, EvidenceReceipt, InputRegistration,
+        )
+        if isinstance(obj, InputRegistration):
+            validated = ()
+        elif isinstance(obj, MaintenanceFrame):
+            validated = (obj.watch, obj.snapshot, obj.old, obj.new, obj.history, obj.registrations)
+        elif isinstance(obj, EvidenceReceipt):
+            validated = (obj.frame, obj.bundle)
         for value in walk(validated):
             if isinstance(value, SealRef):
                 if value.account_id != obj.account_id:
@@ -128,6 +161,8 @@ class ArtifactService:
                     raise ContractError("context_version_missing")
             elif isinstance(value, EvidenceRef):
                 await evidence.resolve(db, value)
+        if isinstance(obj, EvidenceReceipt):
+            await self.validate_maintenance_receipt(db, obj)
         if isinstance(obj, SourceSnapshot):
             await evidence.read_source(db, obj)
         if isinstance(obj, MaintenanceSnapshot):

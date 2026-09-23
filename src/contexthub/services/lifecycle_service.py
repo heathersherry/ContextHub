@@ -60,7 +60,7 @@ class LifecycleService:
             """
             UPDATE contexts
             SET status = 'stale',
-                validity_status = 'stale',
+                validity_status = CASE WHEN validity_status = 'fresh' THEN 'stale' ELSE validity_status END,
                 validity_reason = $2,
                 stale_at = NOW(),
                 updated_at = NOW()
@@ -141,6 +141,7 @@ class LifecycleService:
             )
             UPDATE contexts c
                SET validity_status = CASE
+                     WHEN c.validity_status <> 'fresh' THEN c.validity_status
                      WHEN c.id = $1 THEN 'stale' ELSE 'invalid'
                    END,
                    validity_reason = CASE

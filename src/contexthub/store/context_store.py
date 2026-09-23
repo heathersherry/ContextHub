@@ -45,6 +45,7 @@ class ContextStat:
     created_at: datetime
     updated_at: datetime
     last_accessed_at: datetime
+    validity_status: str = "fresh"
 
 
 class ContextStore:
@@ -89,7 +90,9 @@ class ContextStore:
         col = LEVEL_COLUMNS[level]
         row = await db.fetchrow(
             f"""
-            SELECT id, status, validity_status, version, {col}, file_path
+            SELECT id, status, validity_status, version, {col}, file_path,
+                   EXISTS(SELECT 1 FROM context_invalidations i WHERE i.context_id=contexts.id
+                          AND i.resolved_at IS NULL) AS unresolved
             FROM contexts
             WHERE uri = $1 AND status != 'deleted'
             """,
@@ -98,11 +101,16 @@ class ContextStore:
         if row is None:
             raise NotFoundError(f"Context {uri} not found")
 
+        if row.get("unresolved", False) and row.get("validity_status") == "fresh":
+            row = dict(row)
+            row["validity_status"] = "stale"
+
         if (
             not include_stale
             and (
                 row["status"] != "active"
                 or row.get("validity_status", "fresh") != "fresh"
+                or row.get("unresolved", False)
             )
         ):
             raise ConflictError(
@@ -122,7 +130,8 @@ class ContextStore:
                 """
                 SELECT 1 FROM contexts
                  WHERE id = $1 AND version = $2 AND file_path = $3
-                   AND ($4 OR (status = 'active' AND validity_status = 'fresh'))
+                   AND ($4 OR (status = 'active' AND validity_status = 'fresh'
+                     AND NOT EXISTS(SELECT 1 FROM context_invalidations i WHERE i.context_id=contexts.id AND i.resolved_at IS NULL)))
                 """,
                 row["id"],
                 row.get("version", 1),
@@ -135,6 +144,8 @@ class ContextStore:
                 )
         else:
             content = row[col] or ""
+        if include_stale and (row["status"] != "active" or row.get("validity_status") != "fresh" or row.get("unresolved", False)):
+            content = f"[ContextHub non-fresh: status={row['status']}; validity={row.get('validity_status', 'unknown')}]\n" + content
         if decision.field_masks:
             content = self._masking.apply_masks(content, decision.field_masks)
 
@@ -215,7 +226,8 @@ class ContextStore:
             WHERE uri LIKE $1
               AND (
                 ($2 AND status != 'deleted')
-                OR (NOT $2 AND status = 'active' AND validity_status = 'fresh')
+                OR (NOT $2 AND status = 'active' AND validity_status = 'fresh'
+                    AND NOT EXISTS(SELECT 1 FROM context_invalidations i WHERE i.context_id=contexts.id AND i.resolved_at IS NULL))
               )
             """,
             prefix + "%",
@@ -264,6 +276,9 @@ class ContextStore:
         row = await db.fetchrow(
             """
             SELECT id, uri, context_type, scope, owner_space, status, version,
+                   CASE WHEN validity_status='fresh' AND EXISTS(
+                       SELECT 1 FROM context_invalidations i WHERE i.context_id=contexts.id AND i.resolved_at IS NULL)
+                     THEN 'stale' ELSE validity_status END AS validity_status,
                    tags, active_count, adopted_count, ignored_count,
                    created_at, updated_at, last_accessed_at
             FROM contexts WHERE uri = $1 AND status != 'deleted'
@@ -288,6 +303,7 @@ class ContextStore:
             created_at=row["created_at"],
             updated_at=row["updated_at"],
             last_accessed_at=row["last_accessed_at"],
+            validity_status=row.get("validity_status", "unknown"),
         )
 
         if self._audit:
