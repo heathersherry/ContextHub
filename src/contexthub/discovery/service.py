@@ -488,7 +488,8 @@ async def read_graph_handoff(db, report_ref):
     """
     artifacts = ArtifactService()
     report = await artifacts.get(db, report_ref)
-    if not isinstance(report, DiscoveryReport):
+    from contexthub.discovery.contracts import GraphHandoff
+    if not isinstance(report, (DiscoveryReport, GraphHandoff)):
         raise ContractError("reference_kind_mismatch")
     graph = await artifacts.get(db, report.graph)
     seeds = {}

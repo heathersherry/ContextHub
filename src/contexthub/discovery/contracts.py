@@ -108,3 +108,26 @@ class DiscoveryReport(Sealed):
         if self.status == "pending" and not self.reasons:
             raise ContractError("pending_reason_required")
         return self
+
+
+class GraphHandoff(Sealed):
+    """Complete ordered discovery history, without re-extraction or graph inference."""
+
+    kind: Literal["graph_handoff"] = "graph_handoff"
+    execution_id: UUID
+    agent_id: Name
+    scope: Name
+    owner_space: Name
+    config_sha256: Hash
+    configuration: dict
+    strategy: Literal["selective", "full-history"]
+    reports: tuple[SealRef, ...]
+    prepared: tuple[SealRef, ...]
+    sources: tuple[ContextVersion, ...]
+    graph: SealRef
+    mappings: tuple[NodeMapping, ...]
+    status: Literal["complete", "pending"]
+    reasons: tuple[Name, ...]
+
+    configuration_payload = DiscoveryReport.configuration_payload
+    completion = model_validator(mode="after")(DiscoveryReport.completion)

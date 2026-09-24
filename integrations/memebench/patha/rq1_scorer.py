@@ -251,8 +251,15 @@ def score_rq1(
     paths,
     graphs: Mapping[str, GraphEvidence],
     reviews: tuple[PathReview, ...],
+    *,
+    episode_ids=None,
 ):
-    """One row for every frozen event-target, including missing/failed runs."""
+    """Score complete episodes, retaining every frozen record within them.
+
+    The default remains the entire parent contract. S8 may supply an explicit
+    episode view after checking its frozen development/formal membership; the
+    parent contract and the full path file are still validated unchanged.
+    """
     validate_scoring_contract(contract)
     universe = contract["frozen_record_universe"]["record_ids"]
     path_map = {p["record_id"]: p for p in paths}
@@ -263,7 +270,17 @@ def score_rq1(
         digest = payload.pop("record_sha256")
         if canonical_sha256(payload) != digest:
             raise ScoringContractError("path record hash mismatch")
-    if any(r.record_id not in path_map for r in reviews):
+    if episode_ids is not None:
+        selected = set(episode_ids)
+        if (
+            not selected
+            or len(selected) != len(episode_ids)
+            or not selected <= {p["episode_id"] for p in paths}
+            or set(graphs) - selected
+        ):
+            raise ScoringContractError("invalid complete-episode scoring view")
+        universe = [r for r in universe if path_map[r]["episode_id"] in selected]
+    if any(r.record_id not in universe for r in reviews):
         raise ScoringContractError("review outside frozen universe")
     rows = []
     for record in universe:

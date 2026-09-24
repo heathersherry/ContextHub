@@ -331,8 +331,7 @@ class KnowledgeService:
         for source in operation.source_ids:
             await self._authorize(db, source.context_id, ctx, write=write)
 
-    @recorded_public
-    async def ingest(self, body, ctx):
+    async def _reserve_input(self, body, ctx):
         ident = uuid5(
             NAMESPACE_URL,
             f"knowledge:{ctx.account_id}:{ctx.agent_id}:{body.request_id}",
@@ -346,7 +345,10 @@ class KnowledgeService:
             operation = await self._get(db, ident, "public_operation")
             if operation is not None:
                 await self._operation_access(db, operation, ctx)
-                if operation.request_sha256 != digest:
+                if (
+                    operation.request_sha256 != digest
+                    or operation.configuration_sha256 != self.config_hash
+                ):
                     raise ConflictError("knowledge_request_id_conflict")
             else:
                 owner = ctx.agent_id if body.scope == "agent" else body.team
@@ -354,16 +356,29 @@ class KnowledgeService:
                     db, Scope(body.scope), owner, ctx
                 ):
                     raise ForbiddenError("knowledge_scope_not_writable")
-                # Freeze only this scope's original public sources, including filler.
-                rows = await db.fetch(
-                    """SELECT c.* FROM contexts c WHERE c.account_id=$1
-                    AND c.scope=$2 AND c.owner_space=$3 AND c.status!='deleted'
-                    AND c.uri LIKE 'ctx://%/knowledge/%' ORDER BY c.created_at,c.id""",
-                    ctx.account_id,
-                    body.scope,
-                    owner,
-                )
+                from contexthub.models.knowledge_phases import PrepareRequest
+
+                # Explicit prepared histories never scan unrelated runs.
+                rows = []
+                if not isinstance(body, PrepareRequest):
+                    rows = await db.fetch(
+                        """SELECT c.* FROM contexts c WHERE c.account_id=$1
+                        AND c.scope=$2 AND c.owner_space=$3 AND c.status!='deleted'
+                        AND c.uri LIKE 'ctx://%/knowledge/%' ORDER BY c.created_at,c.id""",
+                        ctx.account_id,
+                        body.scope,
+                        owner,
+                    )
                 admitted = []
+                if isinstance(body, PrepareRequest):
+                    if body.previous:
+                        previous = await self._prepared_access(db, body.previous, ctx)
+                        if (previous.scope, previous.owner_space) != (
+                            body.scope,
+                            owner,
+                        ):
+                            raise ContractError("prepared_scope_mismatch")
+                        admitted.extend(previous.source_ids)
                 for row in rows:
                     decision = await self.acl.check_read_access(db, row["uri"], ctx)
                     if decision.allowed and not decision.field_masks:
@@ -407,7 +422,13 @@ class KnowledgeService:
                 )
                 await self.artifacts.seal(db, operation)
                 created = True
-        if not locals().get("created"):
+        return operation, locals().get("created", False)
+
+    @recorded_public
+    async def ingest(self, body, ctx):
+        operation, created = await self._reserve_input(body, ctx)
+        ident = operation.id
+        if not created:
             return await self.get_maintenance_result(ident, ctx)
         extraction = report = None
         watches = ()
@@ -434,7 +455,7 @@ class KnowledgeService:
         )
         return await self.get_maintenance_result(ident, ctx)
 
-    async def _ingest(self, operation, body, ctx, result):
+    async def _extract_input(self, operation, body, ctx):
         async with self._session(ctx.account_id) as db:
             cutoff = await db.fetchval("SELECT clock_timestamp()")
             refs = []
@@ -449,24 +470,40 @@ class KnowledgeService:
                         cutoff_at=cutoff,
                     )
                 )
-            prior_rows = await db.fetch(
-                """SELECT payload FROM knowledge_artifacts WHERE account_id=$1
-                AND kind='public_completion' AND payload->'extraction' IS NOT NULL""",
-                ctx.account_id,
-            )
+            from contexthub.models.knowledge_phases import PrepareRequest
+
+            if isinstance(body, PrepareRequest):
+                previous = (
+                    (await self._prepared_access(db, body.previous, ctx))
+                    if body.previous
+                    else None
+                )
+                prior_refs = (
+                    (*previous.prior_extractions, previous.extraction)
+                    if previous
+                    else ()
+                )
+            else:
+                prior_rows = await db.fetch(
+                    """SELECT payload FROM knowledge_artifacts WHERE account_id=$1
+                    AND kind='public_completion' AND payload->'extraction' IS NOT NULL""",
+                    ctx.account_id,
+                )
+                prior_refs = tuple(
+                    c.extraction
+                    for r in prior_rows
+                    if (c := PublicCompletion.model_validate(r["payload"])).extraction
+                )
             prior = []
             allowed = set(operation.source_ids[:-1])
-            for row in prior_rows:
-                candidate = PublicCompletion.model_validate(row["payload"])
-                if candidate.extraction is None:
-                    continue
-                artifact = await self.artifacts.get(db, candidate.extraction)
+            for candidate_ref in dict.fromkeys(prior_refs):
+                artifact = await self.artifacts.get(db, candidate_ref)
                 versions = [
                     (await self.artifacts.get(db, s)).source for s in artifact.sources
                 ]
                 # Use exact original seals for past extracted batches.
                 if set(versions) <= allowed:
-                    prior.append(candidate.extraction)
+                    prior.append(candidate_ref)
                     for v, ref in zip(versions, artifact.sources):
                         refs[operation.source_ids.index(v)] = ref
         db = _ShortSessions(self, ctx, operation.source_ids)
@@ -477,14 +514,6 @@ class KnowledgeService:
                 ctx, operation.id, self.config.extraction, "extract", "extraction"
             ),
         )
-        result = result.model_copy(update={"cutoff_at": cutoff})
-        if extracted.status != "complete":
-            return (
-                result.model_copy(update={"reason": extracted.failure_reason}),
-                extracted.reference(),
-                None,
-                (),
-            )
         provenance = tuple(
             ExplicitProvenance(
                 proposition_id=p.id,
@@ -505,6 +534,12 @@ class KnowledgeService:
             cutoff_ordinal=len(refs) - 1,
             provenance=provenance,
         )
+        return extracted, history, tuple(prior)
+
+    async def _discover_input(
+        self, operation, extracted, history, prior, ctx, *, activate
+    ):
+        db = _ShortSessions(self, ctx, operation.source_ids)
         report = await self.discovery.discover(
             db,
             extracted.reference(),
@@ -524,9 +559,29 @@ class KnowledgeService:
                     await self.executor.register_rule_inputs(
                         tx, account_id=ctx.account_id, target=node, provider=rule
                     )
-            watches = await self.executor.register_graph(
-                tx, report.reference(), self.config.maintenance, ctx
+            watches = (
+                await self.executor.register_graph(
+                    tx, report.reference(), self.config.maintenance, ctx
+                )
+                if activate
+                else ()
             )
+        return report, watches
+
+    async def _ingest(self, operation, body, ctx, result):
+        extracted, history, prior = await self._extract_input(operation, body, ctx)
+        result = result.model_copy(update={"cutoff_at": history.cutoff_at})
+        if extracted.status != "complete":
+            return (
+                result.model_copy(update={"reason": extracted.failure_reason}),
+                extracted.reference(),
+                None,
+                (),
+            )
+        report, watches = await self._discover_input(
+            operation, extracted, history, prior, ctx, activate=True
+        )
+        refs = tuple(e.source for e in history.entries)
         result = result.model_copy(
             update={
                 "status": "complete" if report.status == "complete" else "pending",
@@ -932,6 +987,644 @@ class KnowledgeService:
                     "event_delivery": delivery,
                 }
             )
+
+    async def _prepared_access(self, db, ref, ctx):
+        from contexthub.models.knowledge_phases import PreparedInput
+
+        prepared = await self.artifacts.get(db, ref)
+        if not isinstance(prepared, PreparedInput):
+            raise ContractError("prepared_reference_required")
+        if prepared.agent_id != ctx.agent_id:
+            raise ForbiddenError("prepared_agent_mismatch")
+        if prepared.extraction_config_sha256 != canonical_hash(self.config.extraction):
+            raise ContractError("prepared_extraction_configuration_mismatch")
+        for cv in prepared.source_ids:
+            row = await self._authorize(db, cv.context_id, ctx)
+            if row["version"] != cv.version:
+                raise ConflictError("prepared_source_version_drift")
+        done = await self._get(
+            db, uuid5(prepared.operation_id, "completion"), "public_completion"
+        )
+        if done is None or done.result.status != "complete":
+            raise ContractError("prepared_operation_incomplete")
+        extraction = await self.artifacts.get(db, prepared.extraction)
+        if extraction.status != "complete":
+            raise ContractError("prepared_extraction_incomplete")
+        if tuple(extraction.sources) != (prepared.history.entries[-1].source,):
+            raise ContractError("prepared_source_mismatch")
+        return prepared
+
+    async def get_graph_handoff(self, operation_id, ctx):
+        """Read the exact aggregate receipt with source, carrier and watch ACLs.
+
+        This never rebuilds a graph or acquires a runtime commit capability.
+        Current versions may have advanced; consumers bind a before-state
+        database snapshot separately, rather than pretending this is that state.
+        """
+        from contexthub.discovery.contracts import GraphHandoff
+
+        async with self._session(ctx.account_id) as db:
+            operation = await self._get(db, operation_id, "public_operation")
+            if operation is None:
+                raise NotFoundError("knowledge_operation_not_found")
+            await self._operation_access(db, operation, ctx)
+            done = await self._get(
+                db, uuid5(operation_id, "completion"), "public_completion"
+            )
+            if done is None or done.report is None:
+                raise ContractError("graph_handoff_incomplete")
+            handoff = await self.artifacts.get(db, done.report)
+            if (
+                not isinstance(handoff, GraphHandoff)
+                or handoff.agent_id != ctx.agent_id
+            ):
+                raise ContractError("graph_handoff_required")
+            graph = await self.artifacts.get(db, handoff.graph)
+            for cv in (*handoff.sources, *graph.nodes):
+                await self._authorize(db, cv.context_id, ctx)
+            for ref in done.watches:
+                watch = await self.artifacts.get(db, ref)
+                if (
+                    watch.report != done.report
+                    or watch.graph != handoff.graph
+                    or watch.agent_id != ctx.agent_id
+                ):
+                    raise ContractError("graph_watch_mismatch")
+                await self._authorize(db, watch.source.context_id, ctx)
+            return handoff
+
+    async def get_prepared(self, reference, ctx):
+        """Read a completed prepared input after the same reference/ACL checks."""
+        async with self._session(ctx.account_id) as db:
+            return await self._prepared_access(db, reference, ctx)
+
+    async def discovery_report_reference(self, operation_id, ctx):
+        """Read a batch report reference without exposing the artifact store."""
+        async with self._session(ctx.account_id) as db:
+            operation = await self._get(db, operation_id, "public_operation")
+            if operation is None:
+                raise NotFoundError("knowledge_operation_not_found")
+            await self._operation_access(db, operation, ctx)
+            done = await self._get(
+                db, uuid5(operation_id, "completion"), "public_completion"
+            )
+            if (
+                done is None
+                or done.report is None
+                or done.report.kind != "discovery_report"
+            ):
+                raise ContractError("discovery_report_incomplete")
+            report = await self.artifacts.get(db, done.report)
+            for mapping in report.mappings:
+                await self._authorize(db, mapping.node.context_id, ctx)
+            return done.report
+
+    async def execution_records(self, operation_ids, ctx):
+        """Export existing core facts; no new attempts or experimental charges."""
+        calls = []
+        async with self._session(ctx.account_id) as db:
+            for ident in dict.fromkeys(operation_ids):
+                operation = await self._get(db, ident, "public_operation")
+                if operation is None:
+                    raise NotFoundError("knowledge_operation_not_found")
+                await self._operation_access(db, operation, ctx)
+                calls.extend(
+                    r["call_id"]
+                    for r in await db.fetch(
+                        "SELECT DISTINCT call_id FROM execution_attempts WHERE account_id=$1 AND execution_id=$2 ORDER BY call_id",
+                        ctx.account_id,
+                        operation.execution_id,
+                    )
+                )
+        records = []
+        for call in dict.fromkeys(calls):
+            records.extend(await self.executor.recorder.records(ctx.account_id, call))
+        return tuple(records)
+
+    @recorded_public
+    async def prepare(self, body, ctx):
+        """Store one intact input and extract once; share only the sealed handle."""
+        from contexthub.models.knowledge_phases import (
+            PrepareRequest,
+            PreparedInput,
+            PreparedResult,
+        )
+
+        body = PrepareRequest.model_validate(body.model_dump(mode="json"))
+        operation, created = await self._reserve_input(body, ctx)
+        if not created:
+            async with self._session(ctx.account_id) as db:
+                prepared = await self._get(
+                    db, uuid5(operation.id, "prepared"), "prepared_input"
+                )
+            return PreparedResult(
+                result=await self.get_maintenance_result(operation.id, ctx),
+                prepared=prepared.reference() if prepared else None,
+            )
+        result = KnowledgeResult(
+            operation_id=operation.id,
+            request_id=body.request_id,
+            execution_id=operation.id,
+            config_sha256=self.config_hash,
+            operation="ingest",
+            status="pending",
+            content_saved=True,
+        )
+        prepared = extracted = None
+        try:
+            async with asyncio.timeout(self.config.ingest_timeout_seconds):
+                extracted, history, prior = await self._extract_input(
+                    operation, body, ctx
+                )
+                if extracted.status == "complete":
+                    prepared = PreparedInput(
+                        account_id=ctx.account_id,
+                        id=uuid5(operation.id, "prepared"),
+                        operation_id=operation.id,
+                        agent_id=ctx.agent_id,
+                        scope=operation.scope,
+                        owner_space=operation.owner_space,
+                        source_ids=operation.source_ids,
+                        extraction=extracted.reference(),
+                        extraction_config_sha256=canonical_hash(self.config.extraction),
+                        prior_extractions=prior,
+                        previous=body.previous,
+                        history=history,
+                    )
+                    async with self._session(ctx.account_id) as db:
+                        await self.artifacts.seal(db, prepared)
+                    result = result.model_copy(
+                        update={
+                            "status": "complete",
+                            "reason": "prepared",
+                            "cutoff_at": history.cutoff_at,
+                        }
+                    )
+                else:
+                    result = result.model_copy(
+                        update={"reason": extracted.failure_reason}
+                    )
+        except Exception as exc:
+            prepared = None
+            result = result.model_copy(update={"reason": safe_reason(exc)})
+        await self._finish(
+            operation, result, extraction=extracted.reference() if extracted else None
+        )
+        return PreparedResult(
+            result=await self.get_maintenance_result(operation.id, ctx),
+            prepared=prepared.reference() if prepared else None,
+        )
+
+    async def _reserve_phase(
+        self,
+        db,
+        body,
+        ctx,
+        sources,
+        scope,
+        owner,
+        *,
+        report=None,
+        persist_content=False,
+    ):
+        ident = uuid5(
+            NAMESPACE_URL,
+            f"knowledge:{ctx.account_id}:{ctx.agent_id}:{body.request_id}",
+        )
+        await db.fetchval(
+            "SELECT pg_advisory_xact_lock(hashtextextended($1,0))", str(ident)
+        )
+        existing = await self._get(db, ident, "public_operation")
+        if existing:
+            await self._operation_access(db, existing, ctx)
+            if (
+                existing.request_sha256 != canonical_hash(body)
+                or existing.configuration_sha256 != self.config_hash
+            ):
+                raise ConflictError("knowledge_request_id_conflict")
+            return existing, False
+        if persist_content:
+            source = await self.context_service.create(
+                db,
+                CreateContextRequest(
+                    uri=f"ctx://{scope}/{owner}/knowledge/{ident}",
+                    context_type="memory",
+                    scope=scope,
+                    owner_space=owner,
+                    l2_content=body.content,
+                ),
+                ctx,
+            )
+            sources = (
+                *sources,
+                ContextVersion(context_id=source.id, version=source.version),
+            )
+        operation = PublicOperation(
+            account_id=ctx.account_id,
+            id=ident,
+            owner_call_id=self._local_work.get().identity.call_id,
+            agent_id=ctx.agent_id,
+            request_sha256=canonical_hash(body),
+            configuration_sha256=self.config_hash,
+            operation="ingest",
+            request_id=body.request_id,
+            source_ids=sources,
+            execution_id=ident,
+            scope=scope,
+            owner_space=owner,
+            report=report,
+        )
+        await self.artifacts.seal(db, operation)
+        return operation, True
+
+    @recorded_public
+    async def discover_prepared(self, body, ctx):
+        """Use the exact sealed extraction/history; does not activate batch watches."""
+        from contexthub.models.knowledge_phases import DiscoverPreparedRequest
+
+        body = DiscoverPreparedRequest.model_validate(body.model_dump(mode="json"))
+        async with self._session(ctx.account_id) as db:
+            prepared = await self._prepared_access(db, body.prepared, ctx)
+            operation, created = await self._reserve_phase(
+                db, body, ctx, prepared.source_ids, prepared.scope, prepared.owner_space
+            )
+            extracted = await self.artifacts.get(db, prepared.extraction)
+        if not created:
+            return await self.get_maintenance_result(operation.id, ctx)
+        result = KnowledgeResult(
+            operation_id=operation.id,
+            request_id=body.request_id,
+            execution_id=operation.id,
+            config_sha256=self.config_hash,
+            operation="ingest",
+            status="pending",
+            content_saved=True,
+            cutoff_at=prepared.history.cutoff_at,
+        )
+        report = None
+        try:
+            async with asyncio.timeout(self.config.ingest_timeout_seconds):
+                report, _ = await self._discover_input(
+                    operation,
+                    extracted,
+                    prepared.history,
+                    prepared.prior_extractions,
+                    ctx,
+                    activate=False,
+                )
+                result = result.model_copy(
+                    update={
+                        "status": report.status,
+                        "graph_id": report.graph.id,
+                        "report_id": report.id,
+                        "reason": report.reasons[0]
+                        if report.reasons
+                        else "awaiting_graph_finalization",
+                    }
+                )
+        except Exception as exc:
+            result = result.model_copy(update={"reason": safe_reason(exc)})
+        await self._finish(
+            operation,
+            result,
+            extraction=prepared.extraction,
+            report=report.reference() if report else None,
+        )
+        return await self.get_maintenance_result(operation.id, ctx)
+
+    @recorded_public
+    async def finalize_graph(self, body, ctx):
+        """Seal and activate exactly the union of every batch in a prepared chain."""
+        from contexthub.models.knowledge_phases import FinalizeGraphRequest
+        from contexthub.discovery.contracts import (
+            DiscoveryReport,
+            GraphHandoff,
+            encode_configuration,
+        )
+        from contexthub.discovery.service import assemble_graph_snapshot
+
+        body = FinalizeGraphRequest.model_validate(body.model_dump(mode="json"))
+        if len(body.reports) != len(body.prepared) or len(set(body.reports)) != len(
+            body.reports
+        ):
+            raise ContractError("handoff_batch_mismatch")
+        async with self._session(ctx.account_id) as db:
+            preparations = [
+                await self._prepared_access(db, ref, ctx) for ref in body.prepared
+            ]
+            reports = [await self.artifacts.get(db, ref) for ref in body.reports]
+            graphs, mappings = [], {}
+            for i, (prepared, report) in enumerate(zip(preparations, reports)):
+                if prepared.previous != (body.prepared[i - 1] if i else None):
+                    raise ContractError("handoff_history_not_complete")
+                if not isinstance(report, DiscoveryReport) or (
+                    report.shared_extraction != prepared.extraction
+                    or report.prior_extractions != prepared.prior_extractions
+                    or report.history_sha256 != canonical_hash(prepared.history)
+                    or report.config_sha256 != canonical_hash(self.config.discovery)
+                ):
+                    raise ContractError("handoff_report_mismatch")
+                graph = await self.artifacts.get(db, report.graph)
+                graphs.append(graph)
+                for m in report.mappings:
+                    key = m.node.context_id
+                    if key in mappings and mappings[key] != m:
+                        raise ContractError("handoff_mapping_conflict")
+                    mappings[key] = m
+            last = preparations[-1]
+            operation, created = await self._reserve_phase(
+                db, body, ctx, last.source_ids, last.scope, last.owner_space
+            )
+            if created:
+                graph = assemble_graph_snapshot(
+                    graphs,
+                    account_id=ctx.account_id,
+                    graph_id=uuid5(operation.id, "aggregate-graph"),
+                    config_sha256=canonical_hash(self.config.discovery),
+                )
+                await self.artifacts.seal(db, graph)
+                reasons = tuple(
+                    dict.fromkeys(r for report in reports for r in report.reasons)
+                )
+                handoff = GraphHandoff(
+                    account_id=ctx.account_id,
+                    id=uuid5(operation.id, "handoff"),
+                    execution_id=operation.id,
+                    agent_id=ctx.agent_id,
+                    scope=last.scope,
+                    owner_space=last.owner_space,
+                    config_sha256=canonical_hash(self.config.discovery),
+                    configuration=encode_configuration(self.config.discovery),
+                    strategy=self.config.discovery.search.strategy,
+                    reports=body.reports,
+                    prepared=body.prepared,
+                    sources=last.source_ids,
+                    graph=graph.reference(),
+                    mappings=tuple(mappings.values()),
+                    status="pending" if reasons or graph.pending else "complete",
+                    reasons=reasons or (("graph_pending",) if graph.pending else ()),
+                )
+                for cv in (*handoff.sources, *graph.nodes):
+                    await self._authorize(db, cv.context_id, ctx, write=True)
+                await self.artifacts.seal(db, handoff)
+                watches = await self.executor.register_graph(
+                    db, handoff.reference(), self.config.maintenance, ctx
+                )
+                result = KnowledgeResult(
+                    operation_id=operation.id,
+                    request_id=body.request_id,
+                    execution_id=operation.id,
+                    config_sha256=self.config_hash,
+                    operation="ingest",
+                    status=handoff.status,
+                    content_saved=True,
+                    graph_id=graph.id,
+                    report_id=handoff.id,
+                    graph_status="deliverable"
+                    if handoff.status == "complete"
+                    else "pending",
+                    maintenance_ready=handoff.status == "complete",
+                    watch_ids=tuple(r.id for r in watches),
+                    cutoff_at=last.history.cutoff_at,
+                    reason=reasons[0] if reasons else None,
+                )
+                # Activation and receipt commit together; cancellation cannot expose
+                # registered watches without an immutable final handoff receipt.
+                await self.artifacts.seal(
+                    db,
+                    PublicCompletion(
+                        account_id=ctx.account_id,
+                        id=uuid5(operation.id, "completion"),
+                        operation_id=operation.id,
+                        result=result,
+                        report=handoff.reference(),
+                        watches=watches,
+                    ),
+                )
+        return await self.get_maintenance_result(operation.id, ctx)
+
+    @recorded_public
+    async def ingest_assertion_change(self, body, ctx):
+        """Save intact text and version grounded root carriers; never runs P1/P2.
+
+        Derived nodes are excluded, even if the model attempts to name one.
+        All matched updates/events commit atomically after rechecking every basis.
+        """
+        from contexthub.models.knowledge_phases import AssertionChangeRequest
+        from contexthub.discovery.contracts import GraphHandoff
+        from contexthub.services.assertion_change import (
+            locate_assertions,
+            AssertionChangeRecord,
+        )
+
+        body = AssertionChangeRequest.model_validate(body.model_dump(mode="json"))
+        async with self._session(ctx.account_id) as db:
+            handoff = await self.artifacts.get(db, body.handoff)
+            if (
+                not isinstance(handoff, GraphHandoff)
+                or handoff.agent_id != ctx.agent_id
+            ):
+                raise ContractError("assertion_handoff_mismatch")
+            if handoff.status != "complete":
+                raise ContractError("assertion_graph_pending")
+            graph = await self.artifacts.get(db, handoff.graph)
+            for cv in (*handoff.sources, *graph.nodes):
+                await self._authorize(db, cv.context_id, ctx, write=True)
+            operation, created = await self._reserve_phase(
+                db,
+                body,
+                ctx,
+                handoff.sources,
+                handoff.scope,
+                handoff.owner_space,
+                report=body.handoff,
+                persist_content=True,
+            )
+            if created:
+                # The stored source is the exact request text, not selected spans.
+                source = operation.source_ids[-1]
+                cutoff = await db.fetchval("SELECT clock_timestamp()")
+                raw_ref = await self.evidence.snapshot(
+                    db,
+                    account_id=ctx.account_id,
+                    source=source,
+                    content_level="l2_content",
+                    cutoff_at=cutoff,
+                )
+                raw = dict(
+                    context_id=str(source.context_id),
+                    version=source.version,
+                    snapshot_id=str(raw_ref.id),
+                    text=body.content,
+                )
+                candidates, refs = [], [raw_ref]
+                derived = {
+                    e.downstream.context_id for e in (*graph.edges, *graph.pending)
+                }
+                for m in handoff.mappings:
+                    if m.node.context_id in derived or m.proposition_id is None:
+                        continue
+                    # A paraphrase or multi-premise derived claim is not a directly
+                    # quoted assertion. Missing eligibility means no direct write.
+                    assertions = tuple(e for e in m.evidence if e.excerpt == m.text)
+                    if not assertions:
+                        continue
+                    row = await self._authorize(db, m.node.context_id, ctx, write=True)
+                    carrier_ref = await self.evidence.snapshot(
+                        db,
+                        account_id=ctx.account_id,
+                        source=ContextVersion(
+                            context_id=m.node.context_id, version=row["version"]
+                        ),
+                        content_level="l2_content",
+                        cutoff_at=cutoff,
+                    )
+                    refs.append(carrier_ref)
+                    refs.extend(e.source for e in assertions)
+                    candidates.append(
+                        dict(
+                            context_id=str(m.node.context_id),
+                            version=row["version"],
+                            snapshot_id=str(carrier_ref.id),
+                            text=row["l2_content"],
+                            assertions=[e.model_dump(mode="json") for e in assertions],
+                        )
+                    )
+        if not created:
+            return await self.get_maintenance_result(operation.id, ctx)
+        result = KnowledgeResult(
+            operation_id=operation.id,
+            request_id=body.request_id,
+            execution_id=operation.id,
+            config_sha256=self.config_hash,
+            operation="ingest",
+            status="pending",
+            content_saved=True,
+            graph_id=graph.id,
+            report_id=handoff.id,
+            graph_status="deliverable",
+            maintenance_ready=True,
+            location_status="pending",
+            cutoff_at=cutoff,
+        )
+        try:
+            async with asyncio.timeout(self.config.ingest_timeout_seconds):
+                location = await locate_assertions(
+                    self.locator,
+                    raw,
+                    candidates,
+                    identity=self._identity(
+                        ctx,
+                        operation.id,
+                        self.config.change_location,
+                        "assertion_location",
+                        "locator",
+                    ),
+                )
+                async with self._session(ctx.account_id) as db:
+                    await self.artifacts.seal(
+                        db,
+                        AssertionChangeRecord(
+                            account_id=ctx.account_id,
+                            id=uuid5(operation.id, "assertion-change"),
+                            operation_id=operation.id,
+                            handoff=body.handoff,
+                            sources=tuple(dict.fromkeys(refs)),
+                            result=location,
+                        ),
+                    )
+                async with self._session(ctx.account_id) as db:
+                    events = []
+                    # Lock in stable order, then recheck the entire graph/source
+                    # basis before *any* write, including permission changes.
+                    for cv in sorted(
+                        (*handoff.sources, *graph.nodes),
+                        key=lambda n: str(n.context_id),
+                    ):
+                        await db.fetchval(
+                            "SELECT version FROM contexts WHERE id=$1 FOR UPDATE",
+                            cv.context_id,
+                        )
+                        row = await self._authorize(db, cv.context_id, ctx, write=True)
+                        if location.matches and row["version"] != cv.version:
+                            raise ConflictError("assertion_graph_version_drift")
+                    for match in location.matches:
+                        row = await self._authorize(
+                            db, match.carrier_id, ctx, write=True
+                        )
+                        outgoing = any(
+                            e.upstream.context_id == match.carrier_id
+                            for e in graph.edges
+                        )
+                        if outgoing:
+                            watch = await db.fetchval(
+                                """SELECT id FROM knowledge_artifacts WHERE account_id=$1
+                                AND kind='maintenance_watch' AND payload->'report'->>'id'=$2
+                                AND payload->'source'->>'context_id'=$3
+                                AND (payload->'source'->>'version')::int=$4
+                                AND payload->'reasons'='[]'::jsonb""",
+                                ctx.account_id,
+                                str(handoff.id),
+                                str(match.carrier_id),
+                                match.version,
+                            )
+                            if not watch:
+                                raise ContractError("assertion_watch_missing")
+                        updated = await self.context_service.update(
+                            db,
+                            row["uri"],
+                            UpdateContextRequest(l2_content=match.replacement.excerpt),
+                            RequestContext(
+                                account_id=ctx.account_id,
+                                agent_id=ctx.agent_id,
+                                expected_version=match.version,
+                            ),
+                        )
+                        rows = await db.fetch(
+                            """SELECT event_id FROM change_events WHERE account_id=$1
+                            AND context_id=$2 AND source_version=$3 AND change_type='modified'""",
+                            ctx.account_id,
+                            updated.id,
+                            updated.version,
+                        )
+                        if len(rows) != 1:
+                            raise ContractError("assertion_event_not_unique")
+                        events.append(rows[0]["event_id"])
+                    completed_result = result.model_copy(
+                        update={
+                            "status": "pending"
+                            if location.status == "pending"
+                            else "complete",
+                            "location_status": location.status,
+                            "event_ids": tuple(events),
+                            "reason": location.reason,
+                        }
+                    )
+                    # Receipt and actual versions/events commit together.
+                    await self.artifacts.seal(
+                        db,
+                        PublicCompletion(
+                            account_id=ctx.account_id,
+                            id=uuid5(operation.id, "completion"),
+                            operation_id=operation.id,
+                            result=completed_result,
+                            report=body.handoff,
+                        ),
+                    )
+        except Exception as exc:
+            # The transaction may have rolled back OR committed before its
+            # acknowledgement failed. Only the durable receipt can distinguish
+            # them. Never turn speculative event IDs into a success receipt,
+            # and never overwrite an already committed immutable completion.
+            # If this read also fails, propagate uncertainty for a later retry.
+            async with self._session(ctx.account_id) as db:
+                committed = await self._get(
+                    db, uuid5(operation.id, "completion"), "public_completion"
+                )
+            if committed is None:
+                failed_result = result.model_copy(update={"reason": safe_reason(exc)})
+                await self._finish(operation, failed_result, report=body.handoff)
+        return await self.get_maintenance_result(operation.id, ctx)
 
     async def _current(self, db, ident):
         return await db.fetchrow(

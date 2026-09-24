@@ -44,7 +44,9 @@ MODELS = {
 
 def artifact_models():
     # Lazy import avoids the discovery service -> artifact service cycle.
-    from contexthub.discovery.contracts import DiscoveryReport
+    from contexthub.discovery.contracts import DiscoveryReport, GraphHandoff
+    from contexthub.models.knowledge_phases import PreparedInput
+    from contexthub.services.assertion_change import AssertionChangeRecord
     from contexthub.models.knowledge_public import PublicOperation, PublicCompletion
     from contexthub.services.change_location import ChangeLocationRecord
     from contexthub.propagation.contracts import (
@@ -57,6 +59,7 @@ def artifact_models():
         m.model_fields["kind"].default: m for m in (
             MaintenanceWatch, MaintenanceFrame, EvidenceReceipt, InputRegistration,
             ActionBinding, Proposal, Verdict, Continuation, PublicOperation, PublicCompletion, ChangeLocationRecord,
+            PreparedInput, GraphHandoff, AssertionChangeRecord,
         )
     }}
 

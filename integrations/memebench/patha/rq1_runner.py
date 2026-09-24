@@ -1,4 +1,4 @@
-"""RQ1 only: S1-clean input -> shared extraction -> two identical core protocols.
+"""Legacy S4 synthetic reproduction; new service wiring is PublicRQ1Runner.
 
 No scorer imports, questions, labels, model defaults, retries or best-run selection.
 """
@@ -44,6 +44,7 @@ from contexthub.models.knowledge import (
 from contexthub.services.evidence_service import EvidenceService
 from contexthub.services.artifact_service import ArtifactService
 from .schemas import MaintenanceInput
+from .public_rq1_runner import PublicRQ1Runner, PublicRQ1Configuration
 
 
 class RQ1Config(Contract):
