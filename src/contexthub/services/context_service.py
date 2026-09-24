@@ -40,6 +40,27 @@ class ContextService:
         self._audit = audit
 
     @staticmethod
+    async def _apply_verified_unchanged(db, *, context_id, expected_version, causes):
+        """Internal S6 transaction primitive, after guarded checks and locks.
+
+        Keeps content, semantic identity and content version. No modified event:
+        the durable proof/work record is the maintenance outcome.
+        """
+        for event_id, version in causes:
+            result = await db.execute("""UPDATE context_invalidations SET resolved_at=clock_timestamp()
+                WHERE context_id=$1 AND cause_event_id=$2::uuid AND source_version=$3
+                AND resolved_at IS NULL""", context_id, event_id, version)
+            if result != "UPDATE 1":
+                raise ConflictError("Invalidation resolution CAS failed")
+        row = await db.fetchval("""UPDATE contexts SET status='active',validity_status='fresh',
+            validity_reason=NULL,stale_at=NULL,updated_at=clock_timestamp()
+            WHERE id=$1 AND version=$2 AND status IN ('active','stale') AND validity_status='stale'
+            AND NOT EXISTS(SELECT 1 FROM context_invalidations WHERE context_id=$1 AND resolved_at IS NULL)
+            RETURNING version""", context_id, expected_version)
+        if row is None:
+            raise ConflictError("Unchanged target no longer applicable")
+
+    @staticmethod
     async def apply_system_content_change(
         db: ScopedRepo,
         *,

@@ -255,7 +255,8 @@ class MaintenanceExecutor:
                 raise
         return tuple(results)
 
-    async def _prepare(self, db, event, watch, target, policy, execution):
+    async def _prepare(self, db, event, watch, target, policy, execution, *,
+                       expected_overrides=None, deadline_at=None):
         old = watch.source
         new_version = event["source_version"]
         if event["context_id"] != old.context_id or new_version != old.version + 1:
@@ -268,7 +269,8 @@ class MaintenanceExecutor:
         if row is None or row["version"] != target.version:
             raise ContractError("target_version_drift")
         upstreams = tuple(e.upstream for e in graph.edges if e.downstream == target)
-        expected = tuple(new if n == old else n for n in upstreams)
+        overrides = expected_overrides or {}
+        expected = tuple(overrides.get(n, new if n == old else n) for n in upstreams)
         registrations = await db.fetch(
             """SELECT payload,sha256 FROM knowledge_artifacts WHERE account_id=$1
             AND kind='maintenance_inputs' AND payload->>'target_id'=$2 ORDER BY id""",
@@ -286,6 +288,8 @@ class MaintenanceExecutor:
             RequiredInput(source=target, role="target"),
         ]
         required.extend(RequiredInput(source=n, role="upstream") for n in expected)
+        # Verified ancestor commits also explain newly added downstream causes.
+        required.extend(RequiredInput(source=n, role="provenance") for n in overrides.values())
         report = await self.artifacts.get(db, watch.report)
         refs = [
             e
@@ -429,7 +433,7 @@ class MaintenanceExecutor:
                 ),
                 None,
             )
-            if basis.source != old and latest != basis.source.version:
+            if basis.source != old and latest != overrides.get(basis.source, basis.source).version:
                 reasons.append("graph_basis_version_drift")
         if any(reg.unresolved_conflict_ids for reg in registrations):
             reasons.append("registered_conflict_unresolved")
@@ -454,7 +458,8 @@ class MaintenanceExecutor:
                 ContextVersion(context_id=r["id"], version=r["version"])
                 for r in relations
             ),
-            deadline_at=cutoff + timedelta(seconds=policy.timeout_seconds),
+            deadline_at=min(deadline_at, cutoff + timedelta(seconds=policy.timeout_seconds))
+            if deadline_at is not None else cutoff + timedelta(seconds=policy.timeout_seconds),
         )
         await self.artifacts.seal(db, frame)
         await self.artifacts.create_work(db, snapshot.id, snap_ref)
@@ -462,6 +467,11 @@ class MaintenanceExecutor:
             db, event["event_id"], "s5_initialized", frame.model_dump(mode="json")
         )
         return frame
+
+    async def continue_after_commits(self, old_frame_ref, proof_refs):
+        """Bounded S6 continuation; archived proofs alone cannot authorize it."""
+        from contexthub.propagation.commit import continue_after_commits
+        return await continue_after_commits(self, old_frame_ref, proof_refs)
 
     async def recheck(self, db, frame):
         """S6 must call again immediately before use/commit; this grants no commit."""

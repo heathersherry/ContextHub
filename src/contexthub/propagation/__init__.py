@@ -7,6 +7,11 @@ from contexthub.propagation.contracts import (
 )
 from contexthub.propagation.executor import MaintenanceExecutor
 from contexthub.propagation.evidence import EvidenceBuilder
+from contexthub.propagation.candidate import CandidateGenerator, ModelConfig, DeterministicRule
+from contexthub.propagation.hard_checks import HardChecks
+from contexthub.propagation.verifier import FixedVerifier
+from contexthub.propagation.profiles import MaintenanceRunner, ProfileConfig
+from contexthub.propagation.commit import GuardedCommit
 
 __all__ = [
     "MaintenancePolicy",
@@ -14,4 +19,6 @@ __all__ = [
     "RequiredInput",
     "MaintenanceExecutor",
     "EvidenceBuilder",
+    "CandidateGenerator", "ModelConfig", "DeterministicRule", "HardChecks",
+    "FixedVerifier", "MaintenanceRunner", "ProfileConfig", "GuardedCommit",
 ]

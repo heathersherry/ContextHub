@@ -23,11 +23,14 @@ from discovery_helpers import config, search_policy, call_identity
 from s4_helpers import adjudication_config, judgment
 
 
-async def make_graph(repo, narrow=False, price=10, mandatory=False, pending=False):
+async def make_graph(repo, narrow=False, price=10, mandatory=False, pending=False,
+                     labels="ABCD", edges=None):
     account = "s4-review-" + str(uuid4())
     ledger = ExecutionLedger(repo)
     calls = []
     content = "A supports B. B supports C. A supports D. D supports C. Unrelated weather note. All other pairs are unused."
+    if edges is not None:
+        content = " ".join(f"{a} supports {b}." for a,b in edges) + " All other pairs are unused."
     original = json.dumps([{"role": "user", "content": content}], ensure_ascii=False)
     node = ContextVersion(context_id=uuid4(), version=1)
     async with repo.session(account) as db:
@@ -67,17 +70,17 @@ async def make_graph(repo, narrow=False, price=10, mandatory=False, pending=Fals
                             }
                         ],
                     }
-                    for label in "ABCD"
+                    for label in labels
                 ]
             }
         else:
             p = json.loads(prompt[prompt.index("{") :])
-            positive = (p["left"], p["right"]) in [
+            positive = (p["left"], p["right"]) in (edges if edges is not None else [
                 ("A", "B"),
                 ("B", "C"),
                 ("A", "D"),
                 ("D", "C"),
-            ]
+            ])
             raw = judgment(
                 p,
                 "UNKNOWN"

@@ -48,9 +48,13 @@ def artifact_models():
     from contexthub.propagation.contracts import (
         MaintenanceWatch, MaintenanceFrame, EvidenceReceipt, InputRegistration,
     )
+    from contexthub.propagation.candidate import ActionBinding, Proposal
+    from contexthub.propagation.verifier import Verdict
+    from contexthub.propagation.commit import Continuation
     return {**MODELS, "discovery_report": DiscoveryReport, **{
         m.model_fields["kind"].default: m for m in (
-            MaintenanceWatch, MaintenanceFrame, EvidenceReceipt, InputRegistration
+            MaintenanceWatch, MaintenanceFrame, EvidenceReceipt, InputRegistration,
+            ActionBinding, Proposal, Verdict, Continuation,
         )
     }}
 
@@ -92,6 +96,9 @@ class ArtifactService:
             raise ContractError("artifact_hash_mismatch")
         models = artifact_models()
         model = models.get(ref.kind)
+        if ref.kind == "commit_proof" and row["payload"].get("schema_version") == 2:
+            from contexthub.propagation.commit import GuardedProof
+            model = GuardedProof
         if model is None or row["payload"].get("kind") != ref.kind:
             raise ContractError("reference_kind_mismatch")
         obj = model.model_validate(row["payload"])
@@ -319,7 +326,9 @@ class ArtifactService:
         S6 owns atomic content writes, drift checks and cause removal. A receipt
         can be stored only against consistent, separately sealed check records.
         """
-        proof = CommitProof.model_validate(proof.model_dump(mode="json"))
+        from contexthub.propagation.commit import GuardedProof, validate_guarded_proof
+        proof_type = GuardedProof if isinstance(proof, GuardedProof) else CommitProof
+        proof = proof_type.model_validate(proof.model_dump(mode="json"))
         await self.validate(db, proof)
         candidate = await self.get(db, proof.candidate)
         check = await self.get(db, proof.hard_check)
@@ -347,11 +356,13 @@ class ArtifactService:
             proof.committed_target.context_id != snapshot.target.context_id
             or proof.committed_target.version
             != snapshot.target.version + (candidate.outcome == "updated")
-            or proof.checked_upstreams != snapshot.necessary_upstreams
+            or (not isinstance(proof, GuardedProof) and proof.checked_upstreams != snapshot.necessary_upstreams)
             or proof.checked_sources != snapshot.allowed_sources
             or proof.cleared_cause_ids != snapshot.cause_ids
         ):
             raise ContractError("proof_version_mismatch")
+        if isinstance(proof, GuardedProof):
+            await validate_guarded_proof(self, db, proof)
         bundle = await self.get(db, candidate.bundle)
         if not bundle.complete or any(not c.resolved for c in bundle.conflicts):
             raise ContractError("proof_evidence_incomplete")
