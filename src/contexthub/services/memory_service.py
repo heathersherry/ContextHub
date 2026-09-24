@@ -32,7 +32,11 @@ class MemoryService:
         discovery_candidate_strategy: str = "recent_k",
         detection: ChangeDetectionService | None = None,
         extractor: ConversationExtractionService | None = None,
+        knowledge=None,
     ):
+        if knowledge is not None and any(x is not None for x in (discovery, detection, extractor)):
+            raise BadRequestError("knowledge_and_legacy_pipeline_are_exclusive")
+        self._knowledge = knowledge
         self._indexer = indexer
         self._acl = acl
         self._masking = masking
@@ -52,6 +56,12 @@ class MemoryService:
         self._detection = detection
         # Optional: extract facts from a raw conversation. Enables add_conversation.
         self._extractor = extractor
+
+    async def ingest_knowledge(self, body, ctx):
+        """Explicit repository-owning S7 bridge, outside a legacy DB transaction."""
+        if self._knowledge is None:
+            raise BadRequestError("Knowledge maintenance is not configured")
+        return await self._knowledge.ingest(body, ctx)
 
     async def add_memory(
         self, db: ScopedRepo, body: AddMemoryRequest, ctx: RequestContext
@@ -91,7 +101,7 @@ class MemoryService:
             )
             VALUES (
               $1, current_setting('app.account_id'), 'created', $2,
-              concat('created:', $1::text, ':1'), 1, 'memory'
+              concat('created:', $1::uuid::text, ':1'), 1, 'memory'
             )
             ON CONFLICT (account_id, idempotency_key) DO NOTHING
             """,
@@ -436,7 +446,7 @@ class MemoryService:
                  idempotency_key, source_version, graph_scope)
             VALUES (
               $1, current_setting('app.account_id'), 'created', $2, $3,
-              concat('created:', $1::text, ':1'), 1, 'memory-promotion'
+              concat('created:', $1::uuid::text, ':1'), 1, 'memory-promotion'
             )
             ON CONFLICT (account_id, idempotency_key) DO NOTHING
             """,

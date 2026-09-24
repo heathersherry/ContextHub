@@ -1,0 +1,329 @@
+{
+  "schema_version": 1,
+  "id": "synthetic-only",
+  "code_version": "s7-fixture",
+  "extraction": {
+    "schema_version": 1,
+    "id": "fixture-extract",
+    "model": "extract",
+    "base_url": "https://fixture.invalid/v1",
+    "temperature": 0.0,
+    "max_tokens": 400,
+    "prompt_template": "Extract JSON preserving conditions and provenance. {sources_json}",
+    "retry": {
+      "schema_version": 1,
+      "max_attempts": 3,
+      "timeout_seconds": 1.0,
+      "backoff_seconds": [
+        0.0,
+        0.0
+      ],
+      "retry_status_codes": [
+        429,
+        500,
+        502,
+        503,
+        504
+      ],
+      "retry_transport_errors": [
+        "ReadTimeout",
+        "ConnectError"
+      ]
+    }
+  },
+  "extraction_price": null,
+  "discovery": {
+    "schema_version": 1,
+    "search": {
+      "schema_version": 1,
+      "id": "fixture-search",
+      "strategy": "full-history",
+      "initial_sources": 1,
+      "expansion_factor": 2,
+      "page_size": 2,
+      "ordering": "ingestion_desc",
+      "lambda_p1": 10.0
+    },
+    "adjudication": {
+      "schema_version": 1,
+      "id": "fixture-adjudication",
+      "weak": {
+        "schema_version": 1,
+        "id": "fixture-extract",
+        "model": "fixture-model",
+        "base_url": "https://fixture.invalid/v1",
+        "temperature": 0.0,
+        "max_tokens": 400,
+        "prompt_template": "Extract JSON preserving conditions and provenance. {sources_json}",
+        "retry": {
+          "schema_version": 1,
+          "max_attempts": 3,
+          "timeout_seconds": 1.0,
+          "backoff_seconds": [
+            0.0,
+            0.0
+          ],
+          "retry_status_codes": [
+            429,
+            500,
+            502,
+            503,
+            504
+          ],
+          "retry_transport_errors": [
+            "ReadTimeout",
+            "ConnectError"
+          ]
+        }
+      },
+      "strong": {
+        "schema_version": 1,
+        "id": "fixture-extract",
+        "model": "fixture-model",
+        "base_url": "https://fixture.invalid/v1",
+        "temperature": 0.0,
+        "max_tokens": 400,
+        "prompt_template": "Extract JSON preserving conditions and provenance. {sources_json}",
+        "retry": {
+          "schema_version": 1,
+          "max_attempts": 3,
+          "timeout_seconds": 1.0,
+          "backoff_seconds": [
+            0.0,
+            0.0
+          ],
+          "retry_status_codes": [
+            429,
+            500,
+            502,
+            503,
+            504
+          ],
+          "retry_transport_errors": [
+            "ReadTimeout",
+            "ConnectError"
+          ]
+        }
+      },
+      "stage0": {
+        "schema_version": 1,
+        "version": "fixture-v1",
+        "rules": [],
+        "alias_version": "fixture-empty",
+        "aliases": [],
+        "mention_patterns": []
+      },
+      "plans": [
+        {
+          "schema_version": 1,
+          "id": "base",
+          "q": "1",
+          "c": "1",
+          "optional_strong": false,
+          "protocol": "s4-mandatory-v1"
+        },
+        {
+          "schema_version": 1,
+          "id": "review",
+          "q": "2",
+          "c": "2",
+          "optional_strong": true,
+          "protocol": "s4-mandatory-v1"
+        }
+      ],
+      "proxy_version": "fixture-q-v1",
+      "cost_formula_version": "fixture-c-v1",
+      "lambda_p1": 10.0,
+      "weak_price": null,
+      "strong_price": null
+    },
+    "timeout_seconds": 60.0
+  },
+  "maintenance": {
+    "schema_version": 1,
+    "id": "synthetic-only",
+    "page_size": 100,
+    "chunk_size": 10000,
+    "content_level": "l2_content",
+    "timeout_seconds": 120.0,
+    "retry": {
+      "schema_version": 1,
+      "max_attempts": 3,
+      "timeout_seconds": 1.0,
+      "backoff_seconds": [
+        0.0,
+        0.0
+      ],
+      "retry_status_codes": [
+        429,
+        500,
+        502,
+        503,
+        504
+      ],
+      "retry_transport_errors": [
+        "ReadTimeout",
+        "ConnectError"
+      ]
+    },
+    "retry_read_codes": []
+  },
+  "profile": {
+    "schema_version": 1,
+    "profile": "adaptive",
+    "planner": {
+      "schema_version": 1,
+      "lambda_p2": "0",
+      "lambda_unit": "targets/currency",
+      "currency": "TEST",
+      "u_max_algorithm": "single-target-count-v1",
+      "estimates": [
+        {
+          "schema_version": 1,
+          "action": "M2",
+          "amount": "1",
+          "currency": "TEST",
+          "algorithm_version": "synthetic-v1",
+          "price_sha256": "a8198524f58e72b56283ab71ebddada22840f108b46ef7165bb3fca9919c5558"
+        },
+        {
+          "schema_version": 1,
+          "action": "M3",
+          "amount": "1",
+          "currency": "TEST",
+          "algorithm_version": "synthetic-v1",
+          "price_sha256": "a8198524f58e72b56283ab71ebddada22840f108b46ef7165bb3fca9919c5558"
+        }
+      ]
+    },
+    "action_timeout_seconds": 30.0,
+    "rule_timeout_seconds": 1.0
+  },
+  "base": {
+    "schema_version": 1,
+    "id": "base",
+    "model": "base",
+    "base_url": "https://synthetic.invalid/v1",
+    "temperature": 0.0,
+    "max_tokens": 1000,
+    "prompt_template": "Input {input_json}",
+    "rules_version": "synthetic-v1",
+    "retry": {
+      "schema_version": 1,
+      "max_attempts": 3,
+      "timeout_seconds": 1.0,
+      "backoff_seconds": [
+        0.0,
+        0.0
+      ],
+      "retry_status_codes": [
+        429,
+        500,
+        502,
+        503,
+        504
+      ],
+      "retry_transport_errors": [
+        "ReadTimeout",
+        "ConnectError"
+      ]
+    },
+    "price": null
+  },
+  "strong": {
+    "schema_version": 1,
+    "id": "strong",
+    "model": "strong",
+    "base_url": "https://synthetic.invalid/v1",
+    "temperature": 0.0,
+    "max_tokens": 1000,
+    "prompt_template": "Input {input_json}",
+    "rules_version": "synthetic-v1",
+    "retry": {
+      "schema_version": 1,
+      "max_attempts": 3,
+      "timeout_seconds": 1.0,
+      "backoff_seconds": [
+        0.0,
+        0.0
+      ],
+      "retry_status_codes": [
+        429,
+        500,
+        502,
+        503,
+        504
+      ],
+      "retry_transport_errors": [
+        "ReadTimeout",
+        "ConnectError"
+      ]
+    },
+    "price": null
+  },
+  "verifier": {
+    "schema_version": 1,
+    "id": "verifier",
+    "model": "verifier",
+    "base_url": "https://synthetic.invalid/v1",
+    "temperature": 0.0,
+    "max_tokens": 1000,
+    "prompt_template": "Input {input_json}",
+    "rules_version": "synthetic-v1",
+    "retry": {
+      "schema_version": 1,
+      "max_attempts": 3,
+      "timeout_seconds": 1.0,
+      "backoff_seconds": [
+        0.0,
+        0.0
+      ],
+      "retry_status_codes": [
+        429,
+        500,
+        502,
+        503,
+        504
+      ],
+      "retry_transport_errors": [
+        "ReadTimeout",
+        "ConnectError"
+      ]
+    },
+    "price": null
+  },
+  "change_location": {
+    "schema_version": 1,
+    "id": "locator",
+    "model": "locator",
+    "base_url": "https://synthetic.invalid/v1",
+    "temperature": 0.0,
+    "max_tokens": 1000,
+    "prompt_template": "Input {input_json}",
+    "rules_version": "synthetic-v1",
+    "retry": {
+      "schema_version": 1,
+      "max_attempts": 3,
+      "timeout_seconds": 1.0,
+      "backoff_seconds": [
+        0.0,
+        0.0
+      ],
+      "retry_status_codes": [
+        429,
+        500,
+        502,
+        503,
+        504
+      ],
+      "retry_transport_errors": [
+        "ReadTimeout",
+        "ConnectError"
+      ]
+    },
+    "price": null
+  },
+  "rules": [],
+  "execution_owner": "manual",
+  "ingest_timeout_seconds": 120.0
+}

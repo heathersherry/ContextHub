@@ -92,10 +92,14 @@ class Adjudication(Contract):
 
 
 class AdjudicationService:
-    def __init__(self, config, *, api_key, recorder, transport=None, artifacts=None):
+    def __init__(self, config, *, api_key, recorder, transport=None, artifacts=None, clients=None):
         self.config, self.recorder = config, recorder
         self.evidence = EvidenceService(artifacts)
-        self.clients = {}
+        self.clients = clients if clients is not None else {}
+        if clients is not None:
+            if set(clients) != {"weak", "strong"}:
+                raise ContractError("adjudication_clients_incomplete")
+            return
         for role, cfg in (("weak", config.weak), ("strong", config.strong)):
             self.clients[role] = OpenAIChatClient(
                 api_key,

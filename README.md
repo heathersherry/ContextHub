@@ -73,6 +73,8 @@ All four are managed under a unified `ctx://` URI namespace with the same versio
 
 ---
 
+Opt-in knowledge ingestion and maintenance through HTTP/Python SDK: [S7 user guide](docs/knowledge-maintenance.md) (awaiting independent review; synthetic validation only).
+
 ## Quick Start 🚀
 
 ### Prerequisites

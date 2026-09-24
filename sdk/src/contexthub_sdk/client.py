@@ -9,6 +9,9 @@ import httpx
 
 from .exceptions import ContextHubError, raise_for_status
 from .models import (
+    KnowledgeIngestRequest,
+    KnowledgeMaintainRequest,
+    KnowledgeResult,
     AccessPolicyRecord,
     AuditAction,
     AuditEntryRecord,
@@ -57,6 +60,24 @@ def _extract_detail(resp: httpx.Response) -> str:
 
 
 # ── Namespace classes ───────────────────────────────────────────────────
+
+
+class _KnowledgeNamespace:
+    """Synchronous server operations. No implicit retries for side effects."""
+    def __init__(self, client):
+        self._c = client
+
+    async def ingest(self, request: KnowledgeIngestRequest) -> KnowledgeResult:
+        data = await self._c._post("/api/v1/knowledge/ingest", json=request.model_dump(mode="json"))
+        return KnowledgeResult.model_validate(data)
+
+    async def maintain(self, request: KnowledgeMaintainRequest) -> KnowledgeResult:
+        data = await self._c._post("/api/v1/knowledge/maintain", json=request.model_dump(mode="json"))
+        return KnowledgeResult.model_validate(data)
+
+    async def get_maintenance_result(self, operation_id) -> KnowledgeResult:
+        data = await self._c._get(f"/api/v1/knowledge/operations/{operation_id}")
+        return KnowledgeResult.model_validate(data)
 
 
 class _ContextNamespace:
@@ -463,6 +484,8 @@ class ContextHubClient:
         account_id: str,
         agent_id: str,
         timeout: float = 30.0,
+        *,
+        transport: httpx.AsyncBaseTransport | None = None,
     ) -> None:
         self._base_url = url.rstrip("/")
         self._http = httpx.AsyncClient(
@@ -473,7 +496,9 @@ class ContextHubClient:
                 "X-Agent-Id": agent_id,
             },
             timeout=timeout,
+            transport=transport,
         )
+        self.knowledge = _KnowledgeNamespace(self)
         self.context = _ContextNamespace(self)
         self.memory = _MemoryNamespace(self)
         self.skill = _SkillNamespace(self)

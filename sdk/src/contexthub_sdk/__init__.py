@@ -12,6 +12,12 @@ from .exceptions import (
     ServerError,
 )
 from .models import (
+    KnowledgeIngestRequest,
+    KnowledgeMaintainRequest,
+    KnowledgeResult,
+    KnowledgeNode,
+    KnowledgeWork,
+    SourceVersion,
     AccessPolicyRecord,
     AuditAction,
     AuditEntryRecord,
@@ -47,6 +53,8 @@ from .models import (
 )
 
 __all__ = [
+    "KnowledgeIngestRequest", "KnowledgeMaintainRequest", "KnowledgeResult",
+    "KnowledgeNode", "KnowledgeWork", "SourceVersion",
     # Client
     "ContextHubClient",
     # Exceptions

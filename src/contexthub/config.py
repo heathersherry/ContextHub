@@ -20,6 +20,8 @@ class Settings(BaseSettings):
     openai_base_url: str = "https://api.openai.com/v1"
     chat_model: str = "gpt-4o-mini"
     embedding_model: str = "text-embedding-3-small"
+    knowledge_enabled: bool = False
+    knowledge_config_path: str | None = None
     propagation_enabled: bool = True
     propagation_sweep_interval: int = 30    # 秒，周期补扫间隔
     propagation_lease_timeout: int = 300    # 秒，processing 超时后回收

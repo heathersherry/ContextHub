@@ -1,6 +1,8 @@
 """Application entry point."""
 
-from contextlib import asynccontextmanager
+from contextlib import asynccontextmanager, AsyncExitStack
+import os
+from dataclasses import dataclass
 
 import asyncpg
 from fastapi import FastAPI
@@ -15,6 +17,9 @@ from contexthub.api.routers.search import router as search_router
 from contexthub.api.routers.skills import router as skills_router
 from contexthub.api.routers.tools import router as tools_router
 from contexthub.config import Settings
+from contexthub.knowledge_config import KnowledgeConfig
+from contexthub.services.knowledge_factory import create_knowledge_service, KnowledgeSecrets
+from contexthub.api.routers.knowledge import router as knowledge_router
 from contexthub.db.codecs import init_pg_connection
 from contexthub.db.repository import PgRepository
 from contexthub.enforcement.guardrails.closure import ClosureGuardrail
@@ -55,21 +60,53 @@ from contexthub.api.routers.datalake import router as datalake_router
 from contexthub.api.routers.admin import router as admin_router
 
 
+@dataclass
+class ApplicationDependencies:
+    """Explicit local/test boundaries; default callables preserve old application behavior."""
+    embedding_factory: object = None
+    chat_factory: object = None
+    knowledge_transport: object = None
+    knowledge_secrets: object = None
+    rules: tuple = ()
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    settings = Settings()
+    settings = getattr(app.state, "bootstrap_settings", None) or Settings()
+    dependencies = getattr(app.state, "bootstrap_dependencies", None) or ApplicationDependencies()
+    knowledge_config = None
+    knowledge_secrets = None
+    if settings.knowledge_enabled:
+        # Configuration errors precede DB, scheduler, indexer and client creation.
+        try:
+            if not settings.knowledge_config_path:
+                raise ValueError("missing configuration")
+            knowledge_config = KnowledgeConfig.load(settings.knowledge_config_path)
+            knowledge_secrets = dependencies.knowledge_secrets or KnowledgeSecrets(**{
+                role: os.environ.get("KNOWLEDGE_" + role.upper() + "_API_KEY", "")
+                for role in KnowledgeSecrets.__annotations__
+            })
+            if any(not getattr(knowledge_secrets, role) for role in KnowledgeSecrets.__annotations__):
+                raise ValueError("knowledge credentials missing")
+            if tuple((r.id, r.version) for r in dependencies.rules) != tuple(
+                (r.id, r.version) for r in knowledge_config.rules
+            ):
+                raise ValueError("rules registry mismatch")
+        except Exception:
+            raise RuntimeError("knowledge_configuration_invalid") from None
+    stack = AsyncExitStack()
+    await stack.__aenter__()
     pool = await asyncpg.create_pool(
         dsn=settings.asyncpg_database_url,
         min_size=2,
         max_size=10,
         init=init_pg_connection,
     )
+    stack.push_async_callback(pool.close)
     embedding_client = None
     chat_client = None
     lifecycle_scheduler = None
-    lifecycle_started = False
     propagation_engine = None
-    propagation_started = False
 
     try:
         repo = PgRepository(pool)
@@ -90,8 +127,12 @@ async def lifespan(app: FastAPI):
         )
 
         # Task 3 services
-        embedding_client = create_embedding_client(settings)
-        chat_client = create_chat_client(settings)
+        embedding_client = (dependencies.embedding_factory or create_embedding_client)(settings)
+        if hasattr(embedding_client, "close"):
+            stack.push_async_callback(embedding_client.close)
+        chat_client = (dependencies.chat_factory or create_chat_client)(settings)
+        if hasattr(chat_client, "close"):
+            stack.push_async_callback(chat_client.close)
         content_generator = ContentGenerator()
         indexer_service = IndexerService(
             content_generator,
@@ -108,7 +149,15 @@ async def lifespan(app: FastAPI):
 
         # Inject indexer into ContextService for embedding consistency
         context_service = ContextService(context_store, acl_service, indexer_service, audit=audit_service)
-        memory_service = MemoryService(indexer_service, acl_service, masking_service, audit=audit_service)
+        knowledge_service = None
+        if knowledge_config is not None:
+            knowledge_service = await create_knowledge_service(repo, knowledge_config, knowledge_secrets,
+                context_service=context_service, rules=dependencies.rules,
+                transport=dependencies.knowledge_transport)
+            stack.push_async_callback(knowledge_service.close)
+        app.state.knowledge_service = knowledge_service
+        memory_service = MemoryService(indexer_service, acl_service, masking_service,
+                                       audit=audit_service, knowledge=knowledge_service)
         skill_service = SkillService(indexer_service, acl_service, masking_service, audit=audit_service)
 
         # Task 4: retrieval
@@ -186,44 +235,40 @@ async def lifespan(app: FastAPI):
             lifecycle=lifecycle_service,
             sweep_interval=settings.propagation_sweep_interval,
             lease_timeout=settings.propagation_lease_timeout,
+            maintenance_executor=knowledge_service,
         )
 
+        app.state.propagation_engine = propagation_engine
         if settings.propagation_enabled:
+            # start() cleans its own partial initialization on failure.
             await propagation_engine.start()
-            propagation_started = True
+            stack.push_async_callback(propagation_engine.stop)
         if settings.lifecycle_enabled:
+            stack.push_async_callback(lifecycle_scheduler.stop)
             await lifecycle_scheduler.start()
-            lifecycle_started = True
 
-        try:
-            yield
-        finally:
-            if lifecycle_started:
-                await lifecycle_scheduler.stop()
-            if propagation_started:
-                await propagation_engine.stop()
+        yield
     finally:
-        if chat_client is not None and hasattr(chat_client, "close"):
-            await chat_client.close()
-        if embedding_client is not None and hasattr(embedding_client, "close"):
-            await embedding_client.close()
-        await pool.close()
+        await stack.aclose()
 
 
-app = FastAPI(title="ContextHub", lifespan=lifespan)
-app.add_middleware(AuthMiddleware)
-app.include_router(contexts_router)
-app.include_router(memories_router)
-app.include_router(feedback_router)
-app.include_router(documents_router)
-app.include_router(enforce_router)
-app.include_router(skills_router)
-app.include_router(search_router)
-app.include_router(tools_router)
-app.include_router(datalake_router)
-app.include_router(admin_router)
+def create_app(settings: Settings | None = None, *, dependencies: ApplicationDependencies | None = None):
+    application = FastAPI(title="ContextHub", lifespan=lifespan)
+    if settings is not None:
+        application.state.bootstrap_settings = settings
+    if dependencies is not None:
+        application.state.bootstrap_dependencies = dependencies
+    application.add_middleware(AuthMiddleware)
+    for router in (contexts_router, memories_router, feedback_router, documents_router,
+                   enforce_router, skills_router, search_router, tools_router,
+                   datalake_router, admin_router, knowledge_router):
+        application.include_router(router)
+
+    @application.get("/health")
+    async def health():
+        return {"status": "ok"}
+
+    return application
 
 
-@app.get("/health")
-async def health():
-    return {"status": "ok"}
+app = create_app()

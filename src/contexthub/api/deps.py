@@ -108,3 +108,11 @@ def get_document_ingester(request: Request) -> LongDocumentIngester:
 
 def get_enforcement_service(request: Request) -> EnforcementService:
     return request.app.state.enforcement_service
+
+
+def get_knowledge_service(request: Request):
+    from contexthub.errors import ServiceUnavailableError
+    service = getattr(request.app.state, "knowledge_service", None)
+    if service is None:
+        raise ServiceUnavailableError("knowledge_disabled")
+    return service
