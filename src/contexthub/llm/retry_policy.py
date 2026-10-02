@@ -65,6 +65,7 @@ class RecordedCall:
     policy: RetryPolicy
     recorder: AttemptSink
     price: PriceBasis | None = None
+    capture_raw_output: bool = False
     # The validator runs inside the attempt so schema failures preserve usage.
     validate_response: Callable[[str], None] | None = None
     sleep: Callable[[float], Awaitable[None]] = asyncio.sleep

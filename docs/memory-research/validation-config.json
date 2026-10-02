@@ -1,0 +1,32 @@
+{
+  "purpose": "deterministic client fixtures against real PostgreSQL; not an effectiveness experiment",
+  "index": {
+    "dimensions": 3,
+    "embedding_model": "fixture-embedding-v1",
+    "document_prefix": "document: ",
+    "query_prefix": "query: ",
+    "text_config": "pg_catalog.english"
+  },
+  "retrieval": {
+    "text_k": 2,
+    "vector_k": 2,
+    "rrf_c": 60,
+    "hybrid_limit": 2,
+    "entity_k": 2
+  },
+  "retry": {
+    "max_attempts": 2,
+    "timeout_seconds": 5.0,
+    "backoff_seconds": [0.0],
+    "retry_status_codes": [429, 503],
+    "retry_transport_errors": ["ReadTimeout"]
+  },
+  "max_tokens": 1500,
+  "session_timeout_seconds": 10,
+  "prices": null,
+  "query_combination": "plainto_tsquery (AND)",
+  "entity_normalization": "NFKC + casefold + whitespace collapse; sorted unique",
+  "entity_order": "memory_id ascending; append after truncated hybrid union",
+  "answer_ties": "comparable ISO timestamps, otherwise session sequence, then UUID",
+  "maintenance_ties": "UUID; no recency preference"
+}

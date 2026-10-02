@@ -183,6 +183,7 @@ class AttemptRecord(Contract):
     request_config_sha256: Hash
     retry_policy_sha256: Hash
     output_sha256: Hash | None = None
+    raw_output: str | None = Field(default=None, exclude_if=lambda v: v is None)
     response_conversion: ResponseConversion | None = Field(default=None, exclude_if=lambda v: v is None)
     response_archive_path: Name | None = Field(default=None, exclude_if=lambda v: v is None)
     response_archive_sha256: Hash | None = Field(default=None, exclude_if=lambda v: v is None)

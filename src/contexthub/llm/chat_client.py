@@ -314,6 +314,7 @@ class OpenAIChatClient(BaseChatClient):
                 actual_model_missing_reason=None if actual_model else 'provider_not_returned',
                 request_id=request_id, request_id_missing_reason=None if request_id else 'provider_not_returned',
                 output_sha256=text_hash(raw_content) if isinstance(raw_content, str) else None,
+                raw_output=raw_content if call.capture_raw_output and isinstance(raw_content, str) else None,
                 response_conversion=conversion,
                 finished_at=datetime.now(timezone.utc), wall_seconds=time.monotonic() - tick,
                 status_code=response.status_code if response is not None else None,
