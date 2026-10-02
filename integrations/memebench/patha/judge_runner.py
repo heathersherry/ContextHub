@@ -9,7 +9,13 @@ from contexthub.db.codecs import init_pg_connection
 from contexthub.db.repository import PgRepository
 from contexthub.models.knowledge import Contract, ContractError, canonical_hash
 from contexthub.propagation.candidate import ModelConfig
-from .run_gates import FileIdentity, RunManifest, RunAuthorization, stage_preflight
+from .run_gates import (
+    FileIdentity,
+    RunManifest,
+    RunAuthorization,
+    stage_preflight,
+    validate_model_seed,
+)
 from .cli import DatabaseConfiguration, fixture_transport
 from .reporting import RQ2Export, read_json, read_rows
 from .schemas import ScoringSidecar
@@ -62,6 +68,12 @@ async def execute_judge(plan, output):
             or plan.synthetic_responses is not None
         ):
             raise ContractError("judge_plan_run_mismatch")
+        validate_model_seed(manifest, plan.config)
+        if (
+            plan.config.request_parameters is None
+            or plan.config.request_parameters.response_format != "json_object"
+        ):
+            raise ContractError("official_judge_json_object_required")
         frozen = {r.path: r.sha256 for r in manifest.frozen_files}
         from .prepare import artifact_layout
 

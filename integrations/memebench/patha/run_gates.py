@@ -15,6 +15,7 @@ from contexthub.models.knowledge import (
     canonical_hash,
 )
 from .artifacts import file_hash
+from contexthub.llm.request_parameters import SeedPolicy
 
 STAGES = Literal["rq1", "rq2", "answer", "judge"]
 
@@ -33,14 +34,25 @@ class StatisticsConfiguration(Contract):
     aggregate: Literal["pooled_counts", "mean_episode_rates"]
     bootstrap_seed: int = Field(strict=True, ge=0)
     bootstrap_resamples: Literal[10000]
-    provider_seed_supported: bool
+    seed_protocol: Literal["legacy-v1", "per-model-v2"] = "legacy-v1"
+    model_seeds: dict[str, SeedPolicy] | None = None
+    provider_seed_supported: bool | None
     provider_seed: int | None
     wall_relative_tolerance: float | None = Field(ge=0, allow_inf_nan=False)
     local_relative_tolerances: dict[str, float] | None
 
     @model_validator(mode="after")
     def seed(self):
-        if self.provider_seed_supported != (self.provider_seed is not None):
+        if self.seed_protocol == "per-model-v2":
+            if (
+                self.provider_seed_supported is not None
+                or self.provider_seed is not None
+                or not self.model_seeds
+            ):
+                raise ContractError("per_model_seed_configuration_required")
+        elif self.model_seeds is not None or self.provider_seed_supported is None:
+            raise ContractError("legacy_seed_configuration_invalid")
+        elif self.provider_seed_supported != (self.provider_seed is not None):
             raise ContractError("provider_seed_support_mismatch")
         if self.local_relative_tolerances is not None and any(
             v < 0 or not math.isfinite(v)
@@ -103,6 +115,19 @@ class RunManifest(Contract):
     price_identity: FileIdentity
     timeout_identity: FileIdentity
     runtime_dependencies: FileIdentity
+    two_episode_token_only_authorization: Name | None = Field(default=None, exclude_if=lambda v: v is None)
+
+    @model_validator(mode="after")
+    def token_only_scope(self):
+        if self.two_episode_token_only_authorization is not None:
+            expected = {"ep_8185eda1823fe081718f7d90", "ep_a6132508d3bb0eeae1c5b899"}
+            if (self.mode != "development" or set(self.episode_ids) != expected
+                or set(self.development.episode_ids) != expected
+                or self.statistics.repeats != 1
+                or self.development.lambda_p1_grid != (Decimal(0),)
+                or self.development.lambda_p2_grid != (Decimal(0),)):
+                raise ContractError("token_only_exception_scope_mismatch")
+        return self
 
 
 class RunAuthorization(Contract):
@@ -173,9 +198,16 @@ def stage_preflight(manifest, authorization, stage, *, configuration_sha256):
         for package, version in versions.items()
     ):
         raise ContractError("run_package_identity_mismatch")
-    # The current core HTTP client exposes no provider-seed parameter. An
-    # explicit seed requirement must reject, never silently drop the setting.
-    if manifest.statistics.provider_seed_supported:
+    # Legacy identities retain their original rejection. New per-model seeds
+    # must be resolved here and bound to each actual role before construction.
+    if manifest.statistics.seed_protocol == "per-model-v2":
+        if any(
+            p.support == "unknown" and not (
+                manifest.two_episode_token_only_authorization and not p.enabled and p.value is None
+            ) for p in manifest.statistics.model_seeds.values()
+        ):
+            raise ContractError("provider_seed_support_unknown")
+    elif manifest.statistics.provider_seed_supported:
         raise ContractError("provider_seed_not_supported_by_current_client")
     root = Path(manifest.s1_root)
     if Path(manifest.s1_contract.path) != root / "manifests/scorer-contract-v2.json":
@@ -264,3 +296,22 @@ def stage_preflight(manifest, authorization, stage, *, configuration_sha256):
             ):
                 raise ContractError("selective_main_identity_mismatch")
     return manifest
+
+
+def validate_model_seed(manifest, config):
+    """Bind the actually constructed role's seed contract to statistics identity."""
+    policy = manifest.statistics
+    params = config.request_parameters
+    if policy.seed_protocol == "per-model-v2":
+        if (
+            params is None
+            or policy.model_seeds.get(canonical_hash(config)) != params.seed
+        ):
+            raise ContractError("model_seed_identity_mismatch")
+        if params.disabled_unknown_seed_authorization != getattr(manifest, "two_episode_token_only_authorization", None):
+            raise ContractError("unknown_seed_exception_not_authorized")
+        params.require_resolved()
+    elif params is not None:
+        params.require_resolved()
+        if params.seed.enabled or params.seed.support != "unsupported":
+            raise ContractError("per_model_seed_protocol_required")

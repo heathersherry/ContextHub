@@ -10,6 +10,7 @@ from uuid import UUID, uuid4
 from pydantic import Field, model_validator
 
 from contexthub.llm.chat_client import OpenAIChatClient
+from contexthub.llm.request_parameters import RequestParameters
 from contexthub.llm.retry_policy import RecordedCall, RetryPolicy
 from contexthub.models.execution import CallIdentity, PriceBasis
 from contexthub.models.knowledge import (
@@ -134,6 +135,10 @@ class ModelConfig(Contract):
     model: Name
     base_url: Name
     temperature: float | None = Field(allow_inf_nan=False)
+    request_parameters: RequestParameters | None = None
+    response_contract: Literal["references-v1", "location-ids-v2", "candidate-parts-v2", "verifier-ids-v2"] = Field(
+        default="references-v1", exclude_if=lambda value: value == "references-v1"
+    )
     max_tokens: Positive
     prompt_template: Name
     rules_version: Name
@@ -142,6 +147,8 @@ class ModelConfig(Contract):
 
     @model_validator(mode="after")
     def template(self):
+        if self.request_parameters is not None:
+            self.request_parameters.check_temperature(self.temperature)
         fields = list(Formatter().parse(self.prompt_template))
         if [f for _, f, _, _ in fields if f is not None] != ["input_json"] or any(
             s or c for _, _, s, c in fields
@@ -187,6 +194,7 @@ class ModelCall:
             base_url=config.base_url,
             model=config.model,
             temperature=config.temperature,
+            request_parameters=config.request_parameters,
             timeout=config.retry.timeout_seconds,
             transport=transport,
         )
@@ -218,17 +226,18 @@ class ModelCall:
 
 class CandidateGenerator(ModelCall):
     async def generate(self, frame, binding, bundle, sources):
-        response, ident = await self.invoke(
-            frame,
-            binding,
-            {
-                "binding": binding.model_dump(mode="json"),
-                "bundle": bundle.model_dump(mode="json"),
-                "sources": sources,
-            },
-            GenerationResponse.model_validate_json,
-            "generator",
-        )
+        payload = {"binding": binding.model_dump(mode="json"),
+                   "bundle": bundle.model_dump(mode="json"), "sources": sources}
+        parse = GenerationResponse.model_validate_json
+        if self.config.response_contract == "candidate-parts-v2":
+            from .identified_wire import registry_view, expand_generation
+            evidence, view = registry_view((r.evidence for r in bundle.read), "E")
+            causes, cause_view = registry_view(binding.causes, "C")
+            payload.update(evidence_ids=view, cause_ids=cause_view)
+            parse = lambda raw: expand_generation(raw, evidence, causes)
+        elif self.config.response_contract != "references-v1":
+            raise ContractError("generator_response_contract_mismatch")
+        response, ident = await self.invoke(frame, binding, payload, parse, "generator")
         return response, ident
 
 

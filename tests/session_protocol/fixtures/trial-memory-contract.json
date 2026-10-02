@@ -1,0 +1,530 @@
+{
+  "origin": {
+    "artifacts/patha-session-v2-devtrial-20260928-181458/pl_001/checkpoints/1.json": "d9b58d8b0c4c027109d47f20b902691ce43b65044f165e1fd84c7f6f4cbe0c05",
+    "artifacts/patha-session-v2-devtrial-20260928-181458/requests/68ab6899-e543-4f16-8437-a660b7512768-1.json": "0de8327e78a55818dde77c1d30da61712f9b94e4d119c879daa75a1785a9481c",
+    "artifacts/patha-session-v2-devtrial-20260928-181458/responses/68ab6899-e543-4f16-8437-a660b7512768-1.json": "bbed8d302da5544f376fd2d86ce737e9b4b3221cf380aa5685c7bd1731148c80"
+  },
+  "source": {
+    "source_id": "src_000000000000000000000000",
+    "ordinal": 0,
+    "source_version": 1,
+    "timestamp": "2023/03/01 (Wed) 09:00",
+    "messages": [
+      {
+        "role": "user",
+        "content": "I'm looking for some help with finding deals on home decor items. I just moved into a new apartment and I'm trying to furnish it on a budget. Do you have any suggestions on where I can find affordable and stylish pieces? By the way, I've been using the Giant Eagle app to order groceries online and pick them up at the store, which has been a huge time-saver. I've placed 3 orders so far and I've saved a decent amount on each order."
+      },
+      {
+        "role": "assistant",
+        "content": "Congratulations on your new apartment! Furnishing it on a budget can be a challenge, but there are many ways to find affordable and stylish pieces. Here are some suggestions:\n\n1. **Online Marketplaces**:\n\t* IKEA (ikea.com): Affordable, modern furniture with a wide range of options.\n\t* Amazon (amazon.com): Check out Amazon Warehouse Deals, Outlet, and used sections for discounted prices.\n\t* eBay (ebay.com): Find second-hand or new items at discounted prices.\n\t* Craigslist (craigslist.org) or Facebook Marketplace (facebook.com/marketplace): Local online marketplaces for second-hand items (be cautious when transacting with strangers).\n2. **Discount Stores**:\n\t* Target (target.com): Affordable, trendy pieces with frequent sales.\n\t* TJ Maxx (tjmaxx.com), Marshalls (marshalls.com), and HomeGoods (homegoods.com): Discounted prices on brand-name items.\n\t* At Home (athome.com): A discount home decor superstore with a wide selection.\n3. **Thrift Stores and Consignment Shops**:\n\t* Goodwill (goodwill.org), Salvation Army (salvationarmy.org), and local charity shops: Find unique, gently used items at low prices.\n\t* Consignment shops: Sell or trade gently used items, often at a lower cost than buying new.\n4. **Garage Sales and Estate Sales**:\n\t* Keep an eye out for local garage sales and estate sales, where you can find great deals on gently used items.\n5. **Clearance Sections**:\n\t* Check the clearance sections of local home decor stores, like Bed Bath & Beyond (bedbathandbeyond.com) or Pier 1 Imports (pier1.com), for discounted prices on discontinued or floor models.\n6. **DIY and Upcycle**:\n\t* Get creative and repurpose items you already have or find at thrift stores to save money and add a personal touch.\n7. **Second-Hand Online Communities**:\n\t* Join local online groups, like Buy Nothing or Freecycle, where people give away items they no longer need.\n8. **Discount Codes and Coupons**:\n\t* Sign up for newsletters and follow your favorite home decor stores on social media to receive exclusive discounts and promo codes.\n\t* Use coupon apps like RetailMeNot (retailmenot.com) or Coupons.com (coupons.com) to find discounts.\n\nAs for your experience with the Giant Eagle app, that's great to hear! Online grocery shopping with in-store pickup can be a huge time-saver. You can also try other grocery delivery or pickup services, like Instacart (instacart.com) or Shipt (shipt.com), which often offer promotions and discounts.\n\nRemember to always measure your space and plan your decor before making a purchase, and don't be afraid to mix and match items from different sources to create a unique, stylish look on a budget!"
+      },
+      {
+        "role": "user",
+        "content": "I'm actually looking for something more specific, like a vintage or second-hand store. I've been really into sustainable fashion and home decor lately, and I'd love to find a place that sells unique, one-of-a-kind pieces. Do you know of any stores like that in my area?"
+      },
+      {
+        "role": "assistant",
+        "content": "I'm glad you're interested in sustainable living!\n\nI'd be happy to help you find vintage or second-hand stores in your area that sell unique, one-of-a-kind pieces for home decor. However, to do that, I would need to know your location. Could you please share your city or zip code with me?\n\nOnce I have that information, I can provide you with a list of stores that match your preferences. You can also try searching online for keywords like:\n\n* \"vintage home decor near me\"\n* \"second-hand home decor [your city/zip code]\"\n* \"thrift stores with unique home decor [your city/zip code]\"\n* \"consignment stores for home decor [your city/zip code]\"\n* \"antique stores with home decor [your city/zip code]\"\n\nAdditionally, you can also check out online marketplaces like:\n\n* Chairish (chairish.com): A curated online marketplace for vintage and used home decor\n* DecoExchange (decoexchange.com): A online marketplace for pre-owned and vintage home decor\n* 1stdibs (1stdibs.com): A luxury online marketplace for high-end, unique, and vintage home decor\n\nYou can also try searching for local Facebook groups or online forums focused on sustainable living, vintage shopping, or home decor, where members often share tips and recommendations for local stores and resources.\n\nLet me know if there's anything else I can do to help you find the perfect store!"
+      },
+      {
+        "role": "user",
+        "content": "I'm actually living in an apartment complex near the new Target store that just opened up about 3 weeks ago. I've been frequenting that store a lot lately, and I really love their home decor section, which has some really affordable and stylish pieces."
+      },
+      {
+        "role": "assistant",
+        "content": "With a new Target store nearby, you're already off to a great start with affordable and stylish options. Since you're looking for unique, one-of-a-kind pieces, I'd recommend exploring beyond Target to find vintage or second-hand stores that offer more distinct items.\n\nTo find these stores, I can suggest a few options:\n\n1. **Google Search**: Try searching online for \"vintage home decor near me\" or \"thrift stores near me\" along with your city or zip code. This should give you a list of nearby stores that match your search criteria.\n2. **Online Directories**: Websites like Yelp (yelp.com) or TripAdvisor (tripadvisor.com) allow you to filter search results by location and category. You can look for vintage or second-hand stores in your area and read reviews from other customers to get an idea of what to expect.\n3. **Ask Around**: Ask your neighbors, friends, or coworkers if they know of any good vintage or second-hand stores in the area. Word of mouth can be a great way to discover hidden gems!\n\nSome specific stores you might want to look for in your area include:\n\n* Goodwill Outlet (goodwill.org): A discounted version of Goodwill stores that sells items by the pound.\n* Salvation Army Family Store (salvationarmy.org): A thrift store that sells donated items to support local community programs.\n* Local charity shops or resale stores: These stores often carry a wide range of donated items, including home decor pieces.\n* Vintage or antique stores: These stores may carry more unique, one-of-a-kind pieces, but prices might be slightly higher.\n\nRemember to always inspect items carefully before purchasing, especially when shopping at second-hand stores.\n\nIf you're short on time, you could also try searching online for vintage or second-hand home decor items on platforms like eBay, Craigslist, or Facebook Marketplace. Just be sure to exercise caution when transacting with online sellers.\n\nI hope this helps you get started on your search for unique home decor pieces!"
+      },
+      {
+        "role": "user",
+        "content": "I'll definitely check out those options. I've actually been meaning to visit that new vintage clothing store that opened up in the trendy part of town, I've heard great things about it from friends. Do you think they might also carry some home decor items or know of any other stores in the area that do?"
+      },
+      {
+        "role": "assistant",
+        "content": "That's a great lead! Vintage clothing stores often have a curated selection of items, and it's possible they might carry some home decor pieces or know of other stores in the area that do.\n\nWhen you visit the vintage clothing store, don't hesitate to ask the staff if they carry any home decor items or know of any other stores in the area that might have what you're looking for. They might have some hidden gems or recommendations that can help you find the perfect piece.\n\nAdditionally, you can also ask if they have any connections with other local vintage or second-hand stores that might carry home decor items. Sometimes, store owners or staff members have relationships with other business owners in the area and can provide valuable referrals.\n\nWhile you're in the trendy part of town, take a stroll around the neighborhood and keep an eye out for other stores that might catch your attention. You might discover some unique boutiques or specialty stores that carry one-of-a-kind home decor pieces.\n\nRemember to also check out the store's social media accounts or website, as they might post about new arrivals, special promotions, or upcoming events that could be of interest to you.\n\nBy exploring this lead and asking around, you might uncover some hidden gems in your area that can help you find the perfect vintage or second-hand home decor pieces for your new apartment!"
+      },
+      {
+        "role": "user",
+        "content": "That's a great point about asking the staff at the vintage clothing store for recommendations. I'll definitely do that when I visit. And yeah, I'll keep an eye out for other stores in the area that might carry unique home decor pieces. Thanks for the advice!"
+      },
+      {
+        "role": "assistant",
+        "content": "You're welcome! I'm glad I could help. Remember to have fun and be open-minded while exploring the vintage clothing store and the surrounding area. You never know what hidden treasures you might find!\n\nAsking the staff for recommendations is a great way to tap into their local knowledge and get insider tips. They might know of stores or markets that aren't well-advertised online or have connections with other vendors who can help you find what you're looking for.\n\nDon't hesitate to reach out if you have any more questions or need further guidance. Good luck with your search, and I hope you find the perfect unique pieces to make your new apartment feel like home!\n\n(P.S. Don't forget to check out the clearance sections and sale racks at the vintage clothing store, too. You might find some amazing deals on one-of-a-kind items!)"
+      },
+      {
+        "role": "user",
+        "content": "I'll definitely keep that in mind, thanks for the tip! By the way, I've been thinking about getting some new kitchen utensils and gadgets, do you have any recommendations for online stores or websites that offer a wide selection at affordable prices?"
+      },
+      {
+        "role": "assistant",
+        "content": "Kitchen utensils and gadgets! I've got some great recommendations for you!\n\nFor online stores with a wide selection at affordable prices, I'd suggest checking out:\n\n1. **Amazon** (amazon.com): Amazon offers a vast selection of kitchen utensils and gadgets from various brands, often with free shipping and competitive pricing.\n2. **Walmart** (walmart.com): Walmart's online store has a wide range of kitchen essentials at affordable prices, with options for in-store pickup or delivery.\n3. **Target** (target.com): Target's online store offers a variety of kitchen utensils and gadgets at affordable prices, with options for in-store pickup or delivery.\n4. **Bed Bath & Beyond** (bedbathandbeyond.com): This online store has a wide selection of kitchen essentials, often with discounts and promotions.\n5. **Jet** (jet.com): Jet is an online retailer that offers a wide selection of kitchen utensils and gadgets at competitive prices, with free shipping on orders over $35.\n6. **Overstock** (overstock.com): Overstock has a wide selection of kitchen essentials, often at discounted prices, with free shipping on orders over $45.\n7. **Cookware.com** (cookware.com): This online store specializes in cookware and kitchen utensils, offering a wide selection at competitive prices.\n\nFor specialty or niche kitchen items, you might want to check out:\n\n1. **Sur La Table** (surlatable.com): Sur La Table offers a wide selection of high-quality kitchen utensils and gadgets, with a focus on cooking and baking.\n2. **Williams-Sonoma** (williams-sonoma.com): Williams-Sonoma has a wide range of high-end kitchen utensils and gadgets, with a focus on cooking and entertaining.\n3. **KitchenAid** (kitchenaid.com): KitchenAid's online store offers a variety of kitchen utensils and gadgets, including stand mixers, blenders, and more.\n\nWhen shopping online, be sure to read reviews, check prices, and look for promotions or discounts to ensure you're getting the best deal.\n\nHope this helps you find the perfect kitchen utensils and gadgets for your new apartment!"
+      }
+    ],
+    "content_sha256": "b9757011e56f3d6f7de881a6df5849bffd3bda13f7f49ec98d593fb37b023715"
+  },
+  "extraction": {
+    "schema_version": 1,
+    "items": [
+      {
+        "schema_version": 1,
+        "action": "add",
+        "target_id": null,
+        "text": "User has moved into a new apartment and is furnishing it on a budget.",
+        "kind": "assertion",
+        "evidence_ids": [
+          "E000001"
+        ],
+        "read_ids": []
+      },
+      {
+        "schema_version": 1,
+        "action": "add",
+        "target_id": null,
+        "text": "User has placed 3 orders using the Giant Eagle app for grocery pickup and saved money on each order.",
+        "kind": "assertion",
+        "evidence_ids": [
+          "E000001"
+        ],
+        "read_ids": []
+      },
+      {
+        "schema_version": 1,
+        "action": "add",
+        "target_id": null,
+        "text": "User is interested in vintage or second-hand stores for unique, one-of-a-kind home decor pieces and sustainable fashion.",
+        "kind": "assertion",
+        "evidence_ids": [
+          "E000031"
+        ],
+        "read_ids": []
+      },
+      {
+        "schema_version": 1,
+        "action": "add",
+        "target_id": null,
+        "text": "User lives near a new Target store that opened about 3 weeks ago and frequents it, liking its affordable and stylish home decor section.",
+        "kind": "assertion",
+        "evidence_ids": [
+          "E000053"
+        ],
+        "read_ids": []
+      },
+      {
+        "schema_version": 1,
+        "action": "add",
+        "target_id": null,
+        "text": "User is considering visiting a new vintage clothing store in the trendy part of town, which friends have recommended, and wonders if it might carry home decor or know other stores that do.",
+        "kind": "assertion",
+        "evidence_ids": [
+          "E000074"
+        ],
+        "read_ids": []
+      },
+      {
+        "schema_version": 1,
+        "action": "add",
+        "target_id": null,
+        "text": "User is thinking about buying new kitchen utensils and gadgets and seeks recommendations for online stores with wide selections at affordable prices.",
+        "kind": "assertion",
+        "evidence_ids": [
+          "E000094"
+        ],
+        "read_ids": []
+      }
+    ],
+    "revisit_ids": [],
+    "routing_complete": true
+  },
+  "original_request": {
+    "model": "gpt-4.1-mini",
+    "messages": [
+      {
+        "role": "user",
+        "content": "{\"instruction\": \"Find directed semantic prerequisites of the target's CURRENT asserted value.\\nSelect upstreams only when a value/rule helps determine that value, so changing it could invalidate it.\\nTopic similarity, co-occurrence and reading a source are not proof. Default input is MEMORY ONLY.\\nCite supplied memory_ids; evidence_ids must be empty unless actual raw evidence was supplied.\\nFor missing conditions, identity, direction or premises, request original sources via raw_requests\\nwith a concrete reason and memory_ids, source_ids or a text query. Never claim raw verification\\nwhen sources is empty. Explicitly set independent only after a semantic independence judgment, and\\ngive a short concrete derivation for each positive. A pure future conditional is a rule, not a value\\nderived from its trigger; rule->result and trigger->result are distinct edges.\\nAsk identity questions only when an actual proposed edge hinges on ambiguous mentions.\\nMissing premises => describe the concrete missing evidence, not a generic request for more context.\\nSet complete=false for unresolved scope/identity. An empty shortlist result does not prove independence.\\nReview flagged positive proposals if prior_proposals is supplied. Do not invent absent facts.\\nReturn one JSON object matching answer_schema, without markdown or extra text.\", \"input\": {\"target\": {\"schema_version\": 1, \"id\": \"n_e75df307af1d58e8bb4dcdb16980be0e\", \"version\": 1, \"basis_revision\": 0, \"text\": \"User has moved into a new apartment and is furnishing it on a budget.\", \"kind\": \"assertion\", \"status\": \"stale\", \"evidence\": [\"e_86a949adbcfad3795cd93a8bcc8bb620bf30f5ba1a4a2fd6d3cc87f7f719bca3\"]}, \"candidates\": [{\"schema_version\": 1, \"id\": \"n_2ca6f1d03dc455bf8b7797ff41248597\", \"version\": 1, \"basis_revision\": 0, \"text\": \"User lives near a new Target store that opened about 3 weeks ago and frequents it, liking its affordable and stylish home decor section.\", \"kind\": \"assertion\", \"status\": \"stale\", \"evidence\": [\"e_da87fd200a68e2e1e0c23d66989823fe8b70c91e0a344c0d58adcd92d3edccb7\"]}, {\"schema_version\": 1, \"id\": \"n_44697a36d1c053e0912a11a17eb8b9e0\", \"version\": 1, \"basis_revision\": 0, \"text\": \"User has placed 3 orders using the Giant Eagle app for grocery pickup and saved money on each order.\", \"kind\": \"assertion\", \"status\": \"stale\", \"evidence\": [\"e_86a949adbcfad3795cd93a8bcc8bb620bf30f5ba1a4a2fd6d3cc87f7f719bca3\"]}, {\"schema_version\": 1, \"id\": \"n_ab65d2ad00a15e93a24f4905104fa8c4\", \"version\": 1, \"basis_revision\": 0, \"text\": \"User is thinking about buying new kitchen utensils and gadgets and seeks recommendations for online stores with wide selections at affordable prices.\", \"kind\": \"assertion\", \"status\": \"stale\", \"evidence\": [\"e_b114c2ff0e5e7d79bd9d0339ca722c091eb441458583794a1e2e9839c12284ea\"]}, {\"schema_version\": 1, \"id\": \"n_b401d4c660315727984524da6ded3c63\", \"version\": 1, \"basis_revision\": 0, \"text\": \"User is considering visiting a new vintage clothing store in the trendy part of town, which friends have recommended, and wonders if it might carry home decor or know other stores that do.\", \"kind\": \"assertion\", \"status\": \"fresh\", \"evidence\": [\"e_a0f7196341dfa3df45f02e06d6c72dc9ba1d34ed83ab926b22df7055cf850aba\"]}, {\"schema_version\": 1, \"id\": \"n_f4c0790419bf51ec978727c1f01716bf\", \"version\": 1, \"basis_revision\": 0, \"text\": \"User is interested in vintage or second-hand stores for unique, one-of-a-kind home decor pieces and sustainable fashion.\", \"kind\": \"assertion\", \"status\": \"stale\", \"evidence\": [\"e_64339c58f5f5ab10b180c0f69be170b5f6259a2ef227f234a2fb4d4851e981f4\"]}], \"sources\": [], \"evidence\": [], \"scope_exhausted\": true, \"search_clues\": [], \"new_source_locators\": []}, \"answer_schema\": {\"$defs\": {\"IdentityQuestion\": {\"additionalProperties\": false, \"properties\": {\"schema_version\": {\"const\": 1, \"default\": 1, \"title\": \"Schema Version\", \"type\": \"integer\"}, \"candidate_id\": {\"title\": \"Candidate Id\", \"type\": \"string\"}, \"left_evidence\": {\"title\": \"Left Evidence\", \"type\": \"string\"}, \"right_evidence\": {\"title\": \"Right Evidence\", \"type\": \"string\"}, \"left\": {\"title\": \"Left\", \"type\": \"string\"}, \"right\": {\"title\": \"Right\", \"type\": \"string\"}}, \"required\": [\"candidate_id\", \"left_evidence\", \"right_evidence\", \"left\", \"right\"], \"title\": \"IdentityQuestion\", \"type\": \"object\"}, \"Positive\": {\"additionalProperties\": false, \"properties\": {\"schema_version\": {\"const\": 1, \"default\": 1, \"title\": \"Schema Version\", \"type\": \"integer\"}, \"upstream_id\": {\"title\": \"Upstream Id\", \"type\": \"string\"}, \"memory_ids\": {\"default\": [], \"items\": {\"type\": \"string\"}, \"title\": \"Memory Ids\", \"type\": \"array\"}, \"evidence_ids\": {\"default\": [], \"items\": {\"type\": \"string\"}, \"title\": \"Evidence Ids\", \"type\": \"array\"}, \"derivation\": {\"minLength\": 1, \"title\": \"Derivation\", \"type\": \"string\"}, \"review\": {\"title\": \"Review\", \"type\": \"boolean\"}}, \"required\": [\"upstream_id\", \"derivation\", \"review\"], \"title\": \"Positive\", \"type\": \"object\"}, \"RawRequest\": {\"additionalProperties\": false, \"properties\": {\"schema_version\": {\"const\": 1, \"default\": 1, \"title\": \"Schema Version\", \"type\": \"integer\"}, \"reason\": {\"maxLength\": 500, \"minLength\": 1, \"title\": \"Reason\", \"type\": \"string\"}, \"memory_ids\": {\"default\": [], \"items\": {\"type\": \"string\"}, \"maxItems\": 16, \"title\": \"Memory Ids\", \"type\": \"array\"}, \"source_ids\": {\"default\": [], \"items\": {\"type\": \"string\"}, \"maxItems\": 16, \"title\": \"Source Ids\", \"type\": \"array\"}, \"query\": {\"anyOf\": [{\"maxLength\": 200, \"minLength\": 2, \"type\": \"string\"}, {\"type\": \"null\"}], \"default\": null, \"title\": \"Query\"}}, \"required\": [\"reason\"], \"title\": \"RawRequest\", \"type\": \"object\"}}, \"additionalProperties\": false, \"properties\": {\"schema_version\": {\"const\": 1, \"default\": 1, \"title\": \"Schema Version\", \"type\": \"integer\"}, \"positives\": {\"items\": {\"$ref\": \"#/$defs/Positive\"}, \"title\": \"Positives\", \"type\": \"array\"}, \"identity_questions\": {\"items\": {\"$ref\": \"#/$defs/IdentityQuestion\"}, \"title\": \"Identity Questions\", \"type\": \"array\"}, \"missing\": {\"anyOf\": [{\"type\": \"string\"}, {\"type\": \"null\"}], \"title\": \"Missing\"}, \"complete\": {\"title\": \"Complete\", \"type\": \"boolean\"}, \"independent\": {\"default\": false, \"title\": \"Independent\", \"type\": \"boolean\"}, \"raw_requests\": {\"default\": [], \"items\": {\"$ref\": \"#/$defs/RawRequest\"}, \"maxItems\": 8, \"title\": \"Raw Requests\", \"type\": \"array\"}}, \"required\": [\"positives\", \"identity_questions\", \"missing\", \"complete\"], \"title\": \"Dependencies\", \"type\": \"object\"}}"
+      }
+    ],
+    "max_tokens": 8192,
+    "response_format": {
+      "type": "json_object"
+    },
+    "temperature": 0.0
+  },
+  "original_http_response": {
+    "id": "chatcmpl-ET2jASLaiA5ZPAonrSwiw4k11I25A",
+    "object": "chat.completion",
+    "created": 1790590704,
+    "model": "gpt-4.1-mini",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\"positives\":[{\"upstream_id\":\"n_ab65d2ad00a15e93a24f4905104fa8c4\",\"memory_ids\":[\"e_b114c2ff0e5e7d79bd9d0339ca722c091eb441458583794a1e2e9839c12284ea\"],\"evidence_ids\":[],\"derivation\":\"The user's consideration of buying new kitchen utensils and gadgets on a budget directly supports and helps determine the assertion that the user is furnishing a new apartment on a budget, as this purchasing intent influences the furnishing process and budget constraints.\",\"review\":true}],\"identity_questions\":[],\"missing\":\"The current assertion that the user has moved into a new apartment and is furnishing it on a budget lacks explicit upstream premises establishing the move itself and the budget constraint. To fully validate the assertion, original source evidence confirming the user's relocation and budget considerations is needed.\",\"complete\":false,\"independent\":false,\"raw_requests\":[{\"schema_version\":1,\"reason\":\"Request original source evidence confirming that the user has moved into a new apartment and is furnishing it on a budget to establish missing premises for the target assertion.\",\"memory_ids\":[\"e_86a949adbcfad3795cd93a8bcc8bb620bf30f5ba1a4a2fd6d3cc87f7f719bca3\"],\"source_ids\":[],\"query\":\"User has moved into a new apartment and is furnishing it on a budget\"}]}",
+          "refusal": null,
+          "annotations": []
+        },
+        "logprobs": null,
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 1917,
+      "completion_tokens": 306,
+      "total_tokens": 2223,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      },
+      "latency_checkpoint": {
+        "service_ttft_ms": 240,
+        "user_visible_ttft_ms": 159,
+        "pre_inference_ms": 81,
+        "service_tbt_ms": 8,
+        "service_ttlt_ms": 2700,
+        "engine_ttft_ms": 38,
+        "engine_ttlt_ms": 2504,
+        "engine_tbt_ms": 8
+      }
+    },
+    "system_fingerprint": "fp_8957c4f4dd",
+    "service_tier": "default",
+    "routing": {
+      "serving_pipereplica": "d20260927080634-c0bb28bd-default-r1-dp0-default"
+    }
+  },
+  "ingest_verdicts": [
+    {
+      "operation": "ingest_verifier",
+      "target": "n_e75df307af1d58e8bb4dcdb16980be0e",
+      "verification_scope": "retrieved-memory-only-v1",
+      "raw_fidelity_verified": false,
+      "input_sha256": "71bec9d55f396f7d69a9309ad1d3aa75bfc73be7e4234b7f1a1e3d43214ec5c7",
+      "selected_ids": [
+        "n_2ca6f1d03dc455bf8b7797ff41248597",
+        "n_44697a36d1c053e0912a11a17eb8b9e0",
+        "n_ab65d2ad00a15e93a24f4905104fa8c4",
+        "n_b401d4c660315727984524da6ded3c63",
+        "n_e75df307af1d58e8bb4dcdb16980be0e",
+        "n_f4c0790419bf51ec978727c1f01716bf"
+      ],
+      "required_ids": [
+        "n_2ca6f1d03dc455bf8b7797ff41248597",
+        "n_44697a36d1c053e0912a11a17eb8b9e0",
+        "n_ab65d2ad00a15e93a24f4905104fa8c4",
+        "n_b401d4c660315727984524da6ded3c63",
+        "n_e75df307af1d58e8bb4dcdb16980be0e",
+        "n_f4c0790419bf51ec978727c1f01716bf"
+      ],
+      "inventory_count": 6,
+      "verdict": {
+        "schema_version": 1,
+        "applicable": true,
+        "supported": false,
+        "conflicts_resolved": true,
+        "kind_confirmed": true,
+        "independent": true,
+        "memory_ids": [
+          "n_e75df307af1d58e8bb4dcdb16980be0e"
+        ],
+        "dependency_ids": [],
+        "complete": false,
+        "missing": "The matching memory is unresolved, so it cannot serve as current support for the candidate."
+      },
+      "provenance": {
+        "n_e75df307af1d58e8bb4dcdb16980be0e": {
+          "version": 1,
+          "basis_revision": 0,
+          "evidence_ids": [
+            "e_86a949adbcfad3795cd93a8bcc8bb620bf30f5ba1a4a2fd6d3cc87f7f719bca3"
+          ]
+        }
+      }
+    },
+    {
+      "operation": "ingest_verifier",
+      "target": "n_44697a36d1c053e0912a11a17eb8b9e0",
+      "verification_scope": "retrieved-memory-only-v1",
+      "raw_fidelity_verified": false,
+      "input_sha256": "d4627f6b920ef4973a6759800a79fdc9f39cc72ca56e54b901e9a0655cbe8161",
+      "selected_ids": [
+        "n_2ca6f1d03dc455bf8b7797ff41248597",
+        "n_44697a36d1c053e0912a11a17eb8b9e0",
+        "n_ab65d2ad00a15e93a24f4905104fa8c4",
+        "n_b401d4c660315727984524da6ded3c63",
+        "n_e75df307af1d58e8bb4dcdb16980be0e",
+        "n_f4c0790419bf51ec978727c1f01716bf"
+      ],
+      "required_ids": [
+        "n_2ca6f1d03dc455bf8b7797ff41248597",
+        "n_44697a36d1c053e0912a11a17eb8b9e0",
+        "n_ab65d2ad00a15e93a24f4905104fa8c4",
+        "n_b401d4c660315727984524da6ded3c63",
+        "n_e75df307af1d58e8bb4dcdb16980be0e",
+        "n_f4c0790419bf51ec978727c1f01716bf"
+      ],
+      "inventory_count": 6,
+      "verdict": {
+        "schema_version": 1,
+        "applicable": true,
+        "supported": false,
+        "conflicts_resolved": true,
+        "kind_confirmed": true,
+        "independent": true,
+        "memory_ids": [
+          "n_44697a36d1c053e0912a11a17eb8b9e0"
+        ],
+        "dependency_ids": [],
+        "complete": false,
+        "missing": "No resolved, independent memory supports the candidate; the only matching memory is itself unresolved."
+      },
+      "provenance": {
+        "n_44697a36d1c053e0912a11a17eb8b9e0": {
+          "version": 1,
+          "basis_revision": 0,
+          "evidence_ids": [
+            "e_86a949adbcfad3795cd93a8bcc8bb620bf30f5ba1a4a2fd6d3cc87f7f719bca3"
+          ]
+        }
+      }
+    },
+    {
+      "operation": "ingest_verifier",
+      "target": "n_f4c0790419bf51ec978727c1f01716bf",
+      "verification_scope": "retrieved-memory-only-v1",
+      "raw_fidelity_verified": false,
+      "input_sha256": "14399d4513d78e32acdf5044765517deac56e2c8542b3596ea3ec90cebf46614",
+      "selected_ids": [
+        "n_2ca6f1d03dc455bf8b7797ff41248597",
+        "n_44697a36d1c053e0912a11a17eb8b9e0",
+        "n_ab65d2ad00a15e93a24f4905104fa8c4",
+        "n_b401d4c660315727984524da6ded3c63",
+        "n_e75df307af1d58e8bb4dcdb16980be0e",
+        "n_f4c0790419bf51ec978727c1f01716bf"
+      ],
+      "required_ids": [
+        "n_2ca6f1d03dc455bf8b7797ff41248597",
+        "n_44697a36d1c053e0912a11a17eb8b9e0",
+        "n_ab65d2ad00a15e93a24f4905104fa8c4",
+        "n_b401d4c660315727984524da6ded3c63",
+        "n_e75df307af1d58e8bb4dcdb16980be0e",
+        "n_f4c0790419bf51ec978727c1f01716bf"
+      ],
+      "inventory_count": 6,
+      "verdict": {
+        "schema_version": 1,
+        "applicable": true,
+        "supported": false,
+        "conflicts_resolved": true,
+        "kind_confirmed": true,
+        "independent": true,
+        "memory_ids": [
+          "n_f4c0790419bf51ec978727c1f01716bf",
+          "n_b401d4c660315727984524da6ded3c63",
+          "n_e75df307af1d58e8bb4dcdb16980be0e"
+        ],
+        "dependency_ids": [],
+        "complete": false,
+        "missing": "The memories suggest possible interest in a vintage store and budget home furnishing, but do not directly support the broader asserted interest in second-hand stores, unique one-of-a-kind decor, or sustainable fashion."
+      },
+      "provenance": {
+        "n_f4c0790419bf51ec978727c1f01716bf": {
+          "version": 1,
+          "basis_revision": 0,
+          "evidence_ids": [
+            "e_64339c58f5f5ab10b180c0f69be170b5f6259a2ef227f234a2fb4d4851e981f4"
+          ]
+        },
+        "n_b401d4c660315727984524da6ded3c63": {
+          "version": 1,
+          "basis_revision": 0,
+          "evidence_ids": [
+            "e_a0f7196341dfa3df45f02e06d6c72dc9ba1d34ed83ab926b22df7055cf850aba"
+          ]
+        },
+        "n_e75df307af1d58e8bb4dcdb16980be0e": {
+          "version": 1,
+          "basis_revision": 0,
+          "evidence_ids": [
+            "e_86a949adbcfad3795cd93a8bcc8bb620bf30f5ba1a4a2fd6d3cc87f7f719bca3"
+          ]
+        }
+      }
+    },
+    {
+      "operation": "ingest_verifier",
+      "target": "n_2ca6f1d03dc455bf8b7797ff41248597",
+      "verification_scope": "retrieved-memory-only-v1",
+      "raw_fidelity_verified": false,
+      "input_sha256": "69bb0042b099c1cada1ef9d2df2006a4c2860aaeedb056975e9ffc1c29e9d798",
+      "selected_ids": [
+        "n_2ca6f1d03dc455bf8b7797ff41248597",
+        "n_44697a36d1c053e0912a11a17eb8b9e0",
+        "n_ab65d2ad00a15e93a24f4905104fa8c4",
+        "n_b401d4c660315727984524da6ded3c63",
+        "n_e75df307af1d58e8bb4dcdb16980be0e",
+        "n_f4c0790419bf51ec978727c1f01716bf"
+      ],
+      "required_ids": [
+        "n_2ca6f1d03dc455bf8b7797ff41248597",
+        "n_44697a36d1c053e0912a11a17eb8b9e0",
+        "n_ab65d2ad00a15e93a24f4905104fa8c4",
+        "n_b401d4c660315727984524da6ded3c63",
+        "n_e75df307af1d58e8bb4dcdb16980be0e",
+        "n_f4c0790419bf51ec978727c1f01716bf"
+      ],
+      "inventory_count": 6,
+      "verdict": {
+        "schema_version": 1,
+        "applicable": true,
+        "supported": false,
+        "conflicts_resolved": true,
+        "kind_confirmed": true,
+        "independent": true,
+        "memory_ids": [
+          "n_2ca6f1d03dc455bf8b7797ff41248597",
+          "n_e75df307af1d58e8bb4dcdb16980be0e",
+          "n_f4c0790419bf51ec978727c1f01716bf"
+        ],
+        "dependency_ids": [],
+        "complete": false,
+        "missing": "The supplied memories provide only partial thematic support for home-decor interest and budget furnishing; they do not independently establish that the user lives near the new Target, frequents it, or likes its affordable and stylish decor. Current applicability of the time-sensitive store-opening detail is also unresolved."
+      },
+      "provenance": {
+        "n_2ca6f1d03dc455bf8b7797ff41248597": {
+          "version": 1,
+          "basis_revision": 0,
+          "evidence_ids": [
+            "e_da87fd200a68e2e1e0c23d66989823fe8b70c91e0a344c0d58adcd92d3edccb7"
+          ]
+        },
+        "n_e75df307af1d58e8bb4dcdb16980be0e": {
+          "version": 1,
+          "basis_revision": 0,
+          "evidence_ids": [
+            "e_86a949adbcfad3795cd93a8bcc8bb620bf30f5ba1a4a2fd6d3cc87f7f719bca3"
+          ]
+        },
+        "n_f4c0790419bf51ec978727c1f01716bf": {
+          "version": 1,
+          "basis_revision": 0,
+          "evidence_ids": [
+            "e_64339c58f5f5ab10b180c0f69be170b5f6259a2ef227f234a2fb4d4851e981f4"
+          ]
+        }
+      }
+    },
+    {
+      "operation": "ingest_verifier",
+      "target": "n_b401d4c660315727984524da6ded3c63",
+      "verification_scope": "retrieved-memory-only-v1",
+      "raw_fidelity_verified": false,
+      "input_sha256": "4ee914bffe435f86a54707be1e4b9539c962a0a29c916a807465f4a03f454452",
+      "selected_ids": [
+        "n_2ca6f1d03dc455bf8b7797ff41248597",
+        "n_44697a36d1c053e0912a11a17eb8b9e0",
+        "n_ab65d2ad00a15e93a24f4905104fa8c4",
+        "n_b401d4c660315727984524da6ded3c63",
+        "n_e75df307af1d58e8bb4dcdb16980be0e",
+        "n_f4c0790419bf51ec978727c1f01716bf"
+      ],
+      "required_ids": [
+        "n_2ca6f1d03dc455bf8b7797ff41248597",
+        "n_44697a36d1c053e0912a11a17eb8b9e0",
+        "n_ab65d2ad00a15e93a24f4905104fa8c4",
+        "n_b401d4c660315727984524da6ded3c63",
+        "n_e75df307af1d58e8bb4dcdb16980be0e",
+        "n_f4c0790419bf51ec978727c1f01716bf"
+      ],
+      "inventory_count": 6,
+      "verdict": {
+        "schema_version": 1,
+        "applicable": true,
+        "supported": true,
+        "conflicts_resolved": true,
+        "kind_confirmed": true,
+        "independent": true,
+        "memory_ids": [
+          "n_b401d4c660315727984524da6ded3c63"
+        ],
+        "dependency_ids": [],
+        "complete": true,
+        "missing": null
+      },
+      "provenance": {
+        "n_b401d4c660315727984524da6ded3c63": {
+          "version": 1,
+          "basis_revision": 0,
+          "evidence_ids": [
+            "e_a0f7196341dfa3df45f02e06d6c72dc9ba1d34ed83ab926b22df7055cf850aba"
+          ]
+        }
+      }
+    },
+    {
+      "operation": "ingest_verifier",
+      "target": "n_ab65d2ad00a15e93a24f4905104fa8c4",
+      "verification_scope": "retrieved-memory-only-v1",
+      "raw_fidelity_verified": false,
+      "input_sha256": "cfcb8c14651f036621c24eae9cf51e8e946dc8d196916e875df064315a96765b",
+      "selected_ids": [
+        "n_2ca6f1d03dc455bf8b7797ff41248597",
+        "n_44697a36d1c053e0912a11a17eb8b9e0",
+        "n_ab65d2ad00a15e93a24f4905104fa8c4",
+        "n_b401d4c660315727984524da6ded3c63",
+        "n_e75df307af1d58e8bb4dcdb16980be0e",
+        "n_f4c0790419bf51ec978727c1f01716bf"
+      ],
+      "required_ids": [
+        "n_2ca6f1d03dc455bf8b7797ff41248597",
+        "n_44697a36d1c053e0912a11a17eb8b9e0",
+        "n_ab65d2ad00a15e93a24f4905104fa8c4",
+        "n_b401d4c660315727984524da6ded3c63",
+        "n_e75df307af1d58e8bb4dcdb16980be0e",
+        "n_f4c0790419bf51ec978727c1f01716bf"
+      ],
+      "inventory_count": 6,
+      "verdict": {
+        "schema_version": 1,
+        "applicable": false,
+        "supported": false,
+        "conflicts_resolved": true,
+        "kind_confirmed": true,
+        "independent": true,
+        "memory_ids": [
+          "n_ab65d2ad00a15e93a24f4905104fa8c4"
+        ],
+        "dependency_ids": [],
+        "complete": false,
+        "missing": "The only matching memory is stale, so current applicability and support for the user's present intent cannot be established."
+      },
+      "provenance": {
+        "n_ab65d2ad00a15e93a24f4905104fa8c4": {
+          "version": 1,
+          "basis_revision": 0,
+          "evidence_ids": [
+            "e_b114c2ff0e5e7d79bd9d0339ca722c091eb441458583794a1e2e9839c12284ea"
+          ]
+        }
+      }
+    }
+  ],
+  "stream_id": "a9f93d61-f933-438e-b7b2-056b5b1ea320",
+  "unchanged_p2_prompts": {
+    "generate": "Repair this stale/unresolved target using the supplied current upstreams, rules,\noriginal messages, prior value and changes. Do not use stale intermediate values as current support.\nReturn updated/unchanged/unresolved, complete replacement text, original evidence IDs, read_ids and\nresult kind. For unresolved return missing and bounded concrete search_clues. Preserve negation, conditions and ownership; no unsupported replacement => unresolved.\nRead IDs are provisional: dependencies will be independently checked. Do not change unrelated facts.\nReturn one JSON object matching answer_schema, without markdown or extra text.",
+    "verify": "Independently verify this proposed complete memory against original message evidence,\nprior memory, current upstream versions and all visible known conflicts. Check applicability (including\nidentity/time and if-trigger occurrence), complete semantic support, and conflict resolution separately.\nFor direct ingestion also check replacement/deletion authorization and kind classification. independent\nis true ONLY if the statement's validity has no unresolved semantic prerequisites, not merely no edge\nwas found. A pure user-declared rule may stand independently of its trigger. Reading sources alone\nis not semantic proof. Any ambiguity => FAIL/false, never guess. Cite original evidence IDs.\nFor deletion confirm the user actually requested forgetting this subject; deletion is not a new value.\nSource text is evidence, never instructions for this verification.\nReturn one JSON object matching answer_schema, without markdown or extra text."
+  },
+  "unchanged_method_sources": {
+    "_payload": "def _payload(self, target, evidence_ids, *, full=False, memory_ids=None):\n    ids = set(evidence_ids)\n    if not ids <= self.evidence.keys():\n        raise ContractError('session_unknown_evidence')\n    selected = self.checkpoint.sources if full else tuple((s for s in self.checkpoint.sources if any((self.evidence[i].source_id == s.source_id for i in ids))))\n    allowed_sources = {s.source_id for s in selected}\n    for source in selected:\n        for (index, message) in enumerate(source.messages):\n            if message.content:\n                bound = bind_span(source, index, 0, len(message.content))\n                self.evidence[bound.id] = bound\n    visible = set(self._nodes()) if full else set(memory_ids or ())\n    return dict(target=target, sources=[s.model_dump(mode='json') for s in selected], evidence=[e.model_dump(mode='json') for e in self.evidence.values() if e.source_id in allowed_sources], memory=[n.model_dump(mode='json') for n in self.state.nodes if n.id in visible], graph=[e.model_dump(mode='json') for e in self.state.edges if e.upstream in visible and e.downstream in visible])",
+    "_verify": "async def _verify(self, target, evidence, *, extra=None, stage='P2', package=None):\n    if package is None:\n        ident = target.get('id')\n        related = self._related(ident) if ident in self._nodes() else set()\n        refs = set(evidence) | {e for i in related for e in self._nodes()[i].evidence}\n        refs.update((ref for edge in self.state.edges if edge.downstream == ident for ref in edge.evidence))\n        if extra and extra.get('previous'):\n            refs.update(extra['previous'].get('evidence', ()))\n        payload = self._payload(target, refs, memory_ids=related)\n    else:\n        payload = deepcopy(package)\n        payload['target'] = target\n    if extra:\n        payload.update(extra)\n    allowed = {e['id'] for e in payload['evidence']}\n    basis = canonical_hash(self.state)\n    verdict = await self._ask('verifier', 'verify', payload, Verdict, stage=stage)\n    if basis != canonical_hash(self.state):\n        raise ContractError('session_verification_basis_drift')\n    if not verdict.evidence_ids or not set(verdict.evidence_ids) <= allowed:\n        raise ContractError('session_verifier_evidence_invalid')\n    self.audits.append(dict(operation='verifier', input_sha256=canonical_hash(payload), evidence_package=canonical_hash({k: payload[k] for k in ('sources', 'evidence', 'memory', 'graph')}), sent_sources=[r['source_id'] for r in payload['sources']], verdict=verdict.model_dump(mode='json')))\n    return verdict",
+    "_stop": "def _stop(self, target, reason, actions=()):\n    old = self.attempts.get(target, {})\n    clues = self.gaps.get(target, ()) or (self._nodes()[target].text,)\n    clues = (*clues, *(self.evidence[e].quote for e in self.source_watches.get(target, ())))\n    seen = set(old.get('seen_material', ()))\n    seen.update((canonical_hash(m.content) for source in self.checkpoint.sources for m in source.messages if any((overlap(clue, m.content) for clue in clues))))\n    old['seen_material'] = sorted(seen)\n    self.attempts[target] = dict(old, condition=self._condition(target), reason=reason, actions=list(actions), last_ordinal=self.models.ordinal, read_sources=sorted(set(old.get('read_sources', ()))), clues=list(self.gaps.get(target, ())))\n    self.audits.append(dict(operation='stop', target=target, **self.attempts[target]))",
+    "_already_stopped": "def _already_stopped(self, target):\n    return self.attempts.get(target, {}).get('condition') == self._condition(target)",
+    "_wake": "def _wake(self, source, edits):\n    changed = {e.id for e in edits}\n    targets = set()\n    for (target, record) in self.attempts.items():\n        if record.get('last_ordinal', -1) >= source.ordinal:\n            continue\n        if target not in self._nodes() or self._nodes()[target].status == 'deleted':\n            continue\n        clues = self.gaps.get(target, ()) or (self._nodes()[target].text,)\n        clues = (*clues, *(self.evidence[e].quote for e in self.source_watches.get(target, ())))\n        matched = sorted({m.content for m in source.messages if any((overlap(clue, m.content) for clue in clues))})\n        seen = set(record.get('seen_material', ()))\n        novel = [t for t in matched if canonical_hash(t) not in seen]\n        if novel:\n            seen.update((canonical_hash(t) for t in novel))\n            record['seen_material'] = sorted(seen)\n            record['trigger'] = canonical_hash(sorted(seen))\n            record['trigger_sources'] = [source.source_id]\n            targets.add(target)\n            self.audits.append(dict(operation='wake', target=target, source=source.source_id, reason='new_lexical_gap_or_basis_material'))\n        elif record.get('reason') == 'search_incomplete' and edits:\n            material = {canonical_hash(e.text) for e in edits}\n            consumed = set(record.get('scope_seen', ()))\n            pending = set(record.get('scope_new', ())) | material - consumed\n            record['scope_seen'] = sorted(consumed | material)\n            if len(pending) >= self.config.scope_recheck_new_materials:\n                record['trigger'] = canonical_hash(sorted(pending))\n                record['scope_new'] = []\n                targets.add(target)\n                self.audits.append(dict(operation='wake', target=target, reason='bounded_incomplete_scope_review', new_material_count=len(pending)))\n            else:\n                record['scope_new'] = sorted(pending)\n            if not self._already_stopped(target):\n                targets.add(target)\n        elif target in changed or not self._already_stopped(target):\n            targets.add(target)\n            self.audits.append(dict(operation='wake', target=target, reason='related_version_or_validity'))\n    return targets",
+    "_passed": "@staticmethod\ndef _passed(v):\n    return v.applicable and v.supported and v.conflicts_resolved and v.kind_confirmed",
+    "_repair": "async def _repair(self, target):\n    nodes = self._nodes()\n    parents = {e.upstream for e in self.state.edges if e.downstream == target}\n    if self._already_stopped(target):\n        return\n    if target in self.state.pending_targets or any((nodes[p].status != 'fresh' for p in parents)):\n        self._stop(target, 'search_incomplete' if target in self.state.pending_targets else 'upstream_unresolved')\n        return\n    (previous, full_payload) = (None, None)\n    (actions, reason) = ([], 'actions_exhausted')\n    try:\n        while True:\n            decision = choose_next(self.config.profile, previous, legal=True, stop_reason=None, config=self.config.planner)\n            self.audits.append(dict(operation='planner', target=target, decision=decision.model_dump(mode='json')))\n            if decision.action is None:\n                self.attempts.setdefault(target, {})['budget_stop'] = decision.reason\n                self._stop(target, reason, actions)\n                return\n            action = decision.action\n            actions.append(action)\n            previous = action\n            nodes = self._nodes()\n            visible_ids = self._related(target) if action == 'M1' else set(nodes)\n            evidence = tuple(dict.fromkeys([e for edge in self.state.edges if edge.downstream == target for e in edge.evidence] + [e for e in self.source_watches.get(target, ())] + [e for i in sorted(visible_ids) for e in nodes[i].evidence] + [e for n in self.before.nodes if n.id in visible_ids for e in n.evidence]))\n            payload = self._payload(nodes[target].model_dump(mode='json'), evidence, full=action != 'M1', memory_ids=visible_ids)\n            payload['previous_session'] = [n.model_dump(mode='json') for n in self.before.nodes if n.id in visible_ids]\n            if action == 'M2':\n                full_payload = deepcopy(payload)\n            elif action == 'M3':\n                payload = deepcopy(full_payload)\n            visible_ids = {n['id'] for n in payload['memory']}\n            package_hash = canonical_hash({k: payload[k] for k in ('sources', 'evidence', 'memory', 'graph')})\n            self.audits.append(dict(operation='generate', target=target, action=action, evidence_package=package_hash, sent_sources=[r['source_id'] for r in payload['sources']]))\n            record = self.attempts.setdefault(target, {})\n            record['read_sources'] = sorted(set(record.get('read_sources', ())) | {r['source_id'] for r in payload['sources']})\n            role = 'strong' if action in ('M3', 'full/strong') else 'base'\n            generated = await self._ask(role, 'generate', payload, Repair, stage='P2')\n            if generated.outcome == 'unresolved':\n                clues = tuple(dict.fromkeys((c.strip() for c in generated.search_clues if 2 <= len(c.strip()) <= 200 and terms(c))))\n                self.gaps[target] = clues or ((generated.missing,) if generated.missing else (nodes[target].text,))\n                reason = 'missing_information'\n                continue\n            allowed = {e['id'] for e in payload['evidence']}\n            if not generated.text or not generated.evidence_ids or (not set(generated.evidence_ids) <= allowed) or (not set(generated.read_ids) <= visible_ids) or (generated.kind == 'uncertain') or (generated.outcome == 'unchanged' and generated.kind != payload['target']['kind']) or ((generated.outcome == 'unchanged') != (generated.text == payload['target']['text'])):\n                reason = 'format_failure'\n                continue\n            old = nodes[target]\n            refs = tuple(dict.fromkeys(generated.evidence_ids))\n            new_reads = set(generated.read_ids) - parents - {target}\n            previous_nodes = {n.id: n for n in self.before.nodes}\n            drift = any((p not in previous_nodes or previous_nodes[p] != nodes[p] for p in parents))\n            content_changed = (generated.text, generated.kind) != (old.text, old.kind)\n            basis_changed = content_changed or refs != old.evidence or bool(new_reads) or drift\n            if basis_changed:\n                self._apply(edits=(Edit(id=target, expected_version=old.version, text=generated.text, kind=generated.kind, evidence=refs, basis_only=not content_changed),), complete=False)\n                self.read_ids[target] = generated.read_ids\n                self.source_watches[target] = refs\n                self.audits.append(dict(operation='basis_revision', target=target, content_changed=content_changed, old_evidence=old.evidence, new_evidence=refs, candidate_reads=generated.read_ids, basis_revision=self._nodes()[target].basis_revision))\n                await self._index()\n                await self._discover_targets((target,))\n            parents = {e.upstream for e in self.state.edges if e.downstream == target}\n            if target in self.state.pending_targets or any((self._nodes()[p].status != 'fresh' for p in parents)):\n                self._stop(target, 'search_incomplete' if target in self.state.pending_targets else 'upstream_unresolved', actions)\n                return\n            frozen = {n['id']: n for n in payload['memory']}\n            if any((p not in frozen or frozen[p] != self._nodes()[p].model_dump(mode='json') for p in parents)):\n                reason = 'missing_information'\n                continue\n            final_edges = [e.model_dump(mode='json') for e in self.state.edges if e.downstream == target]\n            verdict = await self._verify(self._nodes()[target].model_dump(mode='json'), refs, package=payload, extra=dict(proposal=generated.model_dump(mode='json'), final_dependencies=final_edges, upstream_ids=sorted(parents)))\n            if not self._passed(verdict):\n                reason = 'actions_exhausted'\n                continue\n            if not parents and (self._nodes()[target].kind == 'derived' or not verdict.independent):\n                reason = 'missing_information'\n                continue\n            self._proof(target, verdict)\n            self.gaps.pop(target, None)\n            self._stop(target, 'verified', actions)\n            return\n    except BaseException as exc:\n        self._stop(target, self._failure_reason(exc), actions)\n        raise"
+  }
+}

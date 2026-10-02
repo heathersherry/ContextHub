@@ -112,21 +112,43 @@ class Proposition(Contract):
     evidence: tuple[EvidenceRef, ...] = Field(min_length=1)
 
 
+class UnresolvedProposition(Contract):
+    ordinal: Nonnegative
+    text: Name
+    evidence_ids: tuple[Name, ...] = Field(min_length=1)
+    unknown_evidence_ids: tuple[Name, ...] = Field(min_length=1)
+    status: Literal["unresolved_unverified"] = "unresolved_unverified"
+    reason: Literal["undeclared_evidence_id"] = "undeclared_evidence_id"
+
+    @model_validator(mode="after")
+    def original_ids(self):
+        if not set(self.unknown_evidence_ids) <= set(self.evidence_ids):
+            raise ContractError("unresolved_id_not_in_original")
+        return self
+
+
 class PropositionArtifact(Sealed):
     kind: Literal["propositions"] = "propositions"
     sources: tuple[SealRef, ...] = Field(min_length=1)
     extraction_config_id: Name
     extraction_config_sha256: Hash
     propositions: tuple[Proposition, ...] = ()
-    status: Literal["complete", "pending"]
+    unresolved: tuple[UnresolvedProposition, ...] = Field(default=(), exclude_if=lambda v: not v)
+    status: Literal["complete", "partial", "pending"]
     failure_reason: Name | None = None
 
     @model_validator(mode="after")
     def consistency(self):
         if any(s.kind != "source" for s in self.sources):
             raise ContractError("reference_kind_mismatch")
-        if (self.status == "pending") != (self.failure_reason is not None):
+        if (self.status != "complete") != (self.failure_reason is not None):
             raise ContractError("failure_reason_required")
+        if bool(self.unresolved) != (self.status == "partial"):
+            raise ContractError("unresolved_requires_partial_extraction")
+        if self.unresolved and self.failure_reason != "unresolved_evidence_ids":
+            raise ContractError("partial_extraction_reason_required")
+        if len({p.ordinal for p in self.unresolved}) != len(self.unresolved):
+            raise ContractError("duplicate_unresolved_ordinal")
         if len({p.id for p in self.propositions}) != len(self.propositions):
             raise ContractError("duplicate_proposition")
         if any(

@@ -3,7 +3,7 @@
 import json
 from typing import Literal
 from uuid import UUID
-from pydantic import model_validator
+from pydantic import Field, model_validator
 from contexthub.models.knowledge import (
     Sealed,
     SealRef,
@@ -17,6 +17,8 @@ from contexthub.models.knowledge import (
 )
 from contexthub.discovery.search import CandidatePage, SearchIssue
 from contexthub.discovery.adjudication import Adjudication
+from contexthub.discovery.identity_routing import IdentityRoute
+from contexthub.discovery.semantic_candidates import FactIndexSnapshot, FactSelection
 
 
 def encode_configuration(config: Contract) -> dict:
@@ -73,9 +75,13 @@ class DiscoveryReport(Sealed):
         ],
         ...,
     ]
+    excluded_unresolved_extractions: tuple[SealRef, ...] = Field(default=(), exclude_if=lambda v: not v)
     reasons: tuple[Name, ...]
     mappings: tuple[NodeMapping, ...]
     pages: tuple[CandidatePage, ...]
+    identity_routes: tuple[IdentityRoute, ...] = Field(default=(), exclude_if=lambda v: not v)
+    semantic_selections: tuple[FactSelection, ...] = Field(default=(), exclude_if=lambda v: not v)
+    semantic_index: FactIndexSnapshot | None = Field(default=None, exclude_if=lambda v: v is None)
     evidence_recoveries: tuple[SearchIssue, ...]
     decisions: tuple[Decision, ...]
     call_ids: tuple[UUID, ...]
@@ -127,6 +133,7 @@ class GraphHandoff(Sealed):
     graph: SealRef
     mappings: tuple[NodeMapping, ...]
     status: Literal["complete", "pending"]
+    excluded_unresolved_extractions: tuple[SealRef, ...] = Field(default=(), exclude_if=lambda v: not v)
     reasons: tuple[Name, ...]
 
     configuration_payload = DiscoveryReport.configuration_payload

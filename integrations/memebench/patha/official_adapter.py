@@ -20,7 +20,7 @@ from contexthub.llm.retry_policy import RecordedCall
 from contexthub.services.execution_ledger import ExecutionLedger
 from contexthub.services.knowledge_service import safe_reason
 from contexthub.propagation.candidate import ModelConfig
-from .run_gates import FileIdentity, stage_preflight
+from .run_gates import FileIdentity, stage_preflight, validate_model_seed
 
 
 class OfficialJudgment(Contract):
@@ -150,7 +150,13 @@ class OfficialJudgeRunner:
                 "judge",
                 configuration_sha256=canonical_hash(config),
             )
-            if config.price is None or not any(
+            validate_model_seed(manifest, config)
+            if (
+                config.request_parameters is None
+                or config.request_parameters.response_format != "json_object"
+            ):
+                raise ContractError("official_judge_json_object_required")
+            if (config.price is None and manifest.two_episode_token_only_authorization is None) or not any(
                 r == official_source for r in manifest.frozen_files
             ):
                 raise ContractError("judge_price_or_official_identity_missing")
@@ -168,6 +174,7 @@ class OfficialJudgeRunner:
             model=config.model,
             base_url=config.base_url,
             temperature=config.temperature,
+            request_parameters=config.request_parameters,
             timeout=config.retry.timeout_seconds,
             transport=transport,
         )

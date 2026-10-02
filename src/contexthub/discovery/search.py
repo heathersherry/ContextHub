@@ -278,7 +278,7 @@ class SearchService:
         bypass = cursor.bypass_index if cursor else False
         offset = cursor.offset if cursor else 0
         permanent = []
-        if obj.status != "complete":
+        if obj.status not in ("complete", "partial"):
             permanent.append(SearchIssue(code="extraction_pending"))
         entries = sorted(
             history.entries,
@@ -383,7 +383,7 @@ class SearchService:
         # A fixed sequence for this scope: the whole extraction batch, then
         # source candidates. Page size bounds both kinds; IDs survive expansion.
         units = (
-            [("batch", p) for p in obj.propositions] if obj.status == "complete" else []
+            [("batch", p) for p in obj.propositions] if obj.status in ("complete", "partial") else []
         )
         units += [("source", s) for s in scope]
         chunk = units[offset : offset + policy.page_size]

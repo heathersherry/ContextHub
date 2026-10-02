@@ -86,7 +86,8 @@ async def lifespan(app: FastAPI):
                 role: os.environ.get("KNOWLEDGE_" + role.upper() + "_API_KEY", "")
                 for role in KnowledgeSecrets.__annotations__
             })
-            if any(not getattr(knowledge_secrets, role) for role in KnowledgeSecrets.__annotations__):
+            if any(not getattr(knowledge_secrets, role) for role in KnowledgeSecrets.__annotations__
+                   if role != "embedding" or knowledge_config.discovery.semantic is not None):
                 raise ValueError("knowledge credentials missing")
             if tuple((r.id, r.version) for r in dependencies.rules) != tuple(
                 (r.id, r.version) for r in knowledge_config.rules

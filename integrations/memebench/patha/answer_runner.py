@@ -1,6 +1,5 @@
 """Answers use frozen content only; attempts are kept outside maintenance state."""
 
-import json
 from uuid import uuid4
 from urllib.parse import urlsplit
 import httpx
@@ -12,7 +11,8 @@ from contexthub.models.execution import CallIdentity
 from contexthub.models.knowledge import ContractError, canonical_hash
 from contexthub.services.execution_ledger import ExecutionLedger
 from contexthub.propagation.candidate import ModelConfig
-from .run_gates import stage_preflight
+from .run_gates import stage_preflight, validate_model_seed
+from .answer_prompt import OfficialAnswerConfig, render_answer
 
 
 class AnswerRunner:
@@ -28,7 +28,12 @@ class AnswerRunner:
         manifest=None,
         authorization=None,
     ):
-        config = ModelConfig.model_validate(config.model_dump(mode="json"))
+        config_type = (
+            OfficialAnswerConfig
+            if isinstance(config, OfficialAnswerConfig)
+            else ModelConfig
+        )
+        config = config_type.model_validate(config.model_dump(mode="json"))
         endpoint = urlsplit(config.base_url)
         if (
             endpoint.scheme not in ("http", "https")
@@ -59,7 +64,13 @@ class AnswerRunner:
                 "answer",
                 configuration_sha256=canonical_hash(config),
             )
-            if config.price is None:
+            if (
+                isinstance(config, OfficialAnswerConfig)
+                and config.official_source not in manifest.frozen_files
+            ):
+                raise ContractError("official_answer_source_not_frozen")
+            validate_model_seed(manifest, config)
+            if config.price is None and manifest.two_episode_token_only_authorization is None:
                 raise ContractError("answer_price_missing")
         self.config, self.account_id = config, account_id
         self.ledger = ExecutionLedger(repository)
@@ -68,6 +79,7 @@ class AnswerRunner:
             model=config.model,
             base_url=config.base_url,
             temperature=config.temperature,
+            request_parameters=config.request_parameters,
             timeout=config.retry.timeout_seconds,
             transport=transport,
         )
@@ -93,14 +105,12 @@ class AnswerRunner:
             )
             # No database handle, maintenance tool, task type or score label is
             # supplied to the answering model. Every question sees the same state.
-            payload = dict(
-                question=question.text,
-                contexts=sealed_state["state"]["answer_contexts"],
-            )
             try:
                 answer = await self.client.complete(
-                    self.config.prompt_template.format(
-                        input_json=json.dumps(payload, ensure_ascii=False)
+                    render_answer(
+                        self.config,
+                        question.text,
+                        sealed_state["state"]["answer_contexts"],
                     ),
                     max_tokens=self.config.max_tokens,
                     call=RecordedCall(

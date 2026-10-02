@@ -78,3 +78,31 @@ async def test_partial_factory_failure_closes_prior_clients(monkeypatch):
             transport=SyntheticModels().transport,
         )
     assert owned[0].client._client.is_closed
+
+
+@pytest.mark.asyncio
+async def test_semantic_factory_explicit_secret_and_lifecycle(tmp_path):
+    from contexthub.discovery.semantic_runner import SemanticConfig
+    from contexthub.discovery.semantic_candidates import RetrievalPolicy
+    from contexthub.llm.recorded_embedding import EmbeddingConfig
+    from contexthub.discovery.stage0 import Stage0Config
+    from knowledge_helpers import policy
+    from test_identity_routing import ner,ROUTING
+    cfg=configuration()
+    stage=Stage0Config(version='names',rules=(),aliases=(),alias_version='empty',
+        mention_patterns=(),mention_view='dialogue-content-v2',spacy_ner=ner())
+    semantic=SemanticConfig(embedding=EmbeddingConfig(model='fixture',base_url='https://fixture.invalid',
+        dimensions=2,send_dimensions=True,max_batch=8,response_archive_directory=str(tmp_path),retry=policy()),
+        retrieval=RetrievalPolicy(initial_candidates=8,expansion_factor=2,batch_size=8,max_partial_rounds=3),price=None)
+    cfg=cfg.model_copy(update={'discovery':cfg.discovery.model_copy(update={
+        'adjudication':cfg.discovery.adjudication.model_copy(update={'stage0':stage}),
+        'identity_routing':ROUTING.model_copy(update={'unknown_policy':'advisory'}),'semantic':semantic})})
+    missing=secrets();missing.embedding=None
+    with pytest.raises(ContractError,match='embedding_credentials_missing'):
+        await create_knowledge_service(None,cfg,missing,context_service=None,transport=SyntheticModels().transport)
+    values=secrets();values.embedding='synthetic-embedding-secret'
+    service=await create_knowledge_service(None,cfg,values,context_service=None,transport=SyntheticModels().transport)
+    assert service.discovery.semantic_runner is not None
+    client=service.discovery.semantic_runner.embedding
+    await service.close()
+    assert client._client.is_closed

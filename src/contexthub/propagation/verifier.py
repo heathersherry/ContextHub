@@ -160,8 +160,19 @@ class FixedVerifier(ModelCall):
             "hard_checks": check.model_dump(mode="json"),
         }
 
+        identified = self.config.response_contract == "verifier-ids-v2"
+        if identified:
+            from .identified_wire import registry_view, expand_verdict
+            evidence, view = registry_view((r.evidence for r in bundle.read), "E")
+            causes, cause_view = registry_view((c.cause for c in proposal.data.causes), "C")
+            payload.update(evidence_ids=view, cause_ids=cause_view)
+        elif self.config.response_contract != "references-v1":
+            raise ContractError("verifier_response_contract_mismatch")
+
         def parse(raw):
             work.add("rule_checks")
+            if identified:
+                raw = expand_verdict(raw, evidence, causes).model_dump_json()
             return parse_verdict(raw, proposal, bundle)
 
         data, ident = await self.invoke(

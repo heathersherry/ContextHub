@@ -10,6 +10,7 @@ from typing import Literal
 from uuid import UUID
 from pydantic import Field, model_validator
 from contexthub.discovery.extraction import Span
+from .change_location import UnitRange, location_view, range_span
 from contexthub.models.knowledge import Contract, ContractError, Sealed, SealRef, Name
 from contexthub.llm.retry_policy import RecordedCall
 
@@ -97,20 +98,73 @@ def validate_location(result, raw, candidates):
     return result
 
 
+
+class IdentifiedAssertionMatch(Contract):
+    candidate_id: Name
+    assertion_id: Name
+    replacement: UnitRange
+    identity_basis: UnitRange
+    temporal_basis: UnitRange
+    relation: Literal["same_subject_same_attribute_direct_assertion_replacement"]
+
+
+class IdentifiedAssertionLocation(Contract):
+    status: Literal["located", "unrelated", "pending"]
+    matches: tuple[IdentifiedAssertionMatch, ...]
+    reason: Name
+
+
+def assertion_view(raw, candidates):
+    payload, candidate_map, units = location_view(raw, candidates)
+    assertions = {}
+    for item in payload["candidates"]:
+        selected=[]
+        for evidence in item["source"]["assertions"]:
+            ident=f"A{len(assertions)+1:06d}"
+            assertions[ident]=(item["id"], evidence)
+            selected.append(dict(id=ident, evidence=evidence))
+        item["assertion_ids"]=selected
+    payload["contract"]="direct-assertion-change-ids-v2"
+    return payload, candidate_map, units, assertions
+
+
+def expand_assertions(text, raw, candidate_map, units, assertions):
+    data=IdentifiedAssertionLocation.model_validate_json(text)
+    matches=[]
+    for match in data.matches:
+        if match.candidate_id not in candidate_map or match.assertion_id not in assertions:
+            raise ContractError("unknown_assertion_reference_id")
+        owner,evidence=assertions[match.assertion_id]
+        if owner!=match.candidate_id:
+            raise ContractError("assertion_reference_wrong_candidate")
+        old=candidate_map[match.candidate_id]
+        original=Span(source_id=evidence["source"]["id"],start=evidence["start"],end=evidence["end"],
+                      excerpt=evidence["excerpt"],provenance=evidence["provenance"])
+        matches.append(AssertionMatch(carrier_id=old["context_id"],version=old["version"],
+            old=Span(source_id=old["snapshot_id"],start=0,end=len(old["text"]),excerpt=old["text"],
+                     provenance=("location-ids-v2",match.candidate_id)),original_assertion=original,
+            replacement=range_span(match.replacement,raw,units),identity_basis=range_span(match.identity_basis,raw,units),
+            temporal_basis=range_span(match.temporal_basis,raw,units),relation=match.relation))
+    return AssertionLocation(status=data.status,matches=tuple(matches),reason=data.reason)
+
+
 async def locate_assertions(locator, raw, candidates, *, identity):
     parsed = None
+    identified = locator.config.response_contract == "location-ids-v2"
+    if identified:
+        payload, candidate_map, units, assertions = assertion_view(raw, candidates)
+    elif locator.config.response_contract != "references-v1":
+        raise ContractError("locator_response_contract_mismatch")
 
     def validate(text):
         nonlocal parsed
         parsed = validate_location(
-            AssertionLocation.model_validate_json(text), raw, candidates
+            expand_assertions(text, raw, candidate_map, units, assertions) if identified
+            else AssertionLocation.model_validate_json(text), raw, candidates
         )
 
-    payload = {
-        "contract": "direct-assertion-change-v1",
-        "change": raw,
-        "candidates": candidates,
-    }
+    if not identified:
+        payload = {"contract": "direct-assertion-change-v1", "change": raw, "candidates": candidates}
     await locator.client.complete(
         locator.config.prompt_template.format(
             input_json=json.dumps(payload, ensure_ascii=False)

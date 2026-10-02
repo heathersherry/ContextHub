@@ -162,6 +162,13 @@ class LocalWork(Contract):
     count: Nonnegative
 
 
+class ResponseConversion(Contract):
+    rule: Literal["leading-think-json-v1"]
+    original_sha256: Hash
+    converted_sha256: Hash
+    removed_prefix_characters: Positive
+
+
 class AttemptRecord(Contract):
     identity: CallIdentity
     attempt_no: Positive = Field(le=3)
@@ -176,6 +183,9 @@ class AttemptRecord(Contract):
     request_config_sha256: Hash
     retry_policy_sha256: Hash
     output_sha256: Hash | None = None
+    response_conversion: ResponseConversion | None = Field(default=None, exclude_if=lambda v: v is None)
+    response_archive_path: Name | None = Field(default=None, exclude_if=lambda v: v is None)
+    response_archive_sha256: Hash | None = Field(default=None, exclude_if=lambda v: v is None)
     started_at: AwareDatetime
     finished_at: AwareDatetime | None = None
     wall_seconds: float | None = Field(default=None, ge=0, allow_inf_nan=False)
@@ -199,6 +209,13 @@ class AttemptRecord(Contract):
 
     @model_validator(mode="after")
     def consistency(self):
+        if self.response_conversion is not None and (
+            self.phase != "finished" or self.output_sha256 != self.response_conversion.original_sha256
+        ):
+            raise ContractError("invalid_response_conversion")
+        if ((self.response_archive_path is None) != (self.response_archive_sha256 is None)
+            or (self.phase == "started" and self.response_archive_path is not None)):
+            raise ContractError("invalid_response_archive_reference")
         if self.actual_model is None and self.actual_model_missing_reason is None:
             raise ContractError("model_missing_reason_required")
         if self.request_id is None and self.request_id_missing_reason is None:

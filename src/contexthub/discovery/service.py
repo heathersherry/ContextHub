@@ -16,6 +16,8 @@ from contexthub.models.knowledge import (
 from contexthub.discovery.adjudication import AdjudicationConfig, EvidenceSet
 from contexthub.discovery.search import SearchPolicy, SearchCandidate
 from contexthub.discovery.stage0 import locate
+from contexthub.discovery.identity_routing import IdentityRoutingConfig, route_pair
+from contexthub.discovery.adjudication import IdentityResolution, Adjudication
 from contexthub.discovery.contracts import DiscoveryReport, NodeMapping, Decision, encode_configuration
 from contexthub.discovery.nodes import materialize_propositions
 from contexthub.discovery._work import LocalOperation, MeteredDB
@@ -23,22 +25,39 @@ from contexthub.discovery.extraction import error_code
 from contexthub.services.artifact_service import ArtifactService
 
 
+from contexthub.discovery.semantic_runner import SemanticConfig
+
+
 class DiscoveryConfig(Contract):
     search: SearchPolicy
     adjudication: AdjudicationConfig
     timeout_seconds: float = Field(gt=0, allow_inf_nan=False)
+    identity_routing: IdentityRoutingConfig | None = Field(default=None, exclude_if=lambda v: v is None)
+
+    semantic: SemanticConfig | None = Field(default=None, exclude_if=lambda v: v is None)
 
     def check(self):
+        if self.semantic is not None and (self.identity_routing is None or self.identity_routing.unknown_policy != "advisory"):
+            raise ContractError("semantic_requires_advisory_identity_routing")
+        if self.identity_routing is not None:
+            ner = self.adjudication.stage0.spacy_ner
+            if ner is None or not ner.allowed_entity_labels:
+                raise ContractError("demand_identity_requires_explicit_name_labels")
         if self.search.lambda_p1 != self.adjudication.lambda_p1:
             raise ContractError("price_config_mismatch")
 
 
 class DiscoveryService:
-    def __init__(self, config, *, search, adjudicator, recorder, artifacts=None):
+    def __init__(self, config, *, search, adjudicator, recorder, artifacts=None, semantic_runner=None):
         config.check()
         if config.adjudication != adjudicator.config:
             raise ContractError("adjudicator_config_mismatch")
         self.config, self.search, self.adjudicator = config, search, adjudicator
+        if (config.semantic is None) != (semantic_runner is None):
+            raise ContractError("semantic_runner_configuration_missing")
+        if semantic_runner is not None and (semantic_runner.config != config.semantic or semantic_runner.routing != config.identity_routing or semantic_runner.adjudicator is not adjudicator):
+            raise ContractError("semantic_runner_configuration_mismatch")
+        self.semantic_runner = semantic_runner
         self.recorder = recorder
         self.artifacts = artifacts or ArtifactService()
 
@@ -81,6 +100,12 @@ class DiscoveryService:
         call_ids = [identity.call_id]
         pages, decisions, reasons, mappings = [], [], [], []
         evidence_recoveries = []
+        identity_routes = []
+        semantic_selections = []
+        semantic_index = None
+        # Semantic retrieval indexes the full admitted catalog. The fact shortlist,
+        # not a recency source window, distinguishes the selective arm.
+        catalog_policy = self.config.search.model_copy(update={"strategy":"full-history"}) if self.config.semantic else self.config.search
         states = ["awaiting_extraction"]
         report_id = report_id or uuid4()
 
@@ -103,8 +128,8 @@ class DiscoveryService:
                     db,
                     shared_ref,
                     history,
-                    self.config.search,
-                    identity=child("search-" + str(len(pages)), self.config.search),
+                    catalog_policy,
+                    identity=child("search-" + str(len(pages)), catalog_policy),
                     cursor=page.cursor,
                 )
                 pages.append(page)
@@ -113,6 +138,7 @@ class DiscoveryService:
             artifact = await self.artifacts.get(db, shared_ref)
             if not isinstance(artifact, PropositionArtifact):
                 raise ContractError("reference_kind_mismatch")
+            excluded_extractions = [shared_ref] if artifact.unresolved else []
             carriers = {}
             states.append("awaiting_search")
             await consume(
@@ -120,8 +146,8 @@ class DiscoveryService:
                     db,
                     shared_ref,
                     history,
-                    self.config.search,
-                    identity=child("search-0", self.config.search),
+                    catalog_policy,
+                    identity=child("search-0", catalog_policy),
                 )
             )
             generation = 0
@@ -149,10 +175,12 @@ class DiscoveryService:
                     prior = await self.artifacts.get(db, prior_ref)
                     if (
                         not isinstance(prior, PropositionArtifact)
-                        or prior.status != "complete"
+                        or prior.status not in ("complete", "partial")
                     ):
                         reasons.append("prior_extraction_pending")
                         continue
+                    if prior.unresolved and prior_ref not in excluded_extractions:
+                        excluded_extractions.append(prior_ref)
                     admitted_props = [
                         p
                         for p in prior.propositions
@@ -192,7 +220,7 @@ class DiscoveryService:
                         db,
                         pages,
                         history,
-                        self.config.search,
+                        catalog_policy,
                         identity=child(
                             "empty-expand-" + str(generation), self.config.search
                         ),
@@ -250,7 +278,9 @@ class DiscoveryService:
                 # Entity identity never deletes a fact/provenance pair. SAME
                 # requests a wider candidate envelope; no entity IDs are merged.
                 mentions = locate(self.config.adjudication.stage0, evidence)
-                for index, (left, right) in enumerate(combinations(mentions, 2)):
+                identity_cache = {}  # Only this bundle/generation; no cross-scope reuse.
+                global_pairs = combinations(mentions, 2) if self.config.identity_routing is None else ()
+                for index, (left, right) in enumerate(global_pairs):
                     ident = child(
                         f"entity-{generation}-{index}", self.config.adjudication
                     )
@@ -280,6 +310,17 @@ class DiscoveryService:
                         break
                     if result.action == "pending":
                         reasons.append("entity_" + result.reason)
+                if self.semantic_runner is not None:
+                    sd, sf, sr, ss, semantic_index, sc = await self.semantic_runner.run(
+                        db, targets=batch, candidates=candidates, evidence=evidence, history=history,
+                        identity=child("semantic-round", self.config.semantic),
+                        full_history=self.config.search.strategy == "full-history")
+                    decisions.extend(sd)
+                    round_decisions.extend(sf)
+                    identity_routes.extend(sr)
+                    semantic_selections.extend(ss)
+                    call_ids.extend(sc)
+                    break
                 if not read_more:
                     for target in batch:
                         for candidate in candidates.values():
@@ -292,6 +333,51 @@ class DiscoveryService:
                                 and candidate.sources[0] in target.sources
                             ):
                                 continue
+                            resolutions = []
+                            unresolved_identity = False
+                            if self.config.identity_routing is not None:
+                                routed, audit = route_pair(candidate, target, mentions,
+                                                          self.config.identity_routing, generation)
+                                reused = 0
+                                processed_keys = []
+                                for key, left, right, route_reason in routed:
+                                    processed_keys.append(key)
+                                    if key in identity_cache:
+                                        er = identity_cache[key]
+                                        reused += 1
+                                    else:
+                                        ei = child(f"demand-entity-{generation}-{key}", self.config.adjudication)
+                                        er = await self.adjudicator.judge(db, kind="entity",
+                                            left=left.text, right=right.text, mentions=(left, right),
+                                            bundle=bundle, identity=ei, generation=generation)
+                                        identity_cache[key] = er
+                                        call_ids.append(uuid5(ei.call_id, "adjudication-local"))
+                                        call_ids.extend(t.call_id for t in er.traces)
+                                        decisions.append(Decision(
+                                            upstream_id=uuid5(report_id, canonical_hash(left)),
+                                            downstream_id=uuid5(report_id, canonical_hash(right)), result=er))
+                                    if er.action == "read_more" or (er.verdict == "SAME" and not last.at_max_scope):
+                                        read_more = True
+                                        break
+                                    advisory_unknown = (self.config.identity_routing.unknown_policy == "advisory"
+                                                        and er.verdict == "UNKNOWN" and er.action == "pending")
+                                    if er.action != "complete" and not advisory_unknown:
+                                        unresolved_identity = True
+                                    else:
+                                        resolutions.append(IdentityResolution(mentions=(left, right), result=er))
+                                identity_routes.append(audit.model_copy(update={"reused_resolutions": reused, "processed_resolution_keys": tuple(processed_keys)}))
+                                if read_more:
+                                    break
+                                if unresolved_identity:
+                                    # Preserve a pending dependency; never turn an identity
+                                    # failure or NER filter into a negative dependency verdict.
+                                    d = Decision(upstream_id=candidate.id, downstream_id=target.id,
+                                        result=Adjudication(kind="dependency", verdict="UNKNOWN", action="pending",
+                                            reason="required_identity_unresolved", evidence_sha256=canonical_hash(bundle),
+                                            traces=(), generation=generation))
+                                    decisions.append(d)
+                                    round_decisions.append(d)
+                                    continue
                             explicit = any(
                                 p.proposition_id == target.id
                                 and p.source in candidate.sources
@@ -310,6 +396,7 @@ class DiscoveryService:
                                 identity=ident,
                                 generation=generation,
                                 explicit_provenance=explicit,
+                                **({"identity_resolutions": tuple(resolutions)} if self.config.identity_routing is not None else {}),
                             )
                             call_ids.append(uuid5(ident.call_id, "adjudication-local"))
                             call_ids.extend(t.call_id for t in result.traces)
@@ -334,8 +421,8 @@ class DiscoveryService:
                     db,
                     pages,
                     history,
-                    self.config.search,
-                    identity=child("expand-" + str(generation), self.config.search),
+                    catalog_policy,
+                    identity=child("expand-" + str(generation), catalog_policy),
                     reason="adjudication_read_more",
                 )
                 if page is None:
@@ -358,6 +445,9 @@ class DiscoveryService:
                         by_id[decision.downstream_id].node,
                     )
                     if up == down:
+                        continue
+                    if r.action == "not_selected":
+                        # Sparse cascade omission is not an independence proof.
                         continue
                     if r.action != "complete":
                         pending.append(
@@ -427,7 +517,7 @@ class DiscoveryService:
                 config_sha256=canonical_hash(self.config),
             )
             await self.artifacts.seal(db, graph)
-            if artifact.status != "complete":
+            if artifact.status not in ("complete", "partial"):
                 reasons.append("extraction_pending")
             status = "pending" if reasons else "complete"
             states.append(status)
@@ -438,6 +528,10 @@ class DiscoveryService:
                 code_version=identity.code_version,
                 config_sha256=canonical_hash(self.config),
                 configuration=encode_configuration(self.config),
+                identity_routes=tuple(identity_routes),
+                semantic_selections=tuple(semantic_selections),
+                semantic_index=semantic_index,
+                excluded_unresolved_extractions=tuple(excluded_extractions),
                 shared_extraction=shared_ref,
                 prior_extractions=prior_extractions,
                 graph=graph.reference(),

@@ -1,0 +1,165 @@
+{
+  "schema_version": 1,
+  "protocol": "session-evidence-v2",
+  "models": {
+    "extraction": {
+      "schema_version": 1,
+      "id": "offline",
+      "model": "offline",
+      "base_url": "https://invalid.example/v1",
+      "temperature": 0.0,
+      "request_parameters": null,
+      "max_tokens": 1000,
+      "prompt_template": "{input_json}",
+      "rules_version": "session-evidence-v2",
+      "retry": {
+        "schema_version": 1,
+        "max_attempts": 1,
+        "timeout_seconds": 2.0,
+        "backoff_seconds": [],
+        "retry_status_codes": [],
+        "retry_transport_errors": []
+      },
+      "price": null
+    },
+    "p1_weak": {
+      "schema_version": 1,
+      "id": "offline",
+      "model": "offline",
+      "base_url": "https://invalid.example/v1",
+      "temperature": 0.0,
+      "request_parameters": null,
+      "max_tokens": 1000,
+      "prompt_template": "{input_json}",
+      "rules_version": "session-evidence-v2",
+      "retry": {
+        "schema_version": 1,
+        "max_attempts": 1,
+        "timeout_seconds": 2.0,
+        "backoff_seconds": [],
+        "retry_status_codes": [],
+        "retry_transport_errors": []
+      },
+      "price": null
+    },
+    "p1_strong": {
+      "schema_version": 1,
+      "id": "offline",
+      "model": "offline",
+      "base_url": "https://invalid.example/v1",
+      "temperature": 0.0,
+      "request_parameters": null,
+      "max_tokens": 1000,
+      "prompt_template": "{input_json}",
+      "rules_version": "session-evidence-v2",
+      "retry": {
+        "schema_version": 1,
+        "max_attempts": 1,
+        "timeout_seconds": 2.0,
+        "backoff_seconds": [],
+        "retry_status_codes": [],
+        "retry_transport_errors": []
+      },
+      "price": null
+    },
+    "base": {
+      "schema_version": 1,
+      "id": "offline",
+      "model": "offline",
+      "base_url": "https://invalid.example/v1",
+      "temperature": 0.0,
+      "request_parameters": null,
+      "max_tokens": 1000,
+      "prompt_template": "{input_json}",
+      "rules_version": "session-evidence-v2",
+      "retry": {
+        "schema_version": 1,
+        "max_attempts": 1,
+        "timeout_seconds": 2.0,
+        "backoff_seconds": [],
+        "retry_status_codes": [],
+        "retry_transport_errors": []
+      },
+      "price": null
+    },
+    "strong": {
+      "schema_version": 1,
+      "id": "offline",
+      "model": "offline",
+      "base_url": "https://invalid.example/v1",
+      "temperature": 0.0,
+      "request_parameters": null,
+      "max_tokens": 1000,
+      "prompt_template": "{input_json}",
+      "rules_version": "session-evidence-v2",
+      "retry": {
+        "schema_version": 1,
+        "max_attempts": 1,
+        "timeout_seconds": 2.0,
+        "backoff_seconds": [],
+        "retry_status_codes": [],
+        "retry_transport_errors": []
+      },
+      "price": null
+    },
+    "verifier": {
+      "schema_version": 1,
+      "id": "offline",
+      "model": "offline",
+      "base_url": "https://invalid.example/v1",
+      "temperature": 0.0,
+      "request_parameters": null,
+      "max_tokens": 1000,
+      "prompt_template": "{input_json}",
+      "rules_version": "session-evidence-v2",
+      "retry": {
+        "schema_version": 1,
+        "max_attempts": 1,
+        "timeout_seconds": 2.0,
+        "backoff_seconds": [],
+        "retry_status_codes": [],
+        "retry_transport_errors": []
+      },
+      "price": null
+    }
+  },
+  "embedding": {
+    "schema_version": 1,
+    "model": "offline-vector",
+    "base_url": "https://invalid.example/v1",
+    "dimensions": 2,
+    "send_dimensions": true,
+    "max_batch": 8,
+    "response_archive_directory": "/private/tmp/contexthub-session-offline-responses",
+    "retry": {
+      "schema_version": 1,
+      "max_attempts": 1,
+      "timeout_seconds": 2.0,
+      "backoff_seconds": [],
+      "retry_status_codes": [],
+      "retry_transport_errors": []
+    }
+  },
+  "embedding_price": null,
+  "profile": "adaptive",
+  "planner": {
+    "schema_version": 1,
+    "lambda_p2": "0",
+    "lambda_unit": "targets/currency",
+    "currency": null,
+    "cost_mode": "token_only_zero_lambda",
+    "u_max_algorithm": "single-target-count-v1",
+    "estimates": []
+  },
+  "search": "selective",
+  "initial_candidates": 2,
+  "expansion_factor": 2,
+  "max_partial_rounds": 2,
+  "session_timeout_seconds": 10.0,
+  "explicit_rules": true,
+  "paired_rq1": false,
+  "max_raw_rounds": 2,
+  "raw_source_limit": 8,
+  "scope_recheck_new_materials": 32,
+  "evidence_policy": "memory-first-demand-raw-v2"
+}

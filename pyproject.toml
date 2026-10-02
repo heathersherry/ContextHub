@@ -20,6 +20,11 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+ner = [
+    "spacy==3.8.14",
+    "en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl",
+    "zh-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/zh_core_web_sm-3.8.0/zh_core_web_sm-3.8.0-py3-none-any.whl",
+]
 dev = [
     "httpx>=0.28",
     "pytest>=8.0",
@@ -32,3 +37,6 @@ research = [
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/contexthub"]
+
+[tool.hatch.metadata]
+allow-direct-references = true

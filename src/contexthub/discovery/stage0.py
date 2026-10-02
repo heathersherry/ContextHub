@@ -2,7 +2,8 @@
 
 import re
 from typing import Literal
-from pydantic import model_validator
+from pydantic import Field, model_validator
+from contexthub.discovery.mention_ner import SpacyMentionConfig
 from contexthub.models.knowledge import (
     Contract,
     ContractError,
@@ -68,9 +69,16 @@ class Stage0Config(Contract):
     aliases: tuple[Alias, ...]
     # Candidate mention locator only. It cannot give a verdict.
     mention_patterns: tuple[Name, ...]
+    mention_view: Literal["raw-v1", "dialogue-content-v2"] = Field(
+        default="raw-v1", exclude_if=lambda value: value == "raw-v1"
+    )
+
+    spacy_ner: SpacyMentionConfig | None = Field(default=None, exclude_if=lambda value: value is None)
 
     @model_validator(mode="after")
     def valid(self):
+        if self.spacy_ner is not None and (self.mention_view != "dialogue-content-v2" or self.mention_patterns):
+            raise ContractError("spacy_mentions_require_dialogue_without_regex")
         if len({r.id for r in self.rules}) != len(self.rules):
             raise ContractError("duplicate_rule")
         for p in self.mention_patterns:
@@ -96,6 +104,8 @@ class Stage0Result(Contract):
 
 
 def locate(config, evidence):
+    if config.mention_view == "dialogue-content-v2":
+        return _locate_dialogue(config, evidence)
     mentions = []
     for e in evidence:
         for pattern in config.mention_patterns:
@@ -119,6 +129,55 @@ def locate(config, evidence):
                 if item not in mentions:
                     mentions.append(item)
     return tuple(mentions)
+
+
+
+def _locate_dialogue(config, evidence):
+    from contexthub.discovery.mention_view import dialogue_views
+
+    if config.spacy_ner is not None:
+        from contexthub.discovery.mention_ner import check_ner
+        check_ner(config.spacy_ner)
+    mentions, seen = [], set()
+    sources = {}
+    for ref in evidence:
+        sources.setdefault(ref.source, []).append(ref)
+    for refs in sources.values():
+        # A full source is provided by read_evidence. Overlapping extraction
+        # fragments must not become separate candidate occurrences.
+        full = max(refs, key=lambda ref: ref.end - ref.start)
+        if full.start != 0 or any(ref.end > full.end for ref in refs):
+            raise ContractError("complete_dialogue_evidence_required")
+        for ref in refs:
+            if full.excerpt[ref.start:ref.end] != ref.excerpt:
+                raise ContractError("overlapping_mention_evidence_mismatch")
+        for text, mapping in dialogue_views(full.excerpt):
+            for a, b, scope_span in _candidate_spans(config, text):
+                if not 0 <= a < b <= len(mapping):
+                    raise ContractError("invalid_candidate_mention_span")
+                start, end = mapping[a][0], mapping[b - 1][1]
+                snippet = full.excerpt[start:end]
+                key = (full.source, start, end)
+                if key in seen:
+                    continue
+                seen.add(key)
+                provenance = tuple(dict.fromkeys(p for ref in refs for p in ref.provenance))
+                backing = full.model_copy(update={"provenance": provenance})
+                scope = None
+                if scope_span:
+                    sa, sb = scope_span
+                    scope = full.excerpt[mapping[sa][0]:mapping[sb - 1][1]]
+                mentions.append(Mention(text=snippet, evidence=backing, start=start, scope=scope))
+    return tuple(mentions)
+
+
+def _candidate_spans(config, text):
+    if config.spacy_ner is not None:
+        from contexthub.discovery.mention_ner import entity_spans
+        return ((a, b, None) for a, b in entity_spans(config.spacy_ner, text))
+    return ((match.start("mention"), match.end("mention"),
+             match.span("scope") if match.groupdict().get("scope") else None)
+            for pattern in config.mention_patterns for match in re.finditer(pattern, text))
 
 
 def apply_stage0(

@@ -26,7 +26,14 @@ from .chronology import EpisodeBoundary
 from .database_snapshot import DatabaseIdentity, capture, check_instance, local_dsn
 from .public_rq1_runner import PublicRQ1Configuration, PublicRQ1Result, PublicRQ1Runner
 from .rq2_coordinator import RQ2Coordinator
-from .run_gates import FileIdentity, StatisticsConfiguration, stage_preflight
+from .answer_prompt import OfficialAnswerConfig
+from .episode_deadline import episode_deadline, episode_failure
+from .run_gates import (
+    FileIdentity,
+    StatisticsConfiguration,
+    stage_preflight,
+    validate_model_seed,
+)
 from .firewall import validate_maintenance_payload
 
 
@@ -51,7 +58,7 @@ class MainReference(Contract):
 class StagePlan(Contract):
     run_id: UUID
     rq1: PublicRQ1Configuration
-    answer: ModelConfig
+    answer: OfficialAnswerConfig | ModelConfig
     statistics: StatisticsConfiguration
     database: DatabaseConfiguration
     maintenance_inputs: FileIdentity
@@ -63,6 +70,9 @@ class StagePlan(Contract):
     agent_id: str
     main_runs: dict[str, MainReference]
     credential_environment: dict[str, str]
+    episode_timeout_seconds: float | None = Field(
+        default=None, gt=0, allow_inf_nan=False
+    )
     synthetic_responses: FileIdentity | None
 
 
@@ -89,6 +99,19 @@ def preflight_plan(plan, stage):
             or plan.statistics != manifest.statistics
         ):
             raise ContractError("stage_plan_not_frozen")
+        from .system_factory import preflight_system
+
+        for system in (plan.rq1.selective, plan.rq1.full_history):
+            preflight_system(system, transport=None, stage=stage)
+        if stage == "rq2":
+            validate_model_seed(manifest, plan.answer)
+        timeout_values = json.loads(Path(manifest.timeout_identity.path).read_text())
+        if (
+            plan.episode_timeout_seconds is None
+            or timeout_values.get("episode_timeout_seconds")
+            != plan.episode_timeout_seconds
+        ):
+            raise ContractError("episode_timeout_not_frozen")
         frozen = {r.path: r.sha256 for r in manifest.frozen_files}
         from .prepare import artifact_layout
 
@@ -176,7 +199,8 @@ async def execute_stage(plan, stage, output):
     }
     secrets = KnowledgeSecrets(**secret_values)
     answer_key = os.environ.get(plan.credential_environment.get("answer", ""), "")
-    if not all(secret_values.values()) or not answer_key:
+    embedding_required = any(s.knowledge.discovery.semantic is not None for s in (plan.rq1.selective, plan.rq1.full_history))
+    if not all(v for k, v in secret_values.items() if k != "embedding" or embedding_required) or not answer_key:
         raise ContractError("explicit_credential_environment_missing")
     transport = fixture_transport(plan)
     kwargs = plan.database.kwargs()
@@ -191,6 +215,7 @@ async def execute_stage(plan, stage, output):
         ordinary, min_size=1, max_size=5, init=init_pg_connection
     )
     summary = []
+    deadline_aborted = False
     try:
         async with pool.acquire() as connection:
             await check_instance(connection, identity, ordinary=True)
@@ -202,64 +227,72 @@ async def execute_stage(plan, stage, output):
             for replicate in range(plan.statistics.repeats):
                 destination = root.directory / f"{episode}-{replicate}"
                 case = ArtifactStore(destination)
+                if deadline_aborted:
+                    failure = episode_failure(
+                        episode, replicate, "not_started_after_episode_timeout"
+                    )
+                    case.put("failure.json", failure)
+                    summary.append(failure)
+                    continue
                 try:
-                    if stage == "rq1":
+                    async with episode_deadline(plan.episode_timeout_seconds):
+                        if stage == "rq1":
 
-                        async def seal(handoff, configuration_sha256):
-                            return await capture(
-                                **kwargs,
-                                directory=case.directory / "main",
-                                run_id=str(plan.run_id),
-                                handoff=handoff,
-                                configuration_sha256=configuration_sha256,
+                            async def seal(handoff, configuration_sha256):
+                                return await capture(
+                                    **kwargs,
+                                    directory=case.directory / "main",
+                                    run_id=str(plan.run_id),
+                                    handoff=handoff,
+                                    configuration_sha256=configuration_sha256,
+                                )
+
+                            runner = PublicRQ1Runner(
+                                plan.rq1,
+                                repository=repo,
+                                context_service=context,
+                                secrets=secrets,
+                                transport=transport,
                             )
-
-                        runner = PublicRQ1Runner(
-                            plan.rq1,
-                            repository=repo,
-                            context_service=context,
-                            secrets=secrets,
-                            transport=transport,
-                        )
-                        result = await runner.run(
-                            inputs[episode],
-                            account_id=plan.accounts[episode][replicate],
-                            agent_id=plan.agent_id,
-                            run_id=plan.run_id,
-                            replicate_id=replicate,
-                            cutoff_ordinal=boundaries[episode].before.ordinal,
-                            seal_selective=seal if replicate == 0 else None,
-                        )
-                        case.put("result.json", result)
-                    else:
-                        reference = plan.main_runs[episode]
-                        main = PublicRQ1Result.model_validate_json(
-                            Path(reference.result.path).read_text()
-                        )
-                        cfg = plan.rq1.selective
-                        coordinator = RQ2Coordinator(
-                            knowledge=cfg.knowledge,
-                            answer_config=plan.answer,
-                            secrets=secrets,
-                            answer_key=answer_key,
-                            context_service=context,
-                            transport=transport,
-                            mode=cfg.mode,
-                            manifest=cfg.manifest,
-                            authorization=cfg.authorization,
-                        )
-                        result = await coordinator.run(
-                            inputs[episode],
-                            boundaries[episode],
-                            main=main,
-                            expected_main_run_id=reference.run_id,
-                            snapshot_directory=reference.snapshot_directory,
-                            database=kwargs,
-                            question_directory=plan.question_directory,
-                            output=case.directory / "rq2",
-                            run_id=plan.run_id,
-                            replicate_id=replicate,
-                        )
+                            result = await runner.run(
+                                inputs[episode],
+                                account_id=plan.accounts[episode][replicate],
+                                agent_id=plan.agent_id,
+                                run_id=plan.run_id,
+                                replicate_id=replicate,
+                                cutoff_ordinal=boundaries[episode].before.ordinal,
+                                seal_selective=seal if replicate == 0 else None,
+                            )
+                            case.put("result.json", result)
+                        else:
+                            reference = plan.main_runs[episode]
+                            main = PublicRQ1Result.model_validate_json(
+                                Path(reference.result.path).read_text()
+                            )
+                            cfg = plan.rq1.selective
+                            coordinator = RQ2Coordinator(
+                                knowledge=cfg.knowledge,
+                                answer_config=plan.answer,
+                                secrets=secrets,
+                                answer_key=answer_key,
+                                context_service=context,
+                                transport=transport,
+                                mode=cfg.mode,
+                                manifest=cfg.manifest,
+                                authorization=cfg.authorization,
+                            )
+                            result = await coordinator.run(
+                                inputs[episode],
+                                boundaries[episode],
+                                main=main,
+                                expected_main_run_id=reference.run_id,
+                                snapshot_directory=reference.snapshot_directory,
+                                database=kwargs,
+                                question_directory=plan.question_directory,
+                                output=case.directory / "rq2",
+                                run_id=plan.run_id,
+                                replicate_id=replicate,
+                            )
                     summary.append(
                         dict(
                             episode_id=episode,
@@ -270,12 +303,8 @@ async def execute_stage(plan, stage, output):
                 except Exception as exc:
                     # All requested episodes/replicates retain a result even if
                     # no graph, answer or maintenance output was produced.
-                    failure = dict(
-                        episode_id=episode,
-                        replicate_id=replicate,
-                        status="error",
-                        reason=safe_reason(exc),
-                    )
+                    deadline_aborted = isinstance(exc, TimeoutError)
+                    failure = episode_failure(episode, replicate, safe_reason(exc))
                     case.put("failure.json", failure)
                     if stage == "rq1":
                         case.put(

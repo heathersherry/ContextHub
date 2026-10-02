@@ -1008,7 +1008,7 @@ class KnowledgeService:
         if done is None or done.result.status != "complete":
             raise ContractError("prepared_operation_incomplete")
         extraction = await self.artifacts.get(db, prepared.extraction)
-        if extraction.status != "complete":
+        if extraction.status not in ("complete", "partial"):
             raise ContractError("prepared_extraction_incomplete")
         if tuple(extraction.sources) != (prepared.history.entries[-1].source,):
             raise ContractError("prepared_source_mismatch")
@@ -1136,7 +1136,7 @@ class KnowledgeService:
                 extracted, history, prior = await self._extract_input(
                     operation, body, ctx
                 )
-                if extracted.status == "complete":
+                if extracted.status in ("complete", "partial"):
                     prepared = PreparedInput(
                         account_id=ctx.account_id,
                         id=uuid5(operation.id, "prepared"),
@@ -1156,7 +1156,7 @@ class KnowledgeService:
                     result = result.model_copy(
                         update={
                             "status": "complete",
-                            "reason": "prepared",
+                            "reason": "prepared_with_unresolved_exclusions" if extracted.unresolved else "prepared",
                             "cutoff_at": history.cutoff_at,
                         }
                     )
@@ -1356,6 +1356,8 @@ class KnowledgeService:
                     config_sha256=canonical_hash(self.config.discovery),
                     configuration=encode_configuration(self.config.discovery),
                     strategy=self.config.discovery.search.strategy,
+                    excluded_unresolved_extractions=tuple(dict.fromkeys(
+                        ref for report in reports for ref in report.excluded_unresolved_extractions)),
                     reports=body.reports,
                     prepared=body.prepared,
                     sources=last.source_ids,

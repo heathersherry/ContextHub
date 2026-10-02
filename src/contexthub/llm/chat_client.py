@@ -13,6 +13,8 @@ from contexthub.models.knowledge import ContractError, canonical_hash, text_hash
 from abc import ABC, abstractmethod
 
 import httpx
+from contexthub.llm.request_parameters import RequestParameters
+from contexthub.llm.response_format import RESPONSE_FORMAT_VERSION, unwrap_think_json
 
 logger = logging.getLogger(__name__)
 
@@ -35,7 +37,13 @@ class OpenAIChatClient(BaseChatClient):
         temperature: float | None = None,
         *,
         transport: httpx.AsyncBaseTransport | None = None,
+        request_parameters: RequestParameters | None = None,
     ):
+        self._request_parameters = request_parameters
+        if request_parameters is not None:
+            request_parameters.check_temperature(temperature)
+            if not isinstance(transport, httpx.MockTransport):
+                request_parameters.require_resolved()
         self._api_key = api_key
         self._recorded_model_configured = bool(model)
         self._model = model if model is not None else "gpt-4o-mini"
@@ -53,6 +61,8 @@ class OpenAIChatClient(BaseChatClient):
         self.last_attempt_count = 0
         self.last_retry_unknown_usage = False
         self.last_attempts: list[dict[str, object]] = []
+        self.last_raw_response = None
+        self.last_response_conversion = None
         self._client = httpx.AsyncClient(
             base_url=base_url.rstrip("/"),
             headers={"Authorization": f"Bearer {api_key}"},
@@ -62,6 +72,8 @@ class OpenAIChatClient(BaseChatClient):
 
     async def complete(self, prompt: str, max_tokens: int = 2000, *,
                        call: RecordedCall | None = None) -> str:
+        self.last_raw_response = None
+        self.last_response_conversion = None
         if call is not None:
             return await self._complete_recorded(prompt, max_tokens, call)
         self.last_usage = None
@@ -73,6 +85,9 @@ class OpenAIChatClient(BaseChatClient):
             "messages": [{"role": "user", "content": prompt}],
             "max_tokens": max_tokens,
         }
+        if self._request_parameters is not None:
+            payload.pop("max_tokens")
+            payload.update(self._request_parameters.wire(max_tokens))
         if self._temperature is not None:
             payload["temperature"] = self._temperature
         # Proxy gateways (e.g. yunwu) reply 429 with a short cooldown when a key
@@ -192,7 +207,13 @@ class OpenAIChatClient(BaseChatClient):
         content = msg.get("content")
         if content is None:
             return ""
-        return content if isinstance(content, str) else str(content)
+        content = content if isinstance(content, str) else str(content)
+        self.last_raw_response = content
+        if self._request_parameters is not None and self._request_parameters.response_format == 'json_object':
+            content, self.last_response_conversion = unwrap_think_json(content)
+            if self.last_response_conversion:
+                self.last_attempts[-1]['response_conversion'] = self.last_response_conversion.model_dump(mode='json')
+        return content
 
     async def _complete_recorded(self, prompt: str, max_tokens: int, call: RecordedCall) -> str:
         """Exclusive retry owner; never enters the legacy retry loop.
@@ -204,10 +225,19 @@ class OpenAIChatClient(BaseChatClient):
             raise ContractError("recorded_call_model_required")
         payload = {"model": self._model, "messages": [{"role": "user", "content": prompt}],
                    "max_tokens": max_tokens}
+        if self._request_parameters is not None:
+            payload.pop("max_tokens")
+            payload.update(self._request_parameters.wire(max_tokens))
         if self._temperature is not None:
             payload["temperature"] = self._temperature
         request_config = {"model": self._model, "max_tokens": max_tokens,
                           "temperature": self._temperature, "base_url": self._base_url}
+        if self._request_parameters is not None:
+            request_config = {"model": self._model, "base_url": self._base_url,
+                              "temperature": self._temperature,
+                              "wire": self._request_parameters.wire(max_tokens),
+                              "contract": self._request_parameters.model_dump(mode="json")}
+        request_config['response_adapter'] = RESPONSE_FORMAT_VERSION
         for number in range(1, call.policy.max_attempts + 1):
             started = datetime.now(timezone.utc)
             usage = Usage(completeness='missing', missing_reason='request_not_completed')
@@ -226,15 +256,26 @@ class OpenAIChatClient(BaseChatClient):
             data = None
             response = None
             content = None
+            raw_content = None
+            conversion = None
             error = None
+            archive = {}
             try:
                 response = await self._client.post('/chat/completions', json=payload,
                                                    timeout=call.policy.timeout_seconds)
                 try:
                     data = response.json()
-                except ValueError as exc:
-                    if response.is_success:
-                        raise ResponseParseError('response_json_invalid') from exc
+                except ValueError:
+                    data = None
+                if self._request_parameters is not None and self._request_parameters.response_archive_directory:
+                    from contexthub.llm.response_archive import archive_response
+                    archive = archive_response(
+                        self._request_parameters.response_archive_directory,
+                        identity=call.identity, attempt_no=number, request=payload,
+                        response=response, api_key=self._api_key,
+                    )
+                if data is None and response.is_success:
+                    raise ResponseParseError('response_json_invalid')
                 response.raise_for_status()
                 if not isinstance(data, dict):
                     raise ResponseSchemaError('response_object_required')
@@ -242,8 +283,14 @@ class OpenAIChatClient(BaseChatClient):
                     content = data['choices'][0]['message']['content']
                 except (KeyError, IndexError, TypeError) as exc:
                     raise ResponseSchemaError('response_content_missing') from exc
+                raw_content = content
+                self.last_raw_response = raw_content
                 if not isinstance(content, str) or not content:
                     raise ResponseSchemaError('response_content_invalid')
+                if (call.validate_response is not None or (self._request_parameters is not None
+                        and self._request_parameters.response_format == 'json_object')):
+                    content, conversion = unwrap_think_json(content)
+                    self.last_response_conversion = conversion
                 if call.validate_response is not None:
                     call.validate_response(content)
             except (Exception, asyncio.CancelledError) as exc:
@@ -262,11 +309,12 @@ class OpenAIChatClient(BaseChatClient):
             stop = ('success' if error is None else 'cancelled' if cancelled else
                     'retry_scheduled' if again else 'retry_exhausted' if retryable else 'non_retryable')
             record = AttemptRecord(
-                **common, phase='finished', outcome='success' if error is None else 'cancelled' if cancelled else 'error',
+                **common, **archive, phase='finished', outcome='success' if error is None else 'cancelled' if cancelled else 'error',
                 actual_model=actual_model,
                 actual_model_missing_reason=None if actual_model else 'provider_not_returned',
                 request_id=request_id, request_id_missing_reason=None if request_id else 'provider_not_returned',
-                output_sha256=text_hash(content) if isinstance(content, str) else None,
+                output_sha256=text_hash(raw_content) if isinstance(raw_content, str) else None,
+                response_conversion=conversion,
                 finished_at=datetime.now(timezone.utc), wall_seconds=time.monotonic() - tick,
                 status_code=response.status_code if response is not None else None,
                 error=AttemptError(code=('http_' + str(response.status_code)) if isinstance(error, httpx.HTTPStatusError)

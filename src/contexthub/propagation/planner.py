@@ -20,12 +20,18 @@ class Estimate(Contract):
 class PlannerConfig(Contract):
     lambda_p2: Decimal = Field(ge=0, allow_inf_nan=False)
     lambda_unit: Literal["targets/currency"]
-    currency: Name
+    currency: Name | None
+    cost_mode: Literal["priced", "token_only_zero_lambda"] = Field(default="priced", exclude_if=lambda v: v == "priced")
     u_max_algorithm: Literal["single-target-count-v1"]
     estimates: tuple[Estimate, ...]
 
     @model_validator(mode="after")
     def estimates_unique(self):
+        if self.cost_mode == "token_only_zero_lambda":
+            if self.lambda_p2 != 0 or self.currency is not None or self.estimates:
+                raise ContractError("token_only_requires_zero_lambda_no_price")
+        elif self.currency is None:
+            raise ContractError("priced_currency_required")
         if len({e.action for e in self.estimates}) != len(self.estimates) or any(
             e.currency != self.currency for e in self.estimates
         ):
@@ -70,6 +76,9 @@ def choose_next(
         action = path[path.index(previous) + 1]
     if profile != "adaptive" or action == "M1":
         return Decision(action=action, reason="fixed_action")
+    if config.cost_mode == "token_only_zero_lambda":
+        return Decision(action=action, reason="authorized_token_only_zero_lambda",
+                        lambda_p2=config.lambda_p2, u_max=1, margin=Decimal(1))
     estimate = next((e for e in config.estimates if e.action == action), None)
     if estimate is None or estimate.amount is None:
         return Decision(

@@ -24,6 +24,7 @@ class KnowledgeSecrets:
     strong: str
     verifier: str
     change_location: str
+    embedding: str | None = None
 
 
 async def create_knowledge_service(
@@ -36,9 +37,11 @@ async def create_knowledge_service(
     ):
         raise ContractError("rule_registry_mismatch")
     if not isinstance(secrets, KnowledgeSecrets) or any(
-        not getattr(secrets, role) for role in KnowledgeSecrets.__annotations__
+        not getattr(secrets, role) for role in KnowledgeSecrets.__annotations__ if role != "embedding"
     ):
         raise ContractError("knowledge_credentials_missing")
+    if config.discovery.semantic is not None and not secrets.embedding:
+        raise ContractError("embedding_credentials_missing")
     from contexthub.services.change_location import ChangeLocator
     from contexthub.services.knowledge_service import KnowledgeService
 
@@ -71,6 +74,7 @@ async def create_knowledge_service(
                     model=cfg.model,
                     base_url=cfg.base_url,
                     temperature=cfg.temperature,
+                    request_parameters=cfg.request_parameters,
                     timeout=cfg.retry.timeout_seconds,
                     transport=transport,
                 )
@@ -81,9 +85,16 @@ async def create_knowledge_service(
             recorder=ledger,
             clients=adjudication_clients,
         )
+        semantic_runner = None
+        if config.discovery.semantic is not None:
+            from contexthub.llm.recorded_embedding import RecordedEmbeddingClient
+            from contexthub.discovery.semantic_runner import SemanticRunner
+            embedding = own(RecordedEmbeddingClient(config.discovery.semantic.embedding, api_key=secrets.embedding, transport=transport))
+            semantic_runner = SemanticRunner(config.discovery.semantic, embedding=embedding, adjudicator=adjudicator, recorder=ledger, routing=config.discovery.identity_routing)
         discovery = DiscoveryService(
             config.discovery,
             search=SearchService(recorder=ledger),
+            semantic_runner=semantic_runner,
             adjudicator=adjudicator,
             recorder=ledger,
         )

@@ -1,0 +1,44 @@
+{
+  "protocol": "session-incremental-v1",
+  "status": "implemented-offline-validated-awaiting-review",
+  "real_execution_authorized": false,
+  "production_backend_ready": true,
+  "dataset": "meme_filler32k",
+  "ingestion_unit": "whole-session",
+  "boundaries": "per-episode-position_after_session-inclusive",
+  "questions": "all-in-original-order",
+  "main_analysis": [
+    "Cas",
+    "Abs"
+  ],
+  "state_release": "old-new-dependency-union-then-version-bound-verification",
+  "rq1_pairing": "paired_rq1: shared-extraction-and-frozen-inventory-per-session; predeclared-operational-arm",
+  "rq2_pairing": "same-empty-start-continuous-trajectories",
+  "rq2_decision": "user-confirmed-2026-09-28",
+  "rq2_state_divergence": "allowed-and-recorded",
+  "rq2_graph_sharing": "only-when-source-versions-and-conditions-match",
+  "legacy_snapshot_reuse": false,
+  "explicit_change_rules": {
+    "grammar": "literal-change-rule-v1",
+    "scope": "single-owner-admitted-memory-exact-attribute-bindings",
+    "entry_point": "contexthub.services.explicit_change_rules.maintain_explicit_changes",
+    "model_free_when": "complete-literal-rule-current-versions-no-other-causes",
+    "unsupported": "ordinary-maintenance-or-unresolved",
+    "database_pipeline_connected": true,
+    "database_execution_verified": false
+  },
+  "estimated_cost_targets": {
+    "unchanged_unaffected_target_dependency_calls_per_session": 0,
+    "question_triggered_maintenance_calls": 0,
+    "unversioned_cache_hits": 0,
+    "missing_attempt_records": 0,
+    "token_reduction_claim": null,
+    "latency_claim": null
+  },
+  "real_database_verified": false,
+  "real_model_verified": false,
+  "service_entry_point": "integrations.memebench.patha.session_factory.create_session_components",
+  "episode_entry_point": "integrations.memebench.patha.session_factory.run_session_arm",
+  "rq2_entry_point": "integrations.memebench.patha.session_factory.run_session_comparison",
+  "judge_entry_point": "integrations.memebench.patha.session_evaluation.judge_session_result"
+}
