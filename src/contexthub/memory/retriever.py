@@ -14,20 +14,30 @@ class SearchHit:
     channels: tuple[str, ...]
 
 
-def allowed_cte(purpose):
-    if purpose == "answer":
-        predicate = "status='fresh' AND type='fact'"
-    elif purpose in ("p1", "p2"):
-        predicate = "status IN ('fresh','stale','unresolved') AND type IN ('fact','rule','change')"
-    else:
-        raise ValueError(
-            "purpose must be answer, p1 or p2; historical validity is not implemented"
-        )
-    return f"""WITH latest AS MATERIALIZED (
-        SELECT DISTINCT ON(memory_id) * FROM memories
-        WHERE {SCOPE} AND created_in_session <= $4
-        ORDER BY memory_id,version DESC
-    ), allowed AS MATERIALIZED (SELECT * FROM latest WHERE {predicate})"""
+HISTORY = __import__("re").compile(
+    r"\b(over time|from earliest to latest|previously|formerly|used to|originally|in the past|history of|historical|before the|prior to)\b",
+    __import__("re").I,
+)
+
+
+def answer_purpose(question):
+    return "history" if HISTORY.search(question) else "answer"
+
+
+def allowed_cte(purpose, *, history_candidates=False):
+    base = f"{SCOPE} AND created_in_session <= $4"
+    current = f"SELECT DISTINCT ON(memory_id) * FROM memories WHERE {base} AND temporal_scope='current' ORDER BY memory_id,version DESC"
+    usable = "status='fresh' AND type IN ('fact','rule') AND accepted AND NOT invalidated AND merged_into IS NULL"
+    if purpose in ("answer", "p2"):
+        return f"WITH latest AS MATERIALIZED ({current}), allowed AS MATERIALIZED (SELECT * FROM latest WHERE {usable})"
+    if purpose == "history":
+        return f"WITH allowed AS MATERIALIZED (SELECT * FROM memories WHERE {base} AND accepted AND NOT invalidated AND status<>'deleted' AND merged_into IS NULL AND type IN ('fact','rule'))"
+    if purpose == "p1":
+        return f"""WITH latest AS MATERIALIZED ({current}), candidates AS MATERIALIZED (
+            SELECT * FROM latest UNION
+            SELECT * FROM memories WHERE {base} AND (temporal_scope IS NULL OR temporal_scope='historical' OR (accepted AND {str(history_candidates).lower()}))
+        ), allowed AS MATERIALIZED (SELECT * FROM candidates WHERE status<>'deleted' AND merged_into IS NULL AND type IN ('fact','rule','change'))"""
+    raise ValueError("unknown retrieval purpose")
 
 
 def fuse(text_rows, vector_rows, entity_rows, purpose, config):
@@ -96,28 +106,52 @@ class Retriever:
                 through_session,
             )
 
-    async def search(self, query, context, *, through_session, purpose, entities=()):
-        cte = allowed_cte(purpose)
-        if entities and purpose != "p1":
-            raise ValueError(
-                "entity supplementation is enabled only for p1 in this baseline"
-            )
+    async def search(
+        self,
+        query,
+        context,
+        *,
+        through_session,
+        purpose,
+        entities=(),
+        exclude_session=False,
+    ):
+        cte = allowed_cte(purpose, history_candidates=purpose == "p1")
         if through_session < 1 or through_session > context.session_seq:
             raise ValueError("invalid retrieval session cutoff")
         vector = await self.indexer.query_vector(query, context)
         args = (*context.trace.args, through_session)
         config = self.config
+        if purpose == "p1" and exclude_session:
+            cte += ", old_allowed AS MATERIALIZED (SELECT * FROM allowed WHERE created_in_session < $4)"
+            table = "old_allowed"
+        else:
+            table = "allowed"
+        # PostgreSQL lexemes are quoted before OR composition, including punctuation.
+        tsquery = "to_tsquery($5::regconfig,coalesce((SELECT string_agg(quote_literal(w),' | ') FROM unnest(tsvector_to_array(to_tsvector($5::regconfig,$6))) AS w),''))"
         async with (
             self.store.pool.acquire() as conn,
             conn.transaction(isolation="repeatable_read", readonly=True),
         ):
             # All three channels read the same snapshot. Scope/version/status come before LIMIT.
+            if purpose in ("answer", "history"):
+                import re
+
+                names = await conn.fetch(
+                    cte + " SELECT DISTINCT unnest(entities) AS name FROM allowed",
+                    *args,
+                )
+                normalized = normalize_entities([query])[0] if query.strip() else ""
+                entities = [
+                    r["name"]
+                    for r in names
+                    if re.search(
+                        r"(?<!\w)" + re.escape(r["name"]) + r"(?!\w)", normalized
+                    )
+                ]
             text_rows = await conn.fetch(
                 cte
-                + """ SELECT * FROM allowed
-                WHERE search_vector @@ plainto_tsquery($5::regconfig,$6)
-                ORDER BY ts_rank_cd(search_vector,plainto_tsquery($5::regconfig,$6)) DESC,memory_id
-                LIMIT $7""",
+                + f" SELECT *,count(*) OVER() AS candidate_count,ts_rank_cd(search_vector,{tsquery}) AS text_score FROM {table} WHERE search_vector @@ {tsquery} ORDER BY ts_rank_cd(search_vector,{tsquery}) DESC,memory_id,version LIMIT $7",
                 *args,
                 self.store.config.text_config,
                 query,
@@ -125,20 +159,71 @@ class Retriever:
             )
             vector_rows = await conn.fetch(
                 cte
-                + """ SELECT * FROM allowed WHERE memory_embedding IS NOT NULL
-                ORDER BY memory_embedding <=> $5::vector,memory_id LIMIT $6""",
+                + f""" SELECT *,count(*) OVER() AS candidate_count,memory_embedding <=> $5::vector AS vector_distance FROM {table} WHERE memory_embedding IS NOT NULL
+                ORDER BY memory_embedding <=> $5::vector,memory_id,version LIMIT $6""",
                 *args,
                 vector,
                 config.vector_k,
             )
+            hybrid = fuse(text_rows, vector_rows, [], purpose, config)
             entity_rows = []
             if entities and config.entity_k:
+                selected = [
+                    f"{h.memory['memory_id']}:{h.memory['version']}" for h in hybrid
+                ]
                 entity_rows = await conn.fetch(
                     cte
-                    + """ SELECT * FROM allowed WHERE entities && $5::text[]
-                    ORDER BY memory_id LIMIT $6""",
+                    + f""" SELECT *,count(*) OVER() AS candidate_count,memory_embedding <=> $7::vector AS vector_distance FROM {table} WHERE entities && $5::text[]
+                    AND NOT (memory_id::text || ':' || version::text = ANY($6::text[]))
+                    AND memory_embedding IS NOT NULL
+                    ORDER BY memory_embedding <=> $7::vector,memory_id,version LIMIT $8""",
                     *args,
                     normalize_entities(entities),
+                    selected,
+                    vector,
                     config.entity_k,
                 )
-        return fuse(text_rows, vector_rows, entity_rows, purpose, config)
+        result = fuse(text_rows, vector_rows, entity_rows, purpose, config)
+        from .contracts import material
+
+        await self.store.record(
+            context,
+            "retrieval",
+            {
+                "purpose": purpose,
+                "query": query,
+                "entities": list(entities),
+                "through_session": through_session,
+                "filter": cte,
+                "config": config.model_dump(),
+                "candidate_counts": {
+                    name: rows[0]["candidate_count"] if rows else 0
+                    for name, rows in (
+                        ("text", text_rows),
+                        ("vector", vector_rows),
+                        ("entity", entity_rows),
+                    )
+                },
+                "text": [
+                    {"rank": i, "score": r["text_score"], "memory": material(r)}
+                    for i, r in enumerate(text_rows, 1)
+                ],
+                "vector": [
+                    {"rank": i, "distance": r["vector_distance"], "memory": material(r)}
+                    for i, r in enumerate(vector_rows, 1)
+                ],
+                "entity": [
+                    {"rank": i, "distance": r["vector_distance"], "memory": material(r)}
+                    for i, r in enumerate(entity_rows, 1)
+                ],
+                "selected": [
+                    {
+                        "memory": material(h.memory),
+                        "rrf": h.score,
+                        "channels": h.channels,
+                    }
+                    for h in result
+                ],
+            },
+        )
+        return result

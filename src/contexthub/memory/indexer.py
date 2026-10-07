@@ -31,10 +31,19 @@ class Indexer:
                 raise ValueError("memory version missing")
             if row["search_vector"] is not None and row["memory_embedding"] is not None:
                 continue
+            await self.store.record(
+                context,
+                "index.input",
+                {
+                    "ref": f"{memory_id}:{version}",
+                    "text": row["text"],
+                    "config": config.model_dump(),
+                },
+            )
             (vector,) = await self._embed(
                 [config.document_prefix + row["text"]], context, "indexing"
             )
-            async with self.store.pool.acquire() as conn:
+            async with self.store.pool.acquire() as conn, conn.transaction():
                 await conn.execute(
                     f"""UPDATE memories SET search_vector=to_tsvector($6::regconfig,text),
                     memory_embedding=$7::vector WHERE {SCOPE} AND memory_id=$4 AND version=$5""",
@@ -43,6 +52,16 @@ class Indexer:
                     version,
                     config.text_config,
                     vector_literal(vector, config.dimensions),
+                )
+
+                await self.store.record(
+                    context,
+                    "index.saved",
+                    {
+                        "ref": f"{memory_id}:{version}",
+                        "column": "memories.memory_embedding",
+                    },
+                    conn=conn,
                 )
 
     async def query_vector(self, query, context):

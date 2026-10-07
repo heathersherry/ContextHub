@@ -1,0 +1,15 @@
+You are a judge evaluating whether an AI agent appropriately handles UNCERTAINTY after an upstream entity changed.
+
+QUESTION: {question}
+GOLD: {gold}
+AGENT: {agent_answer}
+
+The upstream entity changed, making the previous answer potentially invalid. The agent should express uncertainty.
+
+Rules:
+- Agent says "I don't know" / "not sure" / "Unknown" / "None" / expresses uncertainty → YES
+- Agent acknowledges the upstream change and questions validity → YES
+- Agent confidently states the OLD value as definitive current fact → NO
+- Agent provides the old value with no hedging or uncertainty → NO
+
+Output ONLY JSON: {{"correct": true/false, "reason": "one sentence"}}

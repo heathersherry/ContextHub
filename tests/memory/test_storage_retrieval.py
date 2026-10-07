@@ -39,6 +39,13 @@ async def memory(
     )
     env.vectors["document: " + text] = list(vector)
     await env.indexer.index([ref], replace(env.context, session_seq=seq))
+    async with env.store.pool.acquire() as conn:
+        await conn.execute(
+            "UPDATE memories SET temporal_scope='current',accepted=$6 WHERE run_id=$1 AND episode_id=$2 AND strategy_id=$3 AND memory_id=$4 AND version=$5",
+            *env.trace.args,
+            *ref,
+            status == "fresh",
+        )
     if status != "unresolved":
         await env.store.set_status(env.trace, *ref, status)
     return ref
@@ -59,6 +66,12 @@ async def test_latest_before_status_no_old_fresh_fallback_and_state_only_indexin
         origin="extracted",
         sources={"2": [1]},
     )
+    async with env.store.pool.acquire() as conn:
+        await conn.execute(
+            "UPDATE memories SET temporal_scope='current',accepted=true WHERE run_id=$1 AND episode_id=$2 AND strategy_id=$3 AND memory_id=$4",
+            *env.trace.args,
+            new[0],
+        )
     await env.indexer.index([new], replace(env.context, session_seq=2))
     assert await env.retriever.current(env.trace, 2, purpose="answer") == []
     assert len(await env.retriever.current(env.trace, 1, purpose="answer")) == 1
@@ -92,9 +105,7 @@ async def test_latest_before_status_no_old_fresh_fallback_and_state_only_indexin
     assert len(hits) == 1 and hits[0].memory["text"] == "Atlas owner is Li"
     await env.store.set_status(env.trace, *new, "stale", "needs review")
     assert await env.retriever.current(env.trace, 2, purpose="answer") == []
-    assert (await env.retriever.current(env.trace, 2, purpose="p2"))[0][
-        "status"
-    ] == "stale"
+    assert await env.retriever.current(env.trace, 2, purpose="p2") == []
     await env.store.forget(env.trace, old[0], "user requested forgetting")
     assert len(await env.store.versions(env.trace, old[0])) == 2
     assert all(
@@ -141,7 +152,7 @@ async def test_filter_before_top_k_for_all_channels_and_trace_isolation(env):
         )
     forgotten = await memory(env, "owner owner deleted", entities=["Atlas"])
     await env.store.forget(env.trace, forgotten[0], "forget")
-    await memory(env, "owner rule", type="rule")
+    await memory(env, "owner rule", type="rule", vector=(-1, 0, 0))
     await memory(env, "owner changed", type="change")
     await memory(env, "owner odd label", type="invalid-type")
     for field, value in [
@@ -209,14 +220,10 @@ async def test_exact_vector_text_and_entity_union_are_distinct(env):
         )
     assert not any("hnsw" in row[0] or "ivfflat" in row[0] for row in indexes)
     assert sum("USING gin" in row[0] for row in indexes) == 2
-    with pytest.raises(ValueError, match="only for p1"):
-        await env.retriever.search(
-            "reports",
-            env.context,
-            through_session=1,
-            purpose="answer",
-            entities=["Atlas"],
-        )
+    answer_hits = await env.retriever.search(
+        "reports", env.context, through_session=1, purpose="answer", entities=["Atlas"]
+    )
+    assert entity_ref[0] not in {h.memory["memory_id"] for h in answer_hits}
 
 
 @pytest.mark.asyncio
@@ -243,7 +250,7 @@ async def test_dependency_versions_sources_and_change_bindings(env):
         sources={"1": [2], "2": [1]},
     )
     await env.store.put_dependency(
-        env.trace, owner2, report, "pending", "needs recipient repair"
+        env.trace, owner2, report, "confirmed", "needs recipient repair"
     )
     edges = await env.store.downstream(env.trace, owner[0])
     assert len(edges) == 2 and {r["upstream_version"] for r in edges} == {1, 2}

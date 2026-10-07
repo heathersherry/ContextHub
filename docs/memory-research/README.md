@@ -1,45 +1,61 @@
-# Memory 研究基础实现
+# Memory 研究实现
 
-本目录是代码进度和验证入口。[交接记录](PROGRESS.md)保存当前状态，[待决问题](QUESTIONS.md)列出尚未实现的 P1/P2 行为。架构唯一主文件仍是[原方案](/Users/sherrylin/Documents/PythonProjects/ContextHub-research-plan/research/proposal/README-memory-architecture-2026-09-29.md)，不在这里复制一份架构。
+2026-10-07：按主方案首版 `local_base` 实现五模块维护、当前／历史检索及独立 MEME 入口。研究分支为 `codex/memory-research`；设计依据仍是研究仓的 `research/proposal/README-memory-architecture-2026-09-29.md`。
 
-## 本轮接口与边界
+## 模块与执行边界
 
-代码在 `src/contexthub/memory/`：
+- `src/contexthub/memory/pipeline.py`：完整 session 抽取、索引、逐焦点 P1、P2 直接维护和已有结论修复；无新材料不重复模型判断，只有检索及已知关系涉及的未决事项参与重查。仅实现 local_base。
+- `dependency_discovery.py`：本段全部新记忆、最多 30 条搜索结果、相关已知依赖；逐方向完整判断、事项和版本引用检查。历史版本明确标识为历史候选。具体字段见 `contracts.py`。
+- `maintenance_executor.py`：直接维护批次在一个事务中保存版本、出处归并、边释放、失效传播和 change 完成记录；同一变化不会重复应用。修复在模型响应及向量生成后单独提交，保存实际依据版本；再交 P1 判断新版本关系。不新增推导事项。
+- `retriever.py`：english 词项 OR、精确向量、等权 RRF；实体从未入选候选按余弦相似度补充。回答用问题原文中出现的已有称呼；当前只读 current 内最新版且已接纳、有效的 fact/rule，历史只读曾接纳且未被判错或遗忘的内容。
+- `schema.sql`：新增 temporal_scope、accepted、invalidated、basis_refs、merged_into、maintenance_active 与按顺序记录过程的 memory_steps。原始候选保留用于审计，归并候选不进入常规检索。推导的实际依据与“需要复查”依赖分别保存。
+- `prompts/`：抽取、P1、P2、官方回答和评分提示词。官方评分源版本及提示词校验信息见 `official_manifest.json`。P1/P2 无额外格式重跑或第二个核验模型。
+- 共用调用层：支持省略输出上限、请求总时限、余额不足不重试、Retry-After 更长等待、拒答／截断停止、完整请求与原始响应记录。费用仍复用 execution_attempts，统计只计 finished 事件。
 
-- `MemoryStore`：五张逐行表的基础读写、内容版本、状态、全部版本遗忘、出处、显式目标绑定和版本依赖边。`add_version` 总是新增 unresolved 行，change 固定第一版。`versions`、`get_session` 是审计接口，不是回答材料接口。
-- `Extractor`：完整当前 session、程序编号、角色、条件句提示；解析可保存内容；首次加最多三次格式重跑。未知分类和不存在的整数引用保留；坏条目保留在完整原响应。整个非空批次均不可读时才重跑，合法空数组不重跑。助手接受／指代等语义约束写在同次提示词中，尚无真实模型质量验证。
-- `Indexer`：同一模型对每条完整记忆编码一次，查询用相同模型和显式 query_prefix；PG `to_tsvector` + 两个 GIN（全文、实体）索引。状态变化不重嵌入，新增版本只索引新行。
-- `Retriever`：SQL 中先限定轨迹和产生顺序、取最大版本，再按用途过滤，最后在允许集合内各取前 k；PG 全文排序 + pgvector 精确余弦扫描 + RRF；P1 实体候选另取并集。同一查询三路使用一致的数据库快照。已知依赖下游单独读取，不与候选争 top-k。
-- `MemoryPipeline.ingest`：保存 session → 抽取 → unresolved 入库 → 索引，然后返回新版本引用。没有调用 P1/P2，也没有自动标 fresh。测试显式调用底层状态写接口准备检索夹具；这不代表具备接纳或维护算法。
-- `calls.py`：复用 `AttemptRecord`、`RetryPolicy`、`ExecutionLedger` 的读取／校验、原有客户端和费用计算。新实验库仅调整存储定位，不引用产品事件／维护任务。原始响应捕获仅对研究调用启用，保存在同一 `execution_attempts` 表中。
+重复确认只补出处；已判错的版本需要独立重新接纳时另存版本，保留原依据。历史纠错不能覆盖当前信息。遗忘排除整个事项所有版本，以及实际使用其内容生成的推导版本；不会物理删除审计记录。
 
-`execution_attempts` 仍按每次请求保存 started/finished 事件；统计请求只取 finished，不能把两种事件都算一次调用。网络请求序号为 `attempt_no`；抽取轮次为 `extraction_attempt`；tokens、cost 和实际耗时在 payload 的原有 usage/cost/wall_seconds 字段，未知费用为 null。新增定位、原响应、解析结果、重试原因是同表列，不另建费用表。
+过程记录保存在 `memory_steps`，覆盖实际模型输入、解析结果、编号归并、检索候选数量／排名／分数、状态和依赖变化、修复依据、回答与评分及失败位置。模型调用通过轨迹、session、阶段以及题号／before-after 关联；题目、标准答案和任务标签不传入维护模块。
 
-PG 使用五张记忆表，另有共用调用记录表及一张 `research_config` 配置表。配置表锁定库内索引模型、维数、文本检索配置和编码前缀，避免用不同模型的向量直接比较。初始化脚本只接受空的 `contexthub_memory_*` 独立库，不运行产品 Alembic 迁移。
+## 确定性验证（不运行实验）
 
-## 实际验证命令
+新测试库为 `contexthub_memory_dev_20261007`，三维 fixture 向量；原库 `contexthub_memory_research_20261002` 保留。新 schema 用独立空库初始化，不把旧基础库的数据状态猜成“已接纳”，不迁移产品表。
 
-工作目录：`/Users/sherrylin/Documents/PythonProjects/ContextHub`。已创建并初始化的库为 `contexthub_memory_research_20261002`；使用本机现有 PG 服务。连接凭据通过环境变量／PG 凭据文件提供，不写入结果。
+在 ContextHub 根目录执行：
 
 ```sh
-export MEMORY_DATABASE_URL='postgresql://contexthub@localhost:5432/contexthub_memory_research_20261002'
+export MEMORY_DATABASE_URL='postgresql:///contexthub_memory_dev_20261007'
 .venv/bin/python scripts/memory_research/validate.py \
-  --run-id memory-foundation-20261002-r1 \
-  --output docs/memory-research/validation-20261002-r1
+  --run-id memory-maintenance-20261007-r1 \
+  --output docs/memory-research/validation-20261007-r1
 ```
 
-r1 用于本轮保存验证；复跑应换新的 run_id 和输出目录，不覆盖已有证据。脚本输出源码绝对路径、代码版本、分支、数据库、完整测试配置，运行新模块真实 PG 验证及相关共用代码回归，再保存 XML、文本和 result.json。每个测试用独立 episode 保留数据库记录，不清空旧数据。
+复跑必须更换 run_id 和输出目录。脚本执行真实 PG 机制测试及共用客户端回归，输出 XML、终端结果与 result.json；模型 HTTP 响应均为测试数据，不访问真实模型。测试不证明抽取／判边／修复质量或 MEME 效果。
 
-仅在另建一个空库时初始化：
+## 未来实验入口（本轮没有执行）
+
+先明确 `runtime-config.json` 中 `document_prefix`、`query_prefix`（允许明确设为空字符串，但不预先替用户决定）。`prices` 与 `paper_prices` 按模型名填写 `PriceBasis`；未提供时费用为空，不伪造单价。实际响应中的模型标识使用既有 `actual_model` 字段，缺失保留原因。
+
+使用新的空 `contexthub_memory_*` 数据库，配置必须是 text-embedding-3-small、1536 维、英文全文；不要复用三维测试库。指定库后初始化：
 
 ```sh
-# 先由操作者创建另一个 contexthub_memory_* 数据库，再将 MEMORY_DATABASE_URL 指向它。
 PYTHONPATH=src .venv/bin/python scripts/memory_research/init_db.py \
-  --config docs/memory-research/validation-config.json
+  --config docs/memory-research/runtime-config.json
 ```
 
-配置 [validation-config.json](validation-config.json)仅服务机制验证：三维确定性向量、HTTP 测试响应、英文全文配置、小规模候选数量。新真实模型实验应使用新的配置和独立库；这些数字不是研究选优结果。源码客户端可以接真实模型，但本轮没有网络模型调用，没有费用效果结论。
+只有决定开始实验时再运行：
 
-## 尚未完成
+```sh
+.venv/bin/python -m integrations.memebench.memory_research.cli \
+  --config docs/memory-research/runtime-config.json \
+  --mode check --output artifacts/memory-research
 
-P1/P2、change 的自动应用／applied_session_seq 写入事务、自动传播和修复、历史回答、MEME 新适配入口、答案生成／评测、产品接入均未实现。四轮不可解析或请求异常会抛错并保留已有记录；失败抽取阻止继续下一 session。本轮没有做中断恢复或索引失败后的自动续跑协议。调用方不能忽略 ingest 的异常继续冒充整条轨迹完成。
+.venv/bin/python -m integrations.memebench.memory_research.cli \
+  --config docs/memory-research/runtime-config.json \
+  --mode formal --output artifacts/memory-research
+```
+
+入口读取本机 `model_providers.local.json` 的 openlux 配置；不将凭据保存到运行记录。check 仅 pl_001、sw_001，formal 读取固定哈希的 filler32k 全 100 例，分别生成唯一运行编号、从空轨迹开始。全部 session 按顺序摄入，只回答 Cas／Abs／Del，评分复用冻结的官方方法和配对分类。官方评分最多三次，调用层一次，避免重试叠加。
+
+每轮目录保存代码与未提交源码副本、差异、全部提示词、生效配置、数据库名、逐题输出、评分、过程及状态导出和分组成本。失败与未判不从原分母剔除。评分与向量单列，共享维护成本仅计一次；仅报告三类任务，不输出六类 Overall。
+
+产品接入、full_strong/adaptive、物理删除、失败自动恢复仍不在首版范围。真实模型调用、1536 维实验库初始化和正式 MEME 实验均尚未执行。

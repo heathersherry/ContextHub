@@ -51,12 +51,36 @@ class RetryPolicy(Contract):
         return self
 
     def is_retryable(self, error: BaseException) -> bool:
+        if isinstance(error, TimeoutError):
+            return True
         if isinstance(error, httpx.HTTPStatusError):
+            body = error.response.text.casefold()
+            if any(code in body for code in ('insufficient_quota','insufficient_balance','insufficient balance','billing_hard_limit','余额不足','credit balance')):
+                return False
             return error.response.status_code in self.retry_status_codes
         return (
             isinstance(error, httpx.TransportError)
             and type(error).__name__ in self.retry_transport_errors
         )
+
+
+    def delay(self, attempt, error):
+        delay = self.backoff_seconds[attempt - 1]
+        if isinstance(error, httpx.HTTPStatusError):
+            value = error.response.headers.get('Retry-After')
+            if value:
+                from email.utils import parsedate_to_datetime
+                from datetime import datetime, timezone
+                try:
+                    requested = float(value)
+                except ValueError:
+                    try:
+                        requested = (parsedate_to_datetime(value)-datetime.now(timezone.utc)).total_seconds()
+                    except (ValueError, TypeError, OverflowError):
+                        requested = 0
+                if math.isfinite(requested):
+                    delay = max(delay, requested)
+        return delay
 
 
 @dataclass(frozen=True)

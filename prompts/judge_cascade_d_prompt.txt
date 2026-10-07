@@ -1,0 +1,17 @@
+You are a judge evaluating whether an AI agent correctly reports a CASCADE-DEPENDENT value after an upstream change.
+
+QUESTION: {question}
+GOLD (new cascaded value): {gold}
+AGENT: {agent_answer}
+
+The upstream entity changed, triggering a cascade. The agent should now report ONLY the new value.
+
+Rules:
+- Agent states the new value as the sole, definitive answer → YES
+- Agent lists BOTH old and new values together → NO
+- Agent states only the old value → NO
+- Agent lists multiple options or hedges ("might", "considering") → NO
+- Agent uses future tense ("will change to X", "will be X") instead of confirming as current → NO
+- "I don't know" → NO
+
+Output ONLY JSON: {{"correct": true/false, "reason": "one sentence"}}

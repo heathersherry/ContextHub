@@ -17,16 +17,23 @@
   "retry": {
     "max_attempts": 2,
     "timeout_seconds": 5.0,
-    "backoff_seconds": [0.0],
-    "retry_status_codes": [429, 503],
-    "retry_transport_errors": ["ReadTimeout"]
+    "backoff_seconds": [
+      0.0
+    ],
+    "retry_status_codes": [
+      429,
+      503
+    ],
+    "retry_transport_errors": [
+      "ReadTimeout"
+    ]
   },
   "max_tokens": 1500,
   "session_timeout_seconds": 10,
   "prices": null,
-  "query_combination": "plainto_tsquery (AND)",
+  "query_combination": "english lexemes OR",
   "entity_normalization": "NFKC + casefold + whitespace collapse; sorted unique",
-  "entity_order": "memory_id ascending; append after truncated hybrid union",
+  "entity_order": "unselected matches by cosine similarity",
   "answer_ties": "comparable ISO timestamps, otherwise session sequence, then UUID",
   "maintenance_ties": "UUID; no recency preference"
 }

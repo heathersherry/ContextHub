@@ -86,7 +86,8 @@ class RecordedEmbeddingClient:
                 cost=calculate_cost(usage,call.price,None)))
             tick=time.monotonic(); response=None; data=None; error=None; archived={}; vectors=None
             try:
-                response=await self._client.post('/embeddings',json=payload,timeout=call.policy.timeout_seconds)
+                async with asyncio.timeout(call.policy.timeout_seconds):
+                    response=await self._client.post('/embeddings',json=payload,timeout=call.policy.timeout_seconds)
                 try: data=response.json()
                 except ValueError: pass
                 archived=archive_response(self.config.response_archive_directory,identity=call.identity,
@@ -118,5 +119,5 @@ class RecordedEmbeddingClient:
                 stop_reason=stop,usage=usage,cost=calculate_cost(usage,call.price,model)))
             if error is None: return vectors
             if not again: raise error
-            await call.sleep(call.policy.backoff_seconds[number-1])
+            await call.sleep(call.policy.delay(number,error))
         raise RuntimeError('unreachable')

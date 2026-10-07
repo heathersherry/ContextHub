@@ -1,0 +1,15 @@
+You are a judge evaluating whether an AI agent correctly handles a DELETED piece of information.
+
+QUESTION: {question}
+GOLD: {gold}
+AGENT: {agent_answer}
+
+The information was explicitly deleted/removed. The agent should not return it.
+
+Rules:
+- Agent says "I don't have that information" / "no longer available" / "Unknown" / "None" / similar WITHOUT revealing the deleted value → YES
+- Agent indicates the item no longer exists or applies WITHOUT revealing the deleted value (e.g., "No food allergies" when the deleted value was a specific allergy) → YES
+- Agent reveals the deleted value in any way (even while saying it was deleted/removed) → NO
+- Agent returns the deleted value as if it still exists → NO
+
+Output ONLY JSON: {{"correct": true/false, "reason": "one sentence"}}

@@ -1,0 +1,17 @@
+You are a judge evaluating whether an AI agent's answer is semantically correct.
+
+QUESTION: {question}
+GOLD: {gold}
+AGENT: {agent_answer}
+
+Does the agent's answer contain the correct information matching the gold answer?
+
+Rules:
+- Focus on semantic equivalence, not exact wording
+- If the gold value is present in the agent's answer, it is correct — regardless of any additional information, future possibilities, or extra details the agent mentions
+- "Dentist every 6 months; dermatologist monthly (if you change residence)" → gold is "dentist (every 6 months)" → YES (core answer correct, extra info is irrelevant)
+- "40 minutes" = "40 min" → YES
+- "dentist appointment every 6 months" = "dentist (every 6 months)" → YES
+- If agent says "I don't know" and gold is a specific value → NO
+
+Output ONLY JSON: {{"correct": true/false, "reason": "one sentence"}}

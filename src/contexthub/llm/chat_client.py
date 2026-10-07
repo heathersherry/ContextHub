@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 
 class BaseChatClient(ABC):
     @abstractmethod
-    async def complete(self, prompt: str, max_tokens: int = 2000) -> str:
+    async def complete(self, prompt: str, max_tokens: int | None = 2000) -> str:
         """通用文本生成接口。"""
 
 
@@ -70,7 +70,7 @@ class OpenAIChatClient(BaseChatClient):
             transport=transport,
         )
 
-    async def complete(self, prompt: str, max_tokens: int = 2000, *,
+    async def complete(self, prompt: str, max_tokens: int | None = 2000, *,
                        call: RecordedCall | None = None) -> str:
         self.last_raw_response = None
         self.last_response_conversion = None
@@ -85,8 +85,10 @@ class OpenAIChatClient(BaseChatClient):
             "messages": [{"role": "user", "content": prompt}],
             "max_tokens": max_tokens,
         }
+        if max_tokens is None:
+            payload.pop("max_tokens", None)
         if self._request_parameters is not None:
-            payload.pop("max_tokens")
+            payload.pop("max_tokens", None)
             payload.update(self._request_parameters.wire(max_tokens))
         if self._temperature is not None:
             payload["temperature"] = self._temperature
@@ -215,7 +217,7 @@ class OpenAIChatClient(BaseChatClient):
                 self.last_attempts[-1]['response_conversion'] = self.last_response_conversion.model_dump(mode='json')
         return content
 
-    async def _complete_recorded(self, prompt: str, max_tokens: int, call: RecordedCall) -> str:
+    async def _complete_recorded(self, prompt: str, max_tokens: int | None, call: RecordedCall) -> str:
         """Exclusive retry owner; never enters the legacy retry loop.
 
         Use the same call identity at higher layers. Reusing it is rejected by
@@ -225,8 +227,10 @@ class OpenAIChatClient(BaseChatClient):
             raise ContractError("recorded_call_model_required")
         payload = {"model": self._model, "messages": [{"role": "user", "content": prompt}],
                    "max_tokens": max_tokens}
+        if max_tokens is None:
+            payload.pop("max_tokens", None)
         if self._request_parameters is not None:
-            payload.pop("max_tokens")
+            payload.pop("max_tokens", None)
             payload.update(self._request_parameters.wire(max_tokens))
         if self._temperature is not None:
             payload["temperature"] = self._temperature
@@ -249,6 +253,7 @@ class OpenAIChatClient(BaseChatClient):
             start = AttemptRecord(**common, phase='started', outcome='started', usage=usage,
                                   actual_model_missing_reason='request_not_completed',
                                   request_id_missing_reason='request_not_completed',
+                                  request_payload=payload if call.capture_raw_output else None,
                                   cost=calculate_cost(usage, call.price, None))
             # Durable reservation must succeed before any network activity.
             await call.recorder.append(start)
@@ -261,8 +266,9 @@ class OpenAIChatClient(BaseChatClient):
             error = None
             archive = {}
             try:
-                response = await self._client.post('/chat/completions', json=payload,
-                                                   timeout=call.policy.timeout_seconds)
+                async with asyncio.timeout(call.policy.timeout_seconds):
+                    response = await self._client.post('/chat/completions', json=payload,
+                                                       timeout=call.policy.timeout_seconds)
                 try:
                     data = response.json()
                 except ValueError:
@@ -285,6 +291,9 @@ class OpenAIChatClient(BaseChatClient):
                     raise ResponseSchemaError('response_content_missing') from exc
                 raw_content = content
                 self.last_raw_response = raw_content
+                choice = data['choices'][0]
+                if choice.get('finish_reason') in ('length','content_filter') or choice['message'].get('refusal'):
+                    raise ResponseSchemaError('response_truncated_or_refused')
                 if not isinstance(content, str) or not content:
                     raise ResponseSchemaError('response_content_invalid')
                 if (call.validate_response is not None or (self._request_parameters is not None
@@ -328,7 +337,7 @@ class OpenAIChatClient(BaseChatClient):
                 return content
             if not again:
                 raise error
-            await call.sleep(call.policy.backoff_seconds[number - 1])
+            await call.sleep(call.policy.delay(number, error))
         raise RuntimeError('unreachable retry state')
 
     @staticmethod
@@ -383,5 +392,5 @@ class OpenAIChatClient(BaseChatClient):
 
 
 class NoOpChatClient(BaseChatClient):
-    async def complete(self, prompt: str, max_tokens: int = 2000) -> str:
+    async def complete(self, prompt: str, max_tokens: int | None = 2000) -> str:
         return ""

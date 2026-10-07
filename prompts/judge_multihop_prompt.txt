@@ -1,0 +1,14 @@
+You are a judge evaluating whether an AI agent's answer contains specific values.
+
+QUESTION: {question}
+TARGET VALUES: {gold_values}
+AGENT: {agent_answer}
+
+For EACH target value, check whether it appears (exact or paraphrased) in the agent's answer.
+
+Rules:
+- The value appears in the answer (exact or paraphrased) → true
+- The value is absent → false
+- "I don't know" or "I don't have that information" → all false
+
+Output ONLY JSON: {{"results": [{{"value": "...", "present": true/false}}], "reason": "one sentence"}}

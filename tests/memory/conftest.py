@@ -16,6 +16,33 @@ from contexthub.memory.calls import CallContext
 from contexthub.memory.extractor import Extractor
 from contexthub.memory.indexer import Indexer
 from contexthub.memory.pipeline import MemoryPipeline
+from contexthub.memory.dependency_discovery import DependencyDiscovery
+from contexthub.memory.maintenance_executor import MaintenanceExecutor
+
+
+class ExtractionHarness:
+    """Only exercises the extractor/indexer foundation, not a production pipeline."""
+
+    def __init__(self, store, extractor, indexer, version):
+        self.store, self.extractor, self.indexer, self.version = (
+            store,
+            extractor,
+            indexer,
+            version,
+        )
+
+    async def ingest(self, trace, seq, messages, *, timestamp=None, timeout_seconds=10):
+        import asyncio
+
+        context = CallContext(self.store, trace, seq, self.version)
+        async with asyncio.timeout(timeout_seconds):
+            numbered = await self.store.save_session(trace, seq, timestamp, messages)
+            items = await self.extractor.extract(numbered, context)
+            refs = await self.store.save_extracted(trace, seq, items)
+            await self.indexer.index(refs, context)
+            return refs
+
+
 from contexthub.memory.retriever import Retriever
 from contexthub.memory.schemas import IndexConfig, RetrievalConfig, Trace
 from contexthub.memory.storage import MemoryStore
@@ -47,6 +74,10 @@ async def env(tmp_path):
     async def chat_handler(request):
         prompts.append(json.loads(request.content))
         result = responses.pop(0)
+        if callable(result):
+            result = result(json.loads(request.content))
+        if isinstance(result, dict):
+            result = json.dumps(result)
         if isinstance(result, BaseException):
             raise result
         if isinstance(result, int):
@@ -105,11 +136,21 @@ async def env(tmp_path):
     extractor = Extractor(client, retry=retry, max_tokens=1500)
     version = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
     context = CallContext(store, trace, 1, version)
-    pipeline = MemoryPipeline(store, extractor, indexer, code_version=version)
+    pipeline = ExtractionHarness(store, extractor, indexer, version)
     retriever = Retriever(
         store, indexer, RetrievalConfig.model_validate(CONFIG["retrieval"])
     )
+    discovery = DependencyDiscovery(store, retriever, client, retry=retry)
+    executor = MaintenanceExecutor(
+        store, retriever, indexer, discovery, client, retry=retry
+    )
+    full_pipeline = MemoryPipeline(
+        store, extractor, indexer, discovery, executor, code_version=version
+    )
     yield SimpleNamespace(
+        full_pipeline=full_pipeline,
+        discovery=discovery,
+        executor=executor,
         store=store,
         trace=trace,
         context=context,

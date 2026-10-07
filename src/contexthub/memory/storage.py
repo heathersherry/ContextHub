@@ -82,6 +82,14 @@ class MemoryStore:
             if session_seq != (previous or 0) + 1:
                 raise ValueError("sessions must be ingested once, in order")
             if previous is not None:
+                failed = await conn.fetchval(
+                    f"SELECT 1 FROM memory_steps WHERE {SCOPE} AND stage='session.failed' LIMIT 1",
+                    *trace.args,
+                )
+                if failed:
+                    raise ValueError(
+                        "previous maintenance failed; stop this trajectory"
+                    )
                 output = await conn.fetchval(
                     f"SELECT extraction_output FROM session_records WHERE {SCOPE} AND session_seq=$4",
                     *trace.args,
@@ -302,7 +310,7 @@ class MemoryStore:
     async def put_dependency(self, trace, upstream, downstream, edge_status, reason):
         async with self.pool.acquire() as conn:
             await conn.execute(
-                """INSERT INTO dependencies VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9)
+                """INSERT INTO dependencies(run_id,episode_id,strategy_id,upstream_id,upstream_version,downstream_id,downstream_version,edge_status,reason) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9)
                 ON CONFLICT(run_id,episode_id,strategy_id,upstream_id,upstream_version,downstream_id,downstream_version)
                 DO UPDATE SET edge_status=EXCLUDED.edge_status,reason=EXCLUDED.reason""",
                 *trace.args,
@@ -353,3 +361,70 @@ class MemoryStore:
             )
             if result != "UPDATE 1":
                 raise ValueError("change missing or already applied")
+
+    async def record(self, context, stage, payload, *, conn=None):
+        import json
+
+        payload = dict(payload, question_id=context.question_id, phase=context.phase)
+        values = (
+            *context.trace.args,
+            context.session_seq,
+            stage,
+            json.loads(json.dumps(payload, default=str)),
+        )
+        sql = "INSERT INTO memory_steps(run_id,episode_id,strategy_id,session_seq,stage,payload) VALUES($1,$2,$3,$4,$5,$6)"
+        if conn is not None:
+            await conn.execute(sql, *values)
+        else:
+            async with self.pool.acquire() as db:
+                await db.execute(sql, *values)
+
+    async def read_ref(self, trace, ref, *, conn=None):
+        from .contracts import split_ref
+
+        sql = f"SELECT * FROM memories WHERE {SCOPE} AND memory_id=$4 AND version=$5"
+        args = (*trace.args, *split_ref(ref))
+        if conn is not None:
+            return await conn.fetchrow(sql, *args)
+        async with self.pool.acquire() as db:
+            return await db.fetchrow(sql, *args)
+
+    async def related(self, trace, refs):
+        from .contracts import split_ref, ref_of
+
+        ids = list({split_ref(r)[0] for r in refs})
+        async with self.pool.acquire() as conn:
+            edges = await conn.fetch(
+                f"""SELECT * FROM dependencies WHERE {SCOPE}
+                AND (upstream_id=ANY($4::uuid[]) OR downstream_id=ANY($4::uuid[]))""",
+                *trace.args,
+                ids,
+            )
+            keys = {
+                f"{e[p + '_id']}:{e[p + '_version']}"
+                for e in edges
+                for p in ("upstream", "downstream")
+            }
+            rows = [await self.read_ref(trace, r, conn=conn) for r in sorted(keys)]
+            # Include the current version of each known neighbor without top-k truncation.
+            current = await conn.fetch(
+                f"""SELECT DISTINCT ON(memory_id) * FROM memories WHERE {SCOPE}
+                AND memory_id=ANY($4::uuid[]) AND temporal_scope='current'
+                ORDER BY memory_id,version DESC""",
+                *trace.args,
+                list({r["memory_id"] for r in rows}),
+            )
+        materials = {
+            ref_of(r): dict(r)
+            for r in [*rows, *current]
+            if r["status"] != "deleted" and r["merged_into"] is None
+        }
+        visible_edges = [
+            dict(e)
+            for e in edges
+            if all(
+                f"{e[p + '_id']}:{e[p + '_version']}" in materials
+                for p in ("upstream", "downstream")
+            )
+        ]
+        return list(materials.values()), visible_edges

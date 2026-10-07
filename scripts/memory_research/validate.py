@@ -1,4 +1,4 @@
-"""Real-PG foundation verification with deterministic HTTP model fixtures, not MEME."""
+"""Real-PG memory-maintenance verification with deterministic HTTP model fixtures, not MEME."""
 
 import argparse
 import asyncio
@@ -73,6 +73,15 @@ def main():
         "branch": subprocess.check_output(
             ["git", "branch", "--show-current"], cwd=ROOT, text=True
         ).strip(),
+        "source_tree_sha256": subprocess.check_output(
+            [
+                sys.executable,
+                "-c",
+                "import hashlib,pathlib; p=pathlib.Path('src/contexthub/memory'); print(hashlib.sha256(b''.join(f.name.encode()+f.read_bytes() for f in sorted(p.glob('*')) if f.is_file())).hexdigest())",
+            ],
+            cwd=ROOT,
+            text=True,
+        ).strip(),
         "tracked_changes_before": subprocess.check_output(
             ["git", "diff", "--name-only", "HEAD"], cwd=ROOT, text=True
         ).splitlines(),
@@ -85,7 +94,7 @@ def main():
     print(json.dumps(report, ensure_ascii=False, indent=2), flush=True)
     environment = dict(os.environ, MEMORY_VALIDATION_RUN_ID=args.run_id)
     groups = {
-        "foundation": ["tests/memory"],
+        "memory-mechanism": ["tests/memory"],
         "shared-regression": [
             "tests/test_knowledge_retry.py",
             "tests/test_knowledge_ledger.py",

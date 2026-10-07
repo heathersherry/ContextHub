@@ -1,0 +1,14 @@
+{
+  "commit": "0271ad85389a963cbc4892a36391f868ba4d18d1",
+  "judge_sha256": "4d19e4a8acc4f3143ace3b5933aeeb92a91e019d57cd0bba42c3bcba7c91a218",
+  "answer_sha256": "9058780e7e839d037505eb3cdfb2a05643c58e1f37a3ea87d5b2c2dd4433bba5",
+  "prompt_files": {
+    "BEFORE_COMMON_PROMPT": "judge_before_common_prompt.txt",
+    "CASCADE_D_PROMPT": "judge_cascade_d_prompt.txt",
+    "CASCADE_U_PROMPT": "judge_cascade_u_prompt.txt",
+    "DELETION_PROMPT": "judge_deletion_prompt.txt",
+    "MULTIHOP_PROMPT": "judge_multihop_prompt.txt",
+    "MULTIPLE_UPDATE_PROMPT": "judge_multiple_update_prompt.txt",
+    "EXACT_PROMPT": "judge_exact_prompt.txt"
+  }
+}

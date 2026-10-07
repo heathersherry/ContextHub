@@ -1,0 +1,11 @@
+{
+  "index": {
+    "dimensions": 1536,
+    "embedding_model": "text-embedding-3-small",
+    "document_prefix": null,
+    "query_prefix": null,
+    "text_config": "pg_catalog.english"
+  },
+  "prices": {},
+  "paper_prices": {}
+}

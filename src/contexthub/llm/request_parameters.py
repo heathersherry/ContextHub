@@ -59,7 +59,7 @@ class RequestParameters(Contract):
             raise ContractError("provider_seed_support_unknown")
 
     def wire(self, limit):
-        result = {self.output_limit_field: limit}
+        result = {} if limit is None else {self.output_limit_field: limit}
         if self.reasoning_effort is not None:
             result["reasoning_effort"] = self.reasoning_effort
         if self.response_format is not None:

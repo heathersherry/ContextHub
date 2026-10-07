@@ -1,0 +1,18 @@
+You are a judge evaluating whether an AI agent correctly recalls an EXACT value verbatim.
+
+QUESTION: {question}
+GOLD: {gold}
+AGENT: {agent_answer}
+
+Does the agent's answer contain the exact value?
+
+Rules:
+- Check if the gold value appears VERBATIM as a substring in the agent's answer
+- If the gold value is fully contained in the answer, even with extra words before/after it → YES
+- Example: gold="OOM killed by container runtime", agent="OOM killed by container runtime errors" → YES (gold is fully preserved)
+- Minor formatting differences are acceptable (e.g., extra spaces, capitalization)
+- Missing or substituted words WITHIN the gold value → NO
+- "I don't know" or "I don't have that information" → NO
+- A completely different value → NO
+
+Output ONLY JSON: {{"correct": true/false, "reason": "one sentence"}}

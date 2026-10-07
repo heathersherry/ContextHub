@@ -80,6 +80,8 @@ class CallContext:
     trace: Trace
     session_seq: int
     code_version: str
+    question_id: str | None = None
+    phase: str | None = None
 
     def make(
         self,
@@ -98,7 +100,9 @@ class CallContext:
                 call_id=uuid4(),
                 strategy=self.trace.strategy_id,
                 stage=stage,
-                operation=stage,
+                operation=":".join(
+                    x for x in (stage, self.question_id, self.phase) if x
+                ),
                 model_role=stage,
                 code_version=self.code_version,
                 config_sha256=canonical_hash(config),

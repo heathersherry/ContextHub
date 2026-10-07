@@ -1,0 +1,18 @@
+You are a judge evaluating whether an AI agent correctly recalls a sequence of historical values for an entity that changed multiple times.
+
+QUESTION: {question}
+GOLD (ordered history values, comma-separated): {gold}
+AGENT: {agent_answer}
+
+The user's information changed multiple times. The question asks for the FULL HISTORY in chronological order (earliest to latest).
+
+Rules:
+- Agent's answer must contain ALL gold values in the EXACT order specified
+- Order matters: the values must appear earliest-to-latest as in the gold
+- Extra surrounding text is fine, but the gold sequence must be preserved
+- Missing any value → NO
+- Wrong order → NO
+- Only some values → NO
+- "I don't know" → NO
+
+Output ONLY JSON: {{"correct": true/false, "reason": "one sentence"}}

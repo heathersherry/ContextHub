@@ -12,6 +12,9 @@ CREATE TABLE memories (
  text text NOT NULL CHECK(length(text) > 0), type text NOT NULL,
  origin text NOT NULL CHECK(origin IN ('extracted','derived')),
  status text NOT NULL CHECK(status IN ('unresolved','fresh','stale','deleted')),
+ temporal_scope text CHECK(temporal_scope IN ('current','historical')),
+ accepted boolean NOT NULL DEFAULT false, invalidated boolean NOT NULL DEFAULT false,
+ basis_refs jsonb NOT NULL DEFAULT '[]', merged_into jsonb,
  status_reason text, created_in_session integer NOT NULL, timestamp text,
  entities text[] NOT NULL, search_vector tsvector, memory_embedding vector(__DIMENSIONS__),
  PRIMARY KEY(run_id, episode_id, strategy_id, memory_id, version),
@@ -32,7 +35,8 @@ CREATE TABLE dependencies (
  run_id text NOT NULL, episode_id text NOT NULL, strategy_id text NOT NULL,
  upstream_id uuid NOT NULL, upstream_version integer NOT NULL,
  downstream_id uuid NOT NULL, downstream_version integer NOT NULL,
- edge_status text NOT NULL CHECK(edge_status IN ('confirmed','pending')), reason text NOT NULL,
+ edge_status text NOT NULL CHECK(edge_status = 'confirmed'), reason text NOT NULL,
+ maintenance_active boolean NOT NULL DEFAULT true,
  PRIMARY KEY(run_id,episode_id,strategy_id,upstream_id,upstream_version,downstream_id,downstream_version),
  FOREIGN KEY(run_id,episode_id,strategy_id,upstream_id,upstream_version) REFERENCES memories,
  FOREIGN KEY(run_id,episode_id,strategy_id,downstream_id,downstream_version) REFERENCES memories
@@ -54,3 +58,12 @@ CREATE TABLE execution_attempts (
  PRIMARY KEY(account_id,call_id,attempt_no,phase)
 );
 CREATE INDEX execution_attempts_trace ON execution_attempts(run_id,episode_id,strategy_id,session_seq);
+
+-- Ordered process evidence, not a second billing ledger or a task scheduler.
+CREATE TABLE memory_steps (
+ step_id bigserial PRIMARY KEY,
+ run_id text NOT NULL, episode_id text NOT NULL, strategy_id text NOT NULL,
+ session_seq integer NOT NULL, stage text NOT NULL, payload jsonb NOT NULL,
+ recorded_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX memory_steps_trace ON memory_steps(run_id,episode_id,strategy_id,session_seq,step_id);
