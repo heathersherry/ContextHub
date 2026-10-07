@@ -578,3 +578,55 @@ async def test_replaying_completed_part_of_change_does_not_reinvalidate(env):
     )
     affected, _ = await env.executor.apply_discoveries([d], c2)
     assert not affected and (await row(env, report))["status"] == "fresh"
+
+
+@pytest.mark.asyncio
+async def test_confirmed_historical_relation_can_be_inactive_for_maintenance(env):
+    c1 = await session(env, 1)
+    owner = await add(env, c1, "Owner Wang", accepted=True)
+    report = await add(env, c1, "Report Wang", accepted=True)
+    a, b = await row(env, owner), await row(env, report)
+    await env.store.put_dependency(
+        env.trace,
+        (a["memory_id"], 1),
+        (b["memory_id"], 1),
+        "confirmed",
+        "past arrangement",
+    )
+    pair = owner + ">" + report
+
+    def respond(payload):
+        data = json.loads(payload["messages"][0]["content"].splitlines()[-1])
+        return {
+            "bindings": [
+                Binding(
+                    content_ref=None,
+                    target_ref=None,
+                    relation="unresolved",
+                    temporal_scope=None,
+                    evidence_refs=[],
+                    issues=["dependency refresh only"],
+                    reason="past relation",
+                ).model_dump()
+            ],
+            "dependencies": [
+                {"pair_id": p, "yes": p == pair, "reason": "past content dependency"}
+                for p in data["pairs"]
+            ],
+            "existing_edges": [
+                {
+                    "pair_id": p,
+                    "yes": False,
+                    "reason": "no longer applies to maintenance",
+                }
+                for p in data["existing_edges"]
+            ],
+        }
+
+    env.responses.append(respond)
+    d = await env.discovery.discover(
+        await row(env, owner), [await row(env, report)], c1, relationships=False
+    )
+    await env.executor.save_edges([d], c1)
+    edges = await env.store.downstream(env.trace, a["memory_id"])
+    assert edges[0]["edge_status"] == "confirmed" and not edges[0]["maintenance_active"]

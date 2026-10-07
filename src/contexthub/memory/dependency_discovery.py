@@ -107,12 +107,6 @@ class DependencyDiscovery:
                 raise ValueError(
                     "P1 must judge every supplied directed pair and known edge exactly once"
                 )
-        prior = {j.pair_id: j.yes for j in result.existing_edges}
-        if any(
-            j.pair_id in prior and prior[j.pair_id] != j.yes
-            for j in result.dependencies
-        ):
-            raise ValueError("contradictory judgments for the same dependency")
         for binding in result.bindings:
             refs = [binding.content_ref, binding.target_ref, *binding.evidence_refs]
             if any(r is not None and r not in rows for r in refs):
