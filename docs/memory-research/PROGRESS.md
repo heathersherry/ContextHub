@@ -1,5 +1,22 @@
 # Memory 研究交接
 
+更新：2026-10-07。设计以研究仓主方案为准；本文件只记录实现与验证。
+
+## 2026-10-07 首版实现与验证
+
+- 工作目录 `/Users/sherrylin/Documents/PythonProjects/ContextHub`，分支 `codex/memory-research`。实现提交 `ae42d82`；历史关系与当前传播适用性修正 `f7f22bf`，最终机制验证针对 `f7f22bfd13ccbf4e1fb99c963cbdaf120343ffce`。
+- 已接通 P1/P2、当前／历史检索、明确替代／重复／纠错／遗忘、失效传播、已有结论修复及版本依据追溯；同次 fact/change 去重、部分完成后的重查不会重做已执行变化。历史依赖成立与当前 maintenance_active 分开。
+- 新 MEME 入口为 `integrations/memebench/memory_research/cli.py`，直接使用新五模块；官方回答与评分提示词集中在 `prompts/`，保留原文并校验。合成数据验证了 before/after 时点、维护信息隔离、三类配对评分及失败分母。
+- **最终验证 95 项通过，0 失败、0 跳过：** memory 36 项，共用回归 59 项。`ruff check --no-cache --select E9,F`、编译及 `git diff --check` 通过。结果见 [r2/result.json](validation-20261007-r2/result.json)，XML 与终端输出同目录；r1 是修正前验证，保留但不作为最终版本依据。
+- run_id：`memory-maintenance-20261007-r2`；独立新库 `contexthub_memory_dev_20261007`。真实 PG＋三维确定性向量＋HTTP 测试响应；不调用真实模型。旧库 `contexthub_memory_research_20261002` 未迁移或清空。
+- 运行日志、源码／提示词冻结、数据库名、实际配置、模型响应标识、费用未知值及逐题过程记录已接入。具体执行及复跑命令见 [README](README.md)。
+- 尚未进行真实模型质量检查、两例 MEME 检查或正式实验；未初始化 1536 维真实实验库。运行前需显式确定 query/document 前缀，价格与币种未提供时保持费用未知。产品接入、额外策略与失败自动恢复仍在首版范围外。
+- 本轮保留原有 QUESTIONS.md 未提交修改和旧实验产物，没有改 main 或推送远端。研究仓只更新交接入口与实现事实，不改变设计规则。
+
+## 2026-10-02 历史交接
+
+以下保持当时版本范围，其中“P1/P2 尚未实现”等进度已由上文替代；73 项是当时基础版结果，不是本次验证。
+
 更新：2026-10-02。主方案见 [架构 README](/Users/sherrylin/Documents/PythonProjects/ContextHub-research-plan/research/proposal/README-memory-architecture-2026-09-29.md)；本文件只保存实现进度。
 
 ## 工作现场与提交

@@ -1,0 +1,103 @@
+{
+  "implementation": "contexthub.memory",
+  "source_path": "/Users/sherrylin/Documents/PythonProjects/ContextHub/src/contexthub/memory",
+  "code_version": "f7f22bfd13ccbf4e1fb99c963cbdaf120343ffce",
+  "branch": "codex/memory-research",
+  "source_tree_sha256": "93c9167422d6c168248b3f6d96d27bf9feedb7356efd68c6e32827ac85ccd3c7",
+  "tracked_changes_before": [
+    "docs/memory-research/QUESTIONS.md"
+  ],
+  "run_id": "memory-maintenance-20261007-r2",
+  "database": "contexthub_memory_dev_20261007",
+  "configuration": {
+    "purpose": "deterministic client fixtures against real PostgreSQL; not an effectiveness experiment",
+    "index": {
+      "dimensions": 3,
+      "embedding_model": "fixture-embedding-v1",
+      "document_prefix": "document: ",
+      "query_prefix": "query: ",
+      "text_config": "pg_catalog.english"
+    },
+    "retrieval": {
+      "text_k": 2,
+      "vector_k": 2,
+      "rrf_c": 60,
+      "hybrid_limit": 2,
+      "entity_k": 2
+    },
+    "retry": {
+      "max_attempts": 2,
+      "timeout_seconds": 5.0,
+      "backoff_seconds": [
+        0.0
+      ],
+      "retry_status_codes": [
+        429,
+        503
+      ],
+      "retry_transport_errors": [
+        "ReadTimeout"
+      ]
+    },
+    "max_tokens": 1500,
+    "session_timeout_seconds": 10,
+    "prices": null,
+    "query_combination": "english lexemes OR",
+    "entity_normalization": "NFKC + casefold + whitespace collapse; sorted unique",
+    "entity_order": "unselected matches by cosine similarity",
+    "answer_ties": "comparable ISO timestamps, otherwise session sequence, then UUID",
+    "maintenance_ties": "UUID; no recency preference"
+  },
+  "started_at": "2026-10-07T03:14:24.617291+00:00",
+  "scope": "real PostgreSQL persistence/retrieval; fixture chat and embedding responses; no MEME or real model quality claims",
+  "checks": {
+    "memory-mechanism": {
+      "exit_code": 0,
+      "command": [
+        "/Users/sherrylin/Documents/PythonProjects/ContextHub/.venv/bin/python",
+        "-m",
+        "pytest",
+        "tests/memory",
+        "-q",
+        "--junitxml=/Users/sherrylin/Documents/PythonProjects/ContextHub/docs/memory-research/validation-20261007-r2/memory-mechanism.xml"
+      ],
+      "tests": 36,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "shared-regression": {
+      "exit_code": 0,
+      "command": [
+        "/Users/sherrylin/Documents/PythonProjects/ContextHub/.venv/bin/python",
+        "-m",
+        "pytest",
+        "tests/test_knowledge_retry.py",
+        "tests/test_knowledge_ledger.py",
+        "tests/test_recorded_embedding.py",
+        "tests/test_chat_client_retry_usage.py",
+        "tests/test_memebench_patha_ledger.py",
+        "tests/session_protocol/test_think_response.py",
+        "-q",
+        "--junitxml=/Users/sherrylin/Documents/PythonProjects/ContextHub/docs/memory-research/validation-20261007-r2/shared-regression.xml"
+      ],
+      "tests": 59,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "postgres": "17.9 (Homebrew)",
+  "pgvector": "0.8.2",
+  "rows": {
+    "session_records": 44,
+    "memories": 78,
+    "memory_sources": 73,
+    "dependencies": 15,
+    "change_events": 7,
+    "execution_attempts": 254
+  },
+  "finished_requests": 127,
+  "finished_at": "2026-10-07T03:14:26.994551+00:00",
+  "success": true
+}
