@@ -22,8 +22,9 @@ class ResponseSchemaError(ValueError):
 
 
 class RetryPolicy(Contract):
-    max_attempts: Positive = Field(le=3)
+    max_attempts: Positive = Field(le=5)
     timeout_seconds: float = Field(gt=0, allow_inf_nan=False)
+    timeout_increment_seconds: float = Field(default=0, ge=0, allow_inf_nan=False)
     backoff_seconds: tuple[float, ...]
     retry_status_codes: tuple[int, ...]
     retry_transport_errors: tuple[str, ...]
@@ -49,6 +50,9 @@ class RetryPolicy(Contract):
         if not set(self.retry_transport_errors) <= allowed:
             raise ContractError("non_transient_retry_class")
         return self
+
+    def timeout_for_attempt(self, attempt: int) -> float:
+        return self.timeout_seconds + (attempt - 1) * self.timeout_increment_seconds
 
     def is_retryable(self, error: BaseException) -> bool:
         if isinstance(error, TimeoutError):

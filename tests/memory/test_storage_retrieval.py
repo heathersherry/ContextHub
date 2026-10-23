@@ -35,7 +35,8 @@ async def memory(
         type=type,
         entities=entities,
         origin=origin,
-        sources={str(seq): [1]} if origin == "extracted" else None,
+        sources=[seq] if origin == "extracted" else None,
+        topics=[],
     )
     env.vectors["document: " + text] = list(vector)
     await env.indexer.index([ref], replace(env.context, session_seq=seq))
@@ -64,7 +65,8 @@ async def test_latest_before_status_no_old_fresh_fallback_and_state_only_indexin
         type="fact",
         entities=["Atlas", "Li"],
         origin="extracted",
-        sources={"2": [1]},
+        sources=[2],
+        topics=[],
     )
     async with env.store.pool.acquire() as conn:
         await conn.execute(
@@ -104,7 +106,8 @@ async def test_latest_before_status_no_old_fresh_fallback_and_state_only_indexin
     )
     assert len(hits) == 1 and hits[0].memory["text"] == "Atlas owner is Li"
     await env.store.set_status(env.trace, *new, "stale", "needs review")
-    assert await env.retriever.current(env.trace, 2, purpose="answer") == []
+    uncertain = await env.retriever.current(env.trace, 2, purpose="answer")
+    assert uncertain == []  # Never fall back to an older fresh version.
     assert await env.retriever.current(env.trace, 2, purpose="p2") == []
     await env.store.forget(env.trace, old[0], "user requested forgetting")
     assert len(await env.store.versions(env.trace, old[0])) == 2
@@ -134,6 +137,7 @@ async def test_latest_before_status_no_old_fresh_fallback_and_state_only_indexin
             type="fact",
             entities=[],
             origin="extracted",
+            topics=[],
         )
 
 
@@ -153,8 +157,6 @@ async def test_filter_before_top_k_for_all_channels_and_trace_isolation(env):
     forgotten = await memory(env, "owner owner deleted", entities=["Atlas"])
     await env.store.forget(env.trace, forgotten[0], "forget")
     await memory(env, "owner rule", type="rule", vector=(-1, 0, 0))
-    await memory(env, "owner changed", type="change")
-    await memory(env, "owner odd label", type="invalid-type")
     for field, value in [
         ("run_id", "other-" + env.trace.run_id),
         ("episode_id", "other-" + env.trace.episode_id),
@@ -169,6 +171,7 @@ async def test_filter_before_top_k_for_all_channels_and_trace_isolation(env):
             type="fact",
             entities=["Atlas"],
             origin="extracted",
+            topics=[],
         )
         await env.store.set_status(other, *ref, "fresh")
         await env.indexer.index([ref], replace(env.context, trace=other))
@@ -181,9 +184,9 @@ async def test_filter_before_top_k_for_all_channels_and_trace_isolation(env):
     assert len(hits) == 1 and hits[0].memory["memory_id"] == target[0]
     assert set(hits[0].channels) == {"text", "vector"}
     assert hits[0].score == pytest.approx(2 / 61)
-    candidates = await env.retriever.current(env.trace, 1, purpose="p1")
+    candidates = await env.retriever.current(env.trace, 1, purpose="p2_match")
     assert {r["status"] for r in candidates} == {"fresh", "stale", "unresolved"}
-    assert {r["type"] for r in candidates} == {"fact", "rule", "change"}
+    assert {r["type"] for r in candidates} == {"fact", "rule"}
     assert all(r["run_id"] == env.trace.run_id for r in candidates)
 
 
@@ -219,7 +222,7 @@ async def test_exact_vector_text_and_entity_union_are_distinct(env):
             "SELECT indexdef FROM pg_indexes WHERE tablename='memories'"
         )
     assert not any("hnsw" in row[0] or "ivfflat" in row[0] for row in indexes)
-    assert sum("USING gin" in row[0] for row in indexes) == 2
+    assert sum("USING gin" in row[0] for row in indexes) == 4
     answer_hits = await env.retriever.search(
         "reports", env.context, through_session=1, purpose="answer", entities=["Atlas"]
     )
@@ -227,62 +230,25 @@ async def test_exact_vector_text_and_entity_union_are_distinct(env):
 
 
 @pytest.mark.asyncio
-async def test_dependency_versions_sources_and_change_bindings(env):
+async def test_generic_user_is_not_a_full_text_keyword(env):
     await session(env, 1)
-    owner = await memory(env, "owner Wang")
-    report = await memory(env, "report recipient Wang", origin="derived")
-    assert await env.store.sources(env.trace, *report) is None
-    await env.store.put_dependency(
-        env.trace, owner, report, "confirmed", "recipient follows owner"
+    relevant = await memory(env, "The user swims twice weekly")
+    await memory(env, "The user bought a photo album", vector=(-1, 0, 0))
+    await memory(env, "The user plans company events", vector=(0, 1, 0))
+    env.retriever.config = env.retriever.config.model_copy(
+        update={"text_k": 20, "vector_k": 1, "hybrid_limit": 20, "entity_k": 0}
     )
-    await env.store.put_dependency(
-        env.trace, owner, report, "confirmed", "recipient follows owner"
-    )
-    await session(env, 2)
-    owner2 = await env.store.add_version(
-        env.trace,
-        owner[0],
-        2,
-        text="owner Li",
-        type="fact",
-        entities=["Li"],
-        origin="extracted",
-        sources={"1": [2], "2": [1]},
-    )
-    await env.store.put_dependency(
-        env.trace, owner2, report, "confirmed", "needs recipient repair"
-    )
-    edges = await env.store.downstream(env.trace, owner[0])
-    assert len(edges) == 2 and {r["upstream_version"] for r in edges} == {1, 2}
-    source = await env.store.sources(env.trace, *owner2)
-    assert source["session_seq"] == [1, 2] and source["message_refs"] == {
-        "1": [2],
-        "2": [1],
-    }
-    change = await memory(
-        env, "owner changed to Li", seq=2, type="change", status="unresolved"
-    )
-    targets = [{"memory_id": str(owner[0]), "version": 1}]
-    await env.store.bind_change(env.trace, change[0], "update", targets)
-    event = await env.store.get_change(env.trace, change[0])
-    assert event["target_refs"] == targets and event["applied_session_seq"] is None
-    with pytest.raises(ValueError):
-        await env.store.add_version(
-            env.trace,
-            change[0],
-            2,
-            text="another change",
-            type="change",
-            entities=[],
-            origin="extracted",
+    for query in ("The user swims", "USER swimming", "the user's swimming"):
+        hits = await env.retriever.search(
+            query, env.context, through_session=1, purpose="p2"
         )
-    with pytest.raises(ValueError, match="target missing"):
-        await env.store.bind_change(
-            env.trace,
-            change[0],
-            "update",
-            [{"memory_id": str(UUID(int=1)), "version": 1}],
-        )
+        assert [h.memory["memory_id"] for h in hits] == [relevant[0]]
+        assert "text" in hits[0].channels
+    # An empty keyword query is valid; vector retrieval still works independently.
+    hits = await env.retriever.search(
+        "the user", env.context, through_session=1, purpose="p2"
+    )
+    assert hits and all(h.channels == ("vector",) for h in hits)
 
 
 @pytest.mark.asyncio
@@ -335,3 +301,21 @@ def test_time_ties_only_for_answers_and_normalization():
     for v in ([0, 0, 0], [float("nan"), 1, 0], [1]):
         with pytest.raises(ValueError):
             vector_literal(v, 3)
+
+
+@pytest.mark.asyncio
+async def test_failed_session_requires_later_completion_in_same_session(env):
+    await session(env, 1)
+    await env.store.record(env.context, "session.complete", {})
+    await env.store.record(env.context, "session.failed", {"error": "HTTPStatusError"})
+    with pytest.raises(ValueError, match="previous maintenance failed"):
+        await env.store.save_session(env.trace, 2, None, [])
+    # A completion from another session cannot clear this failure.
+    await env.store.record(replace(env.context, session_seq=2), "session.complete", {})
+    with pytest.raises(ValueError, match="previous maintenance failed"):
+        await env.store.save_session(env.trace, 2, None, [])
+    await env.store.record(env.context, "session.complete", {"resumed": True})
+    await session(env, 2)
+    await env.store.record(env.context, "session.failed", {"error": "later failure"})
+    with pytest.raises(ValueError, match="previous maintenance failed"):
+        await env.store.save_session(env.trace, 3, None, [])

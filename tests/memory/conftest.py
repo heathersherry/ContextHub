@@ -16,12 +16,12 @@ from contexthub.memory.calls import CallContext
 from contexthub.memory.extractor import Extractor
 from contexthub.memory.indexer import Indexer
 from contexthub.memory.pipeline import MemoryPipeline
-from contexthub.memory.dependency_discovery import DependencyDiscovery
+from contexthub.memory.condition_binder import ConditionBinder
 from contexthub.memory.maintenance_executor import MaintenanceExecutor
 
 
 class ExtractionHarness:
-    """Only exercises the extractor/indexer foundation, not a production pipeline."""
+    """Only exercises extraction without persisting unjudged items, not a production pipeline."""
 
     def __init__(self, store, extractor, indexer, version):
         self.store, self.extractor, self.indexer, self.version = (
@@ -37,10 +37,8 @@ class ExtractionHarness:
         context = CallContext(self.store, trace, seq, self.version)
         async with asyncio.timeout(timeout_seconds):
             numbered = await self.store.save_session(trace, seq, timestamp, messages)
-            items = await self.extractor.extract(numbered, context)
-            refs = await self.store.save_extracted(trace, seq, items)
-            await self.indexer.index(refs, context)
-            return refs
+            extraction = await self.extractor.extract(numbered, context)
+            return extraction.items
 
 
 from contexthub.memory.retriever import Retriever
@@ -140,12 +138,10 @@ async def env(tmp_path):
     retriever = Retriever(
         store, indexer, RetrievalConfig.model_validate(CONFIG["retrieval"])
     )
-    discovery = DependencyDiscovery(store, retriever, client, retry=retry)
-    executor = MaintenanceExecutor(
-        store, retriever, indexer, discovery, client, retry=retry
-    )
+    discovery = ConditionBinder(store, client, retriever, retry=retry)
+    executor = MaintenanceExecutor(store, retriever, indexer, client, retry=retry)
     full_pipeline = MemoryPipeline(
-        store, extractor, indexer, discovery, executor, code_version=version
+        store, extractor, retriever, discovery, executor, code_version=version
     )
     yield SimpleNamespace(
         full_pipeline=full_pipeline,

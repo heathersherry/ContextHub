@@ -1,0 +1,8 @@
+{
+  "instructions": "Screen only the if occurrence at the supplied offsets in candidate.text, which is its containing sentence. You see the sentence and its role, not the rest of the conversation. Decide whether this occurrence could express a condition affecting a specific matter. rule means a candidate conditional relationship, NOT a confirmed user-adopted rule. A later model reads the full conversation to confirm adoption and resolve references. Use unclear when a plausible relationship needs missing context to resolve pronouns, scope, or adoption; do not reject it just because the speaker is an assistant or refers to that/it. Preserve possible consequences and changes without a specified replacement. Reject clear non-rules: if meaning WHETHER, courtesy offers, ordinary preference-based suggestions, generic explanations with no candidate specific dependency, and actual requests to forget or withdraw a rule. An assistant policy proposal or quoted conditional relationship whose adoption is unknown is unclear, not automatically not_rule. Judge only the anchored occurrence when the sentence has several if clauses. Do not invent context.",
+  "criteria": {
+    "rule": "The sentence expresses a candidate condition-to-consequence relationship for a specific matter; forward for confirmation.",
+    "not_rule": "This occurrence is clearly not a candidate conditional rule under state.rule_policy.",
+    "unclear": "A possible conditional relationship needs context to resolve its references, scope or adoption; forward for confirmation."
+  }
+}

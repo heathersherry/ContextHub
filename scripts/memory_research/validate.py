@@ -37,8 +37,6 @@ async def inspect_database(config, run_id):
                     "session_records",
                     "memories",
                     "memory_sources",
-                    "dependencies",
-                    "change_events",
                     "execution_attempts",
                 )
             }

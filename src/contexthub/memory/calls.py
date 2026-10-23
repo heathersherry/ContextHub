@@ -12,12 +12,15 @@ from .schemas import Trace
 
 
 class ResearchLedger(ExecutionLedger):
-    def __init__(self, store, trace, session_seq, extraction_attempt, parser):
+    def __init__(
+        self, store, trace, session_seq, extraction_attempt, parser, output_attempt
+    ):
         super().__init__(PgRepository(store.pool))
         self.trace = trace
         self.session_seq = session_seq
         self.extraction_attempt = extraction_attempt
         self.parser = parser
+        self.output_attempt = output_attempt
 
     async def append(self, record):
         record = AttemptRecord.model_validate(record.model_dump(mode="json"))
@@ -41,7 +44,8 @@ class ResearchLedger(ExecutionLedger):
             "transport_error"
             if record.attempt_no > 1
             else "parse_error"
-            if self.extraction_attempt and self.extraction_attempt > 1
+            if (self.extraction_attempt and self.extraction_attempt > 1)
+            or (self.output_attempt and self.output_attempt > 1)
             else "initial"
         )
         async with self.repository.session(identity.account_id) as db:
@@ -90,6 +94,7 @@ class CallContext:
         policy: RetryPolicy,
         *,
         extraction_attempt=None,
+        output_attempt=None,
         parser=None,
         price: PriceBasis | None = None,
     ):
@@ -101,7 +106,14 @@ class CallContext:
                 strategy=self.trace.strategy_id,
                 stage=stage,
                 operation=":".join(
-                    x for x in (stage, self.question_id, self.phase) if x
+                    x
+                    for x in (
+                        stage,
+                        self.question_id,
+                        self.phase,
+                        f"output_attempt_{output_attempt}" if output_attempt else None,
+                    )
+                    if x
                 ),
                 model_role=stage,
                 code_version=self.code_version,
@@ -111,6 +123,11 @@ class CallContext:
             price=price,
             capture_raw_output=True,
             recorder=ResearchLedger(
-                self.store, self.trace, self.session_seq, extraction_attempt, parser
+                self.store,
+                self.trace,
+                self.session_seq,
+                extraction_attempt,
+                parser,
+                output_attempt,
             ),
         )

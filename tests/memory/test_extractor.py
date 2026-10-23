@@ -4,97 +4,71 @@ import json
 import httpx
 import pytest
 
-from contexthub.memory.extractor import ExtractionFailed, PROMPT, RULE_HINT, parse_items
+from contexthub.memory.extractor import ExtractionFailed, RULE_HINT, parse_items
 
 
-def payload(text="Atlas owner is Li", type="fact", entities=None, refs=None):
-    return json.dumps(
-        {
-            "items": [
-                {
-                    "text": text,
-                    "type": type,
-                    "entities": entities or [],
-                    "message_refs": [1] if refs is None else refs,
-                }
-            ]
-        }
-    )
+def payload(text="Atlas owner is Li"):
+    return json.dumps({"items": [{"text": text, "topics": [], "entities": [], "temporal_scope": "current"}]})
 
 
-def test_usable_partial_and_anomalies():
-    data = json.loads(payload(type="unexpected", refs=[999, -4]))
-    data["items"].append({"text": "cannot map"})
-    items, warnings = parse_items(json.dumps(data))
-    assert len(items) == 1 and items[0].type == "unexpected"
-    assert items[0].message_refs == [999, -4] and len(warnings) == 2
-    assert parse_items('{"items":[]}') == ([], [])
-    for value in ("", "[]", "{}", '{"items":[null]}', '{"items":{}}'):
-        with pytest.raises(ValueError):
-            parse_items(value)
+@pytest.mark.parametrize(
+    "value",
+    [
+        "",
+        "[]",
+        "{}",
+        '{"items":[null]}',
+        '{"items":{}}',
+        '{"items":[{"text":"x","entities":[],"message_refs":[1]}]}',
+        '{"items":[{"text":"x","entities":[],"type":"fact"}]}',
+        '{"items":[],"instructions":[]}',
+    ],
+)
+def test_obsolete_fields_and_unusable_outputs_rejected(value):
+    with pytest.raises(ValueError):
+        parse_items(value)
 
 
 def test_prompt_and_conditional_hints():
     assert RULE_HINT.findall("If the owner changes, reports will switch recipient.")
     assert RULE_HINT.findall("if Atlas expands it would become larger")
-    assert "ONLY the complete current session" in PROMPT
-    assert "unresolved pronouns in text but NOT in entities" in PROMPT
 
 
 @pytest.mark.asyncio
-async def test_pipeline_persists_numbered_input_partial_output_and_initial_states(env):
-    raw = json.loads(payload(type="odd-label", refs=[700, -1]))
-    raw["items"] += json.loads(payload("Please forget my nickname", type="change"))[
-        "items"
-    ]
-    raw["items"].append({"broken": True})
-    env.responses.append(json.dumps(raw))
-    refs = await env.pipeline.ingest(
+async def test_extraction_keeps_requests_without_saving_or_embedding_any_item(env):
+    raw = {
+        "items": [
+            {"text": "Owner is Li", "topics": [], "entities": [], "temporal_scope": "current"},
+            {"text": "Forget nickname", "topics": [], "entities": [], "temporal_scope": "current"},
+        ]
+    }
+    env.responses.append(raw)
+    items = await env.pipeline.ingest(
         env.trace,
         1,
-        [
-            {"role": "assistant", "content": "Atlas owner is Li, okay?"},
-            {
-                "role": "user",
-                "content": "Yes. If the owner changes reports will switch.",
-            },
-        ],
+        [{"role": "user", "content": "Owner is Li. Forget my nickname."}],
         timestamp="raw time",
-        timeout_seconds=10,
     )
-    assert len(refs) == 2 and len(env.prompts) == 1
-    session = await env.store.get_session(env.trace, 1)
-    assert session["messages"][1]["message_no"] == 2
-    assert session["messages"][0]["role"] == "assistant"
-    assert session["timestamp"] == "raw time" and session[
-        "extraction_output"
-    ] == json.dumps(raw)
-    for id, version in refs:
-        (row,) = await env.store.versions(env.trace, id)
-        assert (row["version"], row["status"], row["origin"]) == (
-            1,
-            "unresolved",
-            "extracted",
+    assert len(items) == 2 and not env.embedded
+    saved = await env.store.get_session(env.trace, 1)
+    assert saved["messages"][0]["content"] == "Owner is Li. Forget my nickname."
+    assert [i["text"] for i in json.loads(saved["extraction_output"])["items"]] == [
+        "Owner is Li",
+        "Forget nickname",
+    ]
+    async with env.store.pool.acquire() as conn:
+        assert (
+            await conn.fetchval(
+                "SELECT count(*) FROM memories WHERE run_id=$1 AND episode_id=$2",
+                *env.trace.args[:2]
+            )
+            == 0
         )
-        assert row["search_vector"] is not None and row["memory_embedding"] is not None
-        assert row["timestamp"] == "raw time"
-    source = await env.store.sources(env.trace, *refs[0])
-    assert source["session_seq"] == [1] and source["message_refs"] == {"1": [700, -1]}
-    change = await env.store.get_change(env.trace, refs[1][0])
-    assert (
-        change["operation"] is None
-        and change["target_refs"] == []
-        and change["applied_session_seq"] is None
-    )
-    assert await env.retriever.current(env.trace, 1, purpose="answer") == []
-    prompt = env.prompts[0]["messages"][0]["content"]
-    assert "possible_rules" in prompt and "reports will switch" in prompt
-    assert len(env.embedded) == 2
 
 
 @pytest.mark.asyncio
 async def test_format_and_transport_retries_preserve_all_responses(env):
-    env.responses.extend([503, "not json", "", payload(refs=[99])])
+    env.responses.extend([503, "not json", "", payload()])
     await env.pipeline.ingest(
         env.trace,
         1,
@@ -163,7 +137,7 @@ async def test_empty_batch_no_retry_and_only_current_session_in_prompt(env):
     )
     assert len(env.prompts) == 2
     assert "OLD SECRET" not in env.prompts[1]["messages"][0]["content"]
-    assert len(env.embedded) == 1
+    assert len(env.embedded) == 0
 
 
 @pytest.mark.asyncio
@@ -200,3 +174,19 @@ async def test_session_deadline_stops_without_extra_requests(env):
             env.trace.episode_id,
         )
     assert row["payload"]["stop_reason"] == "cancelled"
+
+
+@pytest.mark.parametrize('scope', [None, 'past', '', 1, []])
+def test_content_requires_explicit_valid_temporal_scope(scope):
+    with pytest.raises(ValueError):
+        parse_items(json.dumps({'items': [{'text': 'A past fact', 'topics': [], 'entities': [], 'temporal_scope': scope}]}))
+
+
+def test_content_cannot_omit_temporal_scope():
+    with pytest.raises(ValueError):
+        parse_items('{"items":[{"text":"A fact","entities":[]}]}')
+
+
+def test_historical_scope_survives_parse():
+    items, _ = parse_items('{"items":[{"text":"Lived in Oxford until 2020","topics":[],"entities":["Oxford"],"temporal_scope":"historical"}]}')
+    assert items[0].temporal_scope == 'historical'

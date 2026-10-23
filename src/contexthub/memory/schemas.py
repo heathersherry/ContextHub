@@ -33,6 +33,7 @@ class RetrievalConfig(BaseModel):
     rrf_c: float = Field(gt=0, allow_inf_nan=False)
     hybrid_limit: int = Field(strict=True, gt=0)
     entity_k: int = Field(strict=True, ge=0)
+    topic_similarity_threshold: float = Field(default=0.8, ge=-1, le=1, allow_inf_nan=False)
 
 
 @dataclass(frozen=True)
@@ -40,7 +41,13 @@ class ExtractedItem:
     text: str
     type: str
     entities: list[str]
-    message_refs: list[int]
+    temporal_scope: Literal["current", "historical"] | None
+    topics: list[str]
+
+
+@dataclass(frozen=True)
+class Extraction:
+    items: list[ExtractedItem]
 
 
 def normalize_entities(names):
@@ -56,6 +63,14 @@ def normalize_entities(names):
             )
         }
     )
+
+
+def normalize_topics(topics):
+    if not isinstance(topics, list) or any(
+        not isinstance(topic, str) or not topic.strip() for topic in topics
+    ):
+        raise ValueError("topics must be a list of nonempty strings")
+    return normalize_entities(topics)
 
 
 def vector_literal(vector, dimensions):

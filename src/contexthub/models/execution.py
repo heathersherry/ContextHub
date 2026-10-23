@@ -171,7 +171,7 @@ class ResponseConversion(Contract):
 
 class AttemptRecord(Contract):
     identity: CallIdentity
-    attempt_no: Positive = Field(le=3)
+    attempt_no: Positive = Field(le=5)
     phase: Literal["started", "finished"]
     requested_model: Name | None
     actual_model: Name | None = None
@@ -254,7 +254,7 @@ class AttemptRecord(Contract):
                 else ("non_retryable",)
             ):
                 raise ContractError("attempt_stop_mismatch")
-            if self.attempt_no == 3 and self.stop_reason == "retry_scheduled":
+            if self.attempt_no == 5 and self.stop_reason == "retry_scheduled":
                 raise ContractError("retry_limit_exceeded")
         if self.cost != calculate_cost(self.usage, self.price, self.actual_model):
             raise ContractError("cost_mismatch")

@@ -1,4 +1,5 @@
 import asyncio
+from dataclasses import replace
 import json
 import httpx
 import pytest
@@ -71,9 +72,13 @@ async def test_bounded_retry_no_outer_resend(tmp_path):
 async def test_cancel_and_reservation_failure(tmp_path):
     async def handle(req): raise asyncio.CancelledError()
     client,call,sink=setup(tmp_path,handle)
+    call=replace(call,capture_raw_output=True)
     try:
         with pytest.raises(asyncio.CancelledError): await client.embed_batch(('a',),call=call)
         assert sink.rows[-1].outcome=='cancelled' and sink.rows[-1].cost.amount is None
+        assert sink.rows[0].request_payload == {
+            'model':'embedding-fixture','input':['a'],'encoding_format':'float','dimensions':2,
+        }
     finally: await client.close()
 
 

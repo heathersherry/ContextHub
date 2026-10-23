@@ -70,3 +70,9 @@ roadmap/
 # Run logs
 integrations/agentleak/runs/
 integrations/memebench/runs/
+
+# Local experiment outputs
+/outputs/
+/artifacts/
+/.smoke_full_s2/
+/.smoke_observe/

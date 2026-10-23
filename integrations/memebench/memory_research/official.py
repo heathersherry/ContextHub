@@ -4,12 +4,14 @@ import ast
 import hashlib
 import json
 from pathlib import Path
-from contexthub.memory.contracts import PROMPTS
+from contexthub.memory import contracts
 
 
 def load_official(path):
     source = Path(path).read_text()
-    pinned = json.loads((PROMPTS / "official_manifest.json").read_text())
+    pinned = json.loads(
+        (contracts.PROMPTS / "evaluation" / "official_manifest.json").read_text()
+    )
     if hashlib.sha256(source.encode()).hexdigest() != pinned["judge_sha256"]:
         raise ValueError("official judge source differs from frozen version")
     tree = ast.parse(source)
@@ -23,6 +25,9 @@ def load_official(path):
     exec(compile(ast.Module(body=nodes, type_ignores=[]), str(path), "exec"), namespace)
     cls = namespace["LLMJudge"]
     for name, filename in pinned["prompt_files"].items():
-        if getattr(cls, name) != (PROMPTS / filename).read_text():
+        if (
+            getattr(cls, name)
+            != (contracts.PROMPTS / "evaluation" / filename).read_text()
+        ):
             raise ValueError("official prompt was modified")
     return cls, namespace["judge_episode"]

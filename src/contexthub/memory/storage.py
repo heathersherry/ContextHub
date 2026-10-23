@@ -6,7 +6,8 @@ from uuid import uuid4
 import asyncpg
 
 from contexthub.db.codecs import init_pg_connection
-from .schemas import IndexConfig, Trace, normalize_entities
+from .contracts import ref_of
+from .schemas import IndexConfig, Trace, normalize_entities, normalize_topics
 
 SCOPE = "run_id=$1 AND episode_id=$2 AND strategy_id=$3"
 
@@ -44,6 +45,14 @@ class MemoryStore:
                             "INSERT INTO research_config VALUES(true,$1)",
                             config.model_dump(),
                         )
+                    columns = {r["column_name"] for r in await conn.fetch(
+                        "SELECT column_name FROM information_schema.columns "
+                        "WHERE table_schema='public' AND table_name='memories'"
+                    )}
+                    if not {"condition_matter_ids", "affected_matter_ids", "topics"} <= columns:
+                        raise ValueError(
+                            "topics and rule endpoint schema required; initialize a new empty research database"
+                        )
                     saved = await conn.fetchval(
                         "SELECT config FROM research_config WHERE singleton"
                     )
@@ -61,7 +70,8 @@ class MemoryStore:
         if session_seq < 1:
             raise ValueError("positive session sequence required")
         numbered = [
-            dict(message_no=i, role=m["role"], content=m["content"])
+            dict(message_no=i, role=m["role"], content=m["content"],
+                 **({"timestamp": m["timestamp"]} if "timestamp" in m else {}))
             for i, m in enumerate(messages, 1)
         ]
         if any(
@@ -83,7 +93,16 @@ class MemoryStore:
                 raise ValueError("sessions must be ingested once, in order")
             if previous is not None:
                 failed = await conn.fetchval(
-                    f"SELECT 1 FROM memory_steps WHERE {SCOPE} AND stage='session.failed' LIMIT 1",
+                    f"""SELECT 1 FROM memory_steps failed WHERE {SCOPE}
+                    AND stage='session.failed' AND NOT EXISTS (
+                        SELECT 1 FROM memory_steps completed
+                        WHERE completed.run_id=failed.run_id
+                        AND completed.episode_id=failed.episode_id
+                        AND completed.strategy_id=failed.strategy_id
+                        AND completed.session_seq=failed.session_seq
+                        AND completed.stage='session.complete'
+                        AND completed.step_id>failed.step_id
+                    ) LIMIT 1""",
                     *trace.args,
                 )
                 if failed:
@@ -98,7 +117,7 @@ class MemoryStore:
                 from .extractor import parse_items
 
                 try:
-                    parse_items(output)
+                    parse_items(output, kind=None)
                 except (ValueError, TypeError):
                     raise ValueError(
                         "previous session extraction failed; stop this trajectory"
@@ -129,6 +148,15 @@ class MemoryStore:
                 session_seq,
             )
 
+    async def latest_repair_evidence(self, trace, key):
+        async with self.pool.acquire() as conn:
+            return await conn.fetchval(
+                f"SELECT payload FROM memory_steps WHERE {SCOPE} AND stage IN "
+                "('p2.condition_evidence','p2.repair_evidence') "
+                "AND payload->>'target'=$4 ORDER BY step_id DESC LIMIT 1",
+                *trace.args, key,
+            )
+
     async def _insert(
         self,
         conn,
@@ -137,6 +165,7 @@ class MemoryStore:
         text,
         type,
         entities,
+        topics,
         origin,
         memory_id,
         version,
@@ -149,8 +178,8 @@ class MemoryStore:
         )
         await conn.execute(
             """INSERT INTO memories(run_id,episode_id,strategy_id,memory_id,version,
-            text,type,origin,status,created_in_session,timestamp,entities)
-            VALUES($1,$2,$3,$4,$5,$6,$7,$8,'unresolved',$9,$10,$11)""",
+            text,type,origin,status,created_in_session,timestamp,entities,topics)
+            VALUES($1,$2,$3,$4,$5,$6,$7,$8,'unresolved',$9,$10,$11,$12)""",
             *trace.args,
             memory_id,
             version,
@@ -160,47 +189,23 @@ class MemoryStore:
             session_seq,
             timestamp,
             normalize_entities(entities),
+            normalize_topics(topics),
         )
         if sources is not None:
             await conn.execute(
-                "INSERT INTO memory_sources VALUES($1,$2,$3,$4,$5,$6,$7)",
+                "INSERT INTO memory_sources VALUES($1,$2,$3,$4,$5,$6)",
                 *trace.args,
                 memory_id,
                 version,
-                sorted(int(k) for k in sources),
-                sources,
-            )
-        if type == "change":
-            await conn.execute(
-                "INSERT INTO change_events(run_id,episode_id,strategy_id,change_id) VALUES($1,$2,$3,$4)",
-                *trace.args,
-                memory_id,
+                sorted(set(sources)),
             )
         return memory_id, version
 
-    async def save_extracted(self, trace, session_seq, items):
-        async with self.pool.acquire() as conn, conn.transaction():
-            return [
-                await self._insert(
-                    conn,
-                    trace,
-                    session_seq,
-                    item.text,
-                    item.type,
-                    item.entities,
-                    "extracted",
-                    uuid4(),
-                    1,
-                    {str(session_seq): item.message_refs},
-                )
-                for item in items
-            ]
-
     async def add_memory(
-        self, trace, session_seq, *, text, type, entities, origin, sources=None
+        self, trace, session_seq, *, text, type, entities, topics, origin, sources=None
     ):
         if origin == "derived" and sources is not None:
-            raise ValueError("derived memories use dependency provenance")
+            raise ValueError("derived memories use basis_refs")
         async with self.pool.acquire() as conn, conn.transaction():
             return await self._insert(
                 conn,
@@ -209,6 +214,7 @@ class MemoryStore:
                 text,
                 type,
                 entities,
+                topics,
                 origin,
                 uuid4(),
                 1,
@@ -224,11 +230,12 @@ class MemoryStore:
         text,
         type,
         entities,
+        topics,
         origin,
         sources=None,
     ):
         if origin == "derived" and sources is not None:
-            raise ValueError("derived memories use dependency provenance")
+            raise ValueError("derived memories use basis_refs")
         async with self.pool.acquire() as conn, conn.transaction():
             await conn.execute(
                 "SELECT pg_advisory_xact_lock(hashtextextended($1,0))",
@@ -239,13 +246,8 @@ class MemoryStore:
                 *trace.args,
                 memory_id,
             )
-            if (
-                old is None
-                or old["type"] == "change"
-                or type == "change"
-                or old["status"] == "deleted"
-            ):
-                raise ValueError("cannot version a missing, forgotten or change memory")
+            if old is None or old["status"] == "deleted":
+                raise ValueError("cannot version a missing or forgotten memory")
             if session_seq < old["created_in_session"]:
                 raise ValueError("cannot create a version in an earlier session")
             return await self._insert(
@@ -255,6 +257,7 @@ class MemoryStore:
                 text,
                 type,
                 entities,
+                topics,
                 origin,
                 memory_id,
                 old["version"] + 1,
@@ -307,61 +310,6 @@ class MemoryStore:
                 version,
             )
 
-    async def put_dependency(self, trace, upstream, downstream, edge_status, reason):
-        async with self.pool.acquire() as conn:
-            await conn.execute(
-                """INSERT INTO dependencies(run_id,episode_id,strategy_id,upstream_id,upstream_version,downstream_id,downstream_version,edge_status,reason) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9)
-                ON CONFLICT(run_id,episode_id,strategy_id,upstream_id,upstream_version,downstream_id,downstream_version)
-                DO UPDATE SET edge_status=EXCLUDED.edge_status,reason=EXCLUDED.reason""",
-                *trace.args,
-                *upstream,
-                *downstream,
-                edge_status,
-                reason,
-            )
-
-    async def downstream(self, trace, upstream_id):
-        """All known old/new version edges, without similarity truncation. Not a repair proof."""
-        async with self.pool.acquire() as conn:
-            return await conn.fetch(
-                f"SELECT * FROM dependencies WHERE {SCOPE} AND upstream_id=$4 ORDER BY upstream_version,downstream_id,downstream_version",
-                *trace.args,
-                upstream_id,
-            )
-
-    async def get_change(self, trace, change_id):
-        async with self.pool.acquire() as conn:
-            return await conn.fetchrow(
-                f"SELECT * FROM change_events WHERE {SCOPE} AND change_id=$4",
-                *trace.args,
-                change_id,
-            )
-
-    async def bind_change(self, trace, change_id, operation, targets):
-        """Persist an explicit P1 binding; never infer targets or apply changes."""
-        if operation not in ("update", "forget"):
-            raise ValueError("unknown change operation")
-        async with self.pool.acquire() as conn, conn.transaction():
-            for target in targets:
-                from uuid import UUID
-
-                if not await conn.fetchval(
-                    f"SELECT 1 FROM memories WHERE {SCOPE} AND memory_id=$4 AND version=$5",
-                    *trace.args,
-                    UUID(str(target["memory_id"])),
-                    target["version"],
-                ):
-                    raise ValueError("change target missing in this trace")
-            result = await conn.execute(
-                f"UPDATE change_events SET operation=$5,target_refs=$6 WHERE {SCOPE} AND change_id=$4 AND applied_session_seq IS NULL",
-                *trace.args,
-                change_id,
-                operation,
-                targets,
-            )
-            if result != "UPDATE 1":
-                raise ValueError("change missing or already applied")
-
     async def record(self, context, stage, payload, *, conn=None):
         import json
 
@@ -389,42 +337,33 @@ class MemoryStore:
         async with self.pool.acquire() as db:
             return await db.fetchrow(sql, *args)
 
-    async def related(self, trace, refs):
-        from .contracts import split_ref, ref_of
-
-        ids = list({split_ref(r)[0] for r in refs})
+    async def current_rows(self, trace, matter_ids=None):
         async with self.pool.acquire() as conn:
-            edges = await conn.fetch(
-                f"""SELECT * FROM dependencies WHERE {SCOPE}
-                AND (upstream_id=ANY($4::uuid[]) OR downstream_id=ANY($4::uuid[]))""",
-                *trace.args,
-                ids,
+            return [
+                dict(r)
+                for r in await conn.fetch(
+                    f"SELECT DISTINCT ON(memory_id) * FROM memories WHERE {SCOPE} AND temporal_scope='current' AND ($4::uuid[] IS NULL OR memory_id=ANY($4)) ORDER BY memory_id,version DESC",
+                    *trace.args, None if matter_ids is None else list(matter_ids),
+                )
+            ]
+
+    async def active_rules(self, trace, *, condition_ids=None, affected_ids=None, rule_ids=None):
+        """Read current active rule versions; optional routes are ORed together."""
+        scoped = any(x is not None for x in (condition_ids, affected_ids, rule_ids))
+        async with self.pool.acquire() as conn:
+            rows = await conn.fetch(
+                f"""SELECT r.* FROM memories r
+                WHERE {SCOPE} AND type='rule' AND temporal_scope='current'
+                AND status='fresh' AND accepted AND NOT invalidated
+                AND ($4::boolean OR condition_matter_ids && $5::uuid[]
+                     OR affected_matter_ids && $6::uuid[] OR memory_id=ANY($7::uuid[]))
+                AND NOT EXISTS (
+                    SELECT 1 FROM memories newer WHERE newer.run_id=r.run_id
+                    AND newer.episode_id=r.episode_id AND newer.strategy_id=r.strategy_id
+                    AND newer.memory_id=r.memory_id AND newer.temporal_scope='current'
+                    AND newer.version>r.version
+                ) ORDER BY memory_id""",
+                *trace.args, not scoped, list(condition_ids or ()),
+                list(affected_ids or ()), list(rule_ids or ()),
             )
-            keys = {
-                f"{e[p + '_id']}:{e[p + '_version']}"
-                for e in edges
-                for p in ("upstream", "downstream")
-            }
-            rows = [await self.read_ref(trace, r, conn=conn) for r in sorted(keys)]
-            # Include the current version of each known neighbor without top-k truncation.
-            current = await conn.fetch(
-                f"""SELECT DISTINCT ON(memory_id) * FROM memories WHERE {SCOPE}
-                AND memory_id=ANY($4::uuid[]) AND temporal_scope='current'
-                ORDER BY memory_id,version DESC""",
-                *trace.args,
-                list({r["memory_id"] for r in rows}),
-            )
-        materials = {
-            ref_of(r): dict(r)
-            for r in [*rows, *current]
-            if r["status"] != "deleted" and r["merged_into"] is None
-        }
-        visible_edges = [
-            dict(e)
-            for e in edges
-            if all(
-                f"{e[p + '_id']}:{e[p + '_version']}" in materials
-                for p in ("upstream", "downstream")
-            )
-        ]
-        return list(materials.values()), visible_edges
+        return {ref_of(r): dict(r) for r in rows}

@@ -266,9 +266,10 @@ class OpenAIChatClient(BaseChatClient):
             error = None
             archive = {}
             try:
-                async with asyncio.timeout(call.policy.timeout_seconds):
+                timeout = call.policy.timeout_for_attempt(number)
+                async with asyncio.timeout(timeout):
                     response = await self._client.post('/chat/completions', json=payload,
-                                                       timeout=call.policy.timeout_seconds)
+                                                       timeout=timeout)
                 try:
                     data = response.json()
                 except ValueError:

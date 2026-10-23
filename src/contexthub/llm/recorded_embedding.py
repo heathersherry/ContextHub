@@ -83,11 +83,13 @@ class RecordedEmbeddingClient:
                 started_at=started,price=call.price)
             await call.recorder.append(AttemptRecord(**common,phase='started',outcome='started',usage=usage,
                 actual_model_missing_reason='request_not_completed',request_id_missing_reason='request_not_completed',
+                request_payload=payload if call.capture_raw_output else None,
                 cost=calculate_cost(usage,call.price,None)))
             tick=time.monotonic(); response=None; data=None; error=None; archived={}; vectors=None
             try:
-                async with asyncio.timeout(call.policy.timeout_seconds):
-                    response=await self._client.post('/embeddings',json=payload,timeout=call.policy.timeout_seconds)
+                timeout = call.policy.timeout_for_attempt(number)
+                async with asyncio.timeout(timeout):
+                    response=await self._client.post('/embeddings',json=payload,timeout=timeout)
                 try: data=response.json()
                 except ValueError: pass
                 archived=archive_response(self.config.response_archive_directory,identity=call.identity,

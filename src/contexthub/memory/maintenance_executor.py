@@ -1,10 +1,26 @@
-"""Apply explicit relations atomically; repair only existing affected conclusions."""
+"""P2 direct maintenance, condition checks and supported repairs. Rule endpoints route each propagation wave."""
 
 import hashlib
 import json
-from collections import deque
-from contextlib import asynccontextmanager
-from .contracts import Repair, material, prompt, ref_of, split_ref
+from uuid import uuid4
+from .contracts import (
+    DirectDecision,
+    DirectPlan,
+    Targets,
+    TriggerDecision,
+    RepairDecision,
+    prompt,
+    ref_of,
+    rule_queries,
+    split_ref,
+)
+from .model_io import (
+    OUTPUT_ATTEMPTS,
+    OutputValidationFailed,
+    LocalReferences,
+    timed_text,
+    validated_completion,
+)
 from .schemas import normalize_entities, vector_literal
 from .storage import SCOPE
 
@@ -16,41 +32,54 @@ def fingerprint(value):
 
 
 class MaintenanceExecutor:
-    def __init__(
-        self, store, retriever, indexer, discovery, client, *, retry, price=None
-    ):
+    def __init__(self, store, retriever, indexer, client, *, retry, price=None, intent_classifier=None):
         self.store, self.retriever, self.indexer = store, retriever, indexer
-        self.discovery, self.client, self.retry, self.price = (
-            discovery,
-            client,
-            retry,
-            price,
+        self.client, self.retry, self.price = client, retry, price
+        self.intent_classifier = intent_classifier
+
+    @staticmethod
+    def render_request(name, inputs):
+        instructions = prompt(name)
+        if name == "p2_repair":
+            instructions = instructions.replace(
+                "{target_statement}", json.dumps(inputs["target"]["text"], ensure_ascii=False)
+            )
+            inputs = {k: v for k, v in inputs.items() if k != "target"}
+        return instructions + "\n" + json.dumps(inputs, ensure_ascii=False, default=str)
+
+    async def ask(self, name, inputs, refs, validate, context):
+        rendered = self.render_request(name, inputs)
+        await self.store.record(
+            context,
+            name + ".input",
+            {"prompt": rendered, "reference_map": refs.decode_map,
+             **({"target": inputs["target"]["ref"]} if name == "p2_repair" else {})},
         )
-
-    @asynccontextmanager
-    async def transaction(self, connection=None):
-        if connection is not None:
-            yield connection
-        else:
-            async with self.store.pool.acquire() as conn, conn.transaction():
-                yield conn
-
-    async def canonical(self, ref, context, conn):
-        seen = set()
-        while ref not in seen:
-            seen.add(ref)
-            row = await self.store.read_ref(context.trace, ref, conn=conn)
-            if row is None:
-                raise ValueError("missing memory reference in this trajectory")
-            if row["merged_into"] is None:
-                return dict(row)
-            ref = row["merged_into"]["ref"]
-        raise ValueError("cyclic merged references")
+        result = await validated_completion(
+            self.client,
+            context,
+            stage=name,
+            log_stage=name,
+            rendered=rendered,
+            retry=self.retry,
+            price=self.price,
+            validate=validate,
+        )
+        await self.store.record(
+            context,
+            name + ".output",
+            {
+                "result": (
+                    result.model_dump() if hasattr(result, "model_dump") else result
+                )
+            },
+        )
+        return result
 
     async def current(self, memory_id, context, conn):
         return await conn.fetchrow(
             f"""SELECT * FROM memories WHERE {SCOPE} AND memory_id=$4
-            AND temporal_scope='current' AND merged_into IS NULL ORDER BY version DESC LIMIT 1""",
+            AND temporal_scope='current' ORDER BY version DESC LIMIT 1""",
             *context.trace.args,
             memory_id,
         )
@@ -64,7 +93,6 @@ class MaintenanceExecutor:
             "accepted",
             "invalidated",
             "basis_refs",
-            "merged_into",
         )
         if not set(values) <= set(columns):
             raise ValueError("unsupported memory mutation")
@@ -83,735 +111,940 @@ class MaintenanceExecutor:
             conn=conn,
         )
 
-    async def sources(self, row, context, conn):
-        source = await conn.fetchrow(
-            f"SELECT * FROM memory_sources WHERE {SCOPE} AND memory_id=$4 AND version=$5",
-            *context.trace.args,
-            row["memory_id"],
-            row["version"],
-        )
-        if source is None or not source["message_refs"]:
-            raise ValueError("direct statement has no source references")
-        for seq, refs in source["message_refs"].items():
-            messages = await conn.fetchval(
-                f"SELECT messages FROM session_records WHERE {SCOPE} AND session_seq=$4",
-                *context.trace.args,
-                int(seq),
+    async def process(self, focus, candidates, context, *, query_vector=None):
+        """Return every accepted reference and transition for one extracted item."""
+        if self.intent_classifier is None:
+            key, changes = await self.direct(focus, candidates, context)
+            return [key] if key else [], changes
+        if focus["type"] == "rule":
+            key, changes = await self.apply_direct(
+                focus, DirectDecision(action="new", target_ref=None), context
             )
-            valid = {m["message_no"] for m in messages or []}
-            if not refs or any(type(n) is not int or n not in valid for n in refs):
-                raise ValueError("invalid direct message reference")
-        return source["message_refs"]
+            return [key], changes
 
-    async def invalidate(
-        self, roots, context, conn, *, exclude_history=False, forget=False, protected=()
-    ):
-        affected = set()
-        # Only actual invalid premises invalidate historical conclusions. A mere
-        # maintenance edge says "recheck", not "this fact was false".
-        if exclude_history or forget:
-            provenance = deque(roots)
-            visited = set()
-            while provenance:
-                basis = provenance.popleft()
-                if basis in visited:
-                    continue
-                visited.add(basis)
-                rows = await conn.fetch(
-                    f"SELECT * FROM memories WHERE {SCOPE} AND basis_refs @> $4::jsonb AND status<>'deleted' AND NOT invalidated",
-                    *context.trace.args,
-                    [basis],
-                )
-                for child in rows:
-                    key = ref_of(child)
-                    await self.mutate(
-                        key,
-                        {
-                            "invalidated": True,
-                            "status": "stale",
-                            "status_reason": f"{'forgotten' if forget else 'incorrect'} premise: {basis}",
-                        },
-                        context,
-                        conn,
-                    )
-                    current = await self.current(child["memory_id"], context, conn)
-                    if current and ref_of(current) == key:
-                        affected.add(key)
-                    provenance.append(key)
-        queue, seen = deque([*roots, *affected]), set()
-        while queue:
-            key = queue.popleft()
-            if key in seen:
-                continue
-            seen.add(key)
-            edges = await conn.fetch(
-                f"SELECT * FROM dependencies WHERE {SCOPE} AND upstream_id=$4 AND upstream_version=$5 AND maintenance_active",
-                *context.trace.args,
-                *split_ref(key),
+        intent = await self.intent_classifier.classify(focus, context)
+        try:
+            if intent == "hold":
+                await self.store.record(context, "p2.held", {"incoming": focus})
+                return [], []
+            if intent == "forget":
+                targets = await self.forget_scope(focus, None, context, query_vector=query_vector)
+                if not targets:
+                    await self.store.record(context, "p2.forget_no_targets", {"incoming": focus})
+                    return [], []
+                decision = DirectDecision(action="forget", target_ref=targets[0])
+                return [], await self.apply_forget(focus, decision, targets, context)
+            plan = await self.plan_direct(
+                intent, focus, candidates, context, query_vector=query_vector,
             )
-            for e in edges:
-                target = f"{e['downstream_id']}:{e['downstream_version']}"
-                child = await self.store.read_ref(context.trace, target, conn=conn)
-                current = await self.current(child["memory_id"], context, conn)
-                if (
-                    target not in protected
-                    and child["status"] != "deleted"
-                    and current
-                    and ref_of(current) == target
-                ):
-                    if child["status"] != "stale":
-                        await self.mutate(
-                            target,
-                            {
-                                "status": "stale",
-                                "status_reason": f"upstream changed: {key}",
-                            },
-                            context,
-                            conn,
-                        )
-                    if child["accepted"]:
-                        affected.add(target)
-                    queue.append(target)
-        return affected
+        except OutputValidationFailed as exc:
+            await self.store.record(context, "p2.direct_skipped", {
+                "incoming": focus, "intent": intent, "attempts": OUTPUT_ATTEMPTS,
+                "error": str(exc), "action": "skip_item",
+            })
+            return [], []
 
-    async def apply(self, binding, focus_ref, context, connection=None):
-        key = fingerprint(binding.model_dump(exclude={"reason", "evidence_refs"}))
-        async with self.transaction(connection) as conn:
-            prior = await conn.fetchval(
-                f"""SELECT payload FROM memory_steps WHERE {SCOPE}
-                AND stage='p2.applied' AND payload->>'key'=$4 ORDER BY step_id DESC LIMIT 1""",
-                *context.trace.args,
-                key,
-            )
-            if prior:
-                return prior["result"], set(), False
-            focus = await self.store.read_ref(context.trace, focus_ref, conn=conn)
-            if focus is None or focus["status"] == "deleted":
-                raise ValueError("missing or forgotten focus")
-            await self.sources(focus, context, conn)
-            if binding.relation == "unresolved":
-                source = (
-                    await self.canonical(binding.content_ref, context, conn)
-                    if binding.content_ref
-                    else None
-                )
-                target = (
-                    await self.canonical(binding.target_ref, context, conn)
-                    if binding.target_ref
-                    else None
-                )
-                reason = "; ".join(binding.issues)
-                if (
-                    target
-                    and source
-                    and target["memory_id"] != source["memory_id"]
-                    and binding.temporal_scope == "current"
-                ):
-                    latest = await self.current(target["memory_id"], context, conn)
-                    if (
-                        not latest
-                        or ref_of(latest) != ref_of(target)
-                        or target["status"] == "deleted"
-                    ):
-                        raise ValueError("unresolved bound target is not current")
-                    sources = await self.sources(source, context, conn)
-                    version = await conn.fetchval(
-                        f"SELECT max(version)+1 FROM memories WHERE {SCOPE} AND memory_id=$4",
-                        *context.trace.args,
-                        target["memory_id"],
-                    )
-                    new = await self.store._insert(
-                        conn,
-                        context.trace,
-                        context.session_seq,
-                        source["text"],
-                        source["type"],
-                        source["entities"],
-                        "extracted",
-                        target["memory_id"],
-                        version,
-                        sources,
-                    )
-                    unresolved = f"{new[0]}:{new[1]}"
-                    await conn.execute(
-                        f"UPDATE memories SET search_vector=to_tsvector($6::regconfig,text),memory_embedding=$7::vector WHERE {SCOPE} AND memory_id=$4 AND version=$5",
-                        *context.trace.args,
-                        *new,
-                        self.store.config.text_config,
-                        source["memory_embedding"],
-                    )
-                    await self.mutate(
-                        unresolved,
-                        {"temporal_scope": "current", "status_reason": reason},
-                        context,
-                        conn,
-                    )
-                    await self.mutate(
-                        binding.content_ref,
-                        {"merged_into": {"ref": unresolved}, "status_reason": reason},
-                        context,
-                        conn,
-                    )
-                elif not focus["accepted"] and focus["merged_into"] is None:
-                    await self.mutate(
-                        focus_ref,
-                        {
-                            "status": "unresolved",
-                            "temporal_scope": binding.temporal_scope,
-                            "status_reason": reason,
-                        },
-                        context,
-                        conn,
-                    )
-                return None, set(), False
-            source = (
-                await self.canonical(binding.content_ref, context, conn)
-                if binding.content_ref
-                else None
-            )
-            target = (
-                await self.canonical(binding.target_ref, context, conn)
-                if binding.target_ref
-                else None
-            )
-            if target and target["status"] == "deleted":
-                raise ValueError("cannot restore a forgotten matter")
-            if source and source["type"] not in ("fact", "rule"):
-                raise ValueError("fact/rule content required")
-            if target and target["type"] not in ("fact", "rule"):
-                raise ValueError("fact/rule target required")
-            if (
-                target
-                and binding.relation in ("replace", "correct", "duplicate")
-                and binding.temporal_scope == "current"
-            ):
-                latest = await self.current(target["memory_id"], context, conn)
-                if latest is None or ref_of(latest) != ref_of(target):
-                    raise ValueError("target is not the observed current version")
-            if target and binding.relation == "correct" and not target["accepted"]:
-                raise ValueError("correction requires an observed accepted target")
-            affected = set()
-            performed = True
-            result = None
-            if binding.relation == "forget":
-                versions = await conn.fetch(
-                    f"SELECT * FROM memories WHERE {SCOPE} AND memory_id=$4",
-                    *context.trace.args,
-                    target["memory_id"],
-                )
-                for old in versions:
-                    await self.mutate(
-                        ref_of(old),
-                        {"status": "deleted", "status_reason": binding.reason},
-                        context,
-                        conn,
-                    )
-                affected |= await self.invalidate(
-                    [ref_of(r) for r in versions], context, conn, forget=True
-                )
-                await conn.execute(
-                    f"""UPDATE dependencies SET maintenance_active=false WHERE {SCOPE}
-                    AND (upstream_id=$4 OR downstream_id=$4)""",
-                    *context.trace.args,
-                    target["memory_id"],
-                )
-                result = ref_of(target)
-            else:
-                sources = await self.sources(source, context, conn)
-                if source["status"] == "deleted" or source["invalidated"]:
-                    raise ValueError("unusable replacement content")
-                if (
-                    source["memory_embedding"] is None
-                    or source["search_vector"] is None
-                ):
-                    raise ValueError("replacement must be indexed before acceptance")
-                if target and source["memory_id"] == target["memory_id"]:
-                    # A sibling fact/change has already merged this provisional record.
-                    result = ref_of(source)
-                    performed = False
-                elif binding.relation == "duplicate" and not target["invalidated"]:
-                    previous = (
-                        await self.sources(target, context, conn)
-                        if target["origin"] == "extracted"
-                        else {}
-                    )
-                    merged = {
-                        k: sorted(set(previous.get(k, [])) | set(sources.get(k, [])))
-                        for k in previous.keys() | sources.keys()
-                    }
-                    await conn.execute(
-                        """INSERT INTO memory_sources VALUES($1,$2,$3,$4,$5,$6,$7)
-                        ON CONFLICT(run_id,episode_id,strategy_id,memory_id,version)
-                        DO UPDATE SET session_seq=EXCLUDED.session_seq,message_refs=EXCLUDED.message_refs""",
-                        *context.trace.args,
-                        target["memory_id"],
-                        target["version"],
-                        sorted(int(k) for k in merged),
-                        merged,
-                    )
-                    await self.store.record(
-                        context,
-                        "p2.sources_merged",
-                        {"ref": ref_of(target), "before": previous, "after": merged},
-                        conn=conn,
-                    )
-                    result = ref_of(target)
-                    await self.mutate(
-                        result,
-                        {
-                            "status": "fresh",
-                            "accepted": True,
-                            "invalidated": False,
-                            "status_reason": binding.reason,
-                        },
-                        context,
-                        conn,
-                    )
-                elif target:
-                    version = await conn.fetchval(
-                        f"SELECT max(version)+1 FROM memories WHERE {SCOPE} AND memory_id=$4",
-                        *context.trace.args,
-                        target["memory_id"],
-                    )
-                    new = await self.store._insert(
-                        conn,
-                        context.trace,
-                        context.session_seq,
-                        source["text"],
-                        source["type"],
-                        source["entities"],
-                        "extracted",
-                        target["memory_id"],
-                        version,
-                        sources,
-                    )
-                    result = f"{new[0]}:{new[1]}"
-                    await conn.execute(
-                        f"""UPDATE memories SET search_vector=to_tsvector($6::regconfig,text),memory_embedding=$7::vector
-                        WHERE {SCOPE} AND memory_id=$4 AND version=$5""",
-                        *context.trace.args,
-                        *new,
-                        self.store.config.text_config,
-                        source["memory_embedding"],
-                    )
-                    if binding.relation in ("replace", "correct", "duplicate"):
-                        await self.mutate(
-                            ref_of(target),
-                            {
-                                "status": "stale",
-                                "invalidated": target["invalidated"]
-                                or binding.relation == "correct",
-                                "status_reason": binding.reason,
-                            },
-                            context,
-                            conn,
-                        )
-                        affected |= await self.invalidate(
-                            [ref_of(target)],
-                            context,
-                            conn,
-                            exclude_history=binding.relation == "correct",
-                        )
-                    await self.mutate(
-                        result,
-                        {
-                            "status": "fresh",
-                            "accepted": True,
-                            "temporal_scope": binding.temporal_scope,
-                            "status_reason": binding.reason,
-                        },
-                        context,
-                        conn,
-                    )
+        if not plan.operations:
+            await self.store.record(context, "p2.held", {"incoming": focus, "intent": intent})
+            return [], []
+        prepared = []
+        for operation in plan.operations:
+            target = candidates.get(operation.target_ref)
+            content = dict(focus)
+            if operation.text is not None:
+                content.update(text=operation.text, entities=normalize_entities(operation.entities))
+            if target:
+                content["type"] = "rule" if target["type"] == "rule" else "content"
+            decision = DirectDecision(action=operation.action, target_ref=operation.target_ref)
+            embedding = await self.direct_embedding(content, decision, context)
+            prepared.append((content, decision, embedding))
+        accepted, transitions = [], []
+        # Validate the whole plan and obtain all embeddings before any memory write.
+        # A storage failure rolls back every operation for this incoming item.
+        async with self.store.pool.acquire() as conn, conn.transaction():
+            for content, decision, embedding in prepared:
+                if decision.action in ("invalidate", "retract", "revoke"):
+                    transitions.extend(await self.remove_direct(content, decision, context, conn))
                 else:
-                    result = ref_of(source)
-                    await self.mutate(
-                        result,
-                        {
-                            "status": "fresh",
-                            "accepted": True,
-                            "temporal_scope": binding.temporal_scope,
-                            "status_reason": binding.reason,
-                        },
-                        context,
-                        conn,
+                    key, changes = await self.write_direct(content, decision, embedding, context, conn)
+                    accepted.append(key)
+                    transitions.extend(changes)
+        return accepted, transitions
+
+    async def plan_direct(self, intent, focus, candidates, context, *, query_vector=None):
+        candidates = {
+            key: row for key, row in candidates.items()
+            if row["accepted"] and row["status"] != "deleted"
+            and (intent == "correction" or row["type"] == "fact")
+        }
+        current = {ref_of(r) for r in await self.store.current_rows(context.trace)}
+        if intent == "new":
+            candidates = await self.retriever.filter_direct_candidates(
+                focus, candidates, context, current_refs=current, query_vector=query_vector,
+            )
+            if not candidates:
+                action = {"current": "new", "historical": "history"}[focus["temporal_scope"]]
+                plan = DirectPlan(operations=[dict(
+                    action=action, target_ref=None,
+                    text=focus["text"], entities=focus["entities"],
+                )])
+                await self.store.record(context, "p2_new.direct_save", {
+                    "reason": "no_candidates", "incoming": focus,
+                    "result": plan.model_dump(),
+                })
+                return plan
+        refs = LocalReferences(list(candidates.values()))
+        inputs = {
+            "incoming": {"text": focus["text"]},
+            "candidates": [dict(
+                ref=refs.encode(key), text=row["text"], type=row["type"],
+                matter=refs.matters[str(row["memory_id"])],
+                is_current=key in current, temporal_scope=row["temporal_scope"],
+                status=row["status"], invalidated=row["invalidated"], origin=row["origin"],
+            ) for key, row in candidates.items()],
+        }
+        allowed = {
+            "new": {"new", "update", "duplicate", "history", "invalidate"},
+            "correction": {"correct", "update", "retract", "revoke", "invalidate"},
+        }[intent]
+
+        def validate(raw):
+            plan = DirectPlan.model_validate_json(raw)
+            seen, written, current_matters = set(), set(), set()
+            for operation in plan.operations:
+                if operation.action not in allowed:
+                    raise ValueError(f"{operation.action} is not allowed for {intent}")
+                if operation.target_ref:
+                    operation.target_ref = refs.decode(operation.target_ref)
+                    if operation.target_ref in seen:
+                        raise ValueError("use each target version at most once")
+                    seen.add(operation.target_ref)
+                    target = candidates[operation.target_ref]
+                    if target["type"] == "rule" and operation.text is not None:
+                        rule_queries(operation.text)
+                    if operation.action in ("update", "invalidate", "revoke") and operation.target_ref not in current:
+                        raise ValueError("this operation requires a current target")
+                    if operation.action == "revoke" and target["type"] != "rule":
+                        raise ValueError("revoke requires a rule")
+                    if operation.action == "invalidate" and target["type"] != "fact":
+                        raise ValueError("invalidate requires a fact")
+                    if operation.action == "duplicate" and (
+                        target["status"] != "fresh" or target["invalidated"] or target["origin"] == "derived"
+                    ):
+                        raise ValueError("reconfirm an unavailable or derived record with update, not duplicate")
+                    if operation.action in ("update", "correct") and operation.target_ref in current:
+                        matter = target["memory_id"]
+                        if matter in current_matters:
+                            raise ValueError("only one new current version per matter")
+                        current_matters.add(matter)
+                if operation.text is not None:
+                    scope = "historical" if operation.action == "history" else "current"
+                    if operation.action == "correct" and operation.target_ref not in current:
+                        scope = "historical"
+                    signature = (operation.text.strip(), scope)
+                    if signature in written:
+                        raise ValueError("do not write the same content twice; retire redundant current targets instead")
+                    written.add(signature)
+            return plan
+
+        return await self.ask("p2_" + intent, inputs, refs, validate, context)
+
+    async def direct(self, focus, candidates, context):
+        current = {ref_of(r) for r in await self.store.current_rows(context.trace)}
+        refs = LocalReferences(list(candidates.values()))
+        inputs = {
+            "incoming": dict(timed_text(focus), type=focus["type"]),
+            "candidates": [
+                dict(
+                    refs.describe(r),
+                    type=r["type"],
+                    matter=refs.matters[str(r["memory_id"])],
+                    is_current=ref_of(r) in current,
+                    status=r["status"],
+                    invalidated=r["invalidated"],
+                    origin=r["origin"],
+                )
+                for r in candidates.values()
+            ],
+        }
+
+        def validate(raw):
+            result = DirectDecision.model_validate_json(raw)
+            if result.target_ref:
+                result.target_ref = refs.decode(result.target_ref)
+                if result.target_ref not in candidates:
+                    raise ValueError("target must be a supplied old candidate")
+                target = candidates[result.target_ref]
+                expected_type = "rule" if focus["type"] == "rule" else "fact"
+                if (
+                    result.action in ("update", "correct", "duplicate", "history")
+                    and target["type"] != expected_type
+                ):
+                    raise ValueError("replacement must match the target memory type")
+                if (
+                    result.action in ("update", "revoke", "invalidate")
+                    and result.target_ref not in current
+                ):
+                    raise ValueError("this operation requires the current version")
+                if result.action == "revoke" and target["type"] != "rule":
+                    raise ValueError("revoke requires a rule")
+                if result.action == "invalidate" and target["type"] != "fact":
+                    raise ValueError("invalidate requires a fact")
+                if result.action == "duplicate" and (
+                    target["status"] != "fresh"
+                    or target["invalidated"]
+                    or target["origin"] == "derived"
+                ):
+                    raise ValueError(
+                        "only a fresh direct assertion can be duplicate; reconfirmation is update"
                     )
-                if binding.content_ref != result:
-                    await self.mutate(
-                        binding.content_ref,
-                        {
-                            "merged_into": {"ref": result},
-                            "status": "unresolved",
-                            "accepted": False,
-                            "status_reason": "merged into " + result,
-                        },
-                        context,
-                        conn,
-                    )
+            return result
+
+        try:
+            decision = await self.ask("p2_direct", inputs, refs, validate, context)
+            forget_refs = (
+                await self.forget_scope(focus, decision.target_ref, context)
+                if decision.action == "forget"
+                else None
+            )
+        except OutputValidationFailed as exc:
             await self.store.record(
                 context,
-                "p2.applied",
+                "p2.direct_skipped",
                 {
-                    "key": key,
-                    "focus": focus_ref,
-                    "binding": binding.model_dump(),
-                    "result": result,
-                    "affected": sorted(affected),
+                    "incoming": focus,
+                    "attempts": OUTPUT_ATTEMPTS,
+                    "error": str(exc),
+                    "action": "skip_item",
                 },
-                conn=conn,
             )
-            return result, affected, performed
-
-    async def save_edges(
-        self, discoveries, context, *, reviews_only=False, connection=None
-    ):
-        async with self.transaction(connection) as conn:
-            judgments = {}
-            for d in discoveries:
-                for j in d["result"].existing_edges:
-                    # An explicit release wins over an unrelated focus retaining an edge.
-                    judgments[j.pair_id] = judgments.get(j.pair_id, True) and j.yes
-            for key, active in judgments.items():
-                up, down = key.split(">")
-                previous = await conn.fetchrow(
-                    f"""SELECT * FROM dependencies WHERE {SCOPE}
-                    AND upstream_id=$4 AND upstream_version=$5 AND downstream_id=$6 AND downstream_version=$7""",
-                    *context.trace.args,
-                    *split_ref(up),
-                    *split_ref(down),
-                )
-                # Inactive historical edges are never automatically reactivated.
-                if previous and previous["maintenance_active"] and not active:
-                    await conn.execute(
-                        f"""UPDATE dependencies SET maintenance_active=false WHERE {SCOPE}
-                        AND upstream_id=$4 AND upstream_version=$5 AND downstream_id=$6 AND downstream_version=$7""",
-                        *context.trace.args,
-                        *split_ref(up),
-                        *split_ref(down),
-                    )
-                    await self.store.record(
-                        context,
-                        "p2.edge_change",
-                        {"before": dict(previous), "maintenance_active": False},
-                        conn=conn,
-                    )
-            if reviews_only:
-                return
-            for d in discoveries:
-                for j in d["result"].dependencies:
-                    if not j.yes or judgments.get(j.pair_id) is False:
-                        continue
-                    a, b = d["pairs"][j.pair_id]
-                    up, down = (
-                        await self.canonical(a, context, conn),
-                        await self.canonical(b, context, conn),
-                    )
-                    if up["memory_id"] == down["memory_id"] or any(
-                        r["status"] == "deleted" or r["merged_into"] is not None
-                        for r in (up, down)
-                    ):
-                        continue
-                    # Version relations need an actual judgment for that content;
-                    # only provisional-to-canonical merges preserve identical text.
-                    current = [
-                        await self.current(r["memory_id"], context, conn)
-                        for r in (up, down)
-                    ]
-                    active = all(
-                        c
-                        and ref_of(c) == ref_of(r)
-                        and r["temporal_scope"] == "current"
-                        for c, r in zip(current, (up, down))
-                    )
-                    await conn.execute(
-                        """INSERT INTO dependencies(run_id,episode_id,strategy_id,upstream_id,upstream_version,
-                        downstream_id,downstream_version,edge_status,reason,maintenance_active) VALUES($1,$2,$3,$4,$5,$6,$7,'confirmed',$8,$9)
-                        ON CONFLICT(run_id,episode_id,strategy_id,upstream_id,upstream_version,downstream_id,downstream_version)
-                        DO UPDATE SET reason=EXCLUDED.reason,maintenance_active=EXCLUDED.maintenance_active""",
-                        *context.trace.args,
-                        up["memory_id"],
-                        up["version"],
-                        down["memory_id"],
-                        down["version"],
-                        j.reason,
-                        active,
-                    )
-                    await self.store.record(
-                        context,
-                        "p2.edge_saved",
-                        {
-                            "upstream": ref_of(up),
-                            "downstream": ref_of(down),
-                            "active": active,
-                            "reason": j.reason,
-                        },
-                        conn=conn,
-                    )
-            # Historical edges remain stored but cannot affect newer content.
-            retired = await conn.fetch(
-                f"""UPDATE dependencies d SET maintenance_active=false WHERE {SCOPE} AND maintenance_active
-                AND (EXISTS(SELECT 1 FROM memories m WHERE m.run_id=d.run_id AND m.episode_id=d.episode_id AND m.strategy_id=d.strategy_id
-                  AND m.memory_id=d.upstream_id AND m.temporal_scope='current' AND m.version>d.upstream_version)
-                OR EXISTS(SELECT 1 FROM memories m WHERE m.run_id=d.run_id AND m.episode_id=d.episode_id AND m.strategy_id=d.strategy_id
-                  AND m.memory_id=d.downstream_id AND m.temporal_scope='current' AND m.version>d.downstream_version)) RETURNING d.*""",
-                *context.trace.args,
-            )
-            for edge in retired:
-                after = dict(edge)
-                await self.store.record(
-                    context,
-                    "p2.edge_change",
-                    {"before": dict(after, maintenance_active=True), "after": after},
-                    conn=conn,
-                )
-
-    async def apply_discoveries(self, discoveries, context):
-        # One direct-maintenance batch: updates, releases, propagation and change
-        # completion commit together. Model requests and repairs stay outside.
-        async with self.store.pool.acquire() as conn, conn.transaction():
-            return await self._apply_discoveries(discoveries, context, conn)
-
-    async def _apply_discoveries(self, discoveries, context, connection):
-        await self.save_edges(
-            discoveries, context, reviews_only=True, connection=connection
+            return None, []
+        return await self.apply_direct(
+            focus, decision, context, forget_refs=forget_refs
         )
-        affected, accepted, changed_refs = set(), set(), set()
-        # If a newly extracted value targets another new value, process that value first.
-        pending = [(d, b) for d in discoveries for b in d["result"].bindings]
-        while pending:
-            progress = False
-            remaining = []
-            for d, b in pending:
-                prerequisites = {
-                    x.content_ref
-                    for _, x in pending
-                    if x.content_ref and x.relation != "unresolved"
-                }
-                if b.target_ref in prerequisites and b.target_ref != b.content_ref:
-                    target = await self.store.read_ref(
-                        context.trace, b.target_ref, conn=connection
-                    )
-                    if not target["accepted"] and target["merged_into"] is None:
-                        remaining.append((d, b))
-                        continue
-                result, changed, performed = await self.apply(
-                    b, d["focus"], context, connection
-                )
-                affected |= changed
-                if result and b.relation != "forget":
-                    accepted.add(result)
-                    if (
-                        performed
-                        and b.relation in ("new", "replace", "correct")
-                        and b.temporal_scope == "current"
-                    ):
-                        changed_refs.add(result)
-                progress = True
-            if not progress:
-                raise ValueError("cyclic or unresolved same-session target ordering")
-            pending = remaining
-        await self.save_edges(discoveries, context, connection=connection)
-        # Newly discovered constraints can affect existing conclusions even when
-        # no old edge existed before this session. Direct new statements prevail.
-        affected |= await self.invalidate(
-            changed_refs, context, connection, protected=accepted
-        )
-        for d in discoveries:
-            focus = await self.store.read_ref(
-                context.trace, d["focus"], conn=connection
-            )
-            if focus["type"] != "change":
-                continue
-            bindings = d["result"].bindings
-            operations = {
-                "forget" if b.relation == "forget" else "update"
-                for b in bindings
-                if b.relation != "unresolved"
-            }
-            async with self.transaction(connection) as conn:
-                before = await conn.fetchrow(
-                    f"SELECT * FROM change_events WHERE {SCOPE} AND change_id=$4",
-                    *context.trace.args,
-                    focus["memory_id"],
-                )
-                targets = [
-                    {
-                        "memory_id": str(split_ref(b.target_ref)[0]),
-                        "version": split_ref(b.target_ref)[1],
-                    }
-                    for b in bindings
-                    if b.target_ref
-                ]
-                await conn.execute(
-                    f"""UPDATE change_events SET operation=$5,target_refs=$6,applied_session_seq=$7 WHERE {SCOPE} AND change_id=$4""",
-                    *context.trace.args,
-                    focus["memory_id"],
-                    next(iter(operations)) if len(operations) == 1 else None,
-                    targets,
-                    context.session_seq
-                    if all(b.relation != "unresolved" for b in bindings)
-                    else None,
-                )
-                await self.store.record(
-                    context,
-                    "p2.change_result",
-                    {
-                        "before": dict(before),
-                        "bindings": [b.model_dump() for b in bindings],
-                        "complete": all(b.relation != "unresolved" for b in bindings),
-                    },
-                    conn=conn,
-                )
-        return affected, accepted
 
-    async def repair(self, target_ref, context, attempted):
-        target = await self.store.read_ref(context.trace, target_ref)
-        if (
-            target is None
-            or target["status"] != "stale"
-            or not target["accepted"]
-            or target["merged_into"] is not None
-        ):
-            return None, set()
-        async with self.store.pool.acquire() as conn:
-            current = await self.current(target["memory_id"], context, conn)
-        if not current or ref_of(current) != target_ref:
-            return None, set()
-        related, _ = await self.store.related(context.trace, [target_ref])
-        hits = await self.retriever.search(
-            target["text"],
-            context,
-            through_session=context.session_seq,
-            purpose="p2",
-            entities=target["entities"],
+    async def forget_scope(self, focus, primary, context, *, query_vector=None):
+        candidates = await self.retriever.forget_candidates(
+            focus, context, primary, query_vector=query_vector,
         )
-        materials = {}
-        async with self.store.pool.acquire() as conn:
-            for r in [*related, *[h.memory for h in hits]]:
-                current = await self.current(r["memory_id"], context, conn)
-                if (
-                    current
-                    and ref_of(current) == ref_of(r)
-                    and r["status"] == "fresh"
-                    and r["accepted"]
-                    and not r["invalidated"]
-                    and r["memory_id"] != target["memory_id"]
-                    and r["type"] in ("fact", "rule")
-                ):
-                    materials[ref_of(r)] = r
-        signature = fingerprint(
-            {
-                "target": material(target),
-                "materials": [material(materials[r]) for r in sorted(materials)],
-            }
-        )
-        if signature in attempted:
-            return None, set()
-        attempted.add(signature)
+        refs = LocalReferences(list(candidates.values()))
         inputs = {
-            "target": material(target),
-            "materials": [material(r) for r in materials.values()],
+            "request": {"text": focus["text"]},
+            "primary_ref": refs.encode(primary) if primary else None,
+            "candidates": [
+                dict(
+                    ref=refs.encode(ref_of(r)),
+                    text=r["text"],
+                    type=r["type"],
+                    matter=refs.matters[str(r["memory_id"])],
+                )
+                for r in candidates.values()
+            ],
         }
-        rendered = (
-            prompt("p2") + "\n" + json.dumps(inputs, default=str, ensure_ascii=False)
-        )
-        await self.store.record(
-            context, "p2.repair_input", {"signature": signature, "prompt": rendered}
-        )
-        # Persist signatures across sessions; irrelevant sessions do not repeat the call.
-        async with self.store.pool.acquire() as conn:
-            previous = await conn.fetchval(
-                f"""SELECT 1 FROM memory_steps WHERE {SCOPE} AND stage='p2.repair_result'
-                AND payload->>'signature'=$4 LIMIT 1""",
-                *context.trace.args,
-                signature,
+
+        def validate(raw):
+            result = Targets.model_validate_json(raw)
+            selected = [refs.decode(r) for r in result.target_refs]
+            if (primary and primary not in selected) or len(selected) != len(set(selected)):
+                raise ValueError(
+                    "forget scope must include the primary target and distinct supplied references"
+                )
+            return selected
+
+        return await self.ask("p2_forget_scope", inputs, refs, validate, context)
+
+    async def apply_direct(self, focus, decision, context, *, forget_refs=None):
+        action = decision.action
+        if action == "hold":
+            await self.store.record(
+                context,
+                "p2.held",
+                {"incoming": focus, "source_session": context.session_seq},
             )
-        if previous:
-            return None, set()
-        raw = await self.client.complete(
-            rendered,
-            max_tokens=None,
-            call=context.make(
-                "repair", {"prompt": rendered}, self.retry, price=self.price
-            ),
-        )
-        result = Repair.model_validate_json(raw)
-        if result.target_ref != target_ref or any(
-            r not in materials for r in result.basis_refs
-        ):
-            raise ValueError("repair target or premise not in supplied material")
-        await self.store.record(
-            context,
-            "p2.repair_result",
-            {"signature": signature, "result": result.model_dump()},
-        )
-        if not result.can_repair:
-            return None, set()
-        if not any(
-            materials[r]["type"] == "rule" for r in result.basis_refs
-        ) or not any(materials[r]["type"] == "fact" for r in result.basis_refs):
-            raise ValueError("repair requires explicit rule and fact premises")
-        (embedding,) = await self.indexer._embed(
-            [self.store.config.document_prefix + result.text], context, "indexing"
-        )
+            return None, []
+        if action in ("forget", "revoke", "invalidate", "retract"):
+            return None, await self.apply_removal(
+                focus, decision, context, forget_refs=forget_refs
+            )
+        embedding = await self.direct_embedding(focus, decision, context)
         async with self.store.pool.acquire() as conn, conn.transaction():
-            check = await self.current(target["memory_id"], context, conn)
-            if not check or ref_of(check) != target_ref or check["status"] != "stale":
-                raise ValueError("repair target changed")
-            for basis in result.basis_refs:
-                row = await self.store.read_ref(context.trace, basis, conn=conn)
-                current = await self.current(row["memory_id"], context, conn)
-                if (
-                    not current
-                    or ref_of(current) != basis
-                    or row["status"] != "fresh"
-                    or not row["accepted"]
-                    or row["invalidated"]
-                ):
-                    raise ValueError("repair premise no longer valid")
-            version = await conn.fetchval(
-                f"SELECT max(version)+1 FROM memories WHERE {SCOPE} AND memory_id=$4",
+            return await self.write_direct(focus, decision, embedding, context, conn)
+
+    async def direct_embedding(self, focus, decision, context):
+        if decision.action not in ("new", "update", "correct", "history"):
+            return None
+        await self.indexer.index_topics(focus["topics"], context)
+        (vector,) = await self.indexer._embed(
+            [self.store.config.document_prefix + focus["text"]], context, "indexing"
+        )
+        return vector_literal(vector, self.store.config.dimensions)
+
+    async def write_direct(self, focus, decision, embedding, context, conn):
+        action = decision.action
+        memory_type = "rule" if focus["type"] == "rule" else "fact"
+        transitions = []
+        target = (
+            await self.store.read_ref(context.trace, decision.target_ref, conn=conn)
+            if decision.target_ref
+            else None
+        )
+        if target and (
+            target["status"] == "deleted" or target["type"] != memory_type
+        ):
+            raise ValueError("invalid direct target")
+        latest = (
+            await self.current(target["memory_id"], context, conn)
+            if target
+            else None
+        )
+        if (
+            target
+            and action == "update"
+            and (latest is None or ref_of(latest) != ref_of(target))
+        ):
+            raise ValueError("update requires the current target")
+        scope = "historical" if action == "history" else "current"
+        if target and action in ("correct", "duplicate"):
+            scope = target["temporal_scope"]
+            if action == "correct" and (
+                latest is None or ref_of(latest) != ref_of(target)
+            ):
+                scope = "historical"
+        if action == "duplicate":
+            if target["status"] != "fresh" or target["invalidated"] or target["origin"] == "derived":
+                raise ValueError("duplicate requires a fresh direct assertion")
+            previous = await conn.fetchval(
+                f"SELECT session_seq FROM memory_sources WHERE {SCOPE} AND memory_id=$4 AND version=$5",
                 *context.trace.args,
                 target["memory_id"],
+                target["version"],
             )
-            ref = await self.store._insert(
+            if previous is None:
+                raise ValueError("duplicate target has no direct session source")
+            merged = sorted(set(previous) | {context.session_seq})
+            await conn.execute(
+                f"UPDATE memory_sources SET session_seq=$6 WHERE {SCOPE} AND memory_id=$4 AND version=$5",
+                *context.trace.args,
+                target["memory_id"],
+                target["version"],
+                merged,
+            )
+            key = ref_of(target)
+            await self.store.record(
+                context,
+                "p2.sources_merged",
+                {"ref": key, "before": previous, "after": merged},
+                conn=conn,
+            )
+        else:
+            uid = target["memory_id"] if target else uuid4()
+            version = await conn.fetchval(
+                f"SELECT coalesce(max(version),0)+1 FROM memories WHERE {SCOPE} AND memory_id=$4",
+                *context.trace.args,
+                uid,
+            )
+            new = await self.store._insert(
                 conn,
                 context.trace,
                 context.session_seq,
-                result.text,
-                target["type"],
-                normalize_entities(result.entities),
-                "derived",
-                target["memory_id"],
+                focus["text"],
+                memory_type,
+                focus["entities"],
+                normalize_entities(
+                    focus["topics"] + (list(target["topics"]) if target else [])
+                ),
+                "extracted",
+                uid,
                 version,
-                None,
+                [context.session_seq],
             )
-            key = f"{ref[0]}:{ref[1]}"
+            key = f"{new[0]}:{new[1]}"
             await conn.execute(
-                f"""UPDATE memories SET search_vector=to_tsvector($6::regconfig,text),memory_embedding=$7::vector
-                WHERE {SCOPE} AND memory_id=$4 AND version=$5""",
+                f"UPDATE memories SET search_vector=to_tsvector($6::regconfig,text),memory_embedding=$7::vector WHERE {SCOPE} AND memory_id=$4 AND version=$5",
                 *context.trace.args,
-                *ref,
+                *new,
                 self.store.config.text_config,
-                vector_literal(embedding, self.store.config.dimensions),
+                embedding,
             )
             await self.mutate(
                 key,
                 {
                     "status": "fresh",
                     "accepted": True,
-                    "temporal_scope": "current",
-                    "basis_refs": sorted(set(result.basis_refs)),
-                    "status_reason": result.reason,
+                    "temporal_scope": scope,
+                    "status_reason": "Direct " + action,
                 },
                 context,
                 conn,
             )
-            affected = await self.invalidate([target_ref], context, conn)
+            if target and action in ("update", "correct"):
+                await self.mutate(
+                    ref_of(target),
+                    {
+                        "status": "stale",
+                        "invalidated": target["invalidated"] or action == "correct",
+                        "status_reason": "Direct " + action,
+                    },
+                    context,
+                    conn,
+                )
+                transitions.extend(
+                    await self.invalidate_basis(
+                        [ref_of(target)],
+                        context,
+                        conn,
+                        exclude_history=action == "correct",
+                    )
+                )
+            if scope == "current":
+                transitions.insert(
+                    0,
+                    {
+                        "operation": action,
+                        "before": dict(target) if target else None,
+                        "after": dict(
+                            await self.store.read_ref(context.trace, key, conn=conn)
+                        ),
+                    },
+                )
+        await self.store.record(
+            context,
+            "p2.direct_applied",
+            {
+                "incoming": focus,
+                "decision": decision.model_dump(),
+                "result": key,
+                "source_session": context.session_seq,
+            },
+            conn=conn,
+        )
+        return key, transitions
+
+    async def apply_removal(self, focus, decision, context, *, forget_refs=None):
+        action = decision.action
+        if action == "forget":
+            if not forget_refs:
+                raise ValueError("forget requires a validated scope")
+            return await self.apply_forget(focus, decision, forget_refs, context)
+        async with self.store.pool.acquire() as conn, conn.transaction():
+            return await self.remove_direct(focus, decision, context, conn)
+
+    async def remove_direct(self, focus, decision, context, conn):
+        action, key = decision.action, decision.target_ref
+        transitions = []
+        target = await self.store.read_ref(context.trace, key, conn=conn)
+        if target is None or target["status"] == "deleted":
+            raise ValueError("removal target unavailable")
+        current = await self.current(target["memory_id"], context, conn)
+        is_current = current and ref_of(current) == key
+        if action in ("revoke", "invalidate") and not is_current:
+            raise ValueError("removal requires a current target")
+        if (
+            action == "revoke"
+            and target["type"] != "rule"
+            or action == "invalidate"
+            and target["type"] != "fact"
+        ):
+            raise ValueError("removal target has the wrong type")
+        rows = [target]
+        for row in rows:
+            await self.mutate(
+                ref_of(row),
+                {
+                    "status": "stale",
+                    "invalidated": row["invalidated"]
+                    or action in ("retract", "revoke"),
+                    "status_reason": "Explicit " + action,
+                },
+                context,
+                conn,
+            )
+        transitions.extend(
+            await self.invalidate_basis(
+                [ref_of(r) for r in rows],
+                context,
+                conn,
+                exclude_history=action != "invalidate",
+            )
+        )
+        changed = target if is_current else None
+        if changed:
+            transitions.append(
+                {"operation": action, "before": dict(changed), "after": None}
+            )
+        await self.store.record(
+            context,
+            "p2.removal_applied",
+            {
+                "incoming": focus,
+                "decision": decision.model_dump(),
+                "source_session": context.session_seq,
+            },
+            conn=conn,
+        )
+        return transitions
+
+    async def apply_forget(self, focus, decision, targets, context):
+        matter_ids = sorted({split_ref(ref)[0] for ref in targets})
+        async with self.store.pool.acquire() as conn, conn.transaction():
+            rows = await conn.fetch(
+                f"SELECT * FROM memories WHERE {SCOPE} AND memory_id=ANY($4::uuid[]) AND status<>'deleted' ORDER BY memory_id,version",
+                *context.trace.args,
+                matter_ids,
+            )
+            current = [await self.current(uid, context, conn) for uid in matter_ids]
+            for row in rows:
+                await self.mutate(
+                    ref_of(row),
+                    {"status": "deleted", "status_reason": "Explicit forget"},
+                    context,
+                    conn,
+                )
+            transitions = await self.invalidate_basis(
+                [ref_of(r) for r in rows], context, conn, exclude_history=True
+            )
+            transitions.extend(
+                {"operation": "forget", "before": dict(row), "after": None}
+                for row in current
+                if row and row["status"] != "deleted"
+            )
             await self.store.record(
                 context,
-                "p2.repaired",
-                {"old": target_ref, "new": key, "basis_refs": result.basis_refs},
+                "p2.removal_applied",
+                {
+                    "incoming": focus,
+                    "decision": decision.model_dump(),
+                    "scope_refs": targets,
+                    "source_session": context.session_seq,
+                },
                 conn=conn,
             )
-        return key, affected
+        return transitions
+
+    async def invalidate_basis(self, roots, context, conn, *, exclude_history=False):
+        """Invalidate actual derivations using exact premises, including historical correction."""
+        todo, seen, transitions = set(roots), set(), []
+        while todo:
+            wave = todo - seen
+            if not wave:
+                break
+            seen |= wave
+            rows = await conn.fetch(
+                f"SELECT * FROM memories WHERE {SCOPE} AND origin='derived' AND accepted AND status<>'deleted' AND basis_refs ?| $4::text[]",
+                *context.trace.args,
+                sorted(wave),
+            )
+            todo = set()
+            for row in rows:
+                ref = ref_of(row)
+                latest = await self.current(row["memory_id"], context, conn)
+                is_current = latest and ref_of(latest) == ref
+                if not exclude_history and not is_current:
+                    continue
+                if row["status"] == "stale" and (
+                    not exclude_history or row["invalidated"]
+                ):
+                    # Already invalidated roots still lead to unvisited descendants.
+                    todo.add(ref)
+                    continue
+                await self.mutate(
+                    ref,
+                    {
+                        "status": "stale",
+                        "invalidated": row["invalidated"] or exclude_history,
+                        "status_reason": (
+                            "A used premise was withdrawn"
+                            if exclude_history
+                            else "A current premise changed"
+                        ),
+                    },
+                    context,
+                    conn,
+                )
+                todo.add(ref)
+                if is_current:
+                    transitions.append(
+                        {
+                            "operation": "basis_invalidated",
+                            "before": dict(row),
+                            "after": None,
+                        }
+                    )
+        return transitions
+
+    async def transition_materials(self, transitions, context, *, for_repair=False):
+        rendered = []
+        for index, t in enumerate(transitions, 1):
+            value = {"operation": t["operation"]}
+            if not for_repair:
+                value["id"] = f"C{index}"
+            for side in ("before", "after"):
+                row = t[side]
+                if row is None:
+                    value[side] = None
+                    continue
+                now = await self.store.read_ref(context.trace, ref_of(row))
+                # Prior values describe transitions, not current premises.
+                # Withdrawn contents must remain unavailable to repair.
+                unavailable = now["status"] == "deleted" or now["invalidated"]
+                value[side] = {
+                    "text": (
+                        "[unavailable]" if for_repair and unavailable else row["text"]
+                    ),
+                    "type": row["type"],
+                    "status_now": now["status"],
+                }
+            rendered.append(value)
+        return rendered
+
+    @staticmethod
+    def changed_matters(transitions):
+        return {t[side]["memory_id"] for t in transitions for side in ("before", "after") if t[side]}
+
+    async def routed_rules(self, transitions, context, binding_refs=()):
+        ids = self.changed_matters(transitions)
+        rule_ids = {t[side]["memory_id"] for t in transitions for side in ("before", "after")
+                    if t[side] and t[side]["type"] == "rule"}
+        rule_ids.update(split_ref(key)[0] for key in binding_refs)
+        return await self.store.active_rules(context.trace, condition_ids=ids, rule_ids=rule_ids)
+
+    async def check_conditions(self, transitions, protected, context, *, rules=None, binding_refs=()):
+        rules = rules if rules is not None else await self.routed_rules(transitions, context, binding_refs)
+        if not rules:
+            return []
+        # Binding is a reason to inspect the current state, never evidence that a source changed.
+        transitions = list(transitions)
+        for key in binding_refs:
+            if key in rules and rules[key]['memory_id'] not in self.changed_matters(transitions):
+                transitions.append({'operation': 'binding', 'before': None, 'after': rules[key]})
+        ids = {uid for rule in rules.values() for field in ('condition_matter_ids', 'affected_matter_ids')
+               for uid in rule[field]}
+        current = {r['memory_id']: r for r in await self.store.current_rows(context.trace, ids)}
+        targets, checks, used_rules, permitted = {}, [], {}, {}
+        refs = LocalReferences(list(current.values()))
+        relevant_indices = set()
+        for condition, rule in rules.items():
+            facts = [r for uid in rule['affected_matter_ids'] if (r := current.get(uid))
+                     and r['type'] == 'fact' and r['status'] == 'fresh' and r['accepted']
+                     and not r['invalidated'] and ref_of(r) not in protected]
+            if not facts:
+                continue
+            source_ids = set(rule['condition_matter_ids'])
+            changes = [f'C{i}' for i, t in enumerate(transitions, 1)
+                       if self.changed_matters([t]) & (source_ids | {rule['memory_id']})]
+            if not changes:
+                continue
+            relevant_indices.update(int(c[1:]) - 1 for c in changes)
+            used_rules[condition] = rule
+            rendered_facts = []
+            for row in facts:
+                key = ref_of(row)
+                targets[key] = row
+                permitted.setdefault(key, set()).update(changes)
+                fact = {'ref': refs.encode(key), 'text': row['text']}
+                incorporated = [f'C{i}' for i, t in enumerate(transitions, 1)
+                                if f'C{i}' in changes and t['after'] and ref_of(t['after']) in row['basis_refs']]
+                if incorporated:
+                    fact['incorporates_changes'] = incorporated
+                rendered_facts.append(fact)
+            sources = []
+            for uid in rule['condition_matter_ids']:
+                row = current.get(uid)
+                usable = row and row['accepted'] and row['status'] == 'fresh' and not row['invalidated']
+                sources.append({'ref': refs.encode(ref_of(row)) if row else None,
+                                'text': row['text'] if usable else None,
+                                'status': 'fresh' if usable else 'unknown'})
+            checks.append({'rule': {'text': rule['text']}, 'sources': sources,
+                           'change_ids': changes, 'facts': rendered_facts})
+        if not targets:
+            return []
+        rendered_changes = await self.transition_materials(transitions, context)
+        inputs = {'changes': [r for i, r in enumerate(rendered_changes) if i in relevant_indices], 'checks': checks}
+        await self.store.record(
+            context,
+            "p2.condition_groups",
+            {
+                "rules": {
+                    condition: [
+                        key
+                        for key, row in targets.items()
+                        if row["memory_id"] in used_rules[condition]["affected_matter_ids"]
+                    ]
+                    for condition in used_rules
+                }
+            },
+        )
+
+        def validate(raw):
+            result = TriggerDecision.model_validate_json(raw)
+            supplied_changes = {change["id"] for change in inputs["changes"]}
+            selected = set()
+            for trigger in result.triggers:
+                trigger.fact_ref = refs.decode(trigger.fact_ref)
+                if trigger.fact_ref not in targets or trigger.fact_ref in selected:
+                    raise ValueError(
+                        "fact_ref must name a distinct supplied fresh target"
+                    )
+                selected.add(trigger.fact_ref)
+                if len(set(trigger.change_ids)) != len(trigger.change_ids) or any(
+                    change_id not in supplied_changes or change_id not in permitted[trigger.fact_ref]
+                    for change_id in trigger.change_ids
+                ):
+                    raise ValueError("change_ids must name distinct supplied changes")
+            return result
+
+        decision = await self.ask("p2_conditions", inputs, refs, validate, context)
+        result = []
+        async with self.store.pool.acquire() as conn, conn.transaction():
+            for trigger in decision.triggers:
+                key = trigger.fact_ref
+                before = await self.store.read_ref(context.trace, key, conn=conn)
+                if before["status"] != "fresh":
+                    continue
+                await self.mutate(
+                    key,
+                    {
+                        "status": "stale",
+                        "status_reason": "A bound rule condition was triggered",
+                    },
+                    context,
+                    conn,
+                )
+                await self.store.record(
+                    context, "p2.condition_evidence",
+                    {"target": key, "changes": self.change_references([
+                        transitions[int(change_id[1:]) - 1]
+                        for change_id in trigger.change_ids
+                    ])},
+                    conn=conn,
+                )
+                result.append(
+                    {
+                        "operation": "condition_triggered",
+                        "before": dict(before),
+                        "after": None,
+                    }
+                )
+                result.extend(await self.invalidate_basis([key], context, conn))
+        return result
+
+    @staticmethod
+    def change_references(transitions):
+        return [
+            {"operation": t["operation"], **{
+                side: ref_of(t[side]) if t[side] else None
+                for side in ("before", "after")
+            }}
+            for t in transitions
+        ]
+
+    async def repair_evidence(self, target, transitions, context):
+        """Follow selected causes and existing bases, never all session writes."""
+        saved = await self.store.latest_repair_evidence(context.trace, ref_of(target))
+        evidence = []
+        for change in saved["changes"] if saved else []:
+            evidence.append({"operation": change["operation"], **{
+                side: dict(await self.store.read_ref(context.trace, change[side]))
+                if change[side] else None
+                for side in ("before", "after")
+            }})
+        rules = await self.store.active_rules(context.trace, affected_ids=[target["memory_id"]])
+        related = {split_ref(ref)[0] for ref in target["basis_refs"]}
+        related.update(uid for r in rules.values() for uid in r["condition_matter_ids"])
+        related.update(
+            t[side]["memory_id"] for t in evidence
+            for side in ("before", "after") if t[side]
+        )
+        evidence.extend(
+            t for t in transitions
+            if any(t[side] and t[side]["memory_id"] in related for side in ("before", "after"))
+        )
+        # Stable reference-only records preserve actual change evidence across sessions.
+        unique = {fingerprint(refs): t for refs, t in zip(self.change_references(evidence), evidence)}
+        evidence = list(unique.values())
+        references = self.change_references(evidence)
+        if references and (not saved or references != saved["changes"]):
+            await self.store.record(context, "p2.repair_evidence", {
+                "target": ref_of(target), "changes": references,
+            })
+        current = await self.store.current_rows(context.trace, related)
+        materials = {
+            ref_of(r): r for r in current
+            if r["memory_id"] in related
+            and r["memory_id"] != target["memory_id"]
+            and r["type"] == "fact" and r["status"] == "fresh"
+            and r["accepted"] and not r["invalidated"]
+        }
+        materials.update(rules)
+        return materials, evidence
+
+    async def repair_inputs(self, target, materials, evidence, context, *, retrieval_available):
+        """One compact rendering shared by execution and offline input previews."""
+        refs = LocalReferences(list(materials.values()))
+        text = target["text"] if not target["invalidated"] else (
+            "[obsolete value unavailable; use the attached rules to identify the matter]"
+        )
+        return {
+            "target": {"text": text, "ref": ref_of(target)},
+            "materials": [
+                {"ref": refs.encode(key), "text": r["text"], "type": r["type"]}
+                for key, r in materials.items()
+            ],
+            "changes": await self.transition_materials(evidence, context, for_repair=True),
+            "retrieval_available": retrieval_available,
+        }, refs
+
+    async def repair(self, target, transitions, context, attempted):
+        key = ref_of(target)
+        if (
+            target["type"] != "fact"
+            or target["status"] != "stale"
+            or not target["accepted"]
+        ):
+            return None
+        materials, evidence = await self.repair_evidence(target, transitions, context)
+        if not any(r["type"] == "rule" for r in materials.values()):
+            return None
+        for retrieval_available in (True, False):
+            inputs, refs = await self.repair_inputs(
+                target, materials, evidence, context, retrieval_available=retrieval_available,
+            )
+            signature = fingerprint({
+                "target": key, "text": inputs["target"]["text"],
+                "materials": sorted(materials), "changes": inputs["changes"],
+                "retrieval_available": retrieval_available,
+            })
+            async with self.store.pool.acquire() as conn:
+                previous = await conn.fetchrow(
+                    f"SELECT stage,payload FROM memory_steps WHERE {SCOPE} "
+                    "AND stage IN ('p2.repair_result','p2.repair_skipped') "
+                    "AND payload->>'signature'=$4 ORDER BY step_id DESC LIMIT 1",
+                    *context.trace.args, signature,
+                )
+
+            def validate(raw):
+                result = RepairDecision.model_validate_json(raw)
+                if result.retrieval_query is not None and not retrieval_available:
+                    raise ValueError("retrieval already used; decide from supplied evidence")
+                result.basis_refs = [refs.decode(r) for r in result.basis_refs]
+                if len(set(result.basis_refs)) != len(result.basis_refs) or any(
+                    r not in materials for r in result.basis_refs
+                ):
+                    raise ValueError("repair uses distinct supplied current premises, never the target")
+                if result.can_repair and {
+                    materials[r]["type"] for r in result.basis_refs
+                } != {"fact", "rule"}:
+                    raise ValueError("repair requires an explicit rule and current fact premises")
+                return result
+
+            if previous:
+                if previous["stage"] == "p2.repair_skipped":
+                    return None
+                result = RepairDecision.model_validate(previous["payload"]["result"])
+            else:
+                if signature in attempted:
+                    return None
+                attempted.add(signature)
+                try:
+                    result = await self.ask("p2_repair", inputs, refs, validate, context)
+                except OutputValidationFailed as exc:
+                    await self.store.record(context, "p2.repair_skipped", {
+                        "signature": signature, "target": key, "attempts": OUTPUT_ATTEMPTS,
+                        "error": str(exc), "action": "keep_stale",
+                    })
+                    return None
+                await self.store.record(context, "p2.repair_result", {
+                    "signature": signature, "target": key, "result": result.model_dump(),
+                })
+            if result.can_repair:
+                break
+            if not result.retrieval_query:
+                return None
+            # Only a concrete missing fact warrants a supplementary search.
+            hits = await self.retriever.search(
+                result.retrieval_query, context, through_session=context.session_seq,
+                purpose="p2", memory_type="fact", exclude_id=target["memory_id"], limit=5,
+                topics=normalize_entities(
+                    list(target["topics"]) + [
+                        topic for row in materials.values() if row["type"] == "rule"
+                        for topic in row["topics"]
+                    ]
+                ),
+            )
+            await self.store.record(context, "p2.repair_retrieval", {
+                "target": key, "query": result.retrieval_query,
+                "refs": [ref_of(h.memory) for h in hits],
+            })
+            added = {ref_of(h.memory): dict(h.memory) for h in hits if ref_of(h.memory) not in materials}
+            if not added:
+                return None
+            materials.update(added)
+            # Include actual session changes to newly retrieved premises, not unrelated writes.
+            ids = {str(r["memory_id"]) for r in added.values()}
+            extra = [t for t in transitions if any(
+                t[side] and str(t[side]["memory_id"]) in ids for side in ("before", "after")
+            )]
+            known = {fingerprint(r) for r in self.change_references(evidence)}
+            evidence.extend(t for t in extra if fingerprint(self.change_references([t])[0]) not in known)
+            if extra:
+                await self.store.record(context, "p2.repair_evidence", {
+                    "target": key, "changes": self.change_references(evidence),
+                })
+        else:
+            return None
+        (embedding,) = await self.indexer._embed(
+            [self.store.config.document_prefix + result.text], context, "indexing"
+        )
+        async with self.store.pool.acquire() as conn, conn.transaction():
+            latest = await self.current(target["memory_id"], context, conn)
+            if not latest or ref_of(latest) != key or latest["status"] != "stale":
+                raise ValueError("repair target changed")
+            for basis in result.basis_refs:
+                row = await self.store.read_ref(context.trace, basis, conn=conn)
+                latest_basis = await self.current(row["memory_id"], context, conn)
+                if (
+                    ref_of(latest_basis) != basis
+                    or row["status"] != "fresh"
+                    or row["invalidated"]
+                ):
+                    raise ValueError("repair premise no longer usable")
+            version = await conn.fetchval(
+                f"SELECT max(version)+1 FROM memories WHERE {SCOPE} AND memory_id=$4",
+                *context.trace.args,
+                target["memory_id"],
+            )
+            new = await self.store._insert(
+                conn,
+                context.trace,
+                context.session_seq,
+                result.text,
+                "fact",
+                result.entities,
+                target["topics"],
+                "derived",
+                target["memory_id"],
+                version,
+                None,
+            )
+            new_key = f"{new[0]}:{new[1]}"
+            await conn.execute(
+                f"UPDATE memories SET search_vector=to_tsvector($6::regconfig,text),memory_embedding=$7::vector WHERE {SCOPE} AND memory_id=$4 AND version=$5",
+                *context.trace.args,
+                *new,
+                self.store.config.text_config,
+                vector_literal(embedding, self.store.config.dimensions),
+            )
+            await self.mutate(
+                new_key,
+                {
+                    "status": "fresh",
+                    "accepted": True,
+                    "temporal_scope": "current",
+                    "basis_refs": result.basis_refs,
+                    "status_reason": "Repaired from current premises",
+                },
+                context,
+                conn,
+            )
+            after = dict(await self.store.read_ref(context.trace, new_key, conn=conn))
+        return {"operation": "repair", "before": dict(target), "after": after}

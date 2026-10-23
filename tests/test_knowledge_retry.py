@@ -202,11 +202,12 @@ async def test_cancel_and_recorder_failure():
 
 def test_policy_is_bounded_and_explicit():
     for kwargs in (
-        {"max_attempts": 4},
+        {"max_attempts": 6},
         {"retry_status_codes": (400,)},
         {"backoff_seconds": ()},
         {"retry_transport_errors": ("ValueError",)},
         {"timeout_seconds": 0},
+        {"timeout_increment_seconds": -1},
     ):
         with pytest.raises(ValidationError):
             policy(**kwargs)

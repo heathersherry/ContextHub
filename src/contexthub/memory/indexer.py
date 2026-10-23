@@ -1,4 +1,4 @@
-from .schemas import vector_literal
+from .schemas import normalize_topics, vector_literal
 from .storage import SCOPE
 
 
@@ -17,18 +17,49 @@ class Indexer:
         )
         return await self.client.embed_batch(tuple(texts), call=call)
 
+    async def index_topics(self, topics, context):
+        """Batch only unseen labels; queries and documents use the same prefix."""
+        topics = normalize_topics(topics)
+        if not topics:
+            return
+        async with self.store.pool.acquire() as conn:
+            existing = await conn.fetch(
+                "SELECT topic FROM topic_embeddings WHERE topic=ANY($1::text[])", topics,
+            )
+        missing = sorted(set(topics) - {row["topic"] for row in existing})
+        if not missing:
+            return
+        batch_size = self.client.config.max_batch
+        for offset in range(0, len(missing), batch_size):
+            batch = missing[offset:offset + batch_size]
+            vectors = await self._embed(
+                [self.store.config.document_prefix + topic for topic in batch],
+                context, "topic_embedding",
+            )
+            rows = [
+                (topic, vector_literal(vector, self.store.config.dimensions))
+                for topic, vector in zip(batch, vectors, strict=True)
+            ]
+            async with self.store.pool.acquire() as conn, conn.transaction():
+                await conn.executemany(
+                    "INSERT INTO topic_embeddings VALUES($1,$2::vector) ON CONFLICT(topic) DO NOTHING",
+                    rows,
+                )
+                await self.store.record(context, "topics.indexed", {"topics": batch}, conn=conn)
+
     async def index(self, refs, context):
         config = self.store.config
         for memory_id, version in refs:
             async with self.store.pool.acquire() as conn:
                 row = await conn.fetchrow(
-                    f"SELECT text,search_vector,memory_embedding FROM memories WHERE {SCOPE} AND memory_id=$4 AND version=$5",
+                    f"SELECT text,topics,search_vector,memory_embedding FROM memories WHERE {SCOPE} AND memory_id=$4 AND version=$5",
                     *context.trace.args,
                     memory_id,
                     version,
                 )
             if row is None:
                 raise ValueError("memory version missing")
+            await self.index_topics(row["topics"], context)
             if row["search_vector"] is not None and row["memory_embedding"] is not None:
                 continue
             await self.store.record(

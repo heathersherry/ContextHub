@@ -1,0 +1,8 @@
+Answer the user's question based ONLY on the context provided below.
+If the information is not in the context, say you don't have that information.
+Answer with ONLY the value. Do not explain or add context.
+
+Context:
+{context}
+
+Question: {question}

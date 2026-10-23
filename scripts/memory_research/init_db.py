@@ -4,15 +4,16 @@ import argparse
 import asyncio
 import json
 import os
-from contexthub.memory.schemas import IndexConfig
+from contexthub.memory.index_cli import add_embedding_index_arguments, resolve_index_config
 from contexthub.memory.storage import MemoryStore
 
 
 async def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", required=True)
+    add_embedding_index_arguments(parser)
     args = parser.parse_args()
-    config = IndexConfig.model_validate(json.load(open(args.config))["index"])
+    config = resolve_index_config(json.load(open(args.config)), args)
     store = await MemoryStore.open(
         os.environ["MEMORY_DATABASE_URL"], config, initialize=True
     )
