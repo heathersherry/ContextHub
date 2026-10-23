@@ -2,8 +2,8 @@
   "index": {
     "dimensions": 1536,
     "embedding_model": "text-embedding-3-small",
-    "document_prefix": null,
-    "query_prefix": null,
+    "document_prefix": "",
+    "query_prefix": "",
     "text_config": "pg_catalog.english"
   },
   "prices": {},

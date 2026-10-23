@@ -1,0 +1,118 @@
+{
+  "files": [
+    {
+      "previous_path": "prompts/answer.txt",
+      "current_path": "prompts/evaluation/answer.txt",
+      "approved_source": "docs/memory-research/validation-repair-skip-20261012-r1/source/prompts/answer.txt",
+      "sha256": "9058780e7e839d037505eb3cdfb2a05643c58e1f37a3ea87d5b2c2dd4433bba5",
+      "matches_approved": true
+    },
+    {
+      "previous_path": "prompts/extractor.txt",
+      "current_path": "prompts/extractor.txt",
+      "approved_source": "docs/memory-research/validation-repair-skip-20261012-r1/source/prompts/extractor.txt",
+      "sha256": "8fdb332c7b0eaef46302209d299717c3708f47579f71a3aac62c184ca0427a09",
+      "matches_approved": true
+    },
+    {
+      "previous_path": "prompts/extractor_facts.txt",
+      "current_path": "prompts/extractor_facts.txt",
+      "approved_source": "docs/memory-research/validation-direct-skip-20261012-r1/changed-files/prompts/extractor_facts.txt",
+      "sha256": "8bd8fbd90b56025a0c5959fce517ceafab4747401da63a81e719606501407f04",
+      "matches_approved": true
+    },
+    {
+      "previous_path": "prompts/judge_before_common_prompt.txt",
+      "current_path": "prompts/evaluation/judge_before_common_prompt.txt",
+      "approved_source": "docs/memory-research/validation-repair-skip-20261012-r1/source/prompts/judge_before_common_prompt.txt",
+      "sha256": "d67a6fc9da67cc0376243c6bbd5ce4083be64a327ceb4dabab599a6984aad144",
+      "matches_approved": true
+    },
+    {
+      "previous_path": "prompts/judge_cascade_d_prompt.txt",
+      "current_path": "prompts/evaluation/judge_cascade_d_prompt.txt",
+      "approved_source": "docs/memory-research/validation-repair-skip-20261012-r1/source/prompts/judge_cascade_d_prompt.txt",
+      "sha256": "8e99c1c14607eecdfa744bf28b15276306458bc4a1f24ec56d9c2f458751c95c",
+      "matches_approved": true
+    },
+    {
+      "previous_path": "prompts/judge_cascade_u_prompt.txt",
+      "current_path": "prompts/evaluation/judge_cascade_u_prompt.txt",
+      "approved_source": "docs/memory-research/validation-repair-skip-20261012-r1/source/prompts/judge_cascade_u_prompt.txt",
+      "sha256": "c54e7dc391e16f3d7e7923d867cec71b932a8183491a6993dcf000725e6ba290",
+      "matches_approved": true
+    },
+    {
+      "previous_path": "prompts/judge_deletion_prompt.txt",
+      "current_path": "prompts/evaluation/judge_deletion_prompt.txt",
+      "approved_source": "docs/memory-research/validation-repair-skip-20261012-r1/source/prompts/judge_deletion_prompt.txt",
+      "sha256": "70c958da96946ecc0551daaee49a0d92c12bab6a51fe6a5c3f612243ea062f15",
+      "matches_approved": true
+    },
+    {
+      "previous_path": "prompts/judge_exact_prompt.txt",
+      "current_path": "prompts/evaluation/judge_exact_prompt.txt",
+      "approved_source": "docs/memory-research/validation-repair-skip-20261012-r1/source/prompts/judge_exact_prompt.txt",
+      "sha256": "23b87a97a57e1c83868b7839c116f2d090ef1868d9d258cdb3fa41d3e3fe035a",
+      "matches_approved": true
+    },
+    {
+      "previous_path": "prompts/judge_multihop_prompt.txt",
+      "current_path": "prompts/evaluation/judge_multihop_prompt.txt",
+      "approved_source": "docs/memory-research/validation-repair-skip-20261012-r1/source/prompts/judge_multihop_prompt.txt",
+      "sha256": "b7da0ef3c647c8a7e9df7a91ee260466b0f3582348cbb7b4361718d90216dbf5",
+      "matches_approved": true
+    },
+    {
+      "previous_path": "prompts/judge_multiple_update_prompt.txt",
+      "current_path": "prompts/evaluation/judge_multiple_update_prompt.txt",
+      "approved_source": "docs/memory-research/validation-repair-skip-20261012-r1/source/prompts/judge_multiple_update_prompt.txt",
+      "sha256": "563d7592e46a938fc79aca8cb95d07bbbe860b613b2144ed1766b4c79dcc0af2",
+      "matches_approved": true
+    },
+    {
+      "previous_path": "prompts/official_manifest.json",
+      "current_path": "prompts/evaluation/official_manifest.json",
+      "approved_source": "docs/memory-research/validation-repair-skip-20261012-r1/source/prompts/official_manifest.json",
+      "sha256": "9df62231ca032a4f84b0882434b4a95f776e28dfc6d548badfb81b56634e2151",
+      "matches_approved": true
+    },
+    {
+      "previous_path": "prompts/output_retry.txt",
+      "current_path": "prompts/output_retry.txt",
+      "approved_source": "docs/memory-research/validation-repair-skip-20261012-r1/source/prompts/output_retry.txt",
+      "sha256": "4ecaa3fd9549a2214a2bfd8ec8ac75b80f145f609ce56c431fd6ac8ba3d5c78c",
+      "matches_approved": true
+    },
+    {
+      "previous_path": "prompts/p1_conditions.txt",
+      "current_path": "prompts/p1_conditions.txt",
+      "approved_source": "docs/memory-research/validation-repair-skip-20261012-r1/source/prompts/p1_conditions.txt",
+      "sha256": "bc810c410ed4adf1ff44dbd5d2d8a1e3f92614f1e66fc88b3e038654dac1d6a2",
+      "matches_approved": true
+    },
+    {
+      "previous_path": "prompts/p2_conditions.txt",
+      "current_path": "prompts/p2_conditions.txt",
+      "approved_source": "docs/memory-research/validation-condition-evidence-20261012-r1/changed-files/prompts/p2_conditions.txt",
+      "sha256": "414bbe0260b85fe8e4427f51a2a776dd56a01ac59d2f3acf33735c3ea6a3139c",
+      "matches_approved": true
+    },
+    {
+      "previous_path": "prompts/p2_direct.txt",
+      "current_path": "prompts/p2_direct.txt",
+      "approved_source": "docs/memory-research/validation-repair-skip-20261012-r1/source/prompts/p2_direct.txt",
+      "sha256": "7f9e4de767bc33f8c9d150fe158b0def4ff4f6615a2e473a1a12b9d31e5bf2e4",
+      "matches_approved": true
+    },
+    {
+      "previous_path": "prompts/p2_repair.txt",
+      "current_path": "prompts/p2_repair.txt",
+      "approved_source": "docs/memory-research/validation-repair-skip-20261012-r1/source/prompts/p2_repair.txt",
+      "sha256": "0f5b0903f47f952a11a944267ecf3a39c408019d47999eb02d8c11192cda7d56",
+      "matches_approved": true
+    }
+  ],
+  "all_match": true,
+  "validation": "9 targeted tests passed: tests/memory/test_prompt_loading.py and tests/memory/test_meme_adapter.py; real PostgreSQL, fixed HTTP model responses; no real-model call."
+}

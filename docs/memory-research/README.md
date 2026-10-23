@@ -1,61 +1,275 @@
 # Memory 研究实现
 
-2026-10-07：按主方案首版 `local_base` 实现五模块维护、当前／历史检索及独立 MEME 入口。研究分支为 `codex/memory-research`；设计依据仍是研究仓的 `research/proposal/README-memory-architecture-2026-09-29.md`。
+**查完整实验请看 [MEME-32k 100 例实验索引](MEME-32K-EXPERIMENTS.md)**：只列 MEME-32k 覆盖全部 100 个 case 的实验，记录时间、改动内容、结果、耗时和报告。
 
-## 模块与执行边界
+## 2026-10-23：两轮 100 例回答实验已记录
 
-- `src/contexthub/memory/pipeline.py`：完整 session 抽取、索引、逐焦点 P1、P2 直接维护和已有结论修复；无新材料不重复模型判断，只有检索及已知关系涉及的未决事项参与重查。仅实现 local_base。
-- `dependency_discovery.py`：本段全部新记忆、最多 30 条搜索结果、相关已知依赖；逐方向完整判断、事项和版本引用检查。历史版本明确标识为历史候选。具体字段见 `contracts.py`。
-- `maintenance_executor.py`：直接维护批次在一个事务中保存版本、出处归并、边释放、失效传播和 change 完成记录；同一变化不会重复应用。修复在模型响应及向量生成后单独提交，保存实际依据版本；再交 P1 判断新版本关系。不新增推导事项。
-- `retriever.py`：english 词项 OR、精确向量、等权 RRF；实体从未入选候选按余弦相似度补充。回答用问题原文中出现的已有称呼；当前只读 current 内最新版且已接纳、有效的 fact/rule，历史只读曾接纳且未被判错或遗忘的内容。
-- `schema.sql`：新增 temporal_scope、accepted、invalidated、basis_refs、merged_into、maintenance_active 与按顺序记录过程的 memory_steps。原始候选保留用于审计，归并候选不进入常规检索。推导的实际依据与“需要复查”依赖分别保存。
-- `prompts/`：抽取、P1、P2、官方回答和评分提示词。官方评分源版本及提示词校验信息见 `official_manifest.json`。P1/P2 无额外格式重跑或第二个核验模型。
-- 共用调用层：支持省略输出上限、请求总时限、余额不足不重试、Retry-After 更长等待、拒答／截断停止、完整请求与原始响应记录。费用仍复用 execution_attempts，统计只计 finished 事件。
+复用原始 100 例各题保存的回答材料，首版通用指导重答得到 **437/694（62.97%），Agg 32/100**；最新换成 MD-Flat 完整官方回答模板后为 **431/694（62.10%），Agg 30/100**。原始基线为 436/694（62.82%），Agg 28/100。两次全量重答均未重跑记忆整理、检索或向量模型。
 
-重复确认只补出处；已判错的版本需要独立重新接纳时另存版本，保留原依据。历史纠错不能覆盖当前信息。遗忘排除整个事项所有版本，以及实际使用其内容生成的推导版本；不会物理删除审计记录。
+最新一次耗时 19.06 分钟，4 case 并行，1,188 次回答、988 次评分全部成功。15 道值班题和 10 道文档题依然全部未答全，相关遗漏事实已在输入材料中。模板统一没有解决这批回答遗漏；全量旧版未同期重跑，且存在相同答案改分，不能把所有分差归因于模板。当前保留用户指定的纯官方模板。[详细结果与比较口径](MEME-32K-EXPERIMENTS.md#100-例实验对比) · [本次原始报告](../../outputs/official-answer-replay-20261023/report.txt)。
 
-过程记录保存在 `memory_steps`，覆盖实际模型输入、解析结果、编号归并、检索候选数量／排名／分数、状态和依赖变化、修复依据、回答与评分及失败位置。模型调用通过轨迹、session、阶段以及题号／before-after 关联；题目、标准答案和任务标签不传入维护模块。
+## 2026-10-23：将最终 100 例的实验实现同步到主代码
 
-## 确定性验证（不运行实验）
+已合入此前仅在冻结副本中的两处差异：`JevConditionBinder.select_bindings` 将 P1 完整说明共享到 `state.binding_policy`，各候选问题引用该说明；`OfficialScorer.score` 接受 `prior_verdicts`，补评时复用已完成判分（包括判错结果），只重新处理失败评分，未回答题仍不能通过。调用方须提供同一问题和同一答案对应的旧判分；修改答案后不能复用其旧判分。此接口不自动查找检查点，常规 CLI 仍按原流程评分。
 
-新测试库为 `contexthub_memory_dev_20261007`，三维 fixture 向量；原库 `contexthub_memory_research_20261002` 保留。新 schema 用独立空库初始化，不把旧基础库的数据状态猜成“已接纳”，不迁移产品表。
+主代码与 `outputs/deepseek-three-case-rerun-20261022/execution-source` 中全部 215 个文件逐字节一致；Jev 选择／概率矛盾最多 3 次的修复此前已在主代码中。模型选择仍由运行参数决定，没有改 CLI 默认模型或配置。47 项针对性测试通过、无跳过，使用新建后删除的专用本地测试库及模型替身；未重跑实验或调用付费模型。此前各日期条目中的“P1 仍仅在实验副本”是历史状态，现已完成同步。
 
-在 ContextHub 根目录执行：
+[同步差异与验证记录](../../outputs/main-sync-20261023/report.txt) · [最终 100 例结果](../../outputs/deepseek-final100-20261022/report.txt) · [错误分析](../../outputs/deepseek-error-analysis-20261022/report.txt)。同步当时尚未实施错误分析中的其他改进；随后进行的回答阶段实验见上方记录。
 
-```sh
-export MEMORY_DATABASE_URL='postgresql:///contexthub_memory_dev_20261007'
-.venv/bin/python scripts/memory_research/validate.py \
-  --run-id memory-maintenance-20261007-r1 \
-  --output docs/memory-research/validation-20261007-r1
-```
+## 2026-10-21：主体prompt小改 + topics >0.8，完整四例对照尚缺pl_002
 
-复跑必须更换 run_id 和输出目录。脚本执行真实 PG 机制测试及共用客户端回归，输出 XML、终端结果与 result.json；模型 HTTP 响应均为测试数据，不访问真实模型。测试不证明抽取／判边／修复质量或 MEME 效果。
+此前sw_001从2/8到7/8，四道Cas/Abs维护链有明确改善；随后按用户要求串行跑后三例：pl_001仍6/7，sw_002仍2/8，pl_002首次和一次同配新库补跑都在第16段`response_truncated_or_refused`中止、未问答。因此不能给出新四例总成绩。sw_002仍看到了旧平台却空操作，且漏存两个截止日期，说明sw_001的成功尚未稳定复现。
 
-## 未来实验入口（本轮没有执行）
+后三例及补跑全部已知费用含向量/评分$0.149130，其中pl_002两次失败$0.062637；另有一次pl_001超时缺usage。固定名义估价，不是账单。旧结果、失败请求和源码快照均保留。[综合报告](../../outputs/remaining-three-subject08-serial-20261021/report.txt) · [错误与费用分析](../../outputs/remaining-three-subject08-serial-20261021/findings.txt) · [pl_002失败IO](../../outputs/remaining-three-subject08-serial-20261021/pl002-failure-walkthrough.txt)。
 
-先明确 `runtime-config.json` 中 `document_prefix`、`query_prefix`（允许明确设为空字符串，但不预先替用户决定）。`prices` 与 `paper_prices` 按模型名填写 `PriceBasis`；未提供时费用为空，不伪造单价。实际响应中的模型标识使用既有 `actual_model` 字段，缺失保留原因。
+## 2026-10-21：四例 topics >0.7 复跑，补跑后15/29，费用上升
 
-使用新的空 `contexthub_memory_*` 数据库，配置必须是 text-embedding-3-small、1536 维、英文全文；不要复用三维测试库。指定库后初始化：
+按用户要求保留官方回答模板及 `runner.render_answer_context` 额外指导；topics严格>0.7，沿用上一轮P1共享说明实验版。模型、向量、重试参数逐项一致，新库运行。pl_001 **6/7→6/7**，pl_002 **4/6→5/6**，sw_001 **5/8→2/8**，sw_002 **5/8→2/8**。新分项Cas3/7、Abs0/6、Del3/4、ER4/4、Agg3/4、Tr2/4，合计**20/29→15/29**。pl_002首次在第16段响应状态校验失败、未问答；表中使用唯一一次同配置空库补跑结果。首次完成率3/4，缺答计分10/29，失败运行单独保留。
 
-```sh
-PYTHONPATH=src .venv/bin/python scripts/memory_research/init_db.py \
-  --config docs/memory-research/runtime-config.json
-```
+topics确实补回pl_002旧住址（正文0.405626、无关键词支持，主题1.0），同事项更新及通勤修复成功；但餐馆题把旅游计划中的另一家餐馆当最爱，仍错。该例多得1分来自Del前测恢复正常，不能归因于住址修复。两个sw的关键旧候选原本就在输入中，topics没有额外放行new候选；sw_002返回空操作，sw_001仅更新一个框架事项并在条件检查返回空triggers。sw_001 Tr疑似官方误判，保留原判不重评。当前事实问答排除规则后，相关事实替代目标的问题仍存在。
 
-只有决定开始实验时再运行：
+完成四例维护＋回答已知token **1,637,492→1,758,127（+7.37%）**，相同名义单价估算 **$0.147658→$0.163711（+10.87%）**；含向量/评分$0.199790，加上pl_002首次失败共$0.231177。另有15次失败请求缺usage，未按免费处理。这是多处修改后的整体复跑，四例已分析过且有生成波动；不能证明0.7比0.8好，也不是严格一致回答指令的MD-Flat对照。
 
-```sh
-.venv/bin/python -m integrations.memebench.memory_research.cli \
-  --config docs/memory-research/runtime-config.json \
-  --mode check --output artifacts/memory-research
+[完整报告](../../outputs/four-case-topics07-20261021/report.txt) · [逐题新旧变化](../../outputs/four-case-topics07-20261021/question-changes.json) · [错误分析](../../outputs/four-case-topics07-20261021/error-analysis.txt) · [费用和全部尝试汇总](../../outputs/four-case-topics07-20261021/summary.json)。各例目录保留完整问答输入输出及关键维护步骤。
 
-.venv/bin/python -m integrations.memebench.memory_research.cli \
-  --config docs/memory-research/runtime-config.json \
-  --mode formal --output artifacts/memory-research
-```
+## 2026-10-20：保留抽取主体，当前事实问答排除规则
 
-入口读取本机 `model_providers.local.json` 的 openlux 配置；不将凭据保存到运行记录。check 仅 pl_001、sw_001，formal 读取固定哈希的 filler32k 全 100 例，分别生成唯一运行编号、从空轨迹开始。全部 session 按顺序摄入，只回答 Cas／Abs／Del，评分复用冻结的官方方法和配对分类。官方评分最多三次，调用层一次，避免重试叠加。
+用户确认 topics 默认保持可调的 **0.8**，下一轮用 `--topic-similarity-threshold 0.70` 做偏重召回的对照；本轮未修改阈值或运行比较。
 
-每轮目录保存代码与未提交源码副本、差异、全部提示词、生效配置、数据库名、逐题输出、评分、过程及状态导出和分组成本。失败与未判不从原分母剔除。评分与向量单列，共享维护成本仅计一次；仅报告三类任务，不输出六类 Overall。
+普通内容、LLM 规则抽取和 Jev 后的规则整理提示词均明确保留团队、组织、项目、家庭或个人主体；`we/our` 不改写成个人的 `the user/their`。只能依据当前会话补全指代，无法确定时保留群体含义，不编造团队名称。拆分事实、遗忘/更正请求和规则两侧沿用同样要求。
 
-产品接入、full_strong/adaptive、物理删除、失败自动恢复仍不在首版范围。真实模型调用、1536 维实验库初始化和正式 MEME 实验均尚未执行。
+当前事实问题在检索排序前限定 fresh/current fact，输入不含 `conditional_rules`；明确询问政策、规则、条件或假设的问题可检索有效事实和规则，并分开呈现。历史问题沿用原路径。分流只读问题文本，以少量明确词语判断，不使用 MEME 题型或增加模型调用；隐含条件问法可能漏判，仍需真实问题验证。官方回答模板未改，运行 manifest 和回答日志记录新策略与用途。
+
+**296 项记忆测试＋59 项共享回归通过，0 失败、0 跳过**，ruff E9/F 和 diff 空白检查通过。[验证记录](validation-subject-answer-20261020-r1/result.json)。覆盖规则在 top-k 前排除、政策问题仍可读取规则、当前/历史路径及无额外分类调用；模型/向量使用固定响应，没有真实模型重跑，不能据此声称主体抽取或 MEME 分数已改善。
+
+## 2026-10-20：topics 作为额外候选通道，默认阈值暂定0.8
+
+用户确认保留原有匹配方式，topics 仅额外放行。规则和普通内容抽取现在都要求 `topics` 列表，统一短中文事项描述；独立断言仍拆分，遗忘/更正描述其处理对象，规则包含条件及结果事项。新增 `memories.topics` 和 `topic_embeddings` 向量缓存表；新库共七表，旧实验库不迁移。标签按当前库固定模型及document前缀编码，重复标签复用，`topic_embedding` 独立记账并归入向量费用。
+
+任意词对余弦相似度 **> `--topic-similarity-threshold`（默认0.8）** 可从原top-k之外补入符合资格的候选；共享维护检索覆盖new/correction/默认直接处理，forget补查、new二次筛选、P1过滤及repair补查复用同一实现。保留时间、轨迹、状态、类型及排除条件；topics不能直接决定更新、遗忘或依赖。问答/历史问题未增加主题抽取调用，失效传播仍沿原绑定。日志保存命中词对与分数，manifest保存阈值，归档导出本轮用过的标签向量。
+
+真实小探针：25次Luna low孤立句子抽取、27个唯一标签的Qwen 1536维向量。pl_002旧住址和新住址均为“居住地”，20条旧候选在0.8下只补回旧住址；0.70—0.90在本池选择相同。反例：“部署平台”与“部署服务商”仅0.742910，0.8漏掉这对主题；原正文路径仍可选中平台，不代表原new/update判断已解决。中文旅游/火锅例子拆成两条，遗忘住址生成同主题。本轮未重跑完整维护或评分，也不能据一个池校准通用阈值。
+
+**283项记忆测试＋59项共享回归通过，0失败、0跳过**。[测试记录](validation-topics-20261020-r2/result.json)。探针52次真实请求无失败/重试，Luna36,509输入＋4,029输出，向量487输入，按此前固定单价估价$0.00569949；不是正常session流程新增topics的净开销。[探针报告](../../outputs/topics-probe-20261020/report.txt) · [完整输入输出](../../outputs/topics-probe-20261020/walkthrough.txt) · [逐候选分数](../../outputs/topics-probe-20261020/comparison.json)。当前保留0.8可调实验默认，后续应同时检查旧事项召回、无关候选/token增加及误更新，不能只看住址是否救回。
+
+## 2026-10-20：追加pl_002、sw_002，四例六类合计20/29
+
+按编号顺序追加两个案例，沿用前两例的冻结维护版本及六类评测入口，各从空库运行一次；未改提示词、阈值或维护代码。pl_002完成25段、1181.30秒，配对有效4/6（原始后测5/6，Del前测漏答故只算trivial pass）；sw_002完成17段、545.78秒，5/8。四例合计：Cas7/7、Abs1/6、Del2/4、ER4/4、Agg3/4、Tr3/4，20/29。sw_002的Tr日期及顺序实际一致、评分器却判错序，疑似误判，保留官方失败未重评。
+
+新增证据：pl_002旧住址已被初始检索找到，但相似度0.36355且无共同关键词/实体，被普通候选筛选排除，空集直存后新旧住址同时fresh。这与前三例中Luna看到旧候选仍选择new是不同原因。pl_002餐馆已stale，回答却从条件规则拿回旧值，重复sw_001结构题机制。sw_002部署平台被新增为另一事项，P1日志规则只绑定旧平台，日志去向没有失效；Agg三项材料已全给到，回答漏设计系统。
+
+维护＋六类回答均值 **409,373 token、已知估价$0.036915/例**；四例含向量、评分共$0.183415，另有pl_002一次超时未知用量（自动重试成功），不能按免费处理。对MD-Flat论文均值为3.35倍token、已知估价低34.24%，仍非同样本/同模型实跑对照。新增三类10/12，Abs仍是主要短板，但失败横跨维护、回答和评分，不能只凭总分定位。P1共享说明仍仅在实验副本。[四例综合报告](../../outputs/four-case-six-tasks-20261020/report.txt) · [分数及费用](../../outputs/four-case-six-tasks-20261020/summary.json) · [pl_002完整问答](../../outputs/pl002-six-tasks-live-20261020/walkthrough.txt) · [sw_002完整问答](../../outputs/sw002-six-tasks-live-20261020/walkthrough.txt)。
+
+## 当前评测范围：固定六类
+
+从2026-10-20的sw_001实验起，正式入口统一回答MEME的Cas、Abs、Del、ER、Agg、Tr六类，按数据集原有前后测位置执行。Cas/Abs/Del仍按官方前后配对的real pass计分；ER/Agg/Tr按官方后测判定计分。Agg使用`u_check_multi`检查全部目标，ER使用官方字符串匹配、不调用评分模型。官方汇总跳过before ER，其实际检测结果保存在`before_er_diagnostics`，不把跳过当作失败。固定数据集后测共694题：Cas164、Abs130，其他四类各100。
+
+sw_001使用已完成新版pl_001的同一份维护源码和提示词，模型、阈值、检索参数保持一致；本轮只扩大评测范围，P1共享state仍在冻结实验副本中。六类入口的7项针对性测试通过，涵盖Agg缺少一个目标时失败、Tr完整历史列表传入评分、ER不调用评分模型，以及漏答仍计入分母。
+
+## 2026-10-20：sw_001完整六类5/8，暴露不同环节的问题
+
+23/23段，689.57秒；362次模型/向量调用全部成功，无重试、无未评分。前测实际6/6，后测5/8：Cas2/2、Abs0/2、Del0/1、ER1/1、Agg1/1、Tr1/1。ER完整日志、Agg三项协作信息、Tr三个历史截止日期都通过。维护源码和提示词与本轮pl_001逐项一致，未按结果调参。
+
+两道Abs分别暴露：旧结构事实已失效，回答却从条件规则复用了`/src and /lib`；测试工具失效后，Luna收到第二跳unknown证据仍返回不触发，旧测试命令继续fresh。Del目标地址确实已删，回答却替换为独立事故手册地址，属于问题范围错配，不能直接称为删除泄漏。新旧框架仍同时fresh，且Luna曾看到明确旧候选，与pl_001车辆更新失败相似。
+
+六类维护＋回答 **404,094 token、$0.035981**；含向量$0.036377，含评分$0.046057。对MD-Flat论文均值仍为3.31倍token、费用低35.90%，不是同样本实跑对照。上述问题未修复，建议按跨样本共同机制继续分析，避免针对单题写特例。[完整报告](../../outputs/sw001-six-tasks-live-20261020/report.txt) · [完整问答输入输出](../../outputs/sw001-six-tasks-live-20261020/walkthrough.txt) · [错误证据](../../outputs/sw001-six-tasks-live-20261020/key-steps.json)。
+
+## 2026-10-20：同一新版记忆补齐六类，完整后测6/7
+
+直接复用下方新版完整pl_001的记忆和8次既有回答，只新增before ER、after ER/Agg/Tr四次回答，未重跑维护。更新前使用日志验证还原的session18状态，更新后使用session24，原向量和全部记忆均未改变。ER原文前后均通过；Agg三个目标全部覆盖；Tr三辆车顺序正确。后测共7题：Cas2/2、Abs0/1、Del1/1、ER1/1、Agg1/1、Tr1/1。前测实际5/5；官方汇总跳过before ER，另存其确定性通过结果。
+
+Tr通过不能消除已有维护问题：三辆车仍都标为当前有效。六类维护＋回答合计 **390,531 token、$0.035355**，含向量$0.035864，含评分$0.043792；相对MD-Flat论文均值是3.20倍token、费用低37.01%，仍不是同样本实跑对照。当时补跑脚本独立接入官方Agg多实体评分；后续正式入口已统一为上方六类范围。[完整报告](../../outputs/pl001-six-tasks-20261020/report.txt) · [全部12次问答完整输入输出](../../outputs/pl001-six-tasks-20261020/walkthrough.txt) · [评分与费用](../../outputs/pl001-six-tasks-20261020/summary.json)。
+
+## 2026-10-20：新版完整 pl_001——费用下降44.6%，正式成绩仍3/4
+
+新版（P1共享state实验副本＋空候选直存＋复用遗忘补查筛选）从空库跑完24段，run=`memory-check-20261020T080044Z-2eca4acb`，803.42秒，无重试、无未评分。前测4/4、后测及配对3/4，与当天上一完整运行一致：两道Cas和Del通过，Abs预约题仍失败。正式P1路径尚未切换；本轮执行的冻结源码和完整输入输出均归档。
+
+维护＋回答的已知输入输出 **990,018→386,320（−60.98%）**，同单价名义估价 **$0.060503→$0.033494（−44.64%）**；加入向量后 $0.061017→$0.033996（−44.28%），含评分 $0.066887→$0.040018（−40.17%）。旧轮一次超时无用量，费用是已知用量估算，不是账单。主要降幅来自P1：输入632,330→51,001；本轮18次P1、446个角色判断均实际使用共享说明。21次空候选全部直接保存，均为current；没有真实历史直存样本。
+
+质量限制仍明显：Scooter从上一轮漏写变成本轮新增，但Luna面对Sedan／Compact两个旧候选仍选new，最终三条驾驶事实并存；乳糖不耐受已解决再次误标historical，随后Luna update才写成current。offsite本次正确抽取直存。原辅导安排正确stale、拒绝编造修复，但回答改为罗列其他活动，没有表达原安排不确定，故Abs仍失败。药物、运动→场馆的独立事项传播和James三条相关记录遗忘在本例中有实际证据。
+
+结论是节省方向有效、四题成绩未降，不代表记忆质量已可靠，也不能推广为整个MEME结论。[完整对照报告](../../outputs/pl001-newversion-live-20261020/report.txt) · [费用与参数核对](../../outputs/pl001-newversion-live-20261020/comparison.json) · [质量证据](../../outputs/pl001-newversion-live-20261020/quality-evidence.json)。
+
+## 2026-10-20：复用遗忘筛选、空候选直存；P1 共享说明完成局部重放
+
+当前代码已让遗忘的语义补查复用 `Retriever.filter_direct_candidates()`：`direct_candidates.py` 原门槛和判定逻辑未改，不增加第二套筛选器。调用时将候选类型扩为 fact／rule，原有关键词、实体、编号及当前版本补回规则继续生效。明确实体命中和 primary 保留，由 Luna 判断删除范围；补查允许为空。Jev 标准流程复用初始查询向量，不增加模型或向量请求。筛选日志为 `p2_forget_scope.candidates`，运行 manifest 同时记录两处用途。
+
+普通内容抽取现在必须输出可直接保存的正文和 `temporal_scope=current|historical`。Jev 判为 new，且原筛选后候选为空时，按时间归属直接 new／history，跳过 Luna `p2_new`；保存和索引继续走现有写入路径，日志为 `p2_new.direct_save`。有候选时仍交 Luna；forget／correction／hold 不走此直存分支。旧抽取输出缺少时间字段不兼容新合同，历史实验归档保持原样。
+
+真实 P1 局部实验只移动公共说明，不修改标准、候选、七次请求的分组或 0.5 判定阈值。对 Oct20 完整运行的 session19 重放 7 次，74 个问题：输入 **102,559→14,735，减少 85.63%**；按原 Jev 单价 $0.042／百万输入，费用 **$0.004307478→$0.000618870**，全部选中／排除结果与保存的基线一致。正式 P1 提示词和绑定代码未替换；这不是整段重新运行、全轨迹质量验证或总体费用降幅。[完整请求、原始响应与用量](../../outputs/pl001-p1-shared-state-20261020/) · [汇总](../../outputs/pl001-p1-shared-state-20261020/summary.json)。
+
+**269 项记忆测试＋59 项共享回归通过，0 失败、0 跳过**，使用真实 PostgreSQL 与固定模型响应。[验证报告](validation-empty-new-forget-reuse-20261020-r1/result.json)。空候选直存与遗忘筛选尚未进行真实模型端到端重跑；新增抽取字段的开销和遗忘召回变化未实测。下方带日期的旧记录按原版本解释。
+
+## 2026-10-20：筛选版完整 pl_001 已跑，分数持平但发现换车漏写
+
+新库 `contexthub_memory_directfilter_live_20261020_055205`，run=`memory-check-20261020T055345Z-bf7458ab`，24/24 段完成，892.67 秒。上一轮模型、提示词、数据和运行参数逐项保持一致；前测 4/4、后测及配对 3/4，与筛选前对照相同。Luna 普通信息输入 206,241→76,054（−63.12%）；Luna 全部输入 −44.95%，但 Jev 输入 +19.84%，两者已报告输入＋输出合计 +0.13%，不能宣称整体省 token。失败请求未知用量另列。
+
+重要边界：Scooter 输入保留两个旧驾驶目标，但 Luna 成功返回空操作，最终未保存 Scooter；正式四题不考车辆。预约事实已 stale、修复拒绝编造，但回答从仍含旧称谓的条件规则返回了 weekly tutoring，Abs 仍错。本轮运动、场馆分成不同事项，并观察到先失效传播、再由新运动版本修复场馆。不能只凭总分称质量完全不变。
+
+[完整结果、Jev／Luna 分项用量及原始证据](/Users/sherrylin/Documents/Codex/2026-10-14/contexthub/outputs/pl001-direct-filter-live-20261020/report.md)。仅执行一次真实运行；一次遗忘请求超时后按原配置重试成功，代码和提示词未调整。下节“未跑真实模型”仅描述此前机制测试阶段。
+
+## 2026-10-20：Luna 普通信息输入先做程序筛选
+
+Jev 判为 new 后，只对送给原本那一次 Luna 的 fact 候选筛选：余弦相似度 ≥0.50 保留；≥0.35 且有共同的有辨识度关键词或明确实体也保留。词频按同轨迹、截至当前段的已接纳未删除事实自动统计，同一事项的多个版本只计一份；`user` 等通用词不提供保留证据。明确编号／网址／路径完整命中可兜底。选中历史版本时同时保留池中该事项的当前版本；允许零条候选，仍调用 Luna 判断操作。
+
+筛选包括本段补入的已接纳事实，复用初始检索查询向量，不增加 Jev、Luna 或向量请求。共享候选池、P1、correction／forget 不变；仍逐条处理，原有提示词和输出 JSON 不变。筛选原因记入 `p2_new.candidates`，参数写入运行 manifest；实现入口为 `direct_candidates.py`、`Retriever.filter_direct_candidates()` 和 `MaintenanceExecutor.plan_direct()`。默认 LLM 直接处理后端没有 Jev new 分支，不启用此筛选。
+
+**257 项记忆测试＋59 项共享回归通过，0 失败、0 跳过**，另通过 ruff E9/F 检查。使用独立 PostgreSQL 测试库及固定模型／向量响应，未调用真实模型或重跑 pl_001。0.50／0.35 是暂定门槛，不代表已验证召回率或实际 token 节省；详细规则见[主方案 §4.1](/Users/sherrylin/Documents/PythonProjects/ContextHub-research-plan/research/proposal/README-memory-architecture-2026-09-29.md#41-检索怎样组合候选)，验证见[结果报告](validation-direct-filter-20261020-r2/result.json)。
+
+当前实现与方案核对（2026-10-16）：后续实验保留 `aliyun / qwen3.7-text-embedding / 1536`，通过显式运行参数选择；命令行默认提供方仍为 openlux，runtime 配置文件仍存旧模型，不能省略覆盖参数。三个 Jev＋Luna low、P1 长版、P2 new 原版 JSON、0.15／0.5 不变。回答只取 fresh 当前记录，模型输入去掉 ref 和失效旧正文；人物身份／关系遗忘包括明确同人的共同活动线索。完整设计、六表字段默认值及真实边界见[主方案](/Users/sherrylin/Documents/PythonProjects/ContextHub-research-plan/research/proposal/README-memory-architecture-2026-09-29.md)。
+
+筛选前对照 pl_001（2026-10-16）：`memory-check-20261016T075858Z-9b6199f9`，24/24 完成，前测 4/4、后测／配对 3/4，912.64 秒。234 次向量累计 61.19 秒；上轮 241 次／334.37 秒。4 次 Luna 超时后恢复。P1 筛选 180→180，仍有模型漏绑／多绑；运动和场馆合为一个事项后一起修复，不能当作独立两层传播证据。[两轮对比](../../artifacts/memory-research/memory-check-20261016T075858Z-9b6199f9/embedding-comparison.json) · [质量核查](../../artifacts/memory-research/memory-check-20261016T075858Z-9b6199f9/quality-review.json)。下方记录按原日期、版本解释，旧“最新”仅指当时时点。
+
+## 2026-10-16：P1 条件／结果两路筛选，暂定 ❗0.15
+
+- 合并初始命中、本段已接纳事实及规则旧绑定事项，按 memory_id 去重并取最新当前 fact，然后分别计算与完整条件、完整结果的余弦相似度。任意一边 ≥0.15 即进入 P1；此步不再按 top-k 截断，不能找回原候选池以外的事项。
+- 在已有规则整理／更正提示词中约定 `If <完整条件>, then <完整结果>`，程序直接拆查询；格式校验使用原有输出纠正流程，不增加语义筛选 LLM。复合条件和多个后果保持完整，不增加查询字段、表或文档向量副本。
+- LLM／Jev 共用筛选。Jev 仍看完整规则、判断两个角色，概率阈值保持 0.5；未替换正式 P1 长提示词。相似度过滤不删除记忆或已有绑定；空候选跳过模型判断。
+- 每个非空待绑定候选池增加两个查询向量调用；`p1.candidates` 保存逐候选两种相似度和取舍，manifest 保存筛选策略与 0.15，便于复盘实际召回与总成本。
+- **242 项记忆测试＋59 项共享回归全部通过，0 失败、0 跳过**；ruff E9/F、git diff --check 通过。最终证据：[验证报告](validation-p1-split-filter-20261016-r3/result.json)。使用独立测试库 `contexthub_memory_rule_endpoints_test_20261015_01` 的新隔离轨迹，模型／向量全部固定响应。测试覆盖新增事实、更新版本去重、两路任一达标、0.15 边界、超过检索名额、全过滤、保留原绑定、Jev 0.5、规则分界及 P2 原有传播回归。
+- ❗0.15 是用户确认的宽松经验值。既有 14 条规则固定池分数中 278→247、人工关键端点 34/34 保留，只是样本观察。后续复盘漏召回、Jev 问题数／token、向量调用成本及端到端效果。没有调用真实模型，也没有重跑 pl_001。方案正文与六表定义保持一致，schema 未改。
+
+## 2026-10-15：新 P1 两端绑定真实 pl_001，三个 Jev＋Luna low
+
+- run=`memory-check-20261015T092722Z-1f0eb445`，新库 `contexthub_memory_endpoints_live_20261015`，24/24 段完成，902.07 秒（15 分 02 秒）。前测 4/4、后测与前后配对 3/4；Cas 1/2、Abs 1/1、Del 1/1。上一轮 `memory-check-20261015T031303Z-8d440b82` 为 4/4、4/4、4/4，876.02 秒。
+- P1 保留了七条预期规则，必要来源都出现、必要目标六条出现，但多绑明显。Velthari 规则把运动错当目标、漏掉候选中的场馆：Jev 场馆 affected=0.49，运动 affected=0.79，阈值仍 0.5。其他规则多绑睡眠、饮食、用药等来源，部分又把健康当目标。必要端点出现不等于整体绑定正确。
+- P2 确实走过健康变化→运动失效→场馆失效，之后运动和用药分别修复成骑车、维生素。场馆两次修复都缺具体新地点规则，最终保持 stale；没有保存 Velthari 事实。错误的用药来源额外唤起了条件检查和预约修复，未产生错误新值。
+- 场馆后测回答 `Cycling on weekends`，把运动方式当地点；上下文已给场馆 Unknown，这是独立回答层问题。预约本轮回答干净的 Unknown；上一轮虽通过但混入其他活动。
+- forget 扫描 84 个版本，明确命中 3＋语义补查 20，模型选择姓名和共同做饭两条；含 James 的意面菜谱仍 fresh。姓名题通过不代表所有 James 提及都遗忘，与此前按请求范围判断的改动需分开解释。
+- P1 调用 21→14，条件检查 9→5，修复 7→6；P1 输入 tokens 218382→74182，条件检查 11718→8878。总耗时略增，不能宣称端到端更快或稳定准确率提升。模型／检索／数据配置相同，但多处代码和提示词同时变化，不是单变量实验。
+- 核对实际 121 次 Luna 请求均为 low；无请求错误、输出格式重试或直接／修复调用失败。运行中源码和提示词未改，未追加重跑；旧库保留，完整费用仍因价格缺失未知。
+- [完整比较报告](../../artifacts/memory-research/memory-check-20261015T092722Z-1f0eb445/comparison-report.md)、[分析汇总](../../artifacts/memory-research/memory-check-20261015T092722Z-1f0eb445/analysis-summary.json)、[逐步机制审计](../../artifacts/memory-research/memory-check-20261015T092722Z-1f0eb445/mechanism-audit.json)、[两端概率](../../artifacts/memory-research/memory-check-20261015T092722Z-1f0eb445/p1-role-probabilities.json)。原始完整输入／输出在该目录 key-inputs/。
+
+
+## 2026-10-15：P1 两端绑定与 P2 沿关系逐层传播
+
+- 规则行保存 `condition_matter_ids`、`affected_matter_ids` 两个 UUID 集合，默认空数组；事实行两列必须为空。新增两个规则数组 GIN 索引，表仍为六张。删除 `change_conditions`、事实换版复制条件、全量条件目标扫描及全量 stale 修复路径，不新增规则表或反向关系副本。
+- P1 的 LLM 输出 `condition_refs`／`affected_refs`；Jev 对每个候选分别判断两个角色。程序转成稳定事项 ID，普通事实换版本不重绑；规则换版本重新判断，两端旧绑定只作为候选。相关新事项可补绑；保留已确认端点，缺端点记日志。
+- P2 从实际变化事项查条件来源端，再读受影响端和完整来源现状；任一来源变化只唤起检查，不自动判定条件成立。每组有自己的 change_ids，拒绝用其他规则的无关变化充当依据。新规则或绑定也唤起当前状态判断，但不冒充来源发生变化。
+- 先沿关系完成失效传播，再修复已到达的 stale 事项；每个修复结果先继续传播，再尝试下一个目标。修复按受影响端查询规则及来源，保留精确 `basis_refs`、已选变化和有限补查。无关写入不再遍历全部未决事项。
+- **229 项记忆测试通过，0 失败、0 跳过**（8.52 秒）；ruff E9/F 和 diff 空白检查通过。使用本次新建的独立 PostgreSQL 库 `contexthub_memory_rule_endpoints_test_20261015_01`，模型／Jev／向量均为固定响应。见[验证记录](validation-rule-endpoints-20261015-r1/result.json)。未运行真实模型或 MEME，不推断准确率和成本改善。
+- 旧实验库原样保留；新代码拒绝旧 schema，实际模型重跑须另建匹配配置的空研究库后初始化。下面带日期的旧实验按当时版本理解，旧 `change_conditions` 或全量维护描述不再代表当前实现。
+
+
+## 2026-10-15：forget 改为实体匹配、语义补查与请求范围判断
+
+- 复用抽取结果 entities，只对请求正文中明确出现的实体做匹配，涵盖人、项目、公司、地点和网址；content 抽取提示词补充了遗忘请求的实体保留要求。不新增实体识别模型调用，不猜别名。
+- `Retriever.forget_candidates` 读取同 run／episode／strategy、截至当前 session 的全部已接纳、未删除版本，在正文中匹配，包括历史、stale、已判错 fact/rule。按 Unicode、大小写和空白规范化，名称使用词边界；含点或斜杠的实体另检查网址延伸边界，支持省略 HTTP(S) 前缀，排除其他子域名或路径中的同名片段。明确命中不受 top-k 限制，不依赖存储实体标签或向量存在。
+- 在其余版本中用完整请求独立做一次全文＋向量检索；精确命中／已确认主目标不占补查名额。正式配置各取 20，RRF 保留最多 20，不加实体通道。无明确实体时也走补查。初始 M_i 检索仍保留，因此 forget 额外产生一次查询向量调用。
+- LLM 只看合并候选，结合请求判断删除范围。取消“明确人名全删”：含实体只是候选，不能把“忘掉 Aurora 文档地址”扩大到项目负责人、预算或独立事故手册；隐含指代须有证据，同名不自动视为同一对象。默认 LLM 路径仍保留其已确认主目标，Jev 路径不强制主目标。
+- 选择后继续事务内删除整事项的全部版本使用资格，并沿 basis_refs 使推导失效；空目标／输出失败不产生部分删除。候选日志记录明确实体、扫描数、精确命中、语义命中、主目标和合并范围。
+- **215 项记忆测试通过，0 失败、0 跳过**，最终完整回归 8.20 秒；ruff E9/F、git diff --check 通过。新建独立库 `contexthub_memory_forget_test_20261015_01`，模型及向量均为固定响应。覆盖超过名额的显式命中、无实体标签／无向量、历史／失效版本、网址边界、独立语义名额、无实体请求和窄范围删除。见[验证记录](validation-entity-forget-20261015-r1/result.json)。
+- 未跑真实模型或 MEME；旧 pl_001／sw_001 仍为修改前结果。实体漏抽、别名、指代、补查截断和模型范围误判仍可能漏删／误删；程序仍全量读取匹配，明确命中也无总量上限，不宣称成本或效果改善。P1／P2 条件维护未改。
+
+以下同日“全量模型候选／明确人名全删”记录保留为修改前历史，由本节替代当前行为说明。
+
+
+## 最新完整实验：sw_001，三个 Jev＋Luna low（2026-10-15）
+
+- run=`memory-check-20261015T033206Z-319e731c`，23/23 sessions 完成，总耗时 723.14 秒（12 分 03 秒，含评分）。沿用上一轮 pl_001 的代码、提示词和模型参数：三个 Jev 开关开启；记忆 gpt-6-luna low；回答 gpt-4.1-mini；评分 gpt-4o。前测 5/5、后测 4/5、前后配对 4/5；Cas 2/2、Abs 2/2、Del 0/1。
+- session20 框架更新为 Veltrion 后，P2 实际保存了 fresh 的 Quorix Forge 构建工具和 `quorix forge --target prod` 构建命令；回答使用已维护的事实。构建工具修复输入只有 1 条事实、2 条规则、1 条变化；构建命令修复输入为 1 条事实、4 条规则、1 条变化。命令修复仍直接使用框架变化和规则链，不能据此声称已经验证严格逐跳传播。
+- 项目结构、测试工具及测试命令标为 stale；规则没有指定新值，修复没有编造。项目结构、测试命令两题均回答 Unknown，通过评分。
+- 文档题未通过，但不是原 URL 未删除：session20 明确要求删除 `github.com/aurora-team/docs`，全量遗忘检查 64 条候选，选中该条并标记 deleted，回答输入不含该 URL。session7 单独提供的事故处理手册 `docs.aurora.internal/runbooks` 被保留，后测 “Where are our docs?” 回答了这个地址。按基准预期此题失败；评分理由“返回已删除值”与实际两个不同 URL 不符。这里暴露的是宽泛问题下把相关资料当成目标资料的回答范围问题，不能靠删除所有文档地址解决。
+- 无请求错误、无输出校验重试，direct_failures=0、repair_failures=0。本轮未修改代码或提示词，也未补跑模型；仅补充结果记录。OpenLux 缺价格配置，未报告完整费用。
+- [结果汇总](../../artifacts/memory-research/memory-check-20261015T033206Z-319e731c/analysis-summary.json)、[逐题评分](../../artifacts/memory-research/memory-check-20261015T033206Z-319e731c/sw_001.scored.json)、[修复与遗忘证据](../../artifacts/memory-research/memory-check-20261015T033206Z-319e731c/key-evidence.json)。key-inputs/ 保存文档遗忘、文档回答、构建工具修复、构建命令修复的完整真实输入与输出，含原文和 JSON 排版阅读版。
+
+## 最新完整实验：三个 Jev＋Luna low，三处问题复查（2026-10-15）
+
+- run=`memory-check-20261015T031303Z-8d440b82`，pl_001 24/24 完成，总耗时 876.02 秒（14 分 36 秒，含评分）。三个 Jev 开关开启；记忆 gpt-6-luna low；回答 gpt-4.1-mini；评分 gpt-4o。前测 4/4、后测 4/4、前后配对 4/4；上一轮完整实验为 4/4、2/4、2/4。这是当前版本综合复跑，不是单变量比较。
+- 场馆本轮实际修复成功：session19 最终保存 fresh 事实 “The user goes to Velthari Studio for workouts.”，依据为场馆规则及新的骑车事实；有效挂载规则是两条场馆规则。首次处理时只有运动失效事件、尚无当前骑车事实，先请求补查；补查后一次仅引用规则的修复提案被校验拒绝，纠正后保持未知。运动修复为周末骑车后，有了新依据，再次修复场馆成功。最终材料为 1 条事实、2 条规则、2 条变化。
+- 遗忘本轮成功：检查 87 条候选，选中 James 姓名、共同尝试菜谱、腰果奶油意面三条记录；最终三条全部 deleted，回答 “I don't have that information.”。采用用户选定的按明确人名全删范围，不代表精细关系遗忘已解决。
+- 预约有改善但仍不干净：旧辅导预约保持 stale；无可确定新值，修复返回 false。回答为 “Trivia night on Wednesdays, book club meetings, and a weekly tutoring session (status unknown).” 官方评分因表达 status unknown 给通过，但仍混入其他活动，不能宣称此问题彻底解决。
+- session15 抽取 7 条规则、6 条 content，没有纯条件混入 content。无请求层错误、无超时；direct_failures=0、repair_failures=0。有 2 次输出校验重试：session17 抽取 JSON 格式问题、session19 场馆修复缺当前事实引用，均未导致终止。
+- [结果及问题分析](../../artifacts/memory-research/memory-check-20261015T031303Z-8d440b82/analysis-summary.json)、[逐题评分](../../artifacts/memory-research/memory-check-20261015T031303Z-8d440b82/pl_001.scored.json)、[修复／遗忘证据](../../artifacts/memory-research/memory-check-20261015T031303Z-8d440b82/key-evidence.json)。three-issues/ 保存三处实际完整输入。运行期间未修改源码／提示词，未再补跑。OpenLux 缺价格配置，未报告完整费用。
+
+## 2026-10-15：回答保留失效事项的不确定性
+
+- answer 检索允许最新当前、已接受、未 invalidated 的 stale fact 参与排序，用于识别未知事项；fresh fact／rule 保留，stale rule、删除记录、被纠正或撤回记录继续排除。P2 依据检索仍只取有效记录，历史回答方式不变。新版本出现后不回退到旧失效版本。
+- 当前回答上下文分为 memories（有效事实）、conditional_rules（条件规则）、unresolved_memories（旧说法和明确 Unknown 状态）。有效材料只保留必要编号、正文、类型，去掉版本／来源／写入时间等冗余字段；英文说明强调未知事项不能使用旧值作当前答案，不能用相关活动替代。回答仍用 gpt-4.1-mini、temperature=0、max_tokens=500；官方回答模板原文和指纹不变，上下文格式改变。
+- 用历史 pl_001 session24 预约问题做 3 次单例调用，均复用保存的查询向量、使用当前生产检索并只读核对实验库与导出状态一致；没有新增 embedding 请求、没有写入实验数据库、没有跑全流程。前两版仍回答 weekly tutoring session；第三版压缩材料并分开条件规则后返回 “Weekly tutoring session (current status unknown).”，2.849 秒，输入 1323／输出 8 tokens。尚未调用评分模型，单例结果不代表稳定准确率。
+- [最终完整输入](../../artifacts/memory-research/appointment-answer-probe-20261015T031108Z/input-readable.txt)、[最终响应和用量](../../artifacts/memory-research/appointment-answer-probe-20261015T031108Z/summary.json)。前两次失败记录保留在 appointment-answer-probe-20261015T030121Z、appointment-answer-probe-20261015T030236Z。
+- 200 项记忆测试通过（8.05 秒，固定模型响应＋独立测试库），验证失效事项进入回答且不成为当前事实、删除／错误记录排除、替代值出现后旧未知版本退出、历史与 P2 语义保留。ruff E9/F、git diff --check 通过。
+
+## 2026-10-15：08／09 去掉记录时间
+
+- P1 的规则和候选只发送正文及候选编号，Jev／LLM 共用相同输入。P2 批量条件检查的规则、事实以及 changes.before／after 全部移除 created_in_session、timestamp；保留变化编号、操作、正文、当前状态和 incorporates_changes。提示词同步改为根据正文中的时间关系和 before／after 判断，不再要求使用记录时间。条件检查继续批量调用。
+- [新版完整阅读包](../../artifacts/memory-research/prompt-catalog-20261015-r4/00-INDEX.txt)中 04–10 的完整请求已逐一确认不含上述两个字段。未修改存储时间、回答模型输入或默认 P2 直接判断路径。
+- 199 项记忆模块测试通过（8.06 秒，独立测试库＋固定模型响应），ruff E9/F、git diff --check 通过。未调用真实模型或重跑实验。
+
+## 2026-10-15：07 遗忘输入也移除记录时间
+
+- p2_forget_scope 的 request 仅保留 text，全部候选仅发送 ref、text、type、matter，不再发送 created_in_session／timestamp。英文提示词已核对，沿用明确人名全删策略。
+- [07 完整英文提示词及 85 条候选](../../artifacts/memory-research/prompt-catalog-20261015-r3/07-forget/input-readable.txt)与[全部提示词阅读包](../../artifacts/memory-research/prompt-catalog-20261015-r3/00-INDEX.txt)已更新。数据库记录时间和其他阶段不变；未调用真实模型或改动已有实验数据。
+- 遗忘／Jev 直接处理／提示词加载相关 42 项测试通过（固定模型响应）；ruff E9/F、git diff --check 通过。
+
+## 2026-10-15：04／05／06 去掉记录时间，提示词统一英文
+
+- Jev 用途判断仅发送 incoming.text；new／correction 的 LLM 处理输入也去掉 incoming 和全部候选的 created_in_session、timestamp。保留候选版本／历史范围／有效性字段及正文中的事件时间；数据库时间记录和其他环节的时间输入不变。
+- 将 p2_intent_jev.json、p2_new.txt、p2_correction.txt 翻译成英文，选项和操作定义保留。当前全部模型提示词模板均为英文。
+- [新版完整阅读包](../../artifacts/memory-research/prompt-catalog-20261015-r2/00-INDEX.txt)含 22 份模板、15 份完整示例；04／05／06 根据当前字段重新拼装，其余按各自标记保留历史请求或离线重建。旧阅读包不覆盖。
+- 41 项用途处理、提示词加载、时间条件相关测试通过（独立测试库＋固定模型响应）；ruff E9/F、git diff --check 通过。确认 04／05／06 示例无上述字段，全部模型模板无中文。未调用真实模型或重跑实验。
+
+## 2026-10-15 历史：遗忘暂用明确人名全删策略（已被实体候选与请求范围判断替代）
+
+- 按用户最新决定，`p2_forget_scope.txt` 改为英文并采用更宽的范围：请求明确点名要遗忘其信息的人时，选择当前 episode 内所有提到该名字的候选，不再区分伴侣、同事等身份；共同经历、菜谱、规则、历史版本均包括。名字忽略大小写，不按其他名字的子串匹配；没有明确人名时保留按请求信息判断的方式。没有新增人物消歧模块或把 James 硬编码到程序。
+- 选择范围仍由 LLM 判断，程序继续整条事项及全部版本删除；独立、不含目标名字且不披露遗忘信息的偏好保留。现有全量扫描和依赖处理不变。本次未改写历史实验数据。
+- 更新既有遗忘测试的固定模型返回，覆盖不带伴侣身份的 James 做菜记录及同名同事一并删除、独立偏好保留、回答检索中不再出现已删记录。遗忘／Jev 分支／提示词加载相关 42 项测试通过，ruff E9/F 与 git diff --check 通过。测试使用独立本机库及固定模型响应，只验证流程接入，不代表已验证真实模型遵从；没有真实模型调用或全流程运行。
+
+## 2026-10-14：再次精简修复提示词
+
+- 目标正文只在开头出现一次；请求 JSON 不再重复发送 target，也不再分配可引用的目标编号。合并重复的事项边界、旧值和候选材料说明，按“找适用规则 → 核实条件 → 生成替代值 → 缺依据才补查”组织判断；输出五个字段各说明一次。
+- 澄清已有充分依据时直接修复；只有证据不足才考虑检索，不能把“不能继续检索”理解为必须拒绝修复。材料选择与条件检查的批量方式保持不变。
+- 同一场馆离线预览完整请求从上一版 5483 字符减为 3733 字符，仍含 1 条当前事实、3 条挂载规则、2 条变化。[新版完整输入](../../artifacts/memory-research/repair-preview-20261014-r2/input-readable.txt)。未调用真实模型或重跑全流程。
+- 199 项测试通过（7.64 秒）；ruff E9/F、git diff --check 通过。[验证记录](validation-repair-evidence-20261014-r2/result.json)。
+
+## 2026-10-14：修复先用条件证据，缺依据才补查
+
+- 修复提示词开头动态填入实际目标正文，明确更新同一事项；说明候选并非都相关、一条充分且无冲突的适用规则即可支持更新，以及 changes.before 可证明变化但不是当前事实。修复 target/materials/changes 不再发送 created_in_session、timestamp，正文中的事件时间保留。条件检查的输入和批量调用方式不变。
+- 条件检查在同一事务内记录选中的变化引用；修复先取这些变化涉及的事实的当前有效版本、目标原推导依据的当前有效版本，以及全部有效挂载规则。进一步合并本轮这些事项的变化，并将引用保存在现有 memory_steps 中供后续 session 使用；没有新增数据库字段。遗忘／纠错内容继续遮蔽。
+- 移除修复开始时的宽泛检索。RepairDecision 增加必填、可为 null 的 retrieval_query：只有 LLM 指出具体缺失依据时才查询，最多补查一次、最多返回五条当前有效 fact，然后再次判断；无法确定新值且没有可补充的依据时直接保持 stale。相同依据下复用已有判断；已记录的缺失依据查询可检查后来的新证据，不重复调用相同判断。
+- 采用当前生产代码从旧运行 step 18257 生成离线场馆预览：20 条事实减为 1 条骑车事实，保留原 P1 挂载的 3 条规则，5 条变化减为 2 条运动变化。原有过宽的健康→运动规则挂载如实保留，本次未改 P1。完整请求字符数 9870→5483。预览没有模型输出，也没有调用模型或检索。[完整输入](../../artifacts/memory-research/repair-preview-20261014/input-readable.txt)、[生成说明](../../artifacts/memory-research/repair-preview-20261014/metadata.json)。
+- **199 项测试通过**（真实本机研究库＋固定 HTTP 模型响应），覆盖选中原因保留、当前版本替换、无关事实排除、跨 session 证据保留、无新证据不重复判断、缺事实后定向检索、最多一次／五条补查，以及既有遗忘和两级传播。ruff E9/F、git diff --check 通过。[验证结果](validation-repair-evidence-20261014-r1/result.json)。未跑全流程，未进行真实模型效果验证。
+
+## 当前代码：本轮事实检查；抽取不返回来源编号（2026-10-14）
+
+本轮 `new`／`update` 后仍为当前有效版本、且挂有有效规则的 fact 进入 P2 条件检查；`duplicate` 确认继续跳过。`correct` 等其他直接操作维持原保护策略。条件检查继续批量发送，不按事实／规则拆分。
+
+抽取结果只需 `text`、`entities`；Jev 规则整理仍用 `candidate_ref` 确保来自已通过筛选的候选，程序验证后去掉。已移除新增的 `source_message_nos` 要求，以及依赖它的来源映射、存储字段和校验。
+
+原始 session 仍保存消息顺序及已有的单条消息时间，但不再建立每条 fact/rule 到消息的映射。维护输入保留 session 时间和正文中的时间描述；同一 session 内若正文没有说明先后，不能根据写入顺序猜测。新增规则本身不意味着条件成立，已经反映变化的事实不应重复失效。
+
+本次修改后，197 项记忆模块测试通过（固定模型响应），未调用真实模型或重跑 pl_001。
+
+## 最新运行：三个 Jev＋Luna low，取消抽取来源编号后（2026-10-14）
+
+`pl_001` **24/24 段完成，前测 4/4、后测 2/4、前后配对 2/4**。程序计时 20 分 44 秒；三个 Jev 开关全开，记忆处理 gpt-6-luna low，回答 gpt-4.1-mini、评分 gpt-4o 未变。一次 Luna 请求、一次向量请求超时后重试成功；无直接处理或修复调用失败（正常返回无法修复不计为调用失败）。
+
+session15 正确分开 7 条规则和 6 条内容，本轮新事实参与条件检查且没有被误判为条件已触发。session19 病情已更新，用药修复为 multivitamin、运动修复为周末骑车，预约和场馆旧值失效。两条场馆规则已挂上，但修复在已有骑车事实、场馆规则和运动变化依据时仍返回无法修复，最终没有新的场馆 fact；场馆答案由回答时结合规则得到。P1 仍存在将运动规则挂到攀岩、买车计划等记录上的过宽匹配。
+
+后测失败：预约回答了 trivia night、读书会和摆摊，未表达原辅导预约的当前不确定性；伴侣姓名记录已删除，但遗忘范围判断没有选中两条 James 做菜记录，这两条仍被检索给回答模型，最终又答出 James。评分器关于预约“仍回答旧值”的解释不准确，应以实际回答为准。修复材料虽统一经过检索，仍可夹带公司活动等无关项。
+
+[分析汇总](../../artifacts/memory-research/memory-check-20261014T081430Z-fd3f85c7/analysis-summary.json)、[逐题评分](../../artifacts/memory-research/memory-check-20261014T081430Z-fd3f85c7/pl_001.scored.json)、[关键证据](../../artifacts/memory-research/memory-check-20261014T081430Z-fd3f85c7/key-evidence.json)。费用缺少 OpenLux 价格配置，不能报告完整金额。本次只运行和分析，未额外修改处理逻辑。
+
+## 上次中断运行：新用途分流＋三个 Jev＋Luna low（2026-10-14）
+
+`pl_001` 本轮 **18/24段后中断，耗时36分59秒**：session19的P2条件检查连续三次60秒超时。前测4/4；后测未执行，原评分文件的0/4只是失败占位，不是有效准确率。新流程已保存全部7条规则、正确更新病情、修复用药与运动并遗忘伴侣关系；预约保持未知。场馆仍因P1漏挂而停留在Crysthene Pool。125条实际Luna请求均为low，回答和评分模型未改；没有自动追加重跑。
+
+[诊断与证据](../../artifacts/memory-research/memory-check-20261014T061209Z-f106c384/diagnosis.json)、[汇总](../../artifacts/memory-research/memory-check-20261014T061209Z-f106c384/analysis-summary.json)。以下2026-10-13的分数属于旧流程完整运行，不与本次未完成结果作准确率对比。
+
+## 可选 Luna 记忆模型（2026-10-13）
+
+本次pl_001已完成24/24，耗时8分14秒，前测4/4、后测1/4、配对1/4。content拆分改善，但Jev拒收5条规则、P1未挂上场馆规则，条件检查与修复没有进入。[运行汇总](../../artifacts/memory-research/memory-check-20261013T090624Z-5f034a10/analysis-summary.json)、[原因及实际路由](../../artifacts/memory-research/memory-check-20261013T090624Z-5f034a10/diagnosis.json)。以下原4.1-mini运行作为上一轮记录保留。
+
+`--memory-model gpt-6-luna` 将记忆处理的 LLM 调用改为 Luna，显式发送 `reasoning_effort=low`，不发送 temperature、seed 或输出长度限制。涵盖规则整理、content抽取、用途分类后的直接处理、条件检查、修复和遗忘范围判断；若相应Jev开关未开启，原LLM规则抽取、P1和P2直接判断也使用所选记忆模型。默认记忆模型仍为gpt-4.1-mini；回答固定gpt-4.1-mini，评分固定gpt-4o。运行清单、实际请求及模型费用归属跟随选择；未配置openlux价格时保留费用未知。
+
+以下是当时的历史运行命令。运行会创建独立的 run_id；索引配置须与数据库一致。
+
+当前采用的完整命令见上一节，已显式开启三个 Jev 开关并选择 Qwen 1536；不要把旧库名或不带向量覆盖的旧命令用于新库。仅测试 P1 后端时，其他开关需按所需实验配置显式设置。
+
+一个 rule 的候选共享 state，每个候选对应 condition／affected 两个 Noul 问题；问题正文明确指定 M 编号，不能仅依靠 API question key 传达候选身份。概率大于等于阈值才挂载，默认阈值0.5，原始概率保存在 `p1.jev_decisions`。空选择为正常结果，已有有效挂载仍保留。
+
+Jev 沿用60秒单次总时限、最多3次暂时故障尝试和10／30秒等待，并额外识别 TypeSafe 529 过载。格式错误、遗漏候选、非法概率停止当前轨迹；不对固定类型接口套用文本纠正，不自动回退到LLM。原LLM仍保留两次输出尝试。完整请求／原始响应、模型版本、用量与请求耗时进入 execution_attempts，汇总另列 `p1_costs`（已包含在maintenance内，不能重复相加）。
+
+`runtime-jev-config.json` 仅额外配置 Jev 官方标准价：每百万输入token 0.042美元，输出免费；这是按公开单价估算，不是账户账单核对。其他渠道价格仍未知。来源：https://docs.typesafe.ai/models ，核对日期2026-10-13。
+
+验证：201项通过（142项记忆模块、59项共用回归），0失败、0跳过，真实PG＋固定HTTP响应。[验证记录](validation-jev-20261013-r1/result.json)。覆盖默认分支、Jev批量／多目标／空选择／已有条件保留、冻结提示词、引用映射、529重试、账户错误、非法响应、取消、日志失败及费用记录；不代表真实判断准确率。

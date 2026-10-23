@@ -1,0 +1,23 @@
+{
+  "index": {
+    "dimensions": 1536,
+    "embedding_model": "text-embedding-3-small",
+    "document_prefix": "",
+    "query_prefix": "",
+    "text_config": "pg_catalog.english"
+  },
+  "prices": {
+    "jev-1.13.0": {
+      "source": "https://docs.typesafe.ai/models",
+      "observed_at": "2026-10-13T06:26:08.182250+00:00",
+      "currency": "USD",
+      "region": "global",
+      "billing_tier": "standard",
+      "model": "jev-1.13.0",
+      "unit_tokens": 1000000,
+      "input_rate": "0.042",
+      "output_rate": "0"
+    }
+  },
+  "paper_prices": {}
+}
