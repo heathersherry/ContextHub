@@ -123,7 +123,7 @@ async def test_scope_includes_history_and_rules_but_excludes_other_episodes(env)
         DirectDecision(action="update", target_ref=old),
         c2,
     )
-    other_trace = env.trace.model_copy(update={"episode_id": "other-episode"})
+    other_trace = env.trace.model_copy(update={"namespace": "other-episode"})
     other = replace(c, trace=other_trace)
     await env.store.save_session(
         other_trace, 1, None, [{"role": "user", "content": NAME}]

@@ -335,3 +335,7 @@ The cheap-first, escalate-only-when-needed policy lives in core as a confidence 
 ## License ⚖️
 
 [Apache License 2.0](LICENSE)
+
+## Managed memory
+
+Applications can use `client.memory.ingest()` and `client.memory.context()` through the existing server. Extraction, rule binding, invalidation, repair and context selection share `contexthub.memory` with the current MEME adapter. See [setup and migration notes](docs/memory-core.txt) and the [SDK example](examples/memory_application.py). The previous public knowledge API has been replaced; manual memory add/list/promote remains separate.

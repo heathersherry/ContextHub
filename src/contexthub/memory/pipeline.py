@@ -69,8 +69,6 @@ class MemoryPipeline:
     async def ingest(
         self, trace, session_seq, messages, *, timestamp=None, timeout_seconds=1800
     ):
-        if trace.strategy_id != "local_base":
-            raise ValueError("only local_base is implemented")
         context = CallContext(self.store, trace, session_seq, self.code_version)
         try:
             async with asyncio.timeout(timeout_seconds):

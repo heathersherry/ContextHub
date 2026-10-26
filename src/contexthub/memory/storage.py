@@ -1,72 +1,81 @@
-"""Only explicit research databases; never run product migrations here."""
+"""Application memory storage in the contexthub_memory PostgreSQL schema."""
 
 from pathlib import Path
+from contextlib import asynccontextmanager
 from uuid import uuid4
 
 import asyncpg
 
 from contexthub.db.codecs import init_pg_connection
 from .contracts import ref_of
-from .schemas import IndexConfig, Trace, normalize_entities, normalize_topics
+from .schemas import IndexConfig, MemoryScope, normalize_entities, normalize_topics
 
-SCOPE = "run_id=$1 AND episode_id=$2 AND strategy_id=$3"
+SCOPE = "tenant_id=$1 AND namespace=$2 AND owner_id=$3"
 
 
 class MemoryStore:
-    def __init__(self, pool, config):
-        self.pool = pool
-        self.config = config
+    def __init__(self, pool, config, *, prompts=None, lease_pool=None):
+        from .prompts_config import PromptSet
+        self.pool, self.config = pool, config
+        self.prompts = prompts or PromptSet()
+        self.lease_pool = lease_pool
 
     @classmethod
-    async def open(cls, dsn: str, config: IndexConfig, *, initialize=False):
+    async def open(cls, dsn: str, config: IndexConfig, *, initialize=False, prompts=None):
         pool = await asyncpg.create_pool(
-            dsn, min_size=1, max_size=5, init=init_pg_connection
+            dsn, min_size=1, max_size=10, init=init_pg_connection,
+            server_settings={"search_path": "contexthub_memory,public"},
         )
+        leases = None
         try:
-            async with pool.acquire() as conn:
-                database = await conn.fetchval("SELECT current_database()")
-                if not database.startswith("contexthub_memory_"):
-                    raise ValueError("dedicated contexthub_memory_* database required")
-                async with conn.transaction():
-                    if initialize:
-                        # Initialization is deliberate and only valid for an empty database.
-                        if await conn.fetchval(
-                            "SELECT count(*) FROM pg_tables WHERE schemaname='public'"
-                        ):
-                            raise ValueError(
-                                "initialization requires an empty research database"
-                            )
-                        await conn.fetchval("SELECT $1::regconfig", config.text_config)
-                        schema = Path(__file__).with_name("schema.sql").read_text()
-                        await conn.execute(
-                            schema.replace("__DIMENSIONS__", str(config.dimensions))
-                        )
-                        await conn.execute(
-                            "INSERT INTO research_config VALUES(true,$1)",
-                            config.model_dump(),
-                        )
-                    columns = {r["column_name"] for r in await conn.fetch(
-                        "SELECT column_name FROM information_schema.columns "
-                        "WHERE table_schema='public' AND table_name='memories'"
-                    )}
-                    if not {"condition_matter_ids", "affected_matter_ids", "topics"} <= columns:
-                        raise ValueError(
-                            "topics and rule endpoint schema required; initialize a new empty research database"
-                        )
-                    saved = await conn.fetchval(
-                        "SELECT config FROM research_config WHERE singleton"
-                    )
-                    if saved != config.model_dump():
-                        raise ValueError("database index configuration mismatch")
-            return cls(pool, config)
+            async with pool.acquire() as conn, conn.transaction():
+                await conn.execute("SELECT pg_advisory_xact_lock(hashtextextended('contexthub_memory_schema',0))")
+                exists = await conn.fetchval("SELECT to_regclass('contexthub_memory.memory_config')")
+                if not exists:
+                    if await conn.fetchval("SELECT to_regclass('public.research_config')"):
+                        raise ValueError("legacy research schema: run python -m contexthub.memory.migrate_research explicitly")
+                    if not initialize:
+                        raise ValueError("memory schema missing; initialize it explicitly")
+                    await conn.execute("CREATE SCHEMA contexthub_memory")
+                    schema = Path(__file__).with_name("schema.sql").read_text()
+                    await conn.execute(schema.replace("__DIMENSIONS__", str(config.dimensions)))
+                    await conn.execute("INSERT INTO memory_config VALUES(true,$1)", config.model_dump())
+                saved = await conn.fetchval("SELECT config FROM memory_config WHERE singleton")
+                if saved != config.model_dump():
+                    raise ValueError("database index configuration mismatch")
+            leases = await asyncpg.create_pool(dsn, min_size=1, max_size=5)
+            return cls(pool, config, prompts=prompts, lease_pool=leases)
         except BaseException:
+            if leases is not None:
+                await leases.close()
             await pool.close()
             raise
 
     async def close(self):
+        if self.lease_pool is not None:
+            await self.lease_pool.close()
         await self.pool.close()
 
-    async def save_session(self, trace: Trace, session_seq, timestamp, messages):
+    @asynccontextmanager
+    async def lease(self, scope):
+        # A second pool prevents writers holding every work connection while
+        # they await model calls. Try-lock rejects overlapping operations.
+        from contexthub.errors import ConflictError
+        async with self.lease_pool.acquire() as conn:
+            key = "memory:" + scope.model_dump_json()
+            locked = await conn.fetchval("SELECT pg_try_advisory_lock(hashtextextended($1,0))", key)
+            if not locked:
+                raise ConflictError("memory_namespace_busy")
+            try:
+                yield
+            finally:
+                await conn.execute("SELECT pg_advisory_unlock(hashtextextended($1,0))", key)
+
+    async def latest_session(self, scope):
+        async with self.pool.acquire() as conn:
+            return await conn.fetchval(f"SELECT coalesce(max(session_seq),0) FROM session_records WHERE {SCOPE}", *scope.args)
+
+    async def save_session(self, trace: MemoryScope, session_seq, timestamp, messages):
         if session_seq < 1:
             raise ValueError("positive session sequence required")
         numbered = [
@@ -96,9 +105,9 @@ class MemoryStore:
                     f"""SELECT 1 FROM memory_steps failed WHERE {SCOPE}
                     AND stage='session.failed' AND NOT EXISTS (
                         SELECT 1 FROM memory_steps completed
-                        WHERE completed.run_id=failed.run_id
-                        AND completed.episode_id=failed.episode_id
-                        AND completed.strategy_id=failed.strategy_id
+                        WHERE completed.tenant_id=failed.tenant_id
+                        AND completed.namespace=failed.namespace
+                        AND completed.owner_id=failed.owner_id
                         AND completed.session_seq=failed.session_seq
                         AND completed.stage='session.complete'
                         AND completed.step_id>failed.step_id
@@ -123,7 +132,7 @@ class MemoryStore:
                         "previous session extraction failed; stop this trajectory"
                     ) from None
             await conn.execute(
-                "INSERT INTO session_records(run_id,episode_id,strategy_id,session_seq,timestamp,messages) VALUES($1,$2,$3,$4,$5,$6)",
+                "INSERT INTO session_records(tenant_id,namespace,owner_id,session_seq,timestamp,messages) VALUES($1,$2,$3,$4,$5,$6)",
                 *trace.args,
                 session_seq,
                 timestamp,
@@ -177,7 +186,7 @@ class MemoryStore:
             session_seq,
         )
         await conn.execute(
-            """INSERT INTO memories(run_id,episode_id,strategy_id,memory_id,version,
+            """INSERT INTO memories(tenant_id,namespace,owner_id,memory_id,version,
             text,type,origin,status,created_in_session,timestamp,entities,topics)
             VALUES($1,$2,$3,$4,$5,$6,$7,$8,'unresolved',$9,$10,$11,$12)""",
             *trace.args,
@@ -320,7 +329,7 @@ class MemoryStore:
             stage,
             json.loads(json.dumps(payload, default=str)),
         )
-        sql = "INSERT INTO memory_steps(run_id,episode_id,strategy_id,session_seq,stage,payload) VALUES($1,$2,$3,$4,$5,$6)"
+        sql = "INSERT INTO memory_steps(tenant_id,namespace,owner_id,session_seq,stage,payload) VALUES($1,$2,$3,$4,$5,$6)"
         if conn is not None:
             await conn.execute(sql, *values)
         else:
@@ -358,8 +367,8 @@ class MemoryStore:
                 AND ($4::boolean OR condition_matter_ids && $5::uuid[]
                      OR affected_matter_ids && $6::uuid[] OR memory_id=ANY($7::uuid[]))
                 AND NOT EXISTS (
-                    SELECT 1 FROM memories newer WHERE newer.run_id=r.run_id
-                    AND newer.episode_id=r.episode_id AND newer.strategy_id=r.strategy_id
+                    SELECT 1 FROM memories newer WHERE newer.tenant_id=r.tenant_id
+                    AND newer.namespace=r.namespace AND newer.owner_id=r.owner_id
                     AND newer.memory_id=r.memory_id AND newer.temporal_scope='current'
                     AND newer.version>r.version
                 ) ORDER BY memory_id""",

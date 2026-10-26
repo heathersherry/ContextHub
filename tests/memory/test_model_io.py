@@ -41,7 +41,7 @@ async def test_direct_correction_preserves_input_ids_and_never_exposes_focus_as_
     assert len(env.prompts) == 2 and not env.responses
     async with env.store.pool.acquire() as conn:
         outputs = await conn.fetch(
-            "SELECT raw_output FROM execution_attempts WHERE run_id=$1 AND episode_id=$2 AND phase='finished' AND extraction_attempt IS NULL",
+            "SELECT raw_output FROM execution_attempts WHERE tenant_id=$1 AND namespace=$2 AND phase='finished' AND extraction_attempt IS NULL",
             *env.trace.args[:2],
         )
     assert len(outputs) >= 2

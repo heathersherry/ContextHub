@@ -59,7 +59,7 @@ async def test_extraction_keeps_requests_without_saving_or_embedding_any_item(en
     async with env.store.pool.acquire() as conn:
         assert (
             await conn.fetchval(
-                "SELECT count(*) FROM memories WHERE run_id=$1 AND episode_id=$2",
+                "SELECT count(*) FROM memories WHERE tenant_id=$1 AND namespace=$2",
                 *env.trace.args[:2]
             )
             == 0
@@ -77,10 +77,10 @@ async def test_format_and_transport_retries_preserve_all_responses(env):
     )
     async with env.store.pool.acquire() as conn:
         rows = await conn.fetch(
-            """SELECT * FROM execution_attempts WHERE run_id=$1 AND episode_id=$2
+            """SELECT * FROM execution_attempts WHERE tenant_id=$1 AND namespace=$2
             AND phase='finished' AND extraction_attempt IS NOT NULL ORDER BY extraction_attempt,attempt_no""",
-            env.trace.run_id,
-            env.trace.episode_id,
+            env.trace.tenant_id,
+            env.trace.namespace,
         )
     assert len(rows) == 4
     assert [r["extraction_attempt"] for r in rows] == [1, 1, 2, 3]
@@ -109,15 +109,15 @@ async def test_four_unusable_responses_stop_trajectory_but_not_other_episode(env
     with pytest.raises(ValueError, match="previous session"):
         await env.pipeline.ingest(env.trace, 2, [], timeout_seconds=10)
     assert len(env.prompts) == 4 and env.embedded == []
-    other = env.trace.model_copy(update={"episode_id": env.trace.episode_id + "-other"})
+    other = env.trace.model_copy(update={"namespace": env.trace.namespace + "-other"})
     env.responses.append('{"items":[]}')
     assert await env.pipeline.ingest(other, 1, [], timeout_seconds=10) == []
     async with env.store.pool.acquire() as conn:
         assert (
             await conn.fetchval(
-                "SELECT count(*) FROM execution_attempts WHERE run_id=$1 AND episode_id=$2 AND phase='finished'",
-                env.trace.run_id,
-                env.trace.episode_id,
+                "SELECT count(*) FROM execution_attempts WHERE tenant_id=$1 AND namespace=$2 AND phase='finished'",
+                env.trace.tenant_id,
+                env.trace.namespace,
             )
             == 4
         )
@@ -148,9 +148,9 @@ async def test_transport_exhaustion_not_format_retry(env):
     assert len(env.prompts) == 2
     async with env.store.pool.acquire() as conn:
         rows = await conn.fetch(
-            "SELECT extraction_attempt,attempt_no FROM execution_attempts WHERE run_id=$1 AND episode_id=$2 AND phase='finished' ORDER BY attempt_no",
-            env.trace.run_id,
-            env.trace.episode_id,
+            "SELECT extraction_attempt,attempt_no FROM execution_attempts WHERE tenant_id=$1 AND namespace=$2 AND phase='finished' ORDER BY attempt_no",
+            env.trace.tenant_id,
+            env.trace.namespace,
         )
     assert [(r[0], r[1]) for r in rows] == [(1, 1), (1, 2)]
 
@@ -169,9 +169,9 @@ async def test_session_deadline_stops_without_extra_requests(env):
     assert len(env.prompts) == 1
     async with env.store.pool.acquire() as conn:
         row = await conn.fetchrow(
-            "SELECT payload FROM execution_attempts WHERE run_id=$1 AND episode_id=$2 AND phase='finished'",
-            env.trace.run_id,
-            env.trace.episode_id,
+            "SELECT payload FROM execution_attempts WHERE tenant_id=$1 AND namespace=$2 AND phase='finished'",
+            env.trace.tenant_id,
+            env.trace.namespace,
         )
     assert row["payload"]["stop_reason"] == "cancelled"
 

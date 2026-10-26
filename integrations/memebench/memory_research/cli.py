@@ -24,16 +24,13 @@ from contexthub.memory.storage import MemoryStore
 from contexthub.memory.model_io import OUTPUT_ATTEMPTS
 from contexthub.memory.schemas import RetrievalConfig
 from contexthub.memory.index_cli import add_embedding_index_arguments, resolve_index_config
-from contexthub.memory.extractor import Extractor
 from contexthub.memory.jev_rule_gate import JevRuleGate
-from contexthub.memory.indexer import Indexer
-from contexthub.memory.retriever import P1_MIN_SIMILARITY, Retriever
+from contexthub.memory.retriever import P1_MIN_SIMILARITY
 from contexthub.memory.direct_candidates import DIRECT_CANDIDATE_POLICY
-from contexthub.memory.condition_binder import ConditionBinder
 from contexthub.memory.jev_condition_binder import JevConditionBinder
 from contexthub.memory.jev_intent_classifier import JevIntentClassifier
-from contexthub.memory.maintenance_executor import MaintenanceExecutor
-from contexthub.memory.pipeline import MemoryPipeline
+from contexthub.memory.factory import assemble_memory_engine
+from contexthub.memory.prompts_config import PromptSet
 from .runner import (
     MemoryAnswerer,
     OfficialScorer,
@@ -138,7 +135,8 @@ def freeze(output, config, args):
     (output / "source.patch").write_bytes(
         subprocess.check_output(["git", "diff", "HEAD", "--", *paths], cwd=ROOT)
     )
-    shutil.copytree(ROOT / "prompts", output / "prompts")
+    shutil.copytree(ROOT / "src/contexthub/memory/prompts", output / "prompts" / "core")
+    shutil.copytree(Path(__file__).with_name("prompts"), output / "prompts" / "meme")
     memory_params = memory_request_parameters(args.memory_model)
     memory_effort = memory_params.reasoning_effort if memory_params else "omitted"
     manifest = {
@@ -428,18 +426,16 @@ async def run(args):
     manifest["evaluation_provider"] = {"label": provider["label"], "base_url": provider["base_url"]}
     manifest["model_parameters"]["embedding"]["base_url"] = embedding_config.base_url
     dump(output / "manifest.json", manifest)
-    store = await MemoryStore.open(os.environ["MEMORY_DATABASE_URL"], index_config)
-    from contexthub.memory import contracts
-
-    previous_prompts = contracts.PROMPTS
-    contracts.PROMPTS = (output / "prompts").resolve()
+    store = await MemoryStore.open(os.environ["MEMORY_DATABASE_URL"], index_config,
+                                   prompts=PromptSet((output / "prompts/core").resolve()))
+    evaluation_prompts = PromptSet((output / "prompts/meme").resolve())
     clients = []
     start = time.monotonic()
     try:
         async with store.pool.acquire() as conn:
             manifest["database"] = await conn.fetchval("SELECT current_database()")
             if await conn.fetchval(
-                "SELECT 1 FROM session_records WHERE run_id=$1 LIMIT 1", run_id
+                "SELECT 1 FROM session_records WHERE tenant_id=$1 LIMIT 1", run_id
             ):
                 raise ValueError("run already exists")
         dump(output / "manifest.json", manifest)
@@ -497,58 +493,30 @@ async def run(args):
             api_key=embedding_provider["api_key"],
         )
         clients.append(emb)
-        indexer = Indexer(store, emb, price=price(index_config.embedding_model))
-        retriever = Retriever(
-            store,
-            indexer,
-            RetrievalConfig(
-                text_k=20, vector_k=20, hybrid_limit=20, entity_k=10, rrf_c=60,
-                topic_similarity_threshold=args.topic_similarity_threshold,
-            ),
-        )
         jev = None
         if "jev" in (args.p1_backend, args.p2_direct_backend, args.rule_gate_backend):
             jev = JevClient(jev_key)
             clients.append(jev)
-        if args.p1_backend == "jev":
-            discovery = JevConditionBinder(
-                store,
-                jev,
-                retriever,
-                retry=decision_retry_policy("jev"),
-                threshold=args.p1_jev_threshold,
-                price=price(JEV_MODEL),
-            )
-        else:
-            discovery = ConditionBinder(
-                store, maintenance, retriever, retry=memory_retry, price=price(args.memory_model)
-            )
-        executor = MaintenanceExecutor(
-            store,
-            retriever,
-            indexer,
-            maintenance,
-            retry=memory_retry,
-            price=price(args.memory_model),
+        pipeline = assemble_memory_engine(
+            store, maintenance, emb,
+            retrieval=RetrievalConfig(text_k=20, vector_k=20, hybrid_limit=20, entity_k=10,
+                                      rrf_c=60, topic_similarity_threshold=args.topic_similarity_threshold),
+            retry=memory_retry, code_version=manifest["code_version"],
+            chat_price=price(args.memory_model), embedding_price=price(index_config.embedding_model),
+            binder_factory=(lambda retriever: JevConditionBinder(
+                store, jev, retriever, retry=decision_retry_policy("jev"),
+                threshold=args.p1_jev_threshold, price=price(JEV_MODEL),
+            )) if args.p1_backend == "jev" else None,
             intent_classifier=JevIntentClassifier(
                 jev, retry=decision_retry_policy("jev"), price=price(JEV_MODEL),
             ) if args.p2_direct_backend == "jev" else None,
+            rule_gate=JevRuleGate(
+                jev, retry=decision_retry_policy("jev"), price=price(JEV_MODEL),
+            ) if args.rule_gate_backend == "jev" else None,
         )
-        pipeline = MemoryPipeline(
-            store,
-            Extractor(
-                maintenance, retry=memory_retry, price=price(args.memory_model),
-                rule_gate=JevRuleGate(
-                    jev, retry=decision_retry_policy("jev"), price=price(JEV_MODEL),
-                ) if args.rule_gate_backend == "jev" else None,
-            ),
-            retriever,
-            discovery,
-            executor,
-            code_version=manifest["code_version"],
-        )
+        retriever = pipeline.pipeline.retriever
         answerer = MemoryAnswerer(
-            store, retriever, answer_client, retry, price("gpt-4.1-mini")
+            store, retriever, answer_client, retry, price("gpt-4.1-mini"), prompts=evaluation_prompts
         )
         scorer = OfficialScorer(
             args.official_judge,
@@ -556,7 +524,7 @@ async def run(args):
             store,
             manifest["code_version"],
             retry.model_copy(update={"max_attempts": 1, "backoff_seconds": ()}),
-            price("gpt-4o"),
+            price("gpt-4o"), prompts=evaluation_prompts,
         )
         reports = []
         for episode in episodes:
@@ -570,12 +538,12 @@ async def run(args):
             )
             async with store.pool.acquire() as conn:
                 result["direct_failures"] = await conn.fetchval(
-                    "SELECT count(*) FROM memory_steps WHERE run_id=$1 AND episode_id=$2 AND strategy_id='local_base' AND stage='p2.direct_skipped'",
+                    "SELECT count(*) FROM memory_steps WHERE tenant_id=$1 AND namespace=$2 AND owner_id='local_base' AND stage='p2.direct_skipped'",
                     run_id,
                     episode["episode_id"],
                 )
                 result["repair_failures"] = await conn.fetchval(
-                    "SELECT count(*) FROM memory_steps WHERE run_id=$1 AND episode_id=$2 AND strategy_id='local_base' AND stage='p2.repair_skipped'",
+                    "SELECT count(*) FROM memory_steps WHERE tenant_id=$1 AND namespace=$2 AND owner_id='local_base' AND stage='p2.repair_skipped'",
                     run_id,
                     episode["episode_id"],
                 )
@@ -625,7 +593,7 @@ async def run(args):
             }
         async with store.pool.acquire() as conn:
             records = await conn.fetch(
-                "SELECT payload FROM execution_attempts WHERE run_id=$1 AND phase='finished' ORDER BY recorded_at",
+                "SELECT payload FROM execution_attempts WHERE tenant_id=$1 AND phase='finished' ORDER BY recorded_at",
                 run_id,
             )
             payloads = [r["payload"] for r in records]
@@ -639,7 +607,7 @@ async def run(args):
                     [
                         r["payload"]
                         for r in await conn.fetch(
-                            "SELECT payload FROM execution_attempts WHERE run_id=$1 AND episode_id=$2 AND phase='finished' ORDER BY recorded_at",
+                            "SELECT payload FROM execution_attempts WHERE tenant_id=$1 AND namespace=$2 AND phase='finished' ORDER BY recorded_at",
                             run_id,
                             e["episode_id"],
                         )
@@ -656,19 +624,19 @@ async def run(args):
                 "session_records",
             ):
                 rows = await conn.fetch(
-                    f"SELECT * FROM {table} WHERE run_id=$1", run_id
+                    f"SELECT * FROM {table} WHERE tenant_id=$1", run_id
                 )
                 dump(output / (table + ".json"), [dict(r) for r in rows])
             # Include query-only labels (e.g. forget requests), not other runs'
             # cache entries. These vectors make topic decisions reproducible.
             topic_vectors = await conn.fetch(
                 """WITH used AS (
-                    SELECT unnest(topics) AS topic FROM memories WHERE run_id=$1
+                    SELECT unnest(topics) AS topic FROM memories WHERE tenant_id=$1
                     UNION
                     SELECT jsonb_array_elements_text(item->'topics') AS topic
                     FROM memory_steps,
                          jsonb_array_elements(payload->'items') AS item
-                    WHERE run_id=$1 AND stage='extraction.parsed'
+                    WHERE tenant_id=$1 AND stage='extraction.parsed'
                 )
                 SELECT topic,embedding::text AS embedding FROM topic_embeddings
                 WHERE topic IN (SELECT topic FROM used) ORDER BY topic""",
@@ -677,7 +645,6 @@ async def run(args):
             dump(output / "topic_embeddings.json", [dict(r) for r in topic_vectors])
         dump(output / "summary.json", summary)
     finally:
-        contracts.PROMPTS = previous_prompts
         for client in clients:
             await client.close()
         await store.close()

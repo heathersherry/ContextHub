@@ -5,7 +5,6 @@ import logging
 
 from contexthub.llm.retry_policy import ResponseSchemaError
 
-from .contracts import prompt as read_prompt
 from .contracts import rule_queries
 from .schemas import ExtractedItem, Extraction, normalize_topics
 from .jev_rule_gate import RULE_HINT
@@ -71,11 +70,11 @@ class Extractor:
         self.rule_gate = rule_gate
 
     async def extract(self, messages, context):
-        # Read both prompts once. The CLI points read_prompt at its frozen run copy.
-        rule_prompt = read_prompt(
+        # Read from this runtime's packaged or explicitly frozen prompt set.
+        rule_prompt = context.store.prompts.text(
             "extractor_rules_normalize" if self.rule_gate else "extractor"
         )
-        fact_prompt = read_prompt("extractor_facts")
+        fact_prompt = context.store.prompts.text("extractor_facts")
         if self.rule_gate is not None:
             selected = await self.rule_gate.select(messages, context)
             if selected:
@@ -183,11 +182,11 @@ class Extractor:
                 if str(exc) == "response_truncated_or_refused":
                     raise
                 # A received empty text is a format failure, not a transport retry.
-                raw = self.client.last_raw_response
+                raw = call.recorder.raw_output
                 if not isinstance(raw, str):
                     raise
             else:
-                raw = self.client.last_raw_response
+                raw = call.recorder.raw_output
             await context.store.save_output(context.trace, context.session_seq, raw)
             try:
                 items, warnings = parse(raw)

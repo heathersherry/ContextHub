@@ -67,16 +67,16 @@ async def test_failed_fact_phase_does_not_repeat_successful_rules_or_save_memori
     async with env.store.pool.acquire() as conn:
         assert (
             await conn.fetchval(
-                "SELECT count(*) FROM memories WHERE run_id=$1 AND episode_id=$2",
-                env.trace.run_id,
-                env.trace.episode_id,
+                "SELECT count(*) FROM memories WHERE tenant_id=$1 AND namespace=$2",
+                env.trace.tenant_id,
+                env.trace.namespace,
             )
             == 0
         )
         stages = await conn.fetch(
-            "SELECT stage FROM memory_steps WHERE run_id=$1 AND episode_id=$2",
-            env.trace.run_id,
-            env.trace.episode_id,
+            "SELECT stage FROM memory_steps WHERE tenant_id=$1 AND namespace=$2",
+            env.trace.tenant_id,
+            env.trace.namespace,
         )
     assert sum(r["stage"] == "extraction.rules.input" for r in stages) == 1
     assert sum(r["stage"] == "extraction.facts.validation_error" for r in stages) == 4

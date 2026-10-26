@@ -4,7 +4,6 @@ import math
 
 from contexthub.llm.jev_client import JEV_MODEL
 from .condition_binder import ConditionBinder
-from .contracts import prompt
 
 
 class JevConditionBinder(ConditionBinder):
@@ -15,7 +14,7 @@ class JevConditionBinder(ConditionBinder):
         self.threshold = threshold
 
     async def select_bindings(self, inputs, refs, key, context):
-        instructions = prompt("p1_jev")
+        instructions = context.store.prompts.text("p1_jev")
         payload = {
             "model": JEV_MODEL,
             "state": {"binding_policy": instructions, **inputs},

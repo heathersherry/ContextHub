@@ -31,7 +31,7 @@ async def inspect_database(config, run_id):
             }
             info["rows"] = {
                 table: await conn.fetchval(
-                    f"SELECT count(*) FROM {table} WHERE run_id=$1", run_id
+                    f"SELECT count(*) FROM {table} WHERE tenant_id=$1", run_id
                 )
                 for table in (
                     "session_records",
@@ -41,7 +41,7 @@ async def inspect_database(config, run_id):
                 )
             }
             info["finished_requests"] = await conn.fetchval(
-                "SELECT count(*) FROM execution_attempts WHERE run_id=$1 AND phase='finished'",
+                "SELECT count(*) FROM execution_attempts WHERE tenant_id=$1 AND phase='finished'",
                 run_id,
             )
             return info

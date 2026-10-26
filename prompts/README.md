@@ -1,6 +1,6 @@
 # 提示词目录
 
-这里都是当前使用的提示词，没有已停用的旧版。默认 LLM 流程与可选 Jev 流程的提示词见下表；Jev P2 路径只判断用途，具体记忆处理交给 LLM。
+核心提示词现随 Python 包保存在 `src/contexthub/memory/prompts/`；MEME 回答和评分模板保存在 `integrations/memebench/memory_research/prompts/`。默认 LLM 流程与可选 Jev 流程的提示词见下表；Jev P2 路径只判断用途，具体记忆处理交给 LLM。
 
 规则和普通内容抽取都必须提供 `topics` 字符串列表。无论原文语言，统一用简短英文描述事项，尽量不依赖当前值；如 `residence`、`deployment platform`，而非城市名或 `location` 这种实体类型。遗忘/更正请求描述被处理的事项，规则覆盖条件及结果侧。多条独立事实继续拆分，不因多个 topics 合成一条。topics 是程序检索提示，不是实体身份、更新或删除依据；无需在后续模型输入里重复。
 
@@ -16,21 +16,21 @@
 
 | 文件 | 用途 |
 | --- | --- |
-| [answer_guidance.txt](answer_guidance.txt) | 当前使用的完整官方回答模板，只插入材料和问题 |
-| [extractor.txt](extractor.txt) | 第一次抽取：规则 |
-| [extractor_rule_jev.json](extractor_rule_jev.json) | `--rule-gate-backend jev`：只看角色和含 if 的完整句子；公共说明放一次，排除 not_rule，将 rule／unclear 交给后续确认 |
-| [extractor_rules_normalize.txt](extractor_rules_normalize.txt) | 读取完整当前会话，确认候选是否为用户确立或采纳的规则，再补全指代并整理；可以全部拒绝，每条输出必须引用转交的候选编号 |
-| [extractor_facts.txt](extractor_facts.txt) | 第二次抽取：拆分普通内容，提供可保存正文、topics 和 current／historical 时间归属；移除条件规则，保留请求意图和逐字引文。Jev new 空候选直接按此结果保存 |
-| [p2_direct.txt](p2_direct.txt) | 直接处理：新增、重复、更新、删除等 |
-| [p2_intent_jev.json](p2_intent_jev.json) | `--p2-direct-backend jev`：不看旧候选，只判断 content 的 new／forget／correction／hold；rule 直接保存 |
-| [p2_new.txt](p2_new.txt) | Jev 判断 new 后，LLM 比较旧 fact，生成新增、确认、更新、历史或失效处理清单 |
-| [p2_correction.txt](p2_correction.txt) | Jev 判断 correction 后，LLM 对多条旧 fact／rule 生成更正、替换或撤回处理清单 |
-| [p2_forget_scope.txt](p2_forget_scope.txt) | 遗忘范围判断：检查全版本明确实体命中＋经现有 0.50／0.35 或 topics 匹配保留的语义补查，按请求选删除事项；人物身份／关系遗忘覆盖明确同人的共同活动线索，命中不自动删除，Jev 路径无需先选主目标 |
-| [p1_conditions.txt](p1_conditions.txt) | 在规则侧分别选择条件来源事项和受影响事项，输出两组引用 |
-| [p1_jev.txt](p1_jev.txt) | `--p1-backend jev`：逐候选分别判断 condition／affected 两种角色，同一规则合并请求 |
-| [p2_conditions.txt](p2_conditions.txt) | 沿已绑定关系检查完整来源状态与目标，返回失效事实及规则相关的变化编号 |
-| [p2_repair.txt](p2_repair.txt) | 用规则与事实依据修复旧事实 |
-| [output_retry.txt](output_retry.txt) | 输出校验失败后的纠正提示 |
+| [answer_guidance.txt](../integrations/memebench/memory_research/prompts/answer_guidance.txt) | 当前使用的完整官方回答模板，只插入材料和问题 |
+| [extractor.txt](../src/contexthub/memory/prompts/extractor.txt) | 第一次抽取：规则 |
+| [extractor_rule_jev.json](../src/contexthub/memory/prompts/extractor_rule_jev.json) | `--rule-gate-backend jev`：只看角色和含 if 的完整句子；公共说明放一次，排除 not_rule，将 rule／unclear 交给后续确认 |
+| [extractor_rules_normalize.txt](../src/contexthub/memory/prompts/extractor_rules_normalize.txt) | 读取完整当前会话，确认候选是否为用户确立或采纳的规则，再补全指代并整理；可以全部拒绝，每条输出必须引用转交的候选编号 |
+| [extractor_facts.txt](../src/contexthub/memory/prompts/extractor_facts.txt) | 第二次抽取：拆分普通内容，提供可保存正文、topics 和 current／historical 时间归属；移除条件规则，保留请求意图和逐字引文。Jev new 空候选直接按此结果保存 |
+| [p2_direct.txt](../src/contexthub/memory/prompts/p2_direct.txt) | 直接处理：新增、重复、更新、删除等 |
+| [p2_intent_jev.json](../src/contexthub/memory/prompts/p2_intent_jev.json) | `--p2-direct-backend jev`：不看旧候选，只判断 content 的 new／forget／correction／hold；rule 直接保存 |
+| [p2_new.txt](../src/contexthub/memory/prompts/p2_new.txt) | Jev 判断 new 后，LLM 比较旧 fact，生成新增、确认、更新、历史或失效处理清单 |
+| [p2_correction.txt](../src/contexthub/memory/prompts/p2_correction.txt) | Jev 判断 correction 后，LLM 对多条旧 fact／rule 生成更正、替换或撤回处理清单 |
+| [p2_forget_scope.txt](../src/contexthub/memory/prompts/p2_forget_scope.txt) | 遗忘范围判断：检查全版本明确实体命中＋经现有 0.50／0.35 或 topics 匹配保留的语义补查，按请求选删除事项；人物身份／关系遗忘覆盖明确同人的共同活动线索，命中不自动删除，Jev 路径无需先选主目标 |
+| [p1_conditions.txt](../src/contexthub/memory/prompts/p1_conditions.txt) | 在规则侧分别选择条件来源事项和受影响事项，输出两组引用 |
+| [p1_jev.txt](../src/contexthub/memory/prompts/p1_jev.txt) | `--p1-backend jev`：逐候选分别判断 condition／affected 两种角色，同一规则合并请求 |
+| [p2_conditions.txt](../src/contexthub/memory/prompts/p2_conditions.txt) | 沿已绑定关系检查完整来源状态与目标，返回失效事实及规则相关的变化编号 |
+| [p2_repair.txt](../src/contexthub/memory/prompts/p2_repair.txt) | 用规则与事实依据修复旧事实 |
+| [output_retry.txt](../src/contexthub/memory/prompts/output_retry.txt) | 输出校验失败后的纠正提示 |
 
 ## evaluation：问答和评分
 

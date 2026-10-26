@@ -137,7 +137,7 @@ async def test_search_only_supplies_five_current_facts_and_cannot_repeat(env):
     assert not env.responses
     async with env.store.pool.acquire() as conn:
         searches = await conn.fetchval(
-            "SELECT count(*) FROM memory_steps WHERE run_id=$1 AND episode_id=$2 AND stage='p2.repair_retrieval'",
-            env.trace.run_id, env.trace.episode_id,
+            "SELECT count(*) FROM memory_steps WHERE tenant_id=$1 AND namespace=$2 AND stage='p2.repair_retrieval'",
+            env.trace.tenant_id, env.trace.namespace,
         )
     assert searches == 1

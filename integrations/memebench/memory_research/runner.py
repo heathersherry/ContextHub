@@ -9,10 +9,9 @@ from pathlib import Path
 from types import SimpleNamespace
 
 from contexthub.memory.calls import CallContext
-from contexthub.memory import contracts
-from contexthub.memory.contracts import material, prompt
-from contexthub.memory.retriever import answer_purpose
-from contexthub.memory.schemas import Trace
+from contexthub.memory.context import ContextBuilder
+from contexthub.memory.prompts_config import PromptSet
+from contexthub.memory.schemas import MemoryScope
 from .official import load_official
 
 TASKS = ("Cas", "Abs", "Del", "ER", "Agg", "Tr")
@@ -35,33 +34,10 @@ def selected_questions(episode, phase):
     ]
 
 
-def answer_context(materials, purpose):
-    if purpose in ("answer", "policy"):
-        context = {
-            "purpose": purpose,
-            "memories": [
-                {"text": m["text"], "type": "fact"}
-                for m in materials if m["status"] == "fresh" and m["type"] == "fact"
-            ],
-        }
-        if purpose == "policy":
-            context["conditional_rules"] = [
-                {"text": m["text"]}
-                for m in materials if m["status"] == "fresh" and m["type"] == "rule"
-            ]
-        return context
-    return {
-        "purpose": purpose,
-        "time_note": "Dates in statement text are fact-time evidence. created_in_session and timestamp only describe ingestion order, not effective dates.",
-        "memories": [
-            {k: v for k, v in m.items() if k not in ("ref", "basis_refs")}
-            for m in materials
-        ],
-    }
-
-
 class MemoryAnswerer:
-    def __init__(self, store, retriever, client, retry, price=None):
+    def __init__(self, store, retriever, client, retry, price=None, *, prompts=None):
+        self.contexts = ContextBuilder(store, retriever)
+        self.prompts = prompts or PromptSet(Path(__file__).with_name("prompts"))
         self.store, self.retriever, self.client, self.retry, self.price = (
             store,
             retriever,
@@ -71,23 +47,19 @@ class MemoryAnswerer:
         )
 
     async def answer(self, question, context, *, timings):
-        purpose = answer_purpose(question)
         with measure(timings, "retrieval"):
-            hits = await self.retriever.search(
-                question, context, through_session=context.session_seq, purpose=purpose,
-                memory_type="fact" if purpose == "answer" else None,
-            )
+            selection = await self.contexts.select(question, context)
+        purpose, materials = selection.mode, selection.materials
         with measure(timings, "answer"):
-            materials = [material(h.memory) for h in hits]
             # Processing order is explicitly distinct from the time a fact held.
-            template = prompt("answer_guidance")
+            template = self.prompts.text("answer_guidance")
             rendered = template.format(
-                context=json.dumps(answer_context(materials, purpose), default=str, ensure_ascii=False),
+                context=selection.rendered,
                 question=question,
             )
             manifest = json.loads(
                 (
-                    contracts.PROMPTS / "evaluation" / "official_manifest.json"
+                    self.prompts.root / "evaluation" / "official_manifest.json"
                 ).read_text()
             )
             if (
@@ -116,8 +88,7 @@ class MemoryAnswerer:
 
 async def run_episode(episode, *, run_id, pipeline, answerer, output):
     started = time.monotonic()
-    trace = Trace(
-        run_id=run_id, episode_id=episode["episode_id"], strategy_id="local_base"
+    trace = MemoryScope(tenant_id=run_id, namespace=episode["episode_id"], owner_id="local_base"
     )
     result = {
         "episode_id": episode["episode_id"],
@@ -206,8 +177,8 @@ async def run_episode(episode, *, run_id, pipeline, answerer, output):
 
 
 class OfficialScorer:
-    def __init__(self, source, client, store, code_version, policy, price=None):
-        self.cls, self.judge_episode = load_official(source)
+    def __init__(self, source, client, store, code_version, policy, price=None, *, prompts=None):
+        self.cls, self.judge_episode = load_official(source, prompts=prompts)
         self.client, self.store, self.code_version, self.policy, self.price = (
             client,
             store,
@@ -219,8 +190,7 @@ class OfficialScorer:
     async def score(self, result, episode, run_id, *, prior_verdicts=None):
         started = time.monotonic()
         loop = asyncio.get_running_loop()
-        trace = Trace(
-            run_id=run_id, episode_id=episode["episode_id"], strategy_id="local_base"
+        trace = MemoryScope(tenant_id=run_id, namespace=episode["episode_id"], owner_id="local_base"
         )
         replay = {}
         judged = {}

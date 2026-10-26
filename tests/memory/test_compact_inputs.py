@@ -138,9 +138,9 @@ async def test_compact_repair_omits_recording_times_and_saves_exact_selected_bas
     await link(env, rule, sources=[owner], targets=[target])
     async with env.store.pool.acquire() as conn:
         await conn.execute(
-            "UPDATE memories SET timestamp=$1 WHERE run_id=$2 AND memory_id=$3",
+            "UPDATE memories SET timestamp=$1 WHERE tenant_id=$2 AND memory_id=$3",
             "2026-10-12",
-            env.trace.run_id,
+            env.trace.tenant_id,
             split_ref(owner)[0],
         )
 

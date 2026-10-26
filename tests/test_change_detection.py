@@ -122,7 +122,7 @@ class _CandRow(dict):
         return self[k]
 
 
-def _make_memory_service(*, detection=None, extractor=None):
+def _make_memory_service():
     from contexthub.generation.base import ContentGenerator
     from contexthub.llm.base import NoOpEmbeddingClient
     from contexthub.services.acl_service import ACLService
@@ -133,7 +133,6 @@ def _make_memory_service(*, detection=None, extractor=None):
     indexer = IndexerService(ContentGenerator(), NoOpEmbeddingClient())
     return MemoryService(
         indexer, ACLService(), MaskingService(),
-        detection=detection, extractor=extractor,
     )
 
 
@@ -155,62 +154,9 @@ async def test_add_memory_without_detection_fires_no_supersede_event():
     from contexthub.models.memory import AddMemoryRequest
 
     repo = RecordingRepo(uuid.uuid4())
-    svc = _make_memory_service(detection=None)
+    svc = _make_memory_service()
     await svc.add_memory(repo, AddMemoryRequest(content="a fact"), _ctx())
 
     # The only change_events insert is the 'created' one; no 'modified'.
     assert not any(_is_modified_event(s) for s in repo.sql), \
         "no supersede event should fire without detection"
-
-
-@pytest.mark.asyncio
-async def test_add_memory_with_detection_fires_modified_event():
-    from contexthub.models.memory import AddMemoryRequest
-
-    new_id = uuid.uuid4()
-    old_id = uuid.uuid4()
-
-    class RepoWithCandidate(RecordingRepo):
-        async def fetch(self, sql, *args):
-            self.sql.append(sql)
-            return [_CandRow(old_id, "The team lead is Kang.")]
-
-    repo = RepoWithCandidate(new_id)
-    svc = _make_memory_service(detection=ChangeDetectionService(FakeChat(["1"])))
-    await svc.add_memory(
-        repo, AddMemoryRequest(content="The team lead is now Nam."), _ctx()
-    )
-
-    modified = [s for s in repo.sql if _is_modified_event(s)]
-    assert len(modified) == 1
-
-
-# --------------------------------------------------------------------------- #
-# add_conversation
-# --------------------------------------------------------------------------- #
-
-class FakeExtractor:
-    def __init__(self, facts):
-        self._facts = facts
-
-    async def extract(self, conversation: str):
-        return [ExtractedFact(text=t) for t in self._facts]
-
-
-@pytest.mark.asyncio
-async def test_add_conversation_without_extractor_raises():
-    svc = _make_memory_service(extractor=None)
-    with pytest.raises(BadRequestError):
-        await svc.add_conversation(RecordingRepo(uuid.uuid4()), "hello", _ctx())
-
-
-@pytest.mark.asyncio
-async def test_add_conversation_stores_each_fact():
-    repo = RecordingRepo(uuid.uuid4())
-    extractor = FakeExtractor(["fact one", "fact two", "fact three"])
-    svc = _make_memory_service(extractor=extractor)
-    out = await svc.add_conversation(repo, "raw dialogue", _ctx())
-
-    assert len(out) == 3  # one Context per extracted fact
-    inserts = [s for s in repo.sql if "INSERT INTO contexts" in s]
-    assert len(inserts) == 3

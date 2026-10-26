@@ -42,7 +42,7 @@ class ExtractionHarness:
 
 
 from contexthub.memory.retriever import Retriever
-from contexthub.memory.schemas import IndexConfig, RetrievalConfig, Trace
+from contexthub.memory.schemas import IndexConfig, RetrievalConfig, MemoryScope
 from contexthub.memory.storage import MemoryStore
 
 CONFIG = json.loads(
@@ -61,10 +61,10 @@ async def env(tmp_path):
             "MEMORY_DATABASE_URL must name an initialized dedicated research database"
         )
     store = await MemoryStore.open(dsn, IndexConfig.model_validate(CONFIG["index"]))
-    trace = Trace(
-        run_id=os.getenv("MEMORY_VALIDATION_RUN_ID", "test-" + uuid4().hex),
-        episode_id=uuid4().hex,
-        strategy_id="local_base",
+    trace = MemoryScope(
+        tenant_id=os.getenv("MEMORY_VALIDATION_RUN_ID", "test-" + uuid4().hex),
+        namespace=uuid4().hex,
+        owner_id="local_base",
     )
     responses, prompts, embedded = [], [], []
     vectors = {}

@@ -6,15 +6,15 @@ import unicodedata
 from pydantic import BaseModel, ConfigDict, Field
 
 
-class Trace(BaseModel):
+class MemoryScope(BaseModel):
     model_config = ConfigDict(frozen=True, extra="forbid")
-    run_id: str = Field(min_length=1)
-    episode_id: str = Field(min_length=1)
-    strategy_id: Literal["local_base", "full_strong", "adaptive"]
+    tenant_id: str = Field(min_length=1)
+    namespace: str = Field(min_length=1)
+    owner_id: str = Field(min_length=1)
 
     @property
     def args(self):
-        return self.run_id, self.episode_id, self.strategy_id
+        return self.tenant_id, self.namespace, self.owner_id
 
 
 class IndexConfig(BaseModel):

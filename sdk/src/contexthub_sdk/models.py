@@ -11,7 +11,7 @@ from datetime import datetime
 from uuid import UUID
 from typing import Literal
 
-from pydantic import BaseModel, Field, ConfigDict, model_validator
+from pydantic import BaseModel, Field, ConfigDict
 
 
 # ── Enums (mirroring server enums) ──────────────────────────────────────
@@ -375,75 +375,55 @@ class AuditEntryRecord(BaseModel):
     request_id: UUID | None = None
 
 
-# Knowledge public API; SDK-owned schemas, no server dependency.
-class PublicModel(BaseModel):
-    model_config = ConfigDict(extra="forbid", frozen=True)
+
+# Managed memory public API; no server dependency.
 
 
-class SourceVersion(PublicModel):
-    context_id: UUID
-    version: int = Field(ge=1)
-
-
-class KnowledgeIngestRequest(PublicModel):
-    request_id: UUID
+class MemoryMessage(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    role: Literal["user", "assistant", "system", "tool"]
     content: str = Field(min_length=1)
-    scope: Literal["agent", "team"] = "agent"
-    team: str | None = None
-    mode: Literal["content", "change"] = "content"
-    provenance: tuple[SourceVersion, ...] = ()
-
-    @model_validator(mode="after")
-    def scope_owner(self):
-        if (self.scope == "team") != bool(self.team):
-            raise ValueError("team is required only for team scope")
-        return self
+    timestamp: str | None = None
 
 
-class KnowledgeMaintainRequest(PublicModel):
-    request_id: UUID
-    event_id: UUID
-    graph_id: UUID
+class MemoryIngestRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    namespace: str = Field(min_length=1, max_length=200)
+    sequence: int = Field(ge=1)
+    messages: list[MemoryMessage] = Field(min_length=1)
+    timestamp: str | None = None
 
 
-class KnowledgeNode(PublicModel):
-    context_id: UUID
-    uri: str
-    version: int
-    fresh: bool
+class MemoryIngestResult(BaseModel):
+    namespace: str
+    sequence: int
+    status: Literal["complete"] = "complete"
+    memory_refs: list[str]
 
 
-class KnowledgeWork(PublicModel):
-    work_id: UUID
-    frame_id: UUID
-    target_id: UUID
-    status: Literal["pending", "running", "updated", "unchanged", "unresolved"]
-    reason: str | None = None
-    proof_id: UUID | None = None
-    current_version: int
-    fresh: bool
+class MemoryContextRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    namespace: str = Field(min_length=1, max_length=200)
+    query: str = Field(min_length=1)
+    mode: Literal["auto", "answer", "policy", "history"] = "auto"
+    max_chars: int | None = Field(default=None, ge=1)
 
 
-class KnowledgeResult(PublicModel):
-    operation_id: UUID
-    request_id: UUID
-    execution_id: UUID
-    config_sha256: str
-    operation: Literal["ingest", "maintain"]
-    status: Literal["running", "complete", "pending", "error"]
-    reason: str | None = None
-    content_saved: bool = False
-    graph_status: Literal["pending", "deliverable"] = "pending"
-    maintenance_ready: bool = False
-    source: KnowledgeNode | None = None
-    graph_id: UUID | None = None
-    report_id: UUID | None = None
-    watch_ids: tuple[UUID, ...] = ()
-    event_ids: tuple[UUID, ...] = ()
-    event_delivery: str | None = None
-    cutoff_at: datetime | None = None
-    nodes: tuple[KnowledgeNode, ...] = ()
-    works: tuple[KnowledgeWork, ...] = ()
-    location_status: Literal["not_requested", "located", "unrelated", "pending"] = (
-        "not_requested"
-    )
+class MemoryContextItem(BaseModel):
+    ref: str
+    text: str
+    type: Literal["fact", "rule"]
+    origin: Literal["extracted", "derived"]
+    status: Literal["fresh", "stale"]
+    temporal_scope: Literal["current", "historical"]
+    source_sessions: list[int]
+    basis_refs: list[str]
+
+
+class MemoryContextResult(BaseModel):
+    namespace: str
+    sequence: int
+    mode: Literal["answer", "policy", "history"]
+    context: str
+    items: list[MemoryContextItem]
+    budget_exhausted: bool

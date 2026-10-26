@@ -9,9 +9,7 @@ import httpx
 
 from .exceptions import ContextHubError, raise_for_status
 from .models import (
-    KnowledgeIngestRequest,
-    KnowledgeMaintainRequest,
-    KnowledgeResult,
+    MemoryIngestRequest, MemoryIngestResult, MemoryContextRequest, MemoryContextResult,
     AccessPolicyRecord,
     AuditAction,
     AuditEntryRecord,
@@ -60,24 +58,6 @@ def _extract_detail(resp: httpx.Response) -> str:
 
 
 # ── Namespace classes ───────────────────────────────────────────────────
-
-
-class _KnowledgeNamespace:
-    """Synchronous server operations. No implicit retries for side effects."""
-    def __init__(self, client):
-        self._c = client
-
-    async def ingest(self, request: KnowledgeIngestRequest) -> KnowledgeResult:
-        data = await self._c._post("/api/v1/knowledge/ingest", json=request.model_dump(mode="json"))
-        return KnowledgeResult.model_validate(data)
-
-    async def maintain(self, request: KnowledgeMaintainRequest) -> KnowledgeResult:
-        data = await self._c._post("/api/v1/knowledge/maintain", json=request.model_dump(mode="json"))
-        return KnowledgeResult.model_validate(data)
-
-    async def get_maintenance_result(self, operation_id) -> KnowledgeResult:
-        data = await self._c._get(f"/api/v1/knowledge/operations/{operation_id}")
-        return KnowledgeResult.model_validate(data)
 
 
 class _ContextNamespace:
@@ -189,6 +169,14 @@ class _MemoryNamespace:
 
     def __init__(self, client: ContextHubClient) -> None:
         self._c = client
+
+    async def ingest(self, request: MemoryIngestRequest) -> MemoryIngestResult:
+        data = await self._c._post("/api/v1/memories/ingest", json=request.model_dump(mode="json"))
+        return MemoryIngestResult.model_validate(data)
+
+    async def context(self, request: MemoryContextRequest) -> MemoryContextResult:
+        data = await self._c._post("/api/v1/memories/context", json=request.model_dump(mode="json"))
+        return MemoryContextResult.model_validate(data)
 
     async def add(self, *, content: str, tags: list[str] | None = None) -> ContextRecord:
         body: dict[str, Any] = {"content": content}
@@ -498,7 +486,6 @@ class ContextHubClient:
             timeout=timeout,
             transport=transport,
         )
-        self.knowledge = _KnowledgeNamespace(self)
         self.context = _ContextNamespace(self)
         self.memory = _MemoryNamespace(self)
         self.skill = _SkillNamespace(self)

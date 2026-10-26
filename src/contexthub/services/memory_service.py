@@ -11,14 +11,6 @@ from contexthub.models.memory import AddMemoryRequest, PromoteRequest
 from contexthub.models.request import RequestContext
 from contexthub.services.acl_service import ACLService
 from contexthub.services.audit_service import AuditService
-from contexthub.services.change_detection_service import ChangeDetectionService
-from contexthub.services.conversation_extraction_service import (
-    ConversationExtractionService,
-)
-from contexthub.services.dependency_discovery_service import (
-    CandidateFact,
-    DependencyDiscoveryService,
-)
 from contexthub.services.indexer_service import IndexerService
 from contexthub.services.masking_service import MaskingService
 
@@ -27,41 +19,11 @@ class MemoryService:
     def __init__(
         self, indexer: IndexerService, acl: ACLService,
         masking: MaskingService, audit: AuditService | None = None,
-        discovery: DependencyDiscoveryService | None = None,
-        discovery_candidate_k: int = 8,
-        discovery_candidate_strategy: str = "recent_k",
-        detection: ChangeDetectionService | None = None,
-        extractor: ConversationExtractionService | None = None,
-        knowledge=None,
     ):
-        if knowledge is not None and any(x is not None for x in (discovery, detection, extractor)):
-            raise BadRequestError("knowledge_and_legacy_pipeline_are_exclusive")
-        self._knowledge = knowledge
         self._indexer = indexer
         self._acl = acl
         self._masking = masking
         self._audit = audit
-        # Optional: discover semantic derived_from edges at write time. When None
-        # (default), add_memory behaves exactly as before — no discovery, no edges.
-        self._discovery = discovery
-        self._discovery_candidate_k = discovery_candidate_k
-        # Candidate-selection strategy for _discover_edges. "recent_k" (default)
-        # is the original recency-ordered query — byte-for-byte unchanged. Set
-        # "embed_topk" to select candidates by pgvector cosine to the new memory
-        # (variable-4 cascade's escalation target); opt-in, no behaviour change
-        # unless explicitly chosen.
-        self._discovery_candidate_strategy = discovery_candidate_strategy
-        # Optional: zero-oracle change detection at write time. When None
-        # (default), add_memory fires no supersede events — behaviour unchanged.
-        self._detection = detection
-        # Optional: extract facts from a raw conversation. Enables add_conversation.
-        self._extractor = extractor
-
-    async def ingest_knowledge(self, body, ctx):
-        """Explicit repository-owning S7 bridge, outside a legacy DB transaction."""
-        if self._knowledge is None:
-            raise BadRequestError("Knowledge maintenance is not configured")
-        return await self._knowledge.ingest(body, ctx)
 
     async def add_memory(
         self, db: ScopedRepo, body: AddMemoryRequest, ctx: RequestContext
@@ -113,16 +75,6 @@ class MemoryService:
         if generated.l0:
             await self._indexer.update_embedding(db, row["id"], generated.l0)
 
-        # Optional: discover semantic derived_from edges from existing memories.
-        if self._discovery is not None:
-            await self._discover_edges(db, row["id"], body.content)
-
-        # Optional: detect which existing memories this new fact supersedes and
-        # fire a `modified` change_event on each — propagation then marks their
-        # derived_from dependents stale. No detection injected => no events.
-        if self._detection is not None:
-            await self._detect_superseded(db, row["id"], body.content, ctx.agent_id)
-
         result = _row_to_context(row)
 
         if self._audit:
@@ -131,202 +83,6 @@ class MemoryService:
                 metadata={"context_type": "memory", "scope": "agent"},
             )
         return result
-
-    async def _discover_edges(
-        self, db: ScopedRepo, new_id: uuid.UUID, new_text: str
-    ) -> None:
-        """Discover derived_from sources for the new memory and persist edges.
-
-        Candidates are the account's other active memories (most recent first).
-        Uses the injected discovery service to decide which the new fact is
-        derived from, then writes derived_from edges (idempotent).
-        """
-        if self._discovery_candidate_strategy == "embed_topk":
-            # Select candidates by pgvector cosine to the new memory's embedding
-            # (variable-4 cascade escalation target). Falls back to recency if the
-            # new memory has no embedding yet.
-            rows = await db.fetch(
-                """
-                SELECT id, COALESCE(l2_content, l1_content, l0_content) AS text
-                FROM contexts
-                WHERE context_type = 'memory'
-                  AND status = 'active'
-                  AND id != $1
-                  AND l0_embedding IS NOT NULL
-                ORDER BY l0_embedding <=> (
-                    SELECT l0_embedding FROM contexts WHERE id = $1
-                )
-                LIMIT $2
-                """,
-                new_id,
-                self._discovery_candidate_k,
-            )
-        else:  # "recent_k" — original recency-ordered query, unchanged.
-            rows = await db.fetch(
-                """
-                SELECT id, COALESCE(l2_content, l1_content, l0_content) AS text
-                FROM contexts
-                WHERE context_type = 'memory'
-                  AND status = 'active'
-                  AND id != $1
-                ORDER BY updated_at DESC
-                LIMIT $2
-                """,
-                new_id,
-                self._discovery_candidate_k,
-            )
-        candidates = [
-            CandidateFact(id=r["id"], text=r["text"]) for r in rows if r["text"]
-        ]
-        source_ids = await self._discovery.discover_sources(new_text, candidates)
-        for src_id in source_ids:
-            await db.execute(
-                """
-                INSERT INTO dependencies (
-                  dependent_id, dependency_id, dep_type, dependency_version
-                )
-                SELECT $1, $2, 'derived_from', version
-                  FROM contexts WHERE id = $2
-                ON CONFLICT (dependent_id, dependency_id, dep_type) DO NOTHING
-                """,
-                new_id,
-                src_id,
-            )
-
-    async def _detect_superseded(
-        self, db: ScopedRepo, new_id: uuid.UUID, new_text: str, agent_id: str
-    ) -> None:
-        """Detect which existing memories new_text supersedes; fire `modified`.
-
-        Candidate set = the account's other active memories (most recent first),
-        same shape as _discover_edges. For each superseded node, emit one
-        `modified` change_event; the propagation engine then marks its
-        derived_from dependents stale.
-        """
-        rows = await db.fetch(
-            """
-            SELECT id, COALESCE(l2_content, l1_content, l0_content) AS text
-            FROM contexts
-            WHERE context_type = 'memory'
-              AND status = 'active'
-              AND id != $1
-            ORDER BY updated_at DESC
-            LIMIT $2
-            """,
-            new_id,
-            self._discovery_candidate_k,
-        )
-        candidates = [
-            CandidateFact(id=r["id"], text=r["text"]) for r in rows if r["text"]
-        ]
-        superseded = await self._detection.detect_superseded(new_text, candidates)
-        for old_id in superseded:
-            await db.execute(
-                """
-                WITH RECURSIVE invalid(node_id) AS (
-                  SELECT $1::uuid
-                  UNION
-                  SELECT edge.node_id
-                    FROM invalid i
-                    JOIN LATERAL (
-                      SELECT d.dependent_id AS node_id
-                        FROM dependencies d
-                       WHERE d.dependency_id = i.node_id
-                      UNION
-                      SELECT r.context_id AS node_id
-                        FROM context_relations r
-                       WHERE r.related_context_id = i.node_id
-                         AND r.relation_type IN (
-                           'alias_of', 'duplicate_of', 'materialized_from'
-                         )
-                    ) edge ON TRUE
-                )
-                UPDATE contexts c
-                   SET validity_status = CASE
-                         WHEN c.id = $1 THEN 'superseded' ELSE 'invalid'
-                       END,
-                       validity_reason = concat('superseded by ', $2::text),
-                       updated_at = NOW()
-                  FROM invalid i
-                 WHERE c.id = i.node_id
-                """,
-                old_id,
-                new_id,
-            )
-            event_row = await db.fetchrow(
-                """
-                INSERT INTO change_events
-                    (context_id, account_id, change_type, actor, diff_summary,
-                     idempotency_key, source_version, graph_scope, metadata)
-                SELECT $1, current_setting('app.account_id'), 'modified', $2, $3,
-                       concat('superseded:', $1::text, ':by:', $4::text),
-                       version, 'memory',
-                       jsonb_build_object('superseded_by_context_id', $4::text)
-                  FROM contexts WHERE id = $1
-                ON CONFLICT (account_id, idempotency_key) DO NOTHING
-                RETURNING event_id
-                """,
-                old_id,
-                agent_id,
-                "superseded by new memory",
-                new_id,
-            )
-            if event_row is not None and event_row.get("event_id") is not None:
-                await db.execute(
-                    """
-                    WITH RECURSIVE invalid(node_id) AS (
-                      SELECT $1::uuid
-                      UNION
-                      SELECT edge.node_id
-                        FROM invalid i
-                        JOIN LATERAL (
-                          SELECT d.dependent_id AS node_id
-                            FROM dependencies d
-                           WHERE d.dependency_id = i.node_id
-                          UNION
-                          SELECT r.context_id AS node_id
-                            FROM context_relations r
-                           WHERE r.related_context_id = i.node_id
-                             AND r.relation_type IN (
-                               'alias_of', 'duplicate_of', 'materialized_from'
-                             )
-                        ) edge ON TRUE
-                    )
-                    INSERT INTO context_invalidations (
-                      context_id, cause_event_id, source_context_id, reason_hash
-                    )
-                    SELECT i.node_id, $3, $1,
-                           encode(digest('superseded', 'sha256'), 'hex')
-                      FROM invalid i
-                    ON CONFLICT (context_id, cause_event_id) DO NOTHING
-                    """,
-                    old_id,
-                    new_id,
-                    event_row["event_id"],
-                )
-
-    async def add_conversation(
-        self, db: ScopedRepo, raw_text: str, ctx: RequestContext
-    ) -> list[Context]:
-        """Extract facts from a raw conversation, store each as a memory.
-
-        Requires an injected ConversationExtractionService. Each extracted fact
-        goes through the normal add_memory write path in order, so discovery and
-        change detection (when injected) apply to every fact, and the timeline-
-        incremental semantics are preserved (an earlier fact is stored before a
-        later one can supersede it).
-        """
-        if self._extractor is None:
-            raise BadRequestError("Conversation extraction is not configured")
-        facts = await self._extractor.extract(raw_text)
-        out: list[Context] = []
-        for fact in facts:
-            if not fact.text or not fact.text.strip():
-                continue
-            out.append(
-                await self.add_memory(db, AddMemoryRequest(content=fact.text), ctx)
-            )
-        return out
 
     async def list_memories(
         self, db: ScopedRepo, ctx: RequestContext, *, include_stale: bool = False

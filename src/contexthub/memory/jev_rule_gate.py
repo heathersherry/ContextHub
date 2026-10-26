@@ -1,12 +1,10 @@
 """Screen sentence-local if occurrences before full-session LLM confirmation."""
 
-import json
 import re
 
 import pysbd
 
 from contexthub.llm.jev_client import JEV_MODEL
-from . import contracts
 
 RULE_HINT = re.compile(r"\bif\b", re.I)
 
@@ -48,7 +46,7 @@ class JevRuleGate:
         })
         if not candidates:
             return []
-        rubric = json.loads((contracts.PROMPTS / "extractor_rule_jev.json").read_text())
+        rubric = context.store.prompts.json("extractor_rule_jev")
         payload = {
             "model": JEV_MODEL,
             "state": {"rule_policy": rubric["instructions"]},

@@ -8,7 +8,8 @@ from types import SimpleNamespace
 
 import pytest
 
-from contexthub.memory import contracts
+from contexthub.memory.prompts_config import PromptSet
+from pathlib import Path
 from integrations.memebench.memory_research.cli import freeze
 from integrations.memebench.memory_research.official import load_official
 from integrations.memebench.memory_research.runner import MemoryAnswerer
@@ -55,7 +56,7 @@ def frozen_prompts(tmp_path):
             == digest
         )
         assert (output / "prompts" / name).read_bytes() == (
-            contracts.PROMPTS / name
+            (PromptSet().root if name.startswith("core/") else Path(__file__).resolve().parents[2] / "integrations/memebench/memory_research/prompts") / name.split("/", 1)[1]
         ).read_bytes()
     return output / "prompts"
 
@@ -80,17 +81,17 @@ async def test_frozen_prompts_reach_extraction_maintenance_retry_and_answer(
     expected = {}
     for name in names:
         # Test-only marker distinguishes the frozen copy from the repository file.
-        path = frozen / (name + ".txt")
+        path = frozen / ("meme" if name in ("evaluation/answer", "answer_guidance") else "core") / (name + ".txt")
         expected[name] = path.read_text() + "\nFrozen prompt loading test.\n"
         path.write_text(expected[name])
     official = json.loads(
-        (frozen / "evaluation" / "official_manifest.json").read_text()
+        (frozen / "meme" / "evaluation" / "official_manifest.json").read_text()
     )
     official["answer_sha256"] = hashlib.sha256(
         expected["evaluation/answer"].encode()
     ).hexdigest()
-    (frozen / "evaluation" / "official_manifest.json").write_text(json.dumps(official))
-    monkeypatch.setattr(contracts, "PROMPTS", frozen)
+    (frozen / "meme" / "evaluation" / "official_manifest.json").write_text(json.dumps(official))
+    env.store.prompts = PromptSet(frozen / "core")
     env.retriever.config = env.retriever.config.model_copy(
         update={"hybrid_limit": 20, "text_k": 20, "vector_k": 20}
     )
@@ -119,7 +120,7 @@ async def test_frozen_prompts_reach_extraction_maintenance_retry_and_answer(
     c2 = await session(env, 2)
     async with env.store.pool.acquire() as conn:
         await conn.execute(
-            "UPDATE session_records SET timestamp=$1 WHERE run_id=$2 AND episode_id=$3 AND session_seq=2",
+            "UPDATE session_records SET timestamp=$1 WHERE tenant_id=$2 AND namespace=$3 AND session_seq=2",
             "2026-10-13",
             *env.trace.args[:2],
         )
@@ -128,7 +129,7 @@ async def test_frozen_prompts_reach_extraction_maintenance_retry_and_answer(
     await env.executor.check_conditions(changes, {new}, c2)
     await env.executor.repair(await row(env, recipient), changes, c2, set())
     answerer = MemoryAnswerer(
-        env.store, env.retriever, env.executor.client, env.executor.retry
+        env.store, env.retriever, env.executor.client, env.executor.retry, prompts=PromptSet(frozen / "meme")
     )
     assert await answerer.answer("Who is the recipient?", c2, timings={}) == "Li"
     await direct(env, pending(c2, "Forget the owner"), c2)
@@ -162,9 +163,8 @@ async def test_frozen_prompts_reach_extraction_maintenance_retry_and_answer(
 
 def test_official_judge_checks_active_frozen_files(tmp_path, monkeypatch):
     frozen = frozen_prompts(tmp_path)
-    monkeypatch.setattr(contracts, "PROMPTS", frozen)
-    load_official(JUDGE_SOURCE)
-    path = frozen / "evaluation" / "judge_before_common_prompt.txt"
+    load_official(JUDGE_SOURCE, prompts=PromptSet(frozen / "meme"))
+    path = frozen / "meme" / "evaluation" / "judge_before_common_prompt.txt"
     path.write_text(path.read_text() + "\nmodified fixture")
     with pytest.raises(ValueError, match="official prompt was modified"):
-        load_official(JUDGE_SOURCE)
+        load_official(JUDGE_SOURCE, prompts=PromptSet(frozen / "meme"))

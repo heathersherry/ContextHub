@@ -307,7 +307,7 @@ pnpm openclaw plugins install -l /path/to/ContextHub/bridge
 
 除引擎本身外，ContextHub 还是一条研究主线的运行时载体：**如何以可控的代价，让派生出来的知识保持新鲜。** 当一个上游事实发生变更时，一些从它派生、却并不字面包含它的下游产物会悄悄过时。难点在于判断"哪些过时了"：便宜的判断方式（一条规则、一次向量相似度）快，但会漏判；强力的大模型能抓住，却很贵。研究要回答的是——如何让每条依赖边上只花它真正值得花的算力，同时对"会漏掉多少"给出可控的上界。这与增量视图维护（IVM）不同：IVM 假设变更检测既精确又免费，而这里把"检测本身有代价、且会漏判"当作首要问题。
 
-"先用便宜档、仅在必要时才升级到强模型"这一策略已作为置信度级联进入核心（[`cascade_router`](src/contexthub/services/cascade_router.py)），在写入时发现 `derived_from` 依赖边（[`dependency_discovery_service`](src/contexthub/services/dependency_discovery_service.py)，经 [`memory_service`](src/contexthub/services/memory_service.py) 以 opt-in 方式接线）；[`integrations/memebench`](integrations/memebench/) harness 则把一个级联式派生记忆基准映射到该模型上来度量它：在抽取出的记忆之上建立依赖图，把一次上游变更沿派生链向下传播，并同时报告过时判定的准确率、以及对齐该基准自身协议的单集成本——从而把该级联策略与"无脑全程使用强模型"作对比。此处 ContextHub 是评测载体，而非排行榜里的竞品系统。
+"先用便宜档、仅在必要时才升级到强模型"这一策略已作为置信度级联进入核心（[`cascade_router`](src/contexthub/services/cascade_router.py)），在写入时发现 `derived_from` 依赖边（[`dependency_discovery_service`](src/contexthub/services/dependency_discovery_service.py)，作为历史研究组件保留；正式自动记忆入口已改用 `contexthub.memory`）；[`integrations/memebench`](integrations/memebench/) harness 则把一个级联式派生记忆基准映射到该模型上来度量它：在抽取出的记忆之上建立依赖图，把一次上游变更沿派生链向下传播，并同时报告过时判定的准确率、以及对齐该基准自身协议的单集成本——从而把该级联策略与"无脑全程使用强模型"作对比。此处 ContextHub 是评测载体，而非排行榜里的竞品系统。
 
 > 该 harness 只是把外部工作映射到 ContextHub 上以便度量，并不内置上游数据集。数据请按各 harness 的说明单独获取。
 
@@ -332,3 +332,7 @@ pnpm openclaw plugins install -l /path/to/ContextHub/bridge
 ## 许可证 ⚖️
 
 [Apache License 2.0](LICENSE)
+
+## 自动记忆与上下文
+
+真实应用现在可通过现有服务的 `client.memory.ingest()` 写入对话，再用 `client.memory.context()` 获取可用上下文。抽取、条件绑定、失效修复和上下文筛选与当前 MEME 实验共用 `contexthub.memory`。部署配置、旧入口替换、数据库迁移和目前的使用边界见 [接入说明](docs/memory-core.txt)，代码示例见 [memory_application.py](examples/memory_application.py)。

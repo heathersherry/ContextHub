@@ -1,4 +1,4 @@
-"""Initialize an already-created, empty dedicated research database."""
+"""Initialize the memory schema in an already-created PostgreSQL database."""
 
 import argparse
 import asyncio

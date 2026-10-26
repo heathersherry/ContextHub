@@ -1,17 +1,9 @@
 """Minimal model outputs; references name exact supplied versions."""
 
-from pathlib import Path
 import re
 from typing import Literal
 from uuid import UUID
 from pydantic import BaseModel, ConfigDict, Field, model_validator
-
-PROMPTS = Path(__file__).resolve().parents[3] / "prompts"
-
-
-def prompt(name):
-    return (PROMPTS / (name + ".txt")).read_text()
-
 
 def ref_of(row):
     return f"{row['memory_id']}:{row['version']}"

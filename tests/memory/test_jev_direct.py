@@ -12,7 +12,7 @@ import pytest_asyncio
 from contexthub.llm.jev_client import JevClient
 from contexthub.llm.retry_policy import ResponseSchemaError
 from contexthub.memory.jev_intent_classifier import JevIntentClassifier
-from contexthub.memory import contracts
+from contexthub.memory.prompts_config import PromptSet
 from contexthub.memory.contracts import split_ref, ref_of
 from contexthub.memory.storage import SCOPE
 from integrations.memebench.memory_research.cli import argument_parser, freeze, decision_retry_policy
@@ -21,7 +21,8 @@ from .helpers import add, pending, row, session, targets_response, input_of, ite
 
 
 class Context:
-    def __init__(self):
+    def __init__(self, prompts=None):
+        self.prompts = prompts or PromptSet()
         self.store = self
         self.steps = []
         self.sink = Sink()
@@ -80,11 +81,10 @@ def plan_response(*operations):
 @pytest.mark.asyncio
 @pytest.mark.parametrize('intent', ['new', 'forget', 'correction', 'hold'])
 async def test_single_question_uses_frozen_prompt_without_candidates(tmp_path, monkeypatch, intent):
-    question = json.loads((contracts.PROMPTS / 'p2_intent_jev.json').read_text())
+    question = json.loads((PromptSet().root / 'p2_intent_jev.json').read_text())
     question['instructions'] += '\nFrozen marker'
     (tmp_path / 'p2_intent_jev.json').write_text(json.dumps(question))
-    monkeypatch.setattr(contracts, 'PROMPTS', tmp_path)
-    sequence, requests, context = [intent], [], Context()
+    sequence, requests, context = [intent], [], Context(PromptSet(tmp_path))
     client = choice_client(sequence, requests)
     try:
         answer = await JevIntentClassifier(client, retry=decision_retry_policy('jev')).classify(
@@ -336,11 +336,11 @@ async def test_branch_prompt_is_loaded_from_active_frozen_directory(env, jev, tm
     active = tmp_path / 'active-prompts'
     active.mkdir()
     for filename in ('p2_intent_jev.json', name + '.txt'):
-        (active / filename).write_bytes((contracts.PROMPTS / filename).read_bytes())
+        (active / filename).write_bytes((PromptSet().root / filename).read_bytes())
     marker = 'FROZEN_BRANCH_' + name
     path = active / (name + '.txt')
     path.write_text(path.read_text() + '\n' + marker)
-    monkeypatch.setattr(contracts, 'PROMPTS', active)
+    env.store.prompts = PromptSet(active)
     c = await session(env, 1)
     old = await add(env, c, 'Existing fact')
     jev[0].append(intent)

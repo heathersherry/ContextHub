@@ -8,6 +8,7 @@ from types import SimpleNamespace
 from uuid import UUID
 
 from contexthub.memory.contracts import ref_of
+from contexthub.memory.prompts_config import PromptSet
 from contexthub.memory.maintenance_executor import MaintenanceExecutor
 
 
@@ -15,6 +16,7 @@ class RecordedRepairState:
     """Scoped reads over an exported snapshot and its existing evidence log."""
 
     def __init__(self, rows, evidence):
+        self.prompts = PromptSet()
         self.rows = rows
         self.evidence = evidence
 

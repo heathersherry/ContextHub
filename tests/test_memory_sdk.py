@@ -1,30 +1,29 @@
 import sys
 from pathlib import Path
-from uuid import uuid4
 import httpx
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "sdk/src"))
 from contexthub_sdk import (
     ContextHubClient,
-    KnowledgeIngestRequest,
-    KnowledgeMaintainRequest,
+    MemoryIngestRequest,
+    MemoryContextRequest,
     ConflictError,
     ServerError,
 )
-from contexthub.models.knowledge_public import (
-    KnowledgeIngestRequest as ServerIngest,
-    KnowledgeMaintainRequest as ServerMaintain,
-    KnowledgeResult as ServerResult,
+from contexthub.memory.public import (
+    MemoryIngestRequest as ServerIngest,
+    MemoryContextRequest as ServerMaintain,
+    MemoryContextResult as ServerResult,
 )
-from contexthub_sdk.models import KnowledgeResult
+from contexthub_sdk.models import MemoryContextResult
 
 
 def test_wire_models_match_without_importing_server():
     for server, sdk in (
-        (ServerIngest, KnowledgeIngestRequest),
-        (ServerMaintain, KnowledgeMaintainRequest),
-        (ServerResult, KnowledgeResult),
+        (ServerIngest, MemoryIngestRequest),
+        (ServerMaintain, MemoryContextRequest),
+        (ServerResult, MemoryContextResult),
     ):
         assert server.model_json_schema() == sdk.model_json_schema()
     package = Path(__file__).resolve().parents[1] / "sdk/src/contexthub_sdk"
@@ -48,8 +47,8 @@ async def test_no_implicit_retry_headers_error_mapping_and_close(status, error):
         "http://local", "fixture", "a", "reader", transport=httpx.MockTransport(send)
     ) as client:
         with pytest.raises(error):
-            await client.knowledge.ingest(
-                KnowledgeIngestRequest(request_id=uuid4(), content="ordinary content")
+            await client.memory.ingest(
+                MemoryIngestRequest(namespace="chat", sequence=1, messages=[{"role":"user", "content":"ordinary content"}])
             )
         assert len(calls) == 1
     assert client._http.is_closed

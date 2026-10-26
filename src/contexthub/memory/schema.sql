@@ -1,13 +1,13 @@
-CREATE EXTENSION IF NOT EXISTS vector;
-CREATE TABLE research_config (singleton boolean PRIMARY KEY CHECK(singleton), config jsonb NOT NULL);
+CREATE EXTENSION IF NOT EXISTS vector WITH SCHEMA public;
+CREATE TABLE memory_config (singleton boolean PRIMARY KEY CHECK(singleton), config jsonb NOT NULL);
 CREATE TABLE session_records (
- run_id text NOT NULL, episode_id text NOT NULL, strategy_id text NOT NULL,
+ tenant_id text NOT NULL, namespace text NOT NULL, owner_id text NOT NULL,
  session_seq integer NOT NULL CHECK(session_seq > 0), timestamp text,
  messages jsonb NOT NULL, extraction_output text,
- PRIMARY KEY(run_id, episode_id, strategy_id, session_seq)
+ PRIMARY KEY(tenant_id, namespace, owner_id, session_seq)
 );
 CREATE TABLE memories (
- run_id text NOT NULL, episode_id text NOT NULL, strategy_id text NOT NULL,
+ tenant_id text NOT NULL, namespace text NOT NULL, owner_id text NOT NULL,
  memory_id uuid NOT NULL, version integer NOT NULL CHECK(version > 0),
  text text NOT NULL CHECK(length(text) > 0), type text NOT NULL CHECK(type IN ('fact','rule')),
  origin text NOT NULL CHECK(origin IN ('extracted','derived')),
@@ -20,9 +20,9 @@ CREATE TABLE memories (
  status_reason text, created_in_session integer NOT NULL, timestamp text,
  entities text[] NOT NULL, topics text[] NOT NULL,
  search_vector tsvector, memory_embedding vector(__DIMENSIONS__),
- PRIMARY KEY(run_id, episode_id, strategy_id, memory_id, version),
- FOREIGN KEY(run_id,episode_id,strategy_id,created_in_session)
-   REFERENCES session_records(run_id,episode_id,strategy_id,session_seq),
+ PRIMARY KEY(tenant_id, namespace, owner_id, memory_id, version),
+ FOREIGN KEY(tenant_id,namespace,owner_id,created_in_session)
+   REFERENCES session_records(tenant_id,namespace,owner_id,session_seq),
  CHECK(type='rule' OR (condition_matter_ids='{}'::uuid[] AND affected_matter_ids='{}'::uuid[]))
 );
 CREATE INDEX memories_text ON memories USING gin(search_vector);
@@ -35,29 +35,29 @@ CREATE TABLE topic_embeddings (
  embedding vector(__DIMENSIONS__) NOT NULL
 );
 CREATE TABLE memory_sources (
- run_id text NOT NULL, episode_id text NOT NULL, strategy_id text NOT NULL,
+ tenant_id text NOT NULL, namespace text NOT NULL, owner_id text NOT NULL,
  memory_id uuid NOT NULL, version integer NOT NULL,
  session_seq integer[] NOT NULL,
- PRIMARY KEY(run_id,episode_id,strategy_id,memory_id,version),
- FOREIGN KEY(run_id,episode_id,strategy_id,memory_id,version) REFERENCES memories
+ PRIMARY KEY(tenant_id,namespace,owner_id,memory_id,version),
+ FOREIGN KEY(tenant_id,namespace,owner_id,memory_id,version) REFERENCES memories
 );
 -- Same shared attempt contract, validation and cost calculation; no product event/task FKs.
 CREATE TABLE execution_attempts (
  account_id text NOT NULL, call_id uuid NOT NULL, attempt_no integer NOT NULL,
  phase text NOT NULL, execution_id uuid NOT NULL, sha256 text NOT NULL, payload jsonb NOT NULL,
  recorded_at timestamptz NOT NULL DEFAULT now(),
- run_id text NOT NULL, episode_id text NOT NULL, strategy_id text NOT NULL,
+ tenant_id text NOT NULL, namespace text NOT NULL, owner_id text NOT NULL,
  session_seq integer NOT NULL, extraction_attempt integer,
  retry_reason text NOT NULL, parse_result text, raw_output text, error text,
  PRIMARY KEY(account_id,call_id,attempt_no,phase)
 );
-CREATE INDEX execution_attempts_trace ON execution_attempts(run_id,episode_id,strategy_id,session_seq);
+CREATE INDEX execution_attempts_trace ON execution_attempts(tenant_id,namespace,owner_id,session_seq);
 
 -- Ordered process evidence, not a second billing ledger or a task scheduler.
 CREATE TABLE memory_steps (
  step_id bigserial PRIMARY KEY,
- run_id text NOT NULL, episode_id text NOT NULL, strategy_id text NOT NULL,
+ tenant_id text NOT NULL, namespace text NOT NULL, owner_id text NOT NULL,
  session_seq integer NOT NULL, stage text NOT NULL, payload jsonb NOT NULL,
  recorded_at timestamptz NOT NULL DEFAULT now()
 );
-CREATE INDEX memory_steps_trace ON memory_steps(run_id,episode_id,strategy_id,session_seq,step_id);
+CREATE INDEX memory_steps_trace ON memory_steps(tenant_id,namespace,owner_id,session_seq,step_id);

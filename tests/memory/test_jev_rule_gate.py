@@ -9,7 +9,7 @@ import pytest
 
 from contexthub.llm.jev_client import JevClient
 from contexthub.llm.retry_policy import ResponseSchemaError
-from contexthub.memory import contracts
+from contexthub.memory.prompts_config import PromptSet
 from contexthub.memory.jev_rule_gate import JevRuleGate, rule_candidates
 from contexthub.memory.extractor import ExtractionFailed
 from integrations.memebench.memory_research.cli import argument_parser, freeze, decision_retry_policy
@@ -75,15 +75,14 @@ def test_identical_sentences_keep_distinct_source_anchors():
 
 @pytest.mark.asyncio
 async def test_gate_sends_only_sentences_and_shared_policy_and_forwards_unclear(tmp_path, monkeypatch):
-    rubric = json.loads((contracts.PROMPTS / 'extractor_rule_jev.json').read_text())
+    rubric = json.loads((PromptSet().root / 'extractor_rule_jev.json').read_text())
     rubric['instructions'] += '\nFrozen gate marker'
     (tmp_path / 'extractor_rule_jev.json').write_text(json.dumps(rubric))
-    monkeypatch.setattr(contracts, 'PROMPTS', tmp_path)
     messages = [
         {'role': 'assistant', 'content': 'If weight exceeds 5 kg, use freight.'},
         {'role': 'user', 'content': 'Yes, use that policy. Ask if the parcel arrived. If that changes, adjust it.'},
     ]
-    requests, context = [], Context()
+    requests, context = [], Context(PromptSet(tmp_path))
     client = gate_client({'R1': 'rule', 'R2': 'not_rule', 'R3': 'unclear'}, requests)
     try:
         selected = await JevRuleGate(client, retry=decision_retry_policy('jev')).select(messages, context)
@@ -123,10 +122,10 @@ async def test_no_if_makes_no_jev_request():
 @pytest.mark.asyncio
 async def test_normalization_only_accepts_selected_refs_then_content_sees_clean_rules(env, tmp_path, monkeypatch):
     for name in ['extractor_rule_jev.json', 'extractor_rules_normalize.txt', 'extractor_facts.txt']:
-        shutil.copy2(contracts.PROMPTS / name, tmp_path / name)
+        shutil.copy2(PromptSet().root / name, tmp_path / name)
     normalize = tmp_path / 'extractor_rules_normalize.txt'
     normalize.write_text(normalize.read_text() + '\nFrozen normalization marker')
-    monkeypatch.setattr(contracts, 'PROMPTS', tmp_path)
+    env.store.prompts = PromptSet(tmp_path)
     requests = []
     client = gate_client({'R1': 'unclear', 'R2': 'not_rule'}, requests)
     env.pipeline.extractor.rule_gate = JevRuleGate(client, retry=decision_retry_policy('jev'))
@@ -253,8 +252,8 @@ def test_rule_gate_cli_default_and_frozen_metadata(tmp_path):
     assert manifest['extraction']['prompts'] == ['extractor_rule_jev.json', 'extractor_rules_normalize.txt', 'extractor_facts.txt']
     assert manifest['model_parameters']['extractor']['model'] == 'gpt-4.1-mini'
     for name in manifest['extraction']['prompts']:
-        assert name in manifest['prompt_sha256']
-        assert (tmp_path / 'frozen' / 'prompts' / name).read_bytes() == (contracts.PROMPTS / name).read_bytes()
+        assert 'core/' + name in manifest['prompt_sha256']
+        assert (tmp_path / 'frozen' / 'prompts' / 'core' / name).read_bytes() == (PromptSet().root / name).read_bytes()
 
 
 @pytest.mark.asyncio

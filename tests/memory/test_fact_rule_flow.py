@@ -57,7 +57,7 @@ async def test_rule_duplicate_merges_session_sources_without_candidate_evidence(
     repeated, changes = await direct(env, pending(c2, text, type="rule"), c2)
     assert repeated == original and changes == []
     saved = await row(env, original)
-    assert saved["episode_id"] == env.trace.episode_id
+    assert saved["namespace"] == env.trace.namespace
     assert saved["created_in_session"] == 1 and "rule_evidence" not in saved
     assert (await env.store.sources(env.trace, *split_ref(original)))[
         "session_seq"
@@ -441,8 +441,8 @@ async def test_schema_rejects_change_and_fact_endpoint_arrays(env):
     for field in ("condition_matter_ids", "affected_matter_ids"):
         with pytest.raises(asyncpg.CheckViolationError):
             async with env.store.pool.acquire() as conn:
-                await conn.execute(f"UPDATE memories SET {field}=$1 WHERE run_id=$2 AND memory_id=$3",
-                                   [split_ref(fact)[0]], env.trace.run_id, split_ref(fact)[0])
+                await conn.execute(f"UPDATE memories SET {field}=$1 WHERE tenant_id=$2 AND memory_id=$3",
+                                   [split_ref(fact)[0]], env.trace.tenant_id, split_ref(fact)[0])
 
 
 @pytest.mark.asyncio
@@ -482,7 +482,7 @@ async def test_full_pipeline_rule_extraction_binding_update_and_repair(env):
     recipient = next(r for r in current if r["text"] == "Recipient Wang")
     assert rule["affected_matter_ids"] == [recipient["memory_id"]]
     assert "rule_evidence" not in rule
-    assert rule["episode_id"] == env.trace.episode_id
+    assert rule["namespace"] == env.trace.namespace
     assert rule["created_in_session"] == 1
     assert (await env.store.sources(env.trace, rule["memory_id"], rule["version"]))[
         "session_seq"

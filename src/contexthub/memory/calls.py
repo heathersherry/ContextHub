@@ -1,4 +1,4 @@
-"""Research context on the shared execution ledger, retry and pricing contract."""
+"""Memory context on the shared execution ledger, retry and pricing contract."""
 
 from dataclasses import dataclass
 from uuid import uuid4
@@ -8,14 +8,15 @@ from contexthub.llm.retry_policy import RecordedCall, RetryPolicy
 from contexthub.models.execution import AttemptRecord, CallIdentity, PriceBasis
 from contexthub.models.knowledge import canonical_hash
 from contexthub.services.execution_ledger import ExecutionLedger, validate_append
-from .schemas import Trace
+from .schemas import MemoryScope
 
 
-class ResearchLedger(ExecutionLedger):
+class MemoryLedger(ExecutionLedger):
     def __init__(
         self, store, trace, session_seq, extraction_attempt, parser, output_attempt
     ):
         super().__init__(PgRepository(store.pool))
+        self.raw_output = None
         self.trace = trace
         self.session_seq = session_seq
         self.extraction_attempt = extraction_attempt
@@ -27,10 +28,12 @@ class ResearchLedger(ExecutionLedger):
         identity = record.identity
         if identity.event_id is not None or identity.work_item_id is not None:
             raise ValueError(
-                "research calls must not reference product events or work items"
+                "memory calls do not reference context-store events or work items"
             )
         parse_result = error = None
         raw = record.raw_output
+        if record.phase == "finished":
+            self.raw_output = raw
         if record.phase == "finished" and raw is not None and self.parser is not None:
             try:
                 _, warnings = self.parser(raw)
@@ -59,7 +62,7 @@ class ResearchLedger(ExecutionLedger):
             await db.execute(
                 """INSERT INTO execution_attempts
                 (account_id,call_id,attempt_no,phase,execution_id,sha256,payload,
-                 run_id,episode_id,strategy_id,session_seq,extraction_attempt,retry_reason,parse_result,raw_output,error)
+                 tenant_id,namespace,owner_id,session_seq,extraction_attempt,retry_reason,parse_result,raw_output,error)
                 VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16)""",
                 identity.account_id,
                 identity.call_id,
@@ -81,7 +84,7 @@ class ResearchLedger(ExecutionLedger):
 @dataclass(frozen=True)
 class CallContext:
     store: object
-    trace: Trace
+    trace: MemoryScope
     session_seq: int
     code_version: str
     question_id: str | None = None
@@ -100,10 +103,10 @@ class CallContext:
     ):
         return RecordedCall(
             identity=CallIdentity(
-                account_id="memory-research",
+                account_id=self.trace.tenant_id,
                 execution_id=uuid4(),
                 call_id=uuid4(),
-                strategy=self.trace.strategy_id,
+                strategy=self.trace.owner_id,
                 stage=stage,
                 operation=":".join(
                     x
@@ -122,7 +125,7 @@ class CallContext:
             policy=policy,
             price=price,
             capture_raw_output=True,
-            recorder=ResearchLedger(
+            recorder=MemoryLedger(
                 self.store,
                 self.trace,
                 self.session_seq,

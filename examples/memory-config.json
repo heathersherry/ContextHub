@@ -1,0 +1,93 @@
+{
+  "index": {
+    "dimensions": 1536,
+    "embedding_model": "text-embedding-3-small",
+    "document_prefix": "",
+    "query_prefix": "",
+    "text_config": "pg_catalog.english"
+  },
+  "retrieval": {
+    "text_k": 20,
+    "vector_k": 20,
+    "rrf_c": 60,
+    "hybrid_limit": 20,
+    "entity_k": 10,
+    "topic_similarity_threshold": 0.8
+  },
+  "chat_model": "gpt-4.1-mini",
+  "chat_base_url": "https://api.openai.com/v1",
+  "request_parameters": {
+    "output_limit_field": "max_tokens",
+    "reasoning_effort": null,
+    "response_format": null,
+    "seed": {
+      "support": "unknown",
+      "enabled": false
+    },
+    "temperature_supported": true,
+    "disabled_unknown_seed_authorization": "This application does not send a seed parameter"
+  },
+  "retry": {
+    "max_attempts": 3,
+    "timeout_seconds": 60,
+    "backoff_seconds": [
+      10,
+      30
+    ],
+    "retry_status_codes": [
+      429,
+      500,
+      502,
+      503,
+      504
+    ],
+    "retry_transport_errors": [
+      "ConnectError",
+      "ReadError",
+      "WriteError",
+      "RemoteProtocolError",
+      "ConnectTimeout",
+      "ReadTimeout",
+      "WriteTimeout",
+      "PoolTimeout"
+    ]
+  },
+  "embedding": {
+    "model": "text-embedding-3-small",
+    "base_url": "https://api.openai.com/v1",
+    "dimensions": 1536,
+    "send_dimensions": true,
+    "max_batch": 1,
+    "response_archive_directory": "/tmp/contexthub-memory-responses",
+    "retry": {
+      "max_attempts": 3,
+      "timeout_seconds": 60,
+      "backoff_seconds": [
+        10,
+        30
+      ],
+      "retry_status_codes": [
+        429,
+        500,
+        502,
+        503,
+        504
+      ],
+      "retry_transport_errors": [
+        "ConnectError",
+        "ReadError",
+        "WriteError",
+        "RemoteProtocolError",
+        "ConnectTimeout",
+        "ReadTimeout",
+        "WriteTimeout",
+        "PoolTimeout"
+      ]
+    }
+  },
+  "code_version": "memory-core-v1",
+  "initialize": true,
+  "rule_gate_backend": "llm",
+  "p1_backend": "llm",
+  "p2_direct_backend": "llm"
+}

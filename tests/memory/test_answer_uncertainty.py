@@ -6,9 +6,13 @@ from unittest.mock import AsyncMock
 
 import pytest
 
-from contexthub.memory.contracts import DirectDecision, prompt, ref_of
+from contexthub.memory.contracts import DirectDecision, ref_of
+from contexthub.memory.prompts_config import PromptSet
+from pathlib import Path
+prompt = PromptSet(Path(__file__).resolve().parents[2] / "integrations/memebench/memory_research/prompts").text
 from contexthub.memory.retriever import answer_purpose
-from integrations.memebench.memory_research.runner import MemoryAnswerer, answer_context
+from integrations.memebench.memory_research.runner import MemoryAnswerer
+from contexthub.memory.context import answer_context
 from .helpers import add, pending, row, session
 
 
@@ -54,9 +58,9 @@ async def test_answer_omits_stale_statements_and_refs_but_keeps_internal_audit(e
     await answerer.answer("What regular appointments do I have?", c, timings={})
     async with env.store.pool.acquire() as conn:
         audit = await conn.fetchval(
-            "SELECT payload FROM memory_steps WHERE run_id=$1 AND episode_id=$2 "
+            "SELECT payload FROM memory_steps WHERE tenant_id=$1 AND namespace=$2 "
             "AND stage='answer.input' ORDER BY step_id DESC LIMIT 1",
-            env.trace.run_id, env.trace.episode_id,
+            env.trace.tenant_id, env.trace.namespace,
         )
     assert {m["ref"] for m in audit["materials"]} == {meetup}
     assert audit["purpose"] == "answer"

@@ -17,9 +17,7 @@ from contexthub.api.routers.search import router as search_router
 from contexthub.api.routers.skills import router as skills_router
 from contexthub.api.routers.tools import router as tools_router
 from contexthub.config import Settings
-from contexthub.knowledge_config import KnowledgeConfig
-from contexthub.services.knowledge_factory import create_knowledge_service, KnowledgeSecrets
-from contexthub.api.routers.knowledge import router as knowledge_router
+from contexthub.memory.factory import MemoryConfig, create_memory_engine
 from contexthub.db.codecs import init_pg_connection
 from contexthub.db.repository import PgRepository
 from contexthub.enforcement.guardrails.closure import ClosureGuardrail
@@ -65,36 +63,30 @@ class ApplicationDependencies:
     """Explicit local/test boundaries; default callables preserve old application behavior."""
     embedding_factory: object = None
     chat_factory: object = None
-    knowledge_transport: object = None
-    knowledge_secrets: object = None
-    rules: tuple = ()
+    memory_transport: object = None
+    memory_chat_key: str | None = None
+    memory_embedding_key: str | None = None
+    memory_jev_key: str | None = None
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     settings = getattr(app.state, "bootstrap_settings", None) or Settings()
     dependencies = getattr(app.state, "bootstrap_dependencies", None) or ApplicationDependencies()
-    knowledge_config = None
-    knowledge_secrets = None
-    if settings.knowledge_enabled:
-        # Configuration errors precede DB, scheduler, indexer and client creation.
+    memory_config = None
+    if settings.memory_enabled:
+        # Validate configuration before starting clients or background services.
         try:
-            if not settings.knowledge_config_path:
-                raise ValueError("missing configuration")
-            knowledge_config = KnowledgeConfig.load(settings.knowledge_config_path)
-            knowledge_secrets = dependencies.knowledge_secrets or KnowledgeSecrets(**{
-                role: os.environ.get("KNOWLEDGE_" + role.upper() + "_API_KEY", "")
-                for role in KnowledgeSecrets.__annotations__
-            })
-            if any(not getattr(knowledge_secrets, role) for role in KnowledgeSecrets.__annotations__
-                   if role != "embedding" or knowledge_config.discovery.semantic is not None):
-                raise ValueError("knowledge credentials missing")
-            if tuple((r.id, r.version) for r in dependencies.rules) != tuple(
-                (r.id, r.version) for r in knowledge_config.rules
-            ):
-                raise ValueError("rules registry mismatch")
+            memory_config = MemoryConfig.load(settings.memory_config_path)
+            memory_chat_key = dependencies.memory_chat_key or os.environ.get("MEMORY_CHAT_API_KEY")
+            memory_embedding_key = dependencies.memory_embedding_key or os.environ.get("MEMORY_EMBEDDING_API_KEY")
+            if not memory_chat_key or not memory_embedding_key:
+                raise ValueError("memory credentials missing")
+            memory_jev_key = dependencies.memory_jev_key or os.environ.get("TYPESAFE_API_KEY")
+            if memory_config.uses_jev and not memory_jev_key:
+                raise ValueError("memory Jev credential missing")
         except Exception:
-            raise RuntimeError("knowledge_configuration_invalid") from None
+            raise RuntimeError("memory_configuration_invalid") from None
     stack = AsyncExitStack()
     await stack.__aenter__()
     pool = await asyncpg.create_pool(
@@ -150,15 +142,18 @@ async def lifespan(app: FastAPI):
 
         # Inject indexer into ContextService for embedding consistency
         context_service = ContextService(context_store, acl_service, indexer_service, audit=audit_service)
-        knowledge_service = None
-        if knowledge_config is not None:
-            knowledge_service = await create_knowledge_service(repo, knowledge_config, knowledge_secrets,
-                context_service=context_service, rules=dependencies.rules,
-                transport=dependencies.knowledge_transport)
-            stack.push_async_callback(knowledge_service.close)
-        app.state.knowledge_service = knowledge_service
+        memory_engine = None
+        if memory_config is not None:
+            memory_engine = await create_memory_engine(
+                settings.asyncpg_database_url, memory_config,
+                chat_key=memory_chat_key, embedding_key=memory_embedding_key,
+                jev_key=memory_jev_key,
+                transport=dependencies.memory_transport,
+            )
+            stack.push_async_callback(memory_engine.close)
+        app.state.memory_engine = memory_engine
         memory_service = MemoryService(indexer_service, acl_service, masking_service,
-                                       audit=audit_service, knowledge=knowledge_service)
+                                       audit=audit_service)
         skill_service = SkillService(indexer_service, acl_service, masking_service, audit=audit_service)
 
         # Task 4: retrieval
@@ -236,7 +231,6 @@ async def lifespan(app: FastAPI):
             lifecycle=lifecycle_service,
             sweep_interval=settings.propagation_sweep_interval,
             lease_timeout=settings.propagation_lease_timeout,
-            maintenance_executor=knowledge_service,
         )
 
         app.state.propagation_engine = propagation_engine
@@ -262,7 +256,7 @@ def create_app(settings: Settings | None = None, *, dependencies: ApplicationDep
     application.add_middleware(AuthMiddleware)
     for router in (contexts_router, memories_router, feedback_router, documents_router,
                    enforce_router, skills_router, search_router, tools_router,
-                   datalake_router, admin_router, knowledge_router):
+                   datalake_router, admin_router):
         application.include_router(router)
 
     @application.get("/health")

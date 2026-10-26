@@ -1,0 +1,92 @@
+ContextHub managed memory
+=========================
+
+目的
+----
+应用和 MEME 都使用 contexthub.memory：抽取事实/规则、判断更新和遗忘、绑定条件、
+使旧结论失效、修复受影响结论、检索并组装上下文。benchmark 只负责数据转换、
+官方回答模板、评分和实验报告。内核不读取题型、标准答案或 benchmark 图标签。
+本次未接入 MemDerive，也未修改维护提示词。公共核心的 pl_001 真实模型验证和
+提交前回归结果见 memory-research/memory-core-pl001-20261026.txt。
+
+应用入口
+--------
+现有 ContextHub HTTP 服务新增：
+  POST /api/v1/memories/ingest
+  POST /api/v1/memories/context
+对应 Python SDK：client.memory.ingest(request)、client.memory.context(request)。
+完整示例：examples/memory_application.py。
+
+写入请求包含 namespace、从 1 开始连续递增的 sequence、messages 和可选 timestamp。
+每个 message 包含 role、content 和可选 timestamp。namespace 是应用自己的会话/项目空间。
+账户和应用身份沿用现有请求头及鉴权，从服务端 RequestContext 绑定，不能由请求正文指定。
+同一账户、身份、namespace 的写入与读取串行；同时操作返回 409 memory_namespace_busy。
+不同空间独立。SDK 不自动重试写入；模型请求重试由内核的统一调用记录负责。
+调用可能耗时较长，示例明确设置客户端 timeout=1800；代理超时也需相应配置。
+
+读取请求包含 namespace、query，可选 mode 和 max_chars。
+  auto：根据问题文字分流，不读取 benchmark 标签。
+  answer：有效的当前事实。
+  policy：有效事实和单独列出的条件规则。
+  history：仍可使用的历史事实；已删除或已被纠错否定的内容不会作为证据。
+context 字段可直接交给应用的回答模型；items 返回记忆版本引用、类型、状态、
+推导依据和 source_sessions。来源目前精确到输入批次，不是逐条消息的事件 ID。
+max_chars 只限制 context 字符串，按完整条目截取，不切断事实/规则；不包含 items
+等返回元数据，也不是 token 预算。budget_exhausted 标明是否因预算丢弃材料。
+查询有向量化请求，但内核不替应用生成最终回答。
+
+部署
+----
+安装服务和 sdk 后，在现有服务环境配置：
+  MEMORY_ENABLED=true
+  MEMORY_CONFIG_PATH=/absolute/path/to/memory-config.json
+  MEMORY_CHAT_API_KEY=...
+  MEMORY_EMBEDDING_API_KEY=...
+可从 examples/memory-config.json 开始，按实际模型服务修改模型名称、端点及参数，
+并设置适合本机的 response_archive_directory。示例不含密钥。
+
+启动仍使用 contexthub.main:app。自动记忆使用现有 DATABASE_URL，表放在
+contexthub_memory schema；不会复用或覆盖 public.contexts 和 public.execution_attempts。
+首次安装配置 initialize=true，数据库角色须能创建 schema/pgvector；完成初始化后
+可设 false。已有 schema 会检查向量模型、维度、前缀和全文检索配置是否一致。
+
+默认使用 LLM 流程。若需要现有 Jev 实验路径，可分别设置 rule_gate_backend、
+p1_backend、p2_direct_backend 为 jev，并显式提供 jev_retry、TYPESAFE_API_KEY。
+p1_jev_threshold 可配置。组件实现与 MEME 共用；两者仍可以选择不同模型参数，
+因此“共用内核”不意味着任何配置的实验成绩都会相同。
+
+明确的接口变更
+--------------
+旧 /api/v1/knowledge/*、client.knowledge 和 KNOWLEDGE_ENABLED/KNOWLEDGE_CONFIG_PATH
+已从正式入口移除，配置需要换成上面的 MEMORY_*。MemoryService 原先注入 discovery、
+detection、extractor 的自动维护分支也已移除；不保留转接层。
+旧 knowledge 内部研究组件还被其他历史实验直接使用，本次没有批量删除这些研究代码。
+旧公开入口的示例和测试已由新入口的 SDK→HTTP→内核→数据库测试替换。
+
+client.memory.add/list/promote 仍是手动内容的存储、列举和分享，保留原有权限流程。
+ingest 管理的记忆保存在内核自己的版本化表中，应通过 context 读取；本次没有把它们
+复制成 ctx:// 文档，也没有给它们接上原有团队分享、统一 search/assemble 或生命周期删除。
+这是当前接口边界，不能把 memory.list 的结果当成自动记忆全集。
+
+故障边界
+--------
+当前维护流程包含多次持久化，单个批次不承诺整体事务回滚。若模型或进程中途失败，
+内核会阻止读取半成品和继续写入下一批，返回 memory_ingestion_incomplete。
+应用保留原始输入，在新的 namespace 顺序重放即可重建；本次没有实现自动恢复检查点。
+返回 complete 代表本次流程完成；规则未能确认、修复未能完成时仍可保留 stale 状态，
+上下文筛选会排除不可用的当前事实。沿用现有算法，不承诺模型永远正确。
+
+MEME 与旧数据
+-------------
+当前 integrations/memebench/memory_research 继续使用原数据集、官方回答模板和评分逻辑。
+run_id/episode_id/strategy_id 仅在适配边界映射为 tenant_id/namespace/owner_id。
+实验结果中的 episode_id 和 run_id 保留；原始数据库导出列名随内核改为通用名称。
+核心提示词随 Python 包放在 src/contexthub/memory/prompts；回答/评分提示词放在
+integrations/memebench/memory_research/prompts。每次运行分别冻结，运行之间不再修改全局路径。
+
+新数据库仍可用 scripts.memory_research.init_db 初始化。
+已有旧研究库需要停止所有使用者，备份后显式执行：
+  MEMORY_DATABASE_URL=... python -m contexthub.memory.migrate_research
+迁移在一个事务内移动表、重命名隔离字段，保留记忆 ID、版本、来源、配置和原始调用记录。
+新内核不会悄悄在旧库旁建一个空库。此命令本次仅在临时数据库验证，未执行于用户实验库。
+旧实验输出和冻结源码不被改写；旧程序不应再连接迁移后的库。

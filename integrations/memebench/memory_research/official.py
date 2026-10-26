@@ -4,13 +4,14 @@ import ast
 import hashlib
 import json
 from pathlib import Path
-from contexthub.memory import contracts
+from contexthub.memory.prompts_config import PromptSet
 
 
-def load_official(path):
+def load_official(path, *, prompts=None):
+    prompts = prompts or PromptSet(Path(__file__).with_name("prompts"))
     source = Path(path).read_text()
     pinned = json.loads(
-        (contracts.PROMPTS / "evaluation" / "official_manifest.json").read_text()
+        (prompts.root / "evaluation" / "official_manifest.json").read_text()
     )
     if hashlib.sha256(source.encode()).hexdigest() != pinned["judge_sha256"]:
         raise ValueError("official judge source differs from frozen version")
@@ -27,7 +28,7 @@ def load_official(path):
     for name, filename in pinned["prompt_files"].items():
         if (
             getattr(cls, name)
-            != (contracts.PROMPTS / "evaluation" / filename).read_text()
+            != (prompts.root / "evaluation" / filename).read_text()
         ):
             raise ValueError("official prompt was modified")
     return cls, namespace["judge_episode"]

@@ -9,7 +9,6 @@ from .contracts import (
     Targets,
     TriggerDecision,
     RepairDecision,
-    prompt,
     ref_of,
     rule_queries,
     split_ref,
@@ -37,9 +36,8 @@ class MaintenanceExecutor:
         self.client, self.retry, self.price = client, retry, price
         self.intent_classifier = intent_classifier
 
-    @staticmethod
-    def render_request(name, inputs):
-        instructions = prompt(name)
+    def render_request(self, name, inputs):
+        instructions = self.store.prompts.text(name)
         if name == "p2_repair":
             instructions = instructions.replace(
                 "{target_statement}", json.dumps(inputs["target"]["text"], ensure_ascii=False)

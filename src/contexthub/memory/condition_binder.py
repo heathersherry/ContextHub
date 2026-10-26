@@ -1,7 +1,7 @@
 """P1 binds condition sources and affected matters on each rule version."""
 
 import json
-from .contracts import RuleBindings, prompt, ref_of, split_ref
+from .contracts import RuleBindings, ref_of, split_ref
 from .model_io import LocalReferences, validated_completion
 from .storage import SCOPE
 
@@ -125,7 +125,7 @@ class ConditionBinder:
 
     async def select_bindings(self, inputs, refs, key, context):
         rendered = (
-            prompt("p1_conditions") + "\n" + json.dumps(inputs, ensure_ascii=False)
+            context.store.prompts.text("p1_conditions") + "\n" + json.dumps(inputs, ensure_ascii=False)
         )
         await self.store.record(
             context,

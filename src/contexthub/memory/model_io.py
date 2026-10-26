@@ -3,7 +3,7 @@
 import json
 
 from contexthub.llm.retry_policy import ResponseParseError, ResponseSchemaError
-from .contracts import prompt, ref_of
+from .contracts import ref_of
 
 OUTPUT_ATTEMPTS = 2
 
@@ -61,7 +61,7 @@ async def validated_completion(
             raw = await client.complete(request, max_tokens=None, call=call)
         except (ResponseParseError, ResponseSchemaError) as exc:
             error = exc
-            raw = client.last_raw_response
+            raw = call.recorder.raw_output
         else:
             try:
                 return validate(raw)
@@ -86,4 +86,4 @@ async def validated_completion(
             {"validation_error": str(error), "previous_response": raw},
             ensure_ascii=False,
         )
-        request = prompt("output_retry") + "\n" + feedback + "\n" + rendered
+        request = context.store.prompts.text("output_retry") + "\n" + feedback + "\n" + rendered

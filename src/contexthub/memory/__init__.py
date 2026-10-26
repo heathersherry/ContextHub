@@ -1,1 +1,1 @@
-"""Independent PG-backed memory research; P1/P2 are not implemented yet."""
+"""Shared conversational memory: extraction, maintenance and context assembly."""

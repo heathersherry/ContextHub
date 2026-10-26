@@ -53,7 +53,7 @@ async def test_update_and_forget_use_same_p2_interface_and_only_session_sources(
     assert "document: " + forget not in env.embedded
     async with env.store.pool.acquire() as conn:
         memories = await conn.fetch(
-            "SELECT text FROM memories WHERE run_id=$1 AND episode_id=$2",
+            "SELECT text FROM memories WHERE tenant_id=$1 AND namespace=$2",
             *env.trace.args[:2]
         )
     assert len(memories) == 3 and forget not in [r["text"] for r in memories]
@@ -80,7 +80,7 @@ async def test_unmatched_forget_is_held_in_session_log_without_fact_or_document_
     async with env.store.pool.acquire() as conn:
         assert (
             await conn.fetchval(
-                "SELECT count(*) FROM memory_steps WHERE run_id=$1 AND episode_id=$2 AND stage='p2.held'",
+                "SELECT count(*) FROM memory_steps WHERE tenant_id=$1 AND namespace=$2 AND stage='p2.held'",
                 *env.trace.args[:2]
             )
             == 1
@@ -121,7 +121,7 @@ async def test_failed_document_embedding_does_not_stale_old_or_save_new_memory(e
     async with env.store.pool.acquire() as conn:
         assert (
             await conn.fetchval(
-                "SELECT count(*) FROM memories WHERE run_id=$1 AND episode_id=$2",
+                "SELECT count(*) FROM memories WHERE tenant_id=$1 AND namespace=$2",
                 *env.trace.args[:2]
             )
             == 1

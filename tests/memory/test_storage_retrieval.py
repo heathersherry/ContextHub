@@ -42,7 +42,7 @@ async def memory(
     await env.indexer.index([ref], replace(env.context, session_seq=seq))
     async with env.store.pool.acquire() as conn:
         await conn.execute(
-            "UPDATE memories SET temporal_scope='current',accepted=$6 WHERE run_id=$1 AND episode_id=$2 AND strategy_id=$3 AND memory_id=$4 AND version=$5",
+            "UPDATE memories SET temporal_scope='current',accepted=$6 WHERE tenant_id=$1 AND namespace=$2 AND owner_id=$3 AND memory_id=$4 AND version=$5",
             *env.trace.args,
             *ref,
             status == "fresh",
@@ -70,7 +70,7 @@ async def test_latest_before_status_no_old_fresh_fallback_and_state_only_indexin
     )
     async with env.store.pool.acquire() as conn:
         await conn.execute(
-            "UPDATE memories SET temporal_scope='current',accepted=true WHERE run_id=$1 AND episode_id=$2 AND strategy_id=$3 AND memory_id=$4",
+            "UPDATE memories SET temporal_scope='current',accepted=true WHERE tenant_id=$1 AND namespace=$2 AND owner_id=$3 AND memory_id=$4",
             *env.trace.args,
             new[0],
         )
@@ -158,9 +158,9 @@ async def test_filter_before_top_k_for_all_channels_and_trace_isolation(env):
     await env.store.forget(env.trace, forgotten[0], "forget")
     await memory(env, "owner rule", type="rule", vector=(-1, 0, 0))
     for field, value in [
-        ("run_id", "other-" + env.trace.run_id),
-        ("episode_id", "other-" + env.trace.episode_id),
-        ("strategy_id", "adaptive"),
+        ("tenant_id", "other-" + env.trace.tenant_id),
+        ("namespace", "other-" + env.trace.namespace),
+        ("owner_id", "adaptive"),
     ]:
         other = env.trace.model_copy(update={field: value})
         await env.store.save_session(other, 1, None, [])
@@ -187,7 +187,7 @@ async def test_filter_before_top_k_for_all_channels_and_trace_isolation(env):
     candidates = await env.retriever.current(env.trace, 1, purpose="p2_match")
     assert {r["status"] for r in candidates} == {"fresh", "stale", "unresolved"}
     assert {r["type"] for r in candidates} == {"fact", "rule"}
-    assert all(r["run_id"] == env.trace.run_id for r in candidates)
+    assert all(r["tenant_id"] == env.trace.tenant_id for r in candidates)
 
 
 @pytest.mark.asyncio
@@ -271,10 +271,11 @@ async def test_reopen_database_persists_and_checks_configuration(env):
             os.environ["MEMORY_DATABASE_URL"],
             env.store.config.model_copy(update={"embedding_model": "different"}),
         )
-    with pytest.raises(ValueError, match="empty research"):
-        await MemoryStore.open(
-            os.environ["MEMORY_DATABASE_URL"], env.store.config, initialize=True
-        )
+    reopened = await MemoryStore.open(
+        os.environ["MEMORY_DATABASE_URL"], env.store.config, initialize=True
+    )
+    assert (await reopened.versions(env.trace, ref[0]))[0]["text"] == "saved independently"
+    await reopened.close()
 
 
 def test_time_ties_only_for_answers_and_normalization():

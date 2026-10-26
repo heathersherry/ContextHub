@@ -1,9 +1,7 @@
 """One candidate-free Jev Choice question about an incoming content's purpose."""
 
-import json
 
 from contexthub.llm.jev_client import JEV_MODEL
-from . import contracts
 
 
 class JevIntentClassifier:
@@ -11,7 +9,7 @@ class JevIntentClassifier:
         self.client, self.retry, self.price = client, retry, price
 
     async def classify(self, incoming, context):
-        question = json.loads((contracts.PROMPTS / "p2_intent_jev.json").read_text())
+        question = context.store.prompts.json("p2_intent_jev")
         payload = {
             "model": JEV_MODEL,
             "state": {"incoming": {"text": incoming["text"]}},

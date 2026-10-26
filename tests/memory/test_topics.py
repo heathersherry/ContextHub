@@ -14,7 +14,7 @@ from .test_jev_direct import jev  # noqa: F401
 
 def topic(env, name, vector):
     # Isolate vector fixtures in the database-wide label cache.
-    label = name + "/" + env.trace.episode_id
+    label = name + "/" + env.trace.namespace
     env.vectors["document: " + label] = vector
     return label
 
@@ -75,7 +75,7 @@ async def test_topic_search_bypasses_top_k_but_not_visibility_or_type(env):
         await add(env, c, f"Move to Newtown distractor {i}")
     future_c = await session(env, 2)
     future = await add(env, future_c, "Future home", topics=[home])
-    other = env.trace.model_copy(update={"episode_id": env.trace.episode_id + "-other"})
+    other = env.trace.model_copy(update={"namespace": env.trace.namespace + "-other"})
     await env.store.save_session(other, 1, None, [])
     foreign = await env.store.add_memory(
         other, 1, text="Other person's home", type="fact", topics=[home],

@@ -1,3 +1,4 @@
+from contexthub.memory.prompts_config import PromptSet
 """Jev wire contract, durable retries, and shared P1 persistence."""
 
 import asyncio
@@ -11,7 +12,6 @@ import pytest
 
 from contexthub.llm.jev_client import JevClient, JEV_MODEL
 from contexthub.llm.retry_policy import RecordedCall, ResponseSchemaError
-from contexthub.memory import contracts
 from contexthub.memory.jev_condition_binder import JevConditionBinder
 from contexthub.models.execution import CallIdentity, PriceBasis
 from contexthub.models.knowledge import canonical_hash
@@ -219,8 +219,8 @@ async def test_jev_shared_binding_multi_none_and_frozen_prompt(
     ]
     rows = {ref: await row(env, ref) for ref in [rule, *fact_refs]}
     path = tmp_path / "p1_jev.txt"
-    path.write_text(contracts.prompt("p1_jev") + "\nFrozen marker")
-    monkeypatch.setattr(contracts, "PROMPTS", tmp_path)
+    path.write_text(PromptSet().text("p1_jev") + "\nFrozen marker")
+    env.store.prompts = PromptSet(tmp_path)
     requests = []
 
     def handler(request):
@@ -258,7 +258,7 @@ async def test_jev_shared_binding_multi_none_and_frozen_prompt(
     assert not env.prompts  # P1 did not call the original chat client
     async with env.store.pool.acquire() as conn:
         decisions = await conn.fetchval(
-            "SELECT count(*) FROM memory_steps WHERE run_id=$1 AND episode_id=$2 AND stage='p1.jev_decisions'",
+            "SELECT count(*) FROM memory_steps WHERE tenant_id=$1 AND namespace=$2 AND stage='p1.jev_decisions'",
             *env.trace.args[:2],
         )
     assert decisions == 3

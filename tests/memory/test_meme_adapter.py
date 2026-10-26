@@ -65,7 +65,7 @@ async def test_runner_boundaries_all_sessions_and_evaluation_isolation(env, tmp_
     pipeline = SimpleNamespace(store=env.store, code_version="fixture", ingest=ingest)
     out = await run_episode(
         episode(),
-        run_id=env.trace.run_id,
+        run_id=env.trace.tenant_id,
         pipeline=pipeline,
         answerer=Answerer(),
         output=tmp_path / "out.json",
@@ -144,12 +144,12 @@ async def test_official_six_tasks_pair_scoring_and_original_denominator(env):
         ),
     )
     try:
-        scored = await scorer.score(result, e, env.trace.run_id)
+        scored = await scorer.score(result, e, env.trace.tenant_id)
         first_request_count = len(requests)
         # Completed judgments, including a negative one, are reused. Failed
         # judgments are retried; a cache entry cannot make a missing answer pass.
         resumed = await scorer.score(
-            result, e, env.trace.run_id,
+            result, e, env.trace.tenant_id,
             prior_verdicts={
                 "before:0": {"u_pass": False, "u_reason": "saved negative verdict"},
                 "after:0": {"u_pass": True, "u_reason": "saved positive verdict"},
