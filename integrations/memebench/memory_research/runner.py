@@ -60,6 +60,20 @@ def answer_context(materials, purpose):
     }
 
 
+def render_answer_context(context, *, indent=None):
+    rendered = json.dumps(context, default=str, ensure_ascii=False, indent=indent)
+    if context.get("conditional_rules"):
+        rendered += (
+            "\n\nCURRENT-KNOWLEDGE LIMITS\n"
+            "conditional_rules are not current facts and cannot supply a value "
+            "without evidence that their conditions hold. "
+            "Do not substitute merely related activities or information."
+        )
+    elif context["purpose"] == "answer":
+        rendered += "\n\nDo not substitute merely related activities or information."
+    return rendered
+
+
 class MemoryAnswerer:
     def __init__(self, store, retriever, client, retry, price=None):
         self.store, self.retriever, self.client, self.retry, self.price = (
@@ -80,9 +94,8 @@ class MemoryAnswerer:
         with measure(timings, "answer"):
             materials = [material(h.memory) for h in hits]
             # Processing order is explicitly distinct from the time a fact held.
-            template = prompt("answer_guidance")
-            rendered = template.format(
-                context=json.dumps(answer_context(materials, purpose), default=str, ensure_ascii=False),
+            rendered = prompt("evaluation/answer").format(
+                context=render_answer_context(answer_context(materials, purpose)),
                 question=question,
             )
             manifest = json.loads(
@@ -91,7 +104,7 @@ class MemoryAnswerer:
                 ).read_text()
             )
             if (
-                hashlib.sha256(template.encode()).hexdigest()
+                hashlib.sha256(prompt("evaluation/answer").encode()).hexdigest()
                 != manifest["answer_sha256"]
             ):
                 raise ValueError("official answer prompt changed")

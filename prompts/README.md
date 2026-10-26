@@ -10,13 +10,10 @@
 
 候选关键词证据排除泛主体词 `user/person/team/group`；这些词单独不能通过“中等向量相似度＋关键词”放行，也不能作为裸实体名称在该筛选器里放行。正文强相似、明确实体/编号和 topics 的现有条件继续有效。new 与 forget 的语义补查复用此筛选器，不能把筛选命中当成主体确认。
 
-问答材料按问题文本分流：当前事实只检索有效的当前 fact，在排序前排除 rule；明确的政策/规则/条件/假设问法可读取有效规则，以 `conditional_rules` 单独呈现。历史问题沿用历史检索。分流无额外模型调用，也不读取 MEME 题型；官方回答模板保持原样。
-
-`answer_guidance.txt` 现在保存 MEME / MD-Flat 的完整官方回答模板，包含 `{context}` 和 `{question}`，与 `evaluation/answer.txt` 逐字一致。回答入口只格式化一次，不再附加完整性、属性范围或条件规则指导；实际使用模板受官方指纹校验。材料构造和检索保持不变。此前指导实验分别保存在 `outputs/answer-guidance-replay-20261023/` 与 `outputs/answer-scope-pilot-20261023/`，本次全量复用材料实验在 `outputs/official-answer-replay-20261023/`：100 例完成，官方计分 431/694，Agg 30/100，值班/文档 25 题均未整题通过；没有证明纯官方模板能解决聚合遗漏。统一回答模板有助于比较，但不是 MD-Flat 同材料、同维护模型、同渠道的完整对照。
+问答材料按问题文本分流：当前事实只检索有效的当前 fact，在排序前排除 rule；明确的政策/规则/条件/假设问法可读取有效规则，单独呈现并提示不得直接当作当前事实。历史问题沿用历史检索。分流无额外模型调用，也不读取 MEME 题型；官方回答模板保持原样。
 
 | 文件 | 用途 |
 | --- | --- |
-| [answer_guidance.txt](answer_guidance.txt) | 当前使用的完整官方回答模板，只插入材料和问题 |
 | [extractor.txt](extractor.txt) | 第一次抽取：规则 |
 | [extractor_rule_jev.json](extractor_rule_jev.json) | `--rule-gate-backend jev`：只看角色和含 if 的完整句子；公共说明放一次，排除 not_rule，将 rule／unclear 交给后续确认 |
 | [extractor_rules_normalize.txt](extractor_rules_normalize.txt) | 读取完整当前会话，确认候选是否为用户确立或采纳的规则，再补全指代并整理；可以全部拒绝，每条输出必须引用转交的候选编号 |
@@ -36,7 +33,7 @@
 
 [evaluation/](evaluation/) 中的文件仍在使用，不是废弃提示词：
 
-- `answer.txt`：官方回答模板的基准副本；当前运行读取同内容的 `answer_guidance.txt`。
+- `answer.txt`：基于记忆回答测试问题。
 - 七份 `judge_*_prompt.txt`：官方评分模板，供评分或官方一致性校验使用。
 - `official_manifest.json`：官方版本及内容校验指纹。
 

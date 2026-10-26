@@ -1,0 +1,1 @@
+Release validation results are recorded on codex/memory-research in experiments/meme32k/VALIDATION.txt. These tagged snapshots preserve the historical runtime; added batch tooling and portable fixture paths are separate from that snapshot. No new full 100-case score is claimed.
