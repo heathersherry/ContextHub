@@ -1,0 +1,55 @@
+MEME-32k reproduction entry point: release validation
+Date: 2026-10-26 (Hong Kong, UTC+8)
+
+Scope
+- Current implementation tested at f9e635a509f2bad579492eb5eff4fe84acc9ea61.
+  Subsequent release edits affect documentation and validation records only.
+- Original baseline: 9442c11d46a583c88fbd22260947f559f8f003b4
+  (meme32k-baseline-20261021, 97 historically selected cases).
+- Retry-fixed baseline: d15ead55b5201be4f86c624de937744f0321b301
+  (meme32k-baseline-retry-20261022, 3 historically selected cases).
+
+Verified
+1. Three independent, clean Git checkouts contained no prior outputs directory
+   and no local provider credentials. Git objects were shared locally solely to
+   avoid copying the 1.4 GB repository object store; runtime files came from the
+   selected committed trees, not the original working directory.
+2. Each historical checkout's 215 runtime/source files exactly matched its
+   baseline-source.json SHA-256 manifest and the saved execution-source snapshot.
+   Across the original 100 selected cases, all recorded source files were present
+   and matched execution_source_sha256 (215 paths, 216 unique file versions).
+3. Offline preflight validated the actual MEME-32k dataset and pinned official
+   scorer in all three checkouts. Selected counts: 97, 3 and 100 respectively.
+   Inputs were the existing hash-verified public files; upstream downloading was
+   not repeated. No model request or database connection is made by preflight.
+4. A fresh Python 3.13.9 virtual environment installed the current checkout using
+   pip install -e '.[dev]'. Regression test collection exposed a missing SDK setup
+   step; pip install -e sdk/ resolved it, and the guide now includes that command.
+   Installed package versions are recorded in validation-environment.json.
+5. The clean current checkout passed 416 tests in 13.28 seconds:
+   tests/memory, tests/test_memory_api.py, tests/test_memory_lifespan.py,
+   tests/test_memory_sdk.py, tests/test_change_detection.py,
+   tests/test_dependency_discovery.py, tests/test_memory_promote.py.
+   All tests used isolated real PostgreSQL and deterministic model fixtures.
+6. Each final historical checkout passed 11 batch/adapter tests in the fresh
+   dependency environment: fixed model routing, partial score handling, explicit
+   failed-case retry, completed-case preservation, session boundaries and official
+   six-task scoring. Historical tests used their own committed source via PYTHONPATH.
+7. The documented 1536-dimensional Qwen configuration initialized successfully in
+   a fresh database for each version. Test fixtures separately used 3 dimensions.
+   PostgreSQL server: 17.9 (Homebrew). All six databases created for this validation
+   were removed after completion. No application or experiment database was reset.
+8. Ruff E9/F checks for the new batch runner/tests and git diff --check passed.
+
+Limits
+- No paid model calls, new live single-case run or new full 100-case experiment
+  was executed for this release. Offline tests do not establish benchmark quality
+  or current provider/model availability.
+- The historical 436/694 aggregate combines the 97/3 case selection; the current
+  joint-extraction implementation has no new full 100-case score.
+- Hosted model versions, response randomness and judge variability prevent a
+  promise of identical scores. Dependencies are recorded, not globally locked.
+- Resume is case-level. Failed cases restart with a fresh run ID; no mid-session
+  restoration or judge-only recovery is claimed.
+- This release includes reproducible source/protocol and source hashes, not old
+  raw model responses, full database dumps, or all historical analysis scripts.

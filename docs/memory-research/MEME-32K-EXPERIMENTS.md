@@ -1,5 +1,7 @@
 # MEME-32k 100 例实验索引
 
+Reproduction instructions and pinned historical source tags: [MEME-32k reproduction](../../experiments/meme32k/README.md). Adding this entry point is not a new 100-case experiment.
+
 这里只记录 MEME-32k 版本覆盖全部 100 个 case 的实验，包括完整流程基线和复用保存材料的全量重答。其他 MEME 版本及其他 benchmark 使用各自的索引，不混入本表。最近更新：2026-10-23。精确时间统一用香港时间（UTC+8）。
 
 最近结论：**B 方案把当前事实 JSON 换成原文逐条换行后，100 例总分为 432/694（62.25%），比此前 A 版多 1 题；Agg 为 32/100。历史题增加的 3 分全部来自输入未变的重跑差异，且出现精确复述和旧风格指令干扰的回归，暂不支持直接替换默认格式。成功请求的回答输入 token 减少 24.50%；重试缺失用量，不能直接当作账单降幅。**

@@ -16,8 +16,9 @@ No previous `outputs/` directory or experiment database is required.
 The historical aggregate was **436/694**, using the case selection in
 [historical-cases.json](historical-cases.json). It combined these two versions;
 there was no single uniform run. To repeat that protocol, use separate checkouts,
-databases and output directories for the two tags and select the corresponding
-cases. The batch entry point supports `--case` for this purpose. Do not add the
+databases and output directories for the two tags. Each historical tag defaults
+to its assigned group (97 or 3 cases); the current branch defaults to all 100.
+The batch entry point also supports `--case` for a smoke test. Do not add the
 same case from both versions to the aggregate. The tagged implementations retain
 the old extra answer guidance; the current branch uses the official answer template.
 Later 100-case answer-only replays are different experiments, not this baseline.
@@ -37,10 +38,10 @@ cd ContextHub
 # git switch --detach meme32k-baseline-retry-20261022
 python3.12 -m venv .venv
 source .venv/bin/activate
-python -m pip install -e '.[dev]' huggingface_hub
+python -m pip install -e '.[dev]' -e sdk/ huggingface_hub
 ```
 
-Python 3.12+ and PostgreSQL 16 with pgvector are required. The project README
+Python 3.12+ and PostgreSQL 16+ with pgvector are required. The project README
 contains macOS and Ubuntu PostgreSQL installation instructions. Dependencies are
 specified in `pyproject.toml`; this is a source/protocol pin, not a complete OS or
 transitive Python dependency lock.
@@ -131,7 +132,8 @@ python -m integrations.memebench.memory_research.batch \
   --output outputs/meme32k-smoke --case pl_001
 ```
 
-Then run all 100 cases serially (this can take many hours and incurs API costs):
+Then run the selected version serially (all 100 on the current branch; 97 or 3
+on the historical tags). This can take many hours and incurs API costs:
 
 ```bash
 python -m integrations.memebench.memory_research.batch \
@@ -173,6 +175,31 @@ Raw outputs remain local/ignored. To publish evidence, review and archive result
 separately; source tags do not distribute historical model responses or databases.
 
 ## Offline regression checks
+
+To combine the two completed historical groups, save their `summary.json` files
+as `outputs/baseline97.json` and `outputs/baseline3.json` in one checkout, then:
+
+```bash
+python - <<'PY_SUM'
+import json
+from pathlib import Path
+mapping = json.loads(Path('experiments/meme32k/historical-cases.json').read_text())['cases']
+parts = [json.loads(Path(p).read_text()) for p in ('outputs/baseline97.json', 'outputs/baseline3.json')]
+seen = set()
+tasks = {}
+for tag, part in zip(('meme32k-baseline-20261021', 'meme32k-baseline-retry-20261022'), parts):
+    expected = {r['case'] for r in mapping if r['source_tag'] == tag}
+    assert part['complete'] and set(part['selected_runs']) == expected
+    assert not seen.intersection(expected)
+    seen.update(expected)
+    for task, row in part['tasks'].items():
+        dest = tasks.setdefault(task, {'passed': 0, 'total': 0})
+        for key in dest:
+            dest[key] += row[key]
+assert len(seen) == 100 and sum(t['total'] for t in tasks.values()) == 694
+print(json.dumps({'tasks': tasks, 'passed': sum(t['passed'] for t in tasks.values()), 'total': 694}, indent=2))
+PY_SUM
+```
 
 Use another dedicated database with the test-only 3-dimensional configuration:
 
