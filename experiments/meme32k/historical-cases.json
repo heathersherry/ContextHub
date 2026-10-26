@@ -1,0 +1,509 @@
+{
+  "dataset_sha256": "a88d28374a002b3e5b1683fb7201d06a1ce739d2ebf94c971c37bb65cf6ebdd3",
+  "score": {
+    "passed": 436,
+    "total": 694
+  },
+  "cases": [
+    {
+      "case": "pl_001",
+      "run_id": "memory-check-20261021T102055Z-515f5f23",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "pl_002",
+      "run_id": "memory-check-20261021T102055Z-5cdf59d7",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "pl_003",
+      "run_id": "memory-check-20261021T103900Z-32ee7276",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "pl_004",
+      "run_id": "memory-check-20261021T131515Z-786ab662",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "pl_005",
+      "run_id": "memory-check-20261021T131515Z-5dbe80a6",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "pl_006",
+      "run_id": "memory-check-20261021T133135Z-4c5afd94",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "pl_007",
+      "run_id": "memory-check-20261021T133248Z-129092c5",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "pl_008",
+      "run_id": "memory-check-20261021T135216Z-5bd267b3",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "pl_009",
+      "run_id": "memory-check-20261021T135956Z-603a53db",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "pl_010",
+      "run_id": "memory-check-20261021T141500Z-3752976a",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "pl_011",
+      "run_id": "memory-check-20261021T141553Z-2500647c",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "pl_012",
+      "run_id": "memory-check-20261021T143115Z-d92ac3a8",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "pl_013",
+      "run_id": "memory-check-20261021T143204Z-633bc04e",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "pl_014",
+      "run_id": "memory-check-20261021T144819Z-bb22d53d",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "pl_015",
+      "run_id": "memory-check-20261021T145059Z-f430e1b1",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "pl_016",
+      "run_id": "memory-check-20261021T150834Z-7228e89d",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "pl_017",
+      "run_id": "memory-check-20261021T151014Z-84adbd5c",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "pl_018",
+      "run_id": "memory-check-20261021T152711Z-2de3919f",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "pl_019",
+      "run_id": "memory-check-20261021T152842Z-9e6f03ee",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "pl_020",
+      "run_id": "memory-check-20261021T154730Z-90986f7b",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "pl_021",
+      "run_id": "memory-check-20261021T154913Z-0fe94ad1",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "pl_022",
+      "run_id": "memory-check-20261021T160411Z-7070151b",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "pl_023",
+      "run_id": "memory-check-20261021T160730Z-19326741",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "pl_024",
+      "run_id": "memory-check-20261021T161940Z-aa394b0d",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "pl_025",
+      "run_id": "memory-check-20261021T162506Z-ef46f59d",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "pl_026",
+      "run_id": "memory-check-20261021T164020Z-7cd6dc47",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "pl_027",
+      "run_id": "memory-check-20261021T164801Z-262d7721",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "pl_028",
+      "run_id": "memory-check-20261021T165816Z-4eb48f94",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "pl_029",
+      "run_id": "memory-check-20261021T170657Z-6e04b938",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "pl_030",
+      "run_id": "memory-check-20261021T171540Z-c94d3cc4",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "pl_031",
+      "run_id": "memory-check-20261021T172739Z-eff9c621",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "pl_032",
+      "run_id": "memory-check-20261021T173543Z-fab460a5",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "pl_033",
+      "run_id": "memory-check-20261021T174513Z-8bc7f494",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "pl_034",
+      "run_id": "memory-check-20261021T175342Z-8af67c71",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "pl_035",
+      "run_id": "memory-check-20261021T180853Z-1dc7dec3",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "pl_036",
+      "run_id": "memory-check-20261021T181551Z-de146862",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "pl_037",
+      "run_id": "memory-check-20261021T182600Z-aa60a88c",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "pl_038",
+      "run_id": "memory-check-20261021T183329Z-edbc5d2c",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "pl_039",
+      "run_id": "memory-check-20261021T184210Z-7e281912",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "pl_040",
+      "run_id": "memory-check-20261021T184839Z-84fecf7b",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "pl_041",
+      "run_id": "memory-check-20261021T190022Z-87b0a59f",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "pl_042",
+      "run_id": "memory-check-20261021T190413Z-cd996c5a",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "pl_043",
+      "run_id": "memory-check-20261021T192032Z-91f18aa7",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "pl_044",
+      "run_id": "memory-check-20261021T192343Z-4fd5737d",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "pl_045",
+      "run_id": "memory-check-20261021T193925Z-a6080973",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "pl_046",
+      "run_id": "memory-check-20261021T194512Z-ce0d8257",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "pl_047",
+      "run_id": "memory-check-20261021T195621Z-a727570a",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "pl_048",
+      "run_id": "memory-check-20261021T200244Z-abe371e8",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "pl_049",
+      "run_id": "memory-check-20261021T201334Z-71148a68",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "pl_050",
+      "run_id": "memory-check-20261022T022116Z-1848a6e7",
+      "source_tag": "meme32k-baseline-retry-20261022"
+    },
+    {
+      "case": "sw_001",
+      "run_id": "memory-check-20261021T104704Z-95ab6ed0",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "sw_002",
+      "run_id": "memory-check-20261021T105636Z-cda4c1fb",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "sw_003",
+      "run_id": "memory-check-20261021T110106Z-70c7f9ac",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "sw_004",
+      "run_id": "memory-check-20261022T022116Z-bb06a6a2",
+      "source_tag": "meme32k-baseline-retry-20261022"
+    },
+    {
+      "case": "sw_005",
+      "run_id": "memory-check-20261021T203410Z-4b4c8881",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "sw_006",
+      "run_id": "memory-check-20261021T203834Z-70371aac",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "sw_007",
+      "run_id": "memory-check-20261021T204348Z-bf81a07a",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "sw_008",
+      "run_id": "memory-check-20261021T204647Z-104477e6",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "sw_009",
+      "run_id": "memory-check-20261021T205649Z-52252c13",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "sw_010",
+      "run_id": "memory-check-20261021T210024Z-156a9483",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "sw_011",
+      "run_id": "memory-check-20261021T210822Z-ca216597",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "sw_012",
+      "run_id": "memory-check-20261021T211349Z-90eef5df",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "sw_013",
+      "run_id": "memory-check-20261021T211922Z-a5b2c421",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "sw_014",
+      "run_id": "memory-check-20261021T212320Z-06cc0cf5",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "sw_015",
+      "run_id": "memory-check-20261021T213104Z-20fd0fbc",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "sw_016",
+      "run_id": "memory-check-20261021T213117Z-451475d4",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "sw_017",
+      "run_id": "memory-check-20261021T214346Z-273f386e",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "sw_018",
+      "run_id": "memory-check-20261021T214528Z-3b33d155",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "sw_019",
+      "run_id": "memory-check-20261021T215304Z-6361adcc",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "sw_020",
+      "run_id": "memory-check-20261021T215618Z-72a6e3ce",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "sw_021",
+      "run_id": "memory-check-20261021T220502Z-92f4e3db",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "sw_022",
+      "run_id": "memory-check-20261021T220831Z-9b9ee20c",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "sw_023",
+      "run_id": "memory-check-20261021T221332Z-f0e5dcfa",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "sw_024",
+      "run_id": "memory-check-20261021T222147Z-317298c2",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "sw_025",
+      "run_id": "memory-check-20261022T022935Z-099c8ced",
+      "source_tag": "meme32k-baseline-retry-20261022"
+    },
+    {
+      "case": "sw_026",
+      "run_id": "memory-check-20261021T222642Z-ecdcff02",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "sw_027",
+      "run_id": "memory-check-20261021T223047Z-b1fe7e5a",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "sw_028",
+      "run_id": "memory-check-20261021T224013Z-1e2f4b7e",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "sw_029",
+      "run_id": "memory-check-20261021T224539Z-b813c6d4",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "sw_030",
+      "run_id": "memory-check-20261021T224913Z-c4ae182c",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "sw_031",
+      "run_id": "memory-check-20261021T225637Z-0fabff40",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "sw_032",
+      "run_id": "memory-check-20261021T225832Z-dbb90f97",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "sw_033",
+      "run_id": "memory-check-20261021T230725Z-a4244478",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "sw_034",
+      "run_id": "memory-check-20261021T230915Z-99aec0b7",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "sw_035",
+      "run_id": "memory-check-20261021T231545Z-70ac0dcd",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "sw_036",
+      "run_id": "memory-check-20261021T231711Z-1d731612",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "sw_037",
+      "run_id": "memory-check-20261021T232833Z-e7651b12",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "sw_038",
+      "run_id": "memory-check-20261021T233143Z-e8b98d33",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "sw_039",
+      "run_id": "memory-check-20261021T233935Z-ed3f69fa",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "sw_040",
+      "run_id": "memory-check-20261021T234110Z-8dca0a79",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "sw_041",
+      "run_id": "memory-check-20261021T234825Z-62957e68",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "sw_042",
+      "run_id": "memory-check-20261021T235154Z-ac695d0f",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "sw_043",
+      "run_id": "memory-check-20261021T235924Z-4c7d286f",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "sw_044",
+      "run_id": "memory-check-20261022T000001Z-b41e1548",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "sw_045",
+      "run_id": "memory-check-20261022T001125Z-3e60f0b3",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "sw_046",
+      "run_id": "memory-check-20261022T001354Z-86a95433",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "sw_047",
+      "run_id": "memory-check-20261022T001747Z-469652ed",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "sw_048",
+      "run_id": "memory-check-20261022T003147Z-9e6b1c3b",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "sw_049",
+      "run_id": "memory-check-20261022T003505Z-a0b3518b",
+      "source_tag": "meme32k-baseline-20261021"
+    },
+    {
+      "case": "sw_050",
+      "run_id": "memory-check-20261022T004313Z-e8b00b25",
+      "source_tag": "meme32k-baseline-20261021"
+    }
+  ]
+}

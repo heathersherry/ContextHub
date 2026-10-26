@@ -1,5 +1,7 @@
 # memebench — 目录导航
 
+For the Jev + DeepSeek MEME-32k pipeline, use [the reproduction guide](../../experiments/meme32k/README.md). The older runners described below are separate experiments.
+
 MEME benchmark 上的 ContextHub 验证代码。当前方案：**P2 只标记过期 + 把过期原因带给回答模型**
 （权威地图：`ContextHub-research-plan/research/proposal/WORKING-NOTES-p2-semantic-recompute.md`）。
 

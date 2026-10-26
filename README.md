@@ -317,6 +317,7 @@ The cheap-first, escalate-only-when-needed policy lives in core as a confidence 
 
 | Document | Description |
 |----------|-------------|
+| [Run MEME-32k from a fresh clone](experiments/meme32k/README.md) | Pinned baselines, Jev + DeepSeek configuration, setup, batch execution and recovery |
 | [MEME-32k 100-case experiment index](docs/memory-research/MEME-32K-EXPERIMENTS.md) | Dates, changes, results, and reports for complete MEME-32k 100-case experiments |
 | [OpenClaw Integration Guide](docs/setup/openclaw-integration-guide.md) | Full 5-terminal setup for ContextHub + OpenClaw |
 | [Local Setup & E2E Verification](docs/setup/local-setup&end2end-verification-guide.md) | Dev environment, migrations, E2E demo |

@@ -1,3 +1,4 @@
+import os
 import json
 from types import SimpleNamespace
 import pytest
@@ -135,7 +136,7 @@ async def test_official_six_tasks_pair_scoring_and_original_denominator(env):
     # Unanswered Del still counts, cannot get a lucky pass.
     result["after_answers"] = [r for r in result["after_answers"] if r["task_type"] != "Del"]
     scorer = OfficialScorer(
-        "/Users/sherrylin/Documents/PythonProjects/public/MEME-public/code/eval/judge.py",
+        os.environ.get("MEME_OFFICIAL_JUDGE", "outputs/MEME-public/code/eval/judge.py"),
         client,
         env.store,
         "fixture",

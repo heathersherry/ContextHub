@@ -1,5 +1,7 @@
 # Memory 研究实现
 
+For current runnable instructions, see [MEME-32k reproduction](../../experiments/meme32k/README.md). The dated entries below are historical records.
+
 **查完整实验请看 [MEME-32k 100 例实验索引](MEME-32K-EXPERIMENTS.md)**：只列 MEME-32k 覆盖全部 100 个 case 的实验，记录时间、改动内容、结果、耗时和报告。
 
 ## 2026-10-23：两轮 100 例回答实验已记录
