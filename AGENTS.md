@@ -9,3 +9,8 @@
 - 每轮记录实际时间（香港时间 UTC+8）、改动内容、执行或复用的阶段、完成状态、得分及计分口径、耗时和报告链接。保留原始报告，不覆盖历史成绩；无改善或退步的完整实验也要登记。
 - 核对实际数据版本。其他 MEME 版本、其他 benchmark 使用各自的索引，不混入 MEME-32k；开始使用新版本时再建立对应索引。
 - 实验未完成时不写成完整结果；说明缺失部分，并提醒用户完成后需要更新索引。
+
+## Documentation language
+
+Use English for project documentation, implementation notes, and experiment records.
+Keep README_zh.md in Chinese. This does not change the user's preferred conversation language.

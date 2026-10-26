@@ -1,45 +1,45 @@
-# 提示词目录
+# Prompt locations
 
-核心提示词现随 Python 包保存在 `src/contexthub/memory/prompts/`；MEME 回答和评分模板保存在 `integrations/memebench/memory_research/prompts/`。默认 LLM 流程与可选 Jev 流程的提示词见下表；Jev P2 路径只判断用途，具体记忆处理交给 LLM。
+Core prompts ship with the Python package in `src/contexthub/memory/prompts/`. MEME answer and scoring templates live in `integrations/memebench/memory_research/prompts/`. The table below covers the default LLM flow and optional Jev paths. In the Jev P2 path, Jev classifies intent; the LLM handles memory processing.
 
-规则和普通内容抽取都必须提供 `topics` 字符串列表。无论原文语言，统一用简短英文描述事项，尽量不依赖当前值；如 `residence`、`deployment platform`，而非城市名或 `location` 这种实体类型。遗忘/更正请求描述被处理的事项，规则覆盖条件及结果侧。多条独立事实继续拆分，不因多个 topics 合成一条。topics 是程序检索提示，不是实体身份、更新或删除依据；无需在后续模型输入里重复。
+Rule and ordinary-content extraction must both provide a list of `topics` strings. Regardless of the input language, use short English descriptions of the subject matter that do not depend on its current value: for example, `residence` or `deployment platform`, rather than a city name or a generic entity type such as `location`. Forgetting and correction requests describe the matters being handled; rules cover both conditions and consequences. Keep independent facts separate even when several topics are present. Topics guide retrieval; they do not establish entity identity or authorize updates or deletion, and need not be repeated in later model inputs.
 
-任一主题词对的余弦相似度 **> `--topic-similarity-threshold`（默认0.8）** 可额外保留候选；原有正文/实体/关键词路径继续有效。new、correction、默认直接处理、forget、P1 和修复补查复用同一个主题匹配实现。问答查询没有新增主题抽取调用，仍使用原回答检索；维护传播仍沿已确认的规则绑定关系进行。
+A topic pair with cosine similarity **greater than `--topic-similarity-threshold` (default 0.8)** can retain an additional candidate. Existing text, entity, and keyword paths remain active. New-content processing, correction, default direct processing, forgetting, P1, and repair retrieval share topic matching. Answer queries do not add a topic-extraction call and continue to use answer retrieval. Maintenance propagation follows confirmed rule bindings.
 
-抽取保留原文的团队、项目等主体；`we/our` 不能改成个人的 `the user/their`。只用当前会话解析指代，无法确定时保留群体指代，不凭 `team/group` 称呼差异制造不同身份。普通信息、默认直接处理、更正和遗忘的维护提示会结合现有候选的名称、归属、范围与具体事项连续性判断是否同一主体；不把这些称呼自动视为同义词，也不因候选只有一个就确认身份。不同具名团队/项目仍须区分。
+Extraction preserves team, project, and other subjects from the original text. Do not turn `we/our` into an individual `the user/their`. Resolve references only from the current session; retain collective references when ambiguous, and do not invent distinct identities merely because wording changes between `team` and `group`. Maintenance prompts for ordinary content, default direct processing, correction, and forgetting assess subject continuity using candidate names, ownership, scope, and specific subject matter. These labels are not automatically synonymous, and a single candidate does not prove identity. Distinct named teams and projects must remain distinct.
 
-候选关键词证据排除泛主体词 `user/person/team/group`；这些词单独不能通过“中等向量相似度＋关键词”放行，也不能作为裸实体名称在该筛选器里放行。正文强相似、明确实体/编号和 topics 的现有条件继续有效。new 与 forget 的语义补查复用此筛选器，不能把筛选命中当成主体确认。
+Candidate keyword evidence excludes generic subject words `user/person/team/group`. These words alone cannot pass the moderate-vector-similarity-plus-keyword filter or qualify as bare entity names in that filter. Existing strong text similarity, explicit entities/identifiers, and topic conditions still apply. Semantic fallback retrieval for new content and forgetting shares this filter; a retrieval match does not confirm subject identity.
 
-问答材料按问题文本分流：当前事实只检索有效的当前 fact，在排序前排除 rule；明确的政策/规则/条件/假设问法可读取有效规则，以 `conditional_rules` 单独呈现。历史问题沿用历史检索。分流无额外模型调用，也不读取 MEME 题型；官方回答模板保持原样。
+Answer materials are selected by question text. Current-fact queries retrieve only valid current facts, excluding rules before ranking. Explicit policy, rule, condition, or hypothetical questions may retrieve valid rules, rendered separately as `conditional_rules`. Historical questions use historical retrieval. Routing makes no extra model call and does not read MEME task labels. The official answer template remains unchanged.
 
-`answer_guidance.txt` 现在保存 MEME / MD-Flat 的完整官方回答模板，包含 `{context}` 和 `{question}`，与 `evaluation/answer.txt` 逐字一致。回答入口只格式化一次，不再附加完整性、属性范围或条件规则指导；实际使用模板受官方指纹校验。材料构造和检索保持不变。此前指导实验分别保存在 `outputs/answer-guidance-replay-20261023/` 与 `outputs/answer-scope-pilot-20261023/`，本次全量复用材料实验在 `outputs/official-answer-replay-20261023/`：100 例完成，官方计分 431/694，Agg 30/100，值班/文档 25 题均未整题通过；没有证明纯官方模板能解决聚合遗漏。统一回答模板有助于比较，但不是 MD-Flat 同材料、同维护模型、同渠道的完整对照。
+`answer_guidance.txt` contains the complete official MEME / MD-Flat answer template, including `{context}` and `{question}`, and is byte-identical to `evaluation/answer.txt`. The answer entry point formats it once, without appending completeness, attribute-scope, or conditional-rule guidance. The actual template is checked against its official fingerprint. This template change left material construction and retrieval unchanged. Earlier guidance experiments are retained in `outputs/answer-guidance-replay-20261023/` and `outputs/answer-scope-pilot-20261023/`. The full material-reuse experiment in `outputs/official-answer-replay-20261023/` completed 100 cases: official score 431/694, Agg 30/100, and none of the 25 on-call/document questions passed in full. These results did not establish that the official template resolves aggregation omissions. A shared answer template improves comparability, but this was not a complete controlled comparison with MD-Flat using identical materials, maintenance models, and providers.
 
-| 文件 | 用途 |
+| File | Purpose |
 | --- | --- |
-| [answer_guidance.txt](../integrations/memebench/memory_research/prompts/answer_guidance.txt) | 当前使用的完整官方回答模板，只插入材料和问题 |
-| [extractor.txt](../src/contexthub/memory/prompts/extractor.txt) | 第一次抽取：规则 |
-| [extractor_rule_jev.json](../src/contexthub/memory/prompts/extractor_rule_jev.json) | `--rule-gate-backend jev`：只看角色和含 if 的完整句子；公共说明放一次，排除 not_rule，将 rule／unclear 交给后续确认 |
-| [extractor_rules_normalize.txt](../src/contexthub/memory/prompts/extractor_rules_normalize.txt) | 读取完整当前会话，确认候选是否为用户确立或采纳的规则，再补全指代并整理；可以全部拒绝，每条输出必须引用转交的候选编号 |
-| [extractor_facts.txt](../src/contexthub/memory/prompts/extractor_facts.txt) | 第二次抽取：拆分普通内容，提供可保存正文、topics 和 current／historical 时间归属；移除条件规则，保留请求意图和逐字引文。Jev new 空候选直接按此结果保存 |
-| [p2_direct.txt](../src/contexthub/memory/prompts/p2_direct.txt) | 直接处理：新增、重复、更新、删除等 |
-| [p2_intent_jev.json](../src/contexthub/memory/prompts/p2_intent_jev.json) | `--p2-direct-backend jev`：不看旧候选，只判断 content 的 new／forget／correction／hold；rule 直接保存 |
-| [p2_new.txt](../src/contexthub/memory/prompts/p2_new.txt) | Jev 判断 new 后，LLM 比较旧 fact，生成新增、确认、更新、历史或失效处理清单 |
-| [p2_correction.txt](../src/contexthub/memory/prompts/p2_correction.txt) | Jev 判断 correction 后，LLM 对多条旧 fact／rule 生成更正、替换或撤回处理清单 |
-| [p2_forget_scope.txt](../src/contexthub/memory/prompts/p2_forget_scope.txt) | 遗忘范围判断：检查全版本明确实体命中＋经现有 0.50／0.35 或 topics 匹配保留的语义补查，按请求选删除事项；人物身份／关系遗忘覆盖明确同人的共同活动线索，命中不自动删除，Jev 路径无需先选主目标 |
-| [p1_conditions.txt](../src/contexthub/memory/prompts/p1_conditions.txt) | 在规则侧分别选择条件来源事项和受影响事项，输出两组引用 |
-| [p1_jev.txt](../src/contexthub/memory/prompts/p1_jev.txt) | `--p1-backend jev`：逐候选分别判断 condition／affected 两种角色，同一规则合并请求 |
-| [p2_conditions.txt](../src/contexthub/memory/prompts/p2_conditions.txt) | 沿已绑定关系检查完整来源状态与目标，返回失效事实及规则相关的变化编号 |
-| [p2_repair.txt](../src/contexthub/memory/prompts/p2_repair.txt) | 用规则与事实依据修复旧事实 |
-| [output_retry.txt](../src/contexthub/memory/prompts/output_retry.txt) | 输出校验失败后的纠正提示 |
+| [answer_guidance.txt](../integrations/memebench/memory_research/prompts/answer_guidance.txt) | Complete official answer template; inserts only context and question. |
+| [extractor.txt](../src/contexthub/memory/prompts/extractor.txt) | First extraction pass: rules. |
+| [extractor_rule_jev.json](../src/contexthub/memory/prompts/extractor_rule_jev.json) | `--rule-gate-backend jev`: reads roles and complete sentences containing `if`; supplies shared instructions once, excludes `not_rule`, and forwards `rule`/`unclear` candidates for confirmation. |
+| [extractor_rules_normalize.txt](../src/contexthub/memory/prompts/extractor_rules_normalize.txt) | Reads the full current session to confirm user-established or adopted rules, resolve references, and normalize them. May reject every candidate; each output must cite a forwarded candidate ID. |
+| [extractor_facts.txt](../src/contexthub/memory/prompts/extractor_facts.txt) | Second extraction pass: separates ordinary content and supplies storable text, topics, and current/historical scope. Removes conditional rules while preserving request intent and verbatim quotations. Jev `new` results with no candidates are stored directly from this output. |
+| [p2_direct.txt](../src/contexthub/memory/prompts/p2_direct.txt) | Direct processing: additions, duplicates, updates, deletion, and related actions. |
+| [p2_intent_jev.json](../src/contexthub/memory/prompts/p2_intent_jev.json) | `--p2-direct-backend jev`: classifies content as new/forget/correction/hold without old candidates; rules are stored directly. |
+| [p2_new.txt](../src/contexthub/memory/prompts/p2_new.txt) | After Jev selects `new`, the LLM compares old facts and produces addition, confirmation, update, historical, or invalidation actions. |
+| [p2_correction.txt](../src/contexthub/memory/prompts/p2_correction.txt) | After Jev selects `correction`, the LLM produces correction, replacement, or retraction actions across old facts/rules. |
+| [p2_forget_scope.txt](../src/contexthub/memory/prompts/p2_forget_scope.txt) | Selects matters to delete from explicit entity matches across all versions and semantic fallback candidates retained by existing 0.50/0.35 thresholds or topic matching. Forgetting a person's identity/relationship includes shared-activity clues clearly referring to that person. Matches do not authorize automatic deletion; the Jev path need not select a primary target first. |
+| [p1_conditions.txt](../src/contexthub/memory/prompts/p1_conditions.txt) | Selects condition-source matters and affected matters separately for each rule, returning two reference sets. |
+| [p1_jev.txt](../src/contexthub/memory/prompts/p1_jev.txt) | `--p1-backend jev`: judges condition/affected roles separately per candidate, batching requests for the same rule. |
+| [p2_conditions.txt](../src/contexthub/memory/prompts/p2_conditions.txt) | Checks complete source states and targets along bound relationships; returns invalidated facts and rule-relevant change IDs. |
+| [p2_repair.txt](../src/contexthub/memory/prompts/p2_repair.txt) | Repairs old facts using rules and factual evidence. |
+| [output_retry.txt](../src/contexthub/memory/prompts/output_retry.txt) | Correction prompt after output validation fails. |
 
-## evaluation：问答和评分
+## Evaluation: answers and scoring
 
-[evaluation/](evaluation/) 中的文件仍在使用，不是废弃提示词：
+Files in [evaluation/](../integrations/memebench/memory_research/prompts/evaluation/) remain active:
 
-- `answer.txt`：官方回答模板的基准副本；当前运行读取同内容的 `answer_guidance.txt`。
-- 七份 `judge_*_prompt.txt`：官方评分模板，供评分或官方一致性校验使用。
-- `official_manifest.json`：官方版本及内容校验指纹。
+- `answer.txt`: reference copy of the official answer template; runs read the identical `answer_guidance.txt`.
+- Seven `judge_*_prompt.txt` files: official scoring templates used for judging or official-template consistency checks.
+- `official_manifest.json`: official version and content fingerprints.
 
-历史实验的提示词保留在各自的 `artifacts/memory-research/` 和 `docs/memory-research/validation-*/` 快照内，不是当前运行入口。当前已停用的 `p1.txt`、`p2.txt` 已从工作区删除，无需恢复或再归档到这里。
+Historical prompts remain in their respective `artifacts/memory-research/` and `docs/memory-research/validation-*/` snapshots; they are not current runtime entry points. Retired `p1.txt` and `p2.txt` files have been removed and need not be restored or archived here.
 
-运行时会将整个目录复制为该次运行的快照；加载路径和运行清单均支持 `evaluation/` 子目录。Jev 用途判断的原审阅草稿已移入运行目录；旧多轮 Jev 判断不再使用。
+Each run snapshots the core and MEME prompt directories separately. Loading and manifests support the `evaluation/` subdirectory. The original Jev intent-classification review draft was moved into the run directory; the old multi-round Jev decision flow is no longer used.

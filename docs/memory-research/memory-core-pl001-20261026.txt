@@ -1,71 +1,97 @@
-ContextHub 公共记忆核心：pl_001 验证记录
-=====================================
+ContextHub shared memory core: pl_001 validation record
+======================================================
 
-日期：2026-10-26（香港时间）
-运行编号：memory-check-20261026T015526Z-0e67eef0
-代码：codex/memory-research，基于 a6fd845c1d031f4c10ed66e36c55be1309ca03b2
-加本次提交中的公共核心重构。实验运行目录保存了当时源码快照和差异；
-不能仅用旧 HEAD 代表实际实验代码。本次提交未因分数调整维护算法或回答模板。
+Date: 2026-10-26 (Hong Kong time)
+Run ID: memory-check-20261026T015526Z-0e67eef0
+Code: codex/memory-research, based on a6fd845c1d031f4c10ed66e36c55be1309ca03b2
+plus the shared-core refactor committed in 66af8f676. The run directory retains
+the source snapshot and diff; the old HEAD alone does not identify the code used.
+The refactor commit did not tune maintenance algorithms or answer templates in
+response to this score.
 
-变更范围
---------
-统一应用与 MEME 的组件组装、记忆维护和上下文选择出口；公共身份字段为
- tenant_id / namespace / owner_id；核心提示词随包保存，MEME 提示词放在适配目录。
-HTTP 新增 /api/v1/memories/ingest 和 /api/v1/memories/context，Python SDK 同步接入。
-移除旧 knowledge 公开入口及 MemoryService 重复的自动维护路径。
-部署、旧库迁移和接口边界见 ../memory-core.txt。
+Scope of changes
+----------------
+Applications and MEME share component assembly, memory maintenance, and context
+selection. Public scope fields are tenant_id / namespace / owner_id. Core prompts
+ship with the package; MEME prompts live in the adapter directory.
+HTTP endpoints /api/v1/memories/ingest and /api/v1/memories/context are also exposed
+through the Python SDK. The old public knowledge endpoints and MemoryService's
+duplicate automatic maintenance path have been removed.
+See ../memory-core.txt for deployment, migration, and interface boundaries.
 
-真实模型实验
-------------
-范围：MEME filler32k 的 pl_001，24 批会话，5 个前测回答、7 个后测回答。
-入口：python -m integrations.memebench.memory_research.cli --mode check --episode pl_001
-本次通过 CLI 直接调用公共核心，没有启动独立 HTTP 服务进行真实模型实验。
+Live-model experiment
+---------------------
+Scope: pl_001 from MEME filler32k; 24 sessions, 5 before-update answers, and
+7 after-update answers.
+Entry point: python -m integrations.memebench.memory_research.cli --mode check --episode pl_001
+This run called the shared core directly through the CLI. It did not exercise
+live models through a separately deployed HTTP server.
 
-模型与参数：
-- 维护：DeepSeek 渠道 deepseek-flash，low reasoning。
-- 规则筛选、条件绑定、直接意图判断：jev-1.13.0；条件绑定阈值 0.5。
-- 向量：aliyun 渠道 qwen3.7-text-embedding，1536 维；文档/查询前缀均为空。
-- 检索：text_k=20、vector_k=20、hybrid_limit=20、entity_k=10、rrf_c=60；主题阈值 0.8。
-- 回答：OpenLux gpt-4.1-mini，temperature=0，max_tokens=500。
-- 评分：OpenLux gpt-4o，官方评分流程。
-- 回答使用纯官方模板，无额外回答指导。
+Models and parameters:
+- Maintenance: deepseek-flash via DeepSeek, low reasoning.
+- Rule gating, condition binding, and direct intent classification: jev-1.13.0;
+  condition-binding threshold 0.5.
+- Embeddings: qwen3.7-text-embedding via aliyun, 1536 dimensions;
+  empty document and query prefixes.
+- Retrieval: text_k=20, vector_k=20, hybrid_limit=20, entity_k=10, rrf_c=60;
+  topic similarity threshold 0.8.
+- Answers: gpt-4.1-mini via OpenLux, temperature=0, max_tokens=500.
+- Scoring: gpt-4o via OpenLux, using the official scoring flow.
+- Unmodified official answer template, without additional answer guidance.
 
-回答模板 SHA256：9058780e7e839d037505eb3cdfb2a05643c58e1f37a3ea87d5b2c2dd4433bba5
-数据集 SHA256：a88d28374a002b3e5b1683fb7201d06a1ce739d2ebf94c971c37bb65cf6ebdd3
-官方评分文件 SHA256：4d19e4a8acc4f3143ace3b5933aeeb92a91e019d57cd0bba42c3bcba7c91a218
+Answer template SHA256: 9058780e7e839d037505eb3cdfb2a05643c58e1f37a3ea87d5b2c2dd4433bba5
+Dataset SHA256: a88d28374a002b3e5b1683fb7201d06a1ce739d2ebf94c971c37bb65cf6ebdd3
+Official scorer SHA256: 4d19e4a8acc4f3143ace3b5933aeeb92a91e019d57cd0bba42c3bcba7c91a218
 
-使用新初始化的独立实验库，未迁移旧实验库。运行前 5 类真实模型探测均通过。
-正式流程耗时 1208.73 秒，714 次请求全部成功；无回答错误，无跳过的直接维护或修复。
-所有会话和评分完成；调用开始/结束记录完整；12 次实际回答请求均核验为官方模板。
-探测的 5 次请求不计入 714 次正式请求。价格不完整，未报告总账单金额。
+The run used a newly initialized, separate experiment database; existing experiment
+databases were not migrated. Connectivity probes for all five model roles passed.
+The complete run took 1208.73 seconds. All 714 requests succeeded, with no answer
+errors or skipped direct-maintenance or repair operations. All sessions and scoring
+completed; request start/end records were complete. All 12 recorded answer requests
+were verified against the official template. The five preflight requests are
+excluded from the 714 experiment requests. Pricing was incomplete, so no total
+billed cost is reported.
 
-官方成绩：6/7（85.7%）
-Cas 级联更新 2/2；Abs 不确定性 0/1；Del 删除 1/1；
-ER 准确回忆 1/1；Agg 聚合 1/1；Tr 历史追踪 1/1。
-Cas/Abs/Del 按前后测配对判定，其余按后测判定。
+Official score: 6/7 (85.7%)
+Cas cascade updates: 2/2; Abs uncertainty: 0/1; Del deletion: 1/1;
+ER exact recall: 1/1; Agg aggregation: 1/1; Tr history tracking: 1/1.
+Cas/Abs/Del use paired before/after criteria; the other tasks use after-update scores.
 
-失败题分析
-----------
-问题：What regular appointments do I have?
-标准答案：Uncertain — previously 'tutoring session (weekly)', but health_condition changed
-实际回答：Book club meetings and trivia night on Wednesdays.
-旧 weekly tutoring 事实因绑定规则触发而变为 stale，未进入实际回答材料。
-回答使用了其他当前社交活动，没有表达目标安排现在未知。官方判失败保留不变；
-但官方解释称其“复述旧值”并不符合实际文本。问题范围和标准答案针对的实体也存在差异。
-后续应单独研究公共上下文怎样表达“原事实过时、当前未知”，不据单题直接修改官方模板。
-上一次纯官方模板重新回答为 5/7，本次 Tr 通过、Abs 仍失败；两次使用的维护/检索材料
-不同，不能将差异解释为重构带来的确定性提升。
+Failed question analysis
+------------------------
+Question: What regular appointments do I have?
+Gold answer: Uncertain — previously 'tutoring session (weekly)', but health_condition changed
+Actual answer: Book club meetings and trivia night on Wednesdays.
+The old weekly tutoring fact became stale after a bound rule was triggered and
+was excluded from the actual answer materials. The answer listed other current
+social activities without expressing that the target appointment was now unknown.
+The official failure is retained, although the judge's explanation that the answer
+repeated the old value does not match the actual text. The broad question wording
+also differs in scope from the specific entity targeted by the gold answer.
+A separate experiment should examine how shared context represents a stale prior
+fact with an unknown current value; this single case does not justify changing the
+official template.
+The previous re-answering run with the official template scored 5/7. Tr passed in
+this run, while Abs still failed. The runs used different maintenance/retrieval
+materials, so the difference is not a controlled estimate of improvement from the
+refactor.
 
-提交前回归
-----------
-独立 PostgreSQL 测试库，fixture-embedding-v1，3 维；与实验库分离。
-模型使用固定模拟响应，无新增付费模型调用。
-365 passed：tests/memory、test_memory_api、test_memory_lifespan、test_memory_sdk、
-test_change_detection、test_dependency_discovery、test_memory_promote。
-覆盖 SDK→HTTP→公共核心→真实数据库链路、隔离、未完成写入和 MEME 共用选择逻辑。
-这是受控应用链路验证，不等同于独立部署 HTTP 服务后的真实模型验证。
+Pre-commit regression validation
+--------------------------------
+Tests used a separate PostgreSQL database with fixture-embedding-v1 and 3-dimensional
+vectors, isolated from the experiment database. Models returned deterministic mock
+responses; these tests made no additional paid model calls.
+365 tests passed across tests/memory, test_memory_api, test_memory_lifespan,
+test_memory_sdk, test_change_detection, test_dependency_discovery, and
+test_memory_promote.
+Coverage includes the SDK-to-HTTP-to-shared-core-to-real-database flow, scope
+isolation, incomplete ingestion, and context selection shared with MEME.
+This is controlled application-flow validation, not live-model validation through
+a separately deployed HTTP server.
 
-保存范围
---------
-原始模型响应、数据库、完整实验导出和本机连接配置保留在本地，未纳入 Git。
-本记录属于单例验证，不更新 MEME-32k 100 例实验索引。100 例尚未运行。
+Artifact retention
+------------------
+Raw model responses, databases, complete experiment exports, and local connection
+settings remain local and are not included in Git. This is a single-case validation
+record, so it does not update the MEME-32k 100-case experiment index.
+The 100-case experiment has not been run for this version.

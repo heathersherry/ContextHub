@@ -317,7 +317,7 @@ The cheap-first, escalate-only-when-needed policy lives in core as a confidence 
 
 | Document | Description |
 |----------|-------------|
-| [MEME-32k 100 例实验索引](docs/memory-research/MEME-32K-EXPERIMENTS.md) | MEME-32k 完整 100 例实验的时间、改动内容、结果与报告入口 |
+| [MEME-32k 100-case experiment index](docs/memory-research/MEME-32K-EXPERIMENTS.md) | Dates, changes, results, and reports for complete MEME-32k 100-case experiments |
 | [OpenClaw Integration Guide](docs/setup/openclaw-integration-guide.md) | Full 5-terminal setup for ContextHub + OpenClaw |
 | [Local Setup & E2E Verification](docs/setup/local-setup&end2end-verification-guide.md) | Dev environment, migrations, E2E demo |
 | [MVP Verification Plan](docs/mvp%20verification/mvp-verification-plan.md) | Three-layer verification: tests → API demo → runtime contract |
