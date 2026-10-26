@@ -1,0 +1,68 @@
+{
+  "validated_at": "2026-10-26T18:20:13+08:00",
+  "kind": "offline_protocol_validation",
+  "baseline_commit": "7df67566737c2da107396470f0d6ad379146da0b",
+  "existing_regression_tests_passed": 416,
+  "adapter_tests_passed": 5,
+  "official_recipe_tests_passed": 3,
+  "total_distinct_tests_passed": 424,
+  "effectiveness_result": false,
+  "paid_model_requests": 0,
+  "recipe_runtime_seconds": 86.51,
+  "shared_and_adapter_regression_runtime_seconds": 14.73,
+  "additional_factory_test_runtime_seconds": 0.37,
+  "recipes": [
+    {
+      "kind": "offline_protocol_validation",
+      "recipe": "q1",
+      "world": "tripops_w1",
+      "events_ingested": 452,
+      "retrievals": 1,
+      "checkpoints": [
+        452
+      ],
+      "tasks_completed": 1,
+      "status": "completed",
+      "model_calls": "deterministic fixtures; no paid API requests",
+      "effectiveness_result": false
+    },
+    {
+      "kind": "offline_protocol_validation",
+      "recipe": "q2",
+      "world": "tripops_w1",
+      "events_ingested": 452,
+      "retrievals": 123,
+      "checkpoints": [
+        452
+      ],
+      "tasks_completed": 1,
+      "status": "completed",
+      "model_calls": "deterministic fixtures; no paid API requests",
+      "effectiveness_result": false
+    },
+    {
+      "kind": "offline_protocol_validation",
+      "recipe": "q3",
+      "world": "tripops_w1",
+      "events_ingested": 452,
+      "retrievals": 75,
+      "checkpoints": [
+        118,
+        193,
+        286,
+        366,
+        452
+      ],
+      "tasks_completed": 1,
+      "status": "completed",
+      "model_calls": "deterministic fixtures; no paid API requests",
+      "effectiveness_result": false
+    }
+  ],
+  "raw_artifacts": "outputs/memderive-validation-20261026 (local, ignored; original official outputs preserved)",
+  "notes": [
+    "Recipe model fixtures produce no stored assertions; scores are not effectiveness results.",
+    "Q1 answer/citation and derived provenance are separately tested with nonempty memories.",
+    "No full MEME or full ten-world MemDerive effectiveness run was performed."
+  ]
+}

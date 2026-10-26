@@ -1,0 +1,12 @@
+{
+  "release": "formal-set-v1.16",
+  "retrieved_at": "2026-10-26",
+  "paper": "https://arxiv.org/html/2610.25373v1",
+  "data_source": "https://anonymous.4open.science/r/DeriveMem-67C6/",
+  "evaluator_source": "https://anonymous.4open.science/r/DerivEval-6799/",
+  "sha256": {
+    "deriveval_src": "8f9c69a685740939479b4a849fc6449dd42d71ff2eec8f4c88045912d04731f9",
+    "deriveval_presets": "21d4a244ba3d02e64bb6fe653afb99403c3082d84011281ee3583c0487db94c7",
+    "derivemem_benchmark": "c3ba5f028f1862f69510e058c24bc0f6d0863d5b15c498f51bd10cf020ccf48e"
+  }
+}
