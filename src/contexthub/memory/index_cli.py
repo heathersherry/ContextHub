@@ -15,3 +15,4 @@ def resolve_index_config(config, args):
     if args.embedding_dimensions is not None:
         values["dimensions"] = args.embedding_dimensions
     return IndexConfig.model_validate(values)
+

@@ -1,3 +1,4 @@
+import os
 from .helpers import rule_item
 from .helpers import bindings_response
 """Exercise frozen prompt loading through actual fixture HTTP requests."""
@@ -27,7 +28,7 @@ from .helpers import (
 )
 
 JUDGE_SOURCE = (
-    "/Users/sherrylin/Documents/PythonProjects/public/MEME-public/code/eval/judge.py"
+    os.environ.get("MEME_OFFICIAL_JUDGE", "outputs/MEME-public/code/eval/judge.py")
 )
 
 

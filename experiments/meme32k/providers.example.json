@@ -1,0 +1,19 @@
+{
+  "targets": [
+    {
+      "label": "deepseek",
+      "base_url": "https://api.deepseek.com",
+      "api_key": "REPLACE_WITH_YOUR_DEEPSEEK_KEY"
+    },
+    {
+      "label": "aliyun",
+      "base_url": "https://dashscope-intl.aliyuncs.com/compatible-mode/v1",
+      "api_key": "REPLACE_WITH_YOUR_ALIYUN_KEY"
+    },
+    {
+      "label": "openlux",
+      "base_url": "https://api.openlux.ai/v1",
+      "api_key": "REPLACE_WITH_YOUR_OPENLUX_KEY"
+    }
+  ]
+}

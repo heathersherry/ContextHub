@@ -20,10 +20,6 @@ JEV_MODEL = "jev-1.13.0"
 JEV_ENDPOINT = "https://api.typesafe.ai/v1/systemone"
 
 
-class ChoiceProbabilityMismatch(ResponseSchemaError):
-    """A structurally valid Choice selects an option below the reported maximum."""
-
-
 class JevClient:
     def __init__(self, api_key, *, transport=None):
         self._client = httpx.AsyncClient(
@@ -31,7 +27,6 @@ class JevClient:
         )
 
     async def evaluate(self, payload, *, call):
-        attempt_limit = call.policy.max_attempts
         for number in range(1, call.policy.max_attempts + 1):
             usage = Usage(
                 completeness="missing", missing_reason="request_not_completed"
@@ -87,16 +82,9 @@ class JevClient:
                 response.headers.get("x-request-id") if response is not None else None
             )
             request_id = request_id if request_id and request_id.strip() else None
-            choice_mismatch = isinstance(error, ChoiceProbabilityMismatch)
-            if choice_mismatch:
-                # Share the existing request budget, including prior transport
-                # failures. Never extend an explicitly smaller caller budget.
-                attempt_limit = min(attempt_limit, 3)
-            retryable = error is not None and (
-                choice_mismatch or call.policy.is_retryable(error)
-            )
+            retryable = error is not None and call.policy.is_retryable(error)
             cancelled = isinstance(error, asyncio.CancelledError)
-            again = retryable and number < attempt_limit
+            again = retryable and number < call.policy.max_attempts
             stop = (
                 "success"
                 if error is None
@@ -158,7 +146,6 @@ class JevClient:
         def probability(value):
             return type(value) in (int, float) and math.isfinite(value) and 0 <= value <= 1
 
-        choice_mismatches = []
         for ref, answer in answers.items():
             kind = questions[ref]["type"]
             if not isinstance(answer, dict) or answer.get("type") != kind:
@@ -181,19 +168,12 @@ class JevClient:
                     )
                     or not isinstance(answer.get("choice"), str)
                     or answer["choice"] not in options
+                    or distribution[answer["choice"]] != max(distribution.values())
                     or not probability(answer.get("confidence"))
                 ):
                     raise ResponseSchemaError("invalid_choice_answer")
-                if distribution[answer["choice"]] != max(distribution.values()):
-                    choice_mismatches.append(ref)
             else:
                 raise ResponseSchemaError("unsupported_question_type")
-        # Validate every answer first: an unrelated malformed answer must not
-        # become retryable just because an earlier Choice was inconsistent.
-        if choice_mismatches:
-            raise ChoiceProbabilityMismatch(
-                "choice_probability_mismatch: " + ", ".join(choice_mismatches)
-            )
         return answers
 
     @staticmethod

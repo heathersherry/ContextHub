@@ -1,0 +1,11 @@
+{
+  "index": {
+    "dimensions": 1536,
+    "embedding_model": "qwen3.7-text-embedding",
+    "document_prefix": "",
+    "query_prefix": "",
+    "text_config": "pg_catalog.english"
+  },
+  "prices": {},
+  "paper_prices": {}
+}
