@@ -254,7 +254,9 @@ class Retriever:
         await self.indexer.index_topics([topic for item in items for topic in item.topics], context)
         for index, item in enumerate(items):
             query_vectors[index] = await self.indexer.query_vector(item.text, context)
-            hits = await self.candidates(
+            # Forgetting performs its broader retrieval at execution time, after
+            # preceding session operations. Reuse only the query embedding here.
+            hits = {} if item.type == "forget_request" else await self.candidates(
                 item.__dict__, context, query_vector=query_vectors[index],
             )
             stored[index] = set(hits)

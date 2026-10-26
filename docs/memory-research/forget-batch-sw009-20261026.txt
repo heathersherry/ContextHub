@@ -1,0 +1,64 @@
+MEME-32k sw_009 full-episode validation — 2026-10-26
+=================================================
+
+Run ID: memory-check-20261026T071958Z-4f68fb28
+Hong Kong time: started 2026-10-26 15:19:58; completed about 15:31:09.
+Scope: all 18 sessions from an empty isolated database, 6 before answers,
+8 after answers and official scoring. Elapsed including scoring: 669.92 seconds.
+No production code or prompts were changed during or after this experiment.
+
+Selection was declared before execution: sw_009 failed deletion in the original
+100-case run. It had deleted the explicit changelog-location fact but retained a
+separate fact containing CHANGELOG.md. The later official-template answer replay
+also disclosed CHANGELOG.md and failed deletion.
+
+Models: deepseek-flash (DeepSeek, low reasoning); jev-1.13.0 for the combined
+candidate gate, batched content intents and P1 binding (threshold 0.5);
+qwen3.7-text-embedding (Aliyun, 1536 dimensions); gpt-4.1-mini answers and gpt-4o
+official scoring via OpenLux. The source snapshot, source diff, prompt hashes,
+request payloads and raw responses are retained with the run.
+
+Official paired deletion score improved 0/1 -> 1/1. Before: CHANGELOG.md in the
+repo root. After: "I don't have that information."
+Overall score fell 6/8 -> 5/8: ER 1/1, Agg 0/1, Tr 1/1, Del 1/1, Cas 2/2,
+Abs 0/2. Both Abs questions had passed in the historical full run and its
+same-official-template answer replay.
+
+Deletion still selected only the explicit location record. The new surviving
+changelog-maintenance fact omitted the filename, unlike the old surviving fact.
+This is evidence of a different extraction outcome, not broader deletion scope.
+
+The Abs failure was traced to an unbound rule condition. The old Docker-image
+rule explicitly referred to deployment infrastructure and Narvex Cloud. The new
+rule said only infrastructure. The deployment fact was present in Jev's binding
+input, but scored 0.15 as a condition source, below 0.5 (0.10 after the update).
+The rule had no condition_matter_ids. The deployment update therefore left the
+Docker image and dependent Dockerfile fresh, and the final answers repeated their
+old values. Preserve this regression when evaluating the token-saving design.
+
+Observed usage, including all attempts:
+- Full-session extraction calls: 26 -> 18; input 111,211 -> 91,023 tokens.
+- Content-intent calls: 77 -> 13; input 67,754 -> 16,633 tokens (-75.45%).
+- All DeepSeek maintenance calls: 96 -> 76; input 203,284 -> 161,419 (-20.59%);
+  output including reasoning 105,444 -> 82,168 (-22.07%).
+The new run extracted 86 contents; its 13 nonempty content sessions each had one
+intent batch. There was one explicit forgetting request, never inserted as a fact.
+There were 461 complete request attempt pairs, no transport failures, no answer
+errors, no unjudged questions and no skipped direct/repair operations. Two repair
+outputs failed semantic validation and were corrected successfully.
+
+This is a selected single case, not a controlled causal comparison or 100-case
+result. Historical source and answer-template differences remain; the separate
+old-memory official-template replay helps contextualize the answer difference.
+The amount of extracted content and downstream work also changed. Total monetary
+cost is unavailable because most model prices are not configured.
+
+Full report and reproducible analysis:
+../../outputs/forget-batch-sw009-20261026/report.txt
+../../outputs/forget-batch-sw009-20261026/comparison.json
+../../outputs/forget-batch-sw009-20261026/verification.json
+../../outputs/forget-batch-sw009-20261026/deletion-evidence.json
+../../outputs/forget-batch-sw009-20261026/regression-evidence.json
+../../outputs/forget-batch-sw009-20261026/analyze.py
+
+This single-case validation is outside the 100-case experiment-index scope.

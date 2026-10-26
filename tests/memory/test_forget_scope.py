@@ -1,3 +1,4 @@
+from .helpers import extraction_response
 """Forgetting covers independent disclosures, beyond the initial retrieval hits."""
 
 import httpx
@@ -66,12 +67,10 @@ async def test_forget_independent_disclosures_and_answer_context(env, monkeypatc
 
     env.responses.extend(
         [
-            {
-                "items": [
+            extraction_response(rules=[], contents=[
                     dict(item("Forget all records mentioning James."), entities=["James"]),
                     item("The user likes painting."),
-                ]
-            },
+                ]),
             direct_response("forget", NAME),
             scope,
             direct_response("new"),
@@ -173,12 +172,10 @@ async def test_scope_failure_skips_without_partial_deletion_and_continues(env, b
 
     env.responses.extend(
         [
-            {
-                "items": [
+            extraction_response(rules=[], contents=[
                     item("Forget my partner's name."),
                     item("The user likes painting."),
-                ]
-            },
+                ]),
             direct_response("forget", NAME),
             wrong,
             wrong,

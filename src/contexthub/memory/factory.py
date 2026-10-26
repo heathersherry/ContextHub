@@ -32,7 +32,7 @@ def assemble_memory_engine(
     chat_price=None,
     embedding_price=None,
     binder_factory=None,
-    rule_gate=None,
+    candidate_gate=None,
     intent_classifier=None,
 ):
     indexer = Indexer(store, embedding, price=embedding_price)
@@ -45,7 +45,7 @@ def assemble_memory_engine(
     return MemoryEngine(
         MemoryPipeline(
             store,
-            Extractor(chat, retry=retry, price=chat_price, rule_gate=rule_gate),
+            Extractor(chat, retry=retry, price=chat_price, candidate_gate=candidate_gate),
             retriever,
             binder,
             MaintenanceExecutor(
@@ -73,7 +73,7 @@ class MemoryConfig(BaseModel):
     embedding: EmbeddingConfig
     code_version: str = Field(min_length=1)
     initialize: bool = False
-    rule_gate_backend: Literal["llm", "jev"] = "llm"
+    candidate_gate_backend: Literal["llm", "jev"] = "llm"
     p1_backend: Literal["llm", "jev"] = "llm"
     p2_direct_backend: Literal["llm", "jev"] = "llm"
     p1_jev_threshold: float = Field(default=0.5, ge=0, le=1, allow_inf_nan=False)
@@ -97,7 +97,7 @@ class MemoryConfig(BaseModel):
     @property
     def uses_jev(self):
         return "jev" in (
-            self.rule_gate_backend,
+            self.candidate_gate_backend,
             self.p1_backend,
             self.p2_direct_backend,
         )
@@ -133,7 +133,7 @@ async def create_memory_engine(
             stack.push_async_callback(jev.close)
         from .jev_condition_binder import JevConditionBinder
         from .jev_intent_classifier import JevIntentClassifier
-        from .jev_rule_gate import JevRuleGate
+        from .jev_candidate_gate import JevCandidateGate
 
         engine = assemble_memory_engine(
             store,
@@ -156,8 +156,8 @@ async def create_memory_engine(
             intent_classifier=JevIntentClassifier(jev, retry=config.jev_retry)
             if config.p2_direct_backend == "jev"
             else None,
-            rule_gate=JevRuleGate(jev, retry=config.jev_retry)
-            if config.rule_gate_backend == "jev"
+            candidate_gate=JevCandidateGate(jev, retry=config.jev_retry)
+            if config.candidate_gate_backend == "jev"
             else None,
         )
         engine._resources = stack.pop_all()

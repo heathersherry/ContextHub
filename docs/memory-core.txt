@@ -8,9 +8,43 @@ and forgetting decisions, condition binding, invalidation, repair, retrieval, an
 context assembly. The benchmark adapter handles data conversion, official answer
 templates, scoring, and experiment reports. The core does not read task types,
 gold answers, or benchmark graph labels.
-This change does not integrate MemDerive or alter maintenance prompts. See
-memory-research/memory-core-pl001-20261026.txt for the pl_001 live-model experiment
-and pre-commit regression results.
+The shared-core refactor did not integrate MemDerive or alter maintenance prompts.
+See memory-research/memory-core-pl001-20261026.txt for its pl_001 live-model
+experiment and pre-commit regression results. That experiment predates the joint
+extraction change described in memory-research/joint-extraction-20261026.txt.
+
+Extraction confirms candidate rules, extracts independent content and identifies
+actual forgetting requests in one full-session LLM request. Case-insensitive
+standalone if and remove/forget/delete hints form separate candidate groups.
+Rule hints exclude recognized code regions: Markdown fences and inline code,
+HTML pre/code elements, bare Python conditional lines and braced if lines.
+The filter preserves original source offsets and the full conversation. Prose
+explaining code remains eligible for semantic screening; syntax alone does not
+decide whether it establishes a user rule. Forgetting hints are unchanged.
+Optional Jev screening uses one request with separate three-way questions:
+rule/not_rule/unclear and forget/not_forget/unclear. Each policy and its detailed
+criteria appear once in shared state. Positive and unclear candidates survive.
+Numeric source offsets stay in audit logs; multi-if sentences use <target> tags.
+The extractor receives compact rule candidates and only message numbers for
+forgetting hints. Forgetting hints never restrict full-conversation extraction.
+
+The model must return rules, contents and forget_requests. Content and forgetting
+requests carry unique positive order values across both arrays; the program
+validates all three arrays atomically, strips transport metadata and processes
+rules first, followed by content and forgetting requests interleaved by order.
+Only content has temporal_scope. Internal forgetting items have type
+forget_request; they are recorded in the session output, never inserted as facts.
+
+With p2_direct_backend=jev, all contents receive new/correction/hold classifications
+in one batch with shared instructions and criteria. Rules and forget_requests
+are excluded, and an empty content batch makes no classification call. Actual
+maintenance remains sequential, so later operations see earlier accepted writes.
+Forgetting bypasses content classification, retrieves old disclosures at execution
+time, confirms deletion scope, and marks selected matters and all versions deleted.
+It reuses the prepared query embedding without a redundant generic candidate search.
+The shared-activity deletion policy (including the James cooking example) remains
+in p2_forget_scope.txt. See memory-research/forget-batch-flow-20261026.txt for
+implementation details and validation limits.
 
 Application entry points
 ------------------------
@@ -68,7 +102,7 @@ desired. Existing schemas are checked for matching embedding models, dimensions,
 prefixes, and full-text search configuration.
 
 The default flow uses an LLM. To use the existing Jev experiment paths, set
-rule_gate_backend, p1_backend, and p2_direct_backend to jev as needed, and explicitly
+candidate_gate_backend, p1_backend, and p2_direct_backend to jev as needed, and explicitly
 provide jev_retry and TYPESAFE_API_KEY. p1_jev_threshold is configurable.
 Applications and MEME share component implementations but can use different model
 parameters; sharing the core does not imply identical scores across configurations.

@@ -1,0 +1,92 @@
+Explicit forgetting and batched intent classification — 2026-10-26
+================================================================
+
+Implemented flow
+---------------
+1. Program screening finds standalone if occurrences and sentences containing
+   remove/forget/delete, case-insensitively. A sentence can belong to both groups.
+   Original source offsets remain in audit records, not model questions.
+2. JevCandidateGate sends one request with independent rule/not_rule/unclear and
+   forget/not_forget/unclear questions. Each group's instructions and detailed
+   criteria appear once in shared state; questions reference that policy. Only
+   clearly negative candidates are omitted. An empty candidate set makes no call.
+3. One full-session extraction returns rules, contents and forget_requests.
+   Retained forgetting hints are message numbers, avoiding repeated source text.
+   They are not a whitelist: requests such as "stop retaining my address" remain
+   eligible. Actual requests must preserve subject and scope; quoted, negated,
+   hypothetical or document-editing commands are not immediate memory deletion.
+   Facts covered by a forgetting request must not be emitted as new assertions;
+   an explicit later request to remember information again retains its later order.
+4. All contents receive new/correction/hold classifications in one Jev request.
+   Shared instructions and criteria are sent once. Rules and forget_requests are
+   excluded, and an empty contents array makes no classification call.
+5. Maintenance remains sequential. Explicit forgetting bypasses content
+   classification and proceeds directly to old-memory retrieval, deletion-scope
+   confirmation and existing matter/version deletion. The request is retained in
+   session output/audit records but is never inserted as a fact.
+
+Ordering and validation
+-----------------------
+Content and forgetting outputs have unique positive integer order values across
+both arrays. Rules still run first. The parser interleaves the remaining groups
+by order and strips transport fields before maintenance. Internal request items
+have type=forget_request with no temporal_scope in the saved extraction payload.
+All three groups validate before any maintenance starts. Four unusable extraction
+responses stop the session. Malformed Jev batches stop before any fact writes.
+Existing deletion-scope validation and bounded failure handling remain in place.
+
+Forgetting reuses the prepared query embedding but skips generic ingestion
+candidate retrieval. Its broader retrieval runs at execution time and therefore
+sees earlier writes/deletions in the same session. Existing literal entity matching,
+semantic supplementation, historical-version handling and the shared-activity
+policy in p2_forget_scope.txt remain unchanged. The James relationship request can
+still select cooking memories while retaining an independently identified namesake
+and unrelated standalone preferences.
+
+Configuration and audit changes
+-------------------------------
+The active configuration key is candidate_gate_backend; the CLI flag is
+--candidate-gate-backend. They replace rule_gate_backend/--rule-gate-backend without
+aliases. Set candidate_gate_backend=jev and p2_direct_backend=jev to use both batches;
+the equivalent CLI flags are --candidate-gate-backend jev --p2-direct-backend jev.
+Provider/model selection remains configurable; the existing LLM-only backend is
+still available. The example application configuration uses the renamed key.
+
+Initial screening logs extraction.candidates and extraction.candidate_gate.*;
+the recorded model stage is extraction_candidate_gate. Joint extraction remains
+extraction_joint. p2_intent remains the recorded classification stage but now has
+C1, C2, ... questions and an answers mapping rather than one answer. The frozen
+experiment manifest records the new prompts and batch semantics. Historical
+experiment outputs were not rewritten.
+
+Validation
+----------
+389 tests passed, with no skips, on the dedicated local PostgreSQL test database:
+  tests/memory
+  tests/test_memory_api.py
+  tests/test_memory_lifespan.py
+  tests/test_memory_sdk.py
+  tests/test_change_detection.py
+  tests/test_dependency_discovery.py
+  tests/test_memory_promote.py
+
+Coverage includes overlapping if/forget candidates, shared criteria appearing
+once, hint-free forgetting extraction, atomic three-group validation, malformed
+batch answers, James/shared-activity deletion, order-sensitive delete/remember
+sequences, deletion-scope failure without partial mutation, and continued content
+processing after a skipped deletion. Existing SDK/API/runtime regressions pass.
+Ruff E9/F checks and git diff --check pass.
+
+Tests use fixture model responses and real local storage. They verify the request
+contracts, control flow and storage effects, not live-model semantic accuracy.
+No live Jev/DeepSeek calls or MEME benchmark rerun were performed. Actual token
+usage, net cost, latency and extraction/classification accuracy still require a
+matched live-model comparison; reduced prompt duplication alone is not a measured
+cost result. This is an implementation validation, not a new 100-case experiment.
+
+Subsequent live validation
+-------------------------
+A later full-episode sw_009 run used live models and official scoring. Deletion
+improved from 0/1 to 1/1, but overall score fell from 6/8 to 5/8 because two Abs
+questions regressed. See forget-batch-sw009-20261026.txt and its linked raw report.
+The earlier fixture validation above does not establish live-model quality.

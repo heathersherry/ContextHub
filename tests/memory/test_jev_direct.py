@@ -1,3 +1,4 @@
+from .helpers import extraction_response
 from .helpers import rule_item
 from .helpers import bindings_response
 """Candidate-free intent plus LLM plans on real PostgreSQL and fixture HTTP."""
@@ -39,16 +40,17 @@ def choice_client(sequence, requests):
     def handler(request):
         data = json.loads(request.content)
         requests.append(data)
-        assert set(data['state']) == {'incoming'}
-        assert set(data['state']['incoming']) == {'text'}
-        assert set(data['questions']) == {'intent'}
-        question = data['questions']['intent']
-        assert set(question['criteria']) == {'new', 'forget', 'correction', 'hold'}
-        selected = sequence.pop(0)
-        return httpx.Response(200, json=result({'intent': {
-            'type': 'choice', 'choice': selected, 'confidence': 1.0,
-            'probabilities': {key: float(key == selected) for key in question['criteria']},
-        }}))
+        assert set(data['state']) == {'intent_policy'}
+        answers = {}
+        for ref, question in data['questions'].items():
+            assert set(question['instructions']['incoming']) == {'text'}
+            assert set(question['criteria']) == {'new', 'correction', 'hold'}
+            selected = sequence.pop(0)
+            answers[ref] = {
+                'type': 'choice', 'choice': selected, 'confidence': 1.0,
+                'probabilities': {key: float(key == selected) for key in question['criteria']},
+            }
+        return httpx.Response(200, json=result(answers))
     return JevClient('fixture', transport=httpx.MockTransport(handler))
 
 
@@ -60,6 +62,14 @@ async def jev(env):
     yield sequence, requests
     assert not sequence
     await client.close()
+
+
+async def process_item(env, focus, candidates, context, **kwargs):
+    if focus["type"] == "content":
+        [intent] = await env.executor.intent_classifier.classify([focus], context)
+    else:
+        intent = None
+    return await env.executor.process(focus, candidates, context, intent=intent, **kwargs)
 
 
 def plan_response(*operations):
@@ -79,7 +89,7 @@ def plan_response(*operations):
 
 
 @pytest.mark.asyncio
-@pytest.mark.parametrize('intent', ['new', 'forget', 'correction', 'hold'])
+@pytest.mark.parametrize('intent', ['new', 'correction', 'hold'])
 async def test_single_question_uses_frozen_prompt_without_candidates(tmp_path, monkeypatch, intent):
     question = json.loads((PromptSet().root / 'p2_intent_jev.json').read_text())
     question['instructions'] += '\nFrozen marker'
@@ -88,11 +98,12 @@ async def test_single_question_uses_frozen_prompt_without_candidates(tmp_path, m
     client = choice_client(sequence, requests)
     try:
         answer = await JevIntentClassifier(client, retry=decision_retry_policy('jev')).classify(
-            {'text': 'fixture', 'created_in_session': 2, 'type': 'content'}, context)
+            [{'text': 'fixture', 'created_in_session': 2, 'type': 'content'}], context)
     finally:
         await client.close()
-    assert answer == intent and len(requests) == 1
-    assert requests[0]['questions']['intent'] == question
+    assert answer == [intent] and len(requests) == 1
+    assert requests[0]['state']['intent_policy'] == {k: question[k] for k in ('instructions', 'criteria')}
+    assert json.dumps(requests[0]).count('Frozen marker') == 1
     assert context.sink.records[-1].raw_output
 
 
@@ -100,11 +111,11 @@ async def test_single_question_uses_frozen_prompt_without_candidates(tmp_path, m
 async def test_rule_add_and_content_hold_need_no_llm(env, jev):
     sequence, requests = jev
     c = await session(env, 1)
-    keys, changes = await env.executor.process(pending(c, 'If health changes, then exercise changes', type='rule'), {}, c)
+    keys, changes = await process_item(env, pending(c, 'If health changes, then exercise changes', type='rule'), {}, c)
     assert len(keys) == 1 and (await row(env, keys[0]))['type'] == 'rule'
     assert changes[0]['operation'] == 'new' and not requests
     sequence.append('hold')
-    assert await env.executor.process(pending(c, 'unclear'), {}, c) == ([], [])
+    assert await process_item(env, pending(c, 'unclear'), {}, c) == ([], [])
     assert len(requests) == 1 and not env.prompts
 
 
@@ -123,7 +134,7 @@ async def test_new_updates_one_duplicate_retires_another_and_leaves_other_matter
         return plan_response(('update', 'Home Shanghai', 'Home Beijing'),
                              ('invalidate', 'Currently living in Shanghai', None))(payload)
     env.responses.append(response)
-    keys, changes = await env.executor.process(pending(c2, 'I moved to Beijing'),
+    keys, changes = await process_item(env, pending(c2, 'I moved to Beijing'),
         {key: await row(env, key) for key in [old, redundant, food, rule]}, c2)
     assert len(keys) == 1
     saved = await row(env, keys[0])
@@ -144,12 +155,12 @@ async def test_new_history_then_duplicate_does_not_replace_current(env, jev):
     sequence.extend(['new', 'new'])
     env.responses.extend([plan_response(('history', 'Home Beijing', 'Home Shanghai last year')),
                           plan_response(('duplicate', 'Home Beijing', None))])
-    keys, changes = await env.executor.process(pending(c2, 'Last year I lived in Shanghai'),
+    keys, changes = await process_item(env, pending(c2, 'Last year I lived in Shanghai'),
         {current: await row(env, current)}, c2)
     historical = await row(env, keys[0])
     assert historical['temporal_scope'] == 'historical' and not changes
     assert (await row(env, current))['status'] == 'fresh'
-    keys, changes = await env.executor.process(pending(c2, 'I still live in Beijing'),
+    keys, changes = await process_item(env, pending(c2, 'I still live in Beijing'),
         {current: await row(env, current)}, c2)
     assert keys == [current] and changes == []
     assert len(await env.store.versions(env.trace, split_ref(current)[0])) == 2
@@ -169,7 +180,7 @@ async def test_correction_multiple_generated_texts_and_rule_type(env, jev):
     sequence.append('correction')
     env.responses.append(plan_response(('correct', 'Home Shanghai', 'Home Suzhou'),
                                        ('update', 'If it rains, then take the bus', 'If it rains, then take the subway')))
-    keys, _ = await env.executor.process(pending(c2, 'The address was wrong; change the saved transport rule too'),
+    keys, _ = await process_item(env, pending(c2, 'The address was wrong; change the saved transport rule too'),
         {key: await row(env, key) for key in [fact, rule]}, c2)
     saved = [await row(env, key) for key in keys]
     assert [(r['text'], r['type']) for r in saved] == [('Home Suzhou', 'fact'), ('If it rains, then take the subway', 'rule')]
@@ -185,12 +196,12 @@ async def test_historical_correction_does_not_change_current(env, jev):
     current = await add(env, c1, 'Home Beijing')
     env.responses.append(plan_response(('history', 'Home Beijing', 'Home Shanghai last year')))
     sequence.append('new')
-    keys, _ = await env.executor.process(pending(c1, 'Home Shanghai last year'), {current: await row(env, current)}, c1)
+    keys, _ = await process_item(env, pending(c1, 'Home Shanghai last year'), {current: await row(env, current)}, c1)
     history = keys[0]
     c2 = await session(env, 2)
     sequence.append('correction')
     env.responses.append(plan_response(('correct', 'Home Shanghai last year', 'Home Suzhou last year')))
-    keys, _ = await env.executor.process(pending(c2, 'Last year was Suzhou, not Shanghai'),
+    keys, _ = await process_item(env, pending(c2, 'Last year was Suzhou, not Shanghai'),
         {key: await row(env, key) for key in [history, current]}, c2)
     assert (await row(env, keys[0]))['temporal_scope'] == 'historical'
     assert (await row(env, history))['invalidated']
@@ -207,7 +218,7 @@ async def test_correction_can_retract_fact_and_revoke_rule_without_new_values(en
     sequence.append('correction')
     env.responses.append(plan_response(('retract', 'Package 2kg', None),
                                        ('revoke', 'If heavy choose courier A', None)))
-    keys, changes = await env.executor.process(pending(c, 'Weight was wrong; stop using the old courier rule'),
+    keys, changes = await process_item(env, pending(c, 'Weight was wrong; stop using the old courier rule'),
         {key: await row(env, key) for key in [fact, rule]}, c)
     assert not keys and len(changes) == 2
     assert (await row(env, fact))['invalidated'] and (await row(env, rule))['invalidated']
@@ -224,14 +235,14 @@ async def test_forget_scans_beyond_retrieval_including_history_rules_and_embedde
     records = [await add(env, c1, text, type=kind, scope=scope) for text, kind, scope in texts]
     preference = await add(env, c1, 'The user likes pasta')
     c2 = await session(env, 2)
-    sequence.append('forget')
+    # Explicit forgetting bypasses content classification.
     def response(payload):
         data = input_of(payload)
         assert data['primary_ref'] is None and len(data['candidates']) == 6
         return targets_response([texts[i][0] for i in (0, 2, 3)])(payload)
     env.responses.append(response)
-    focus = dict(pending(c2, 'Forget my relationship with James'), entities=['James'])
-    assert (await env.executor.process(focus, {}, c2))[0] == []
+    focus = dict(pending(c2, 'Forget my relationship with James', type='forget_request'), entities=['James'])
+    assert (await process_item(env, focus, {}, c2))[0] == []
     for key in [records[i] for i in (0, 2, 3)]:
         assert (await row(env, key))['status'] == 'deleted'
     for key in [records[i] for i in (1, 4)]:
@@ -246,9 +257,10 @@ async def test_no_action_never_saves_request(env, jev, intent):
     c = await session(env, 1)
     old = await add(env, c, 'Existing fact')
     candidates = {old: await row(env, old)}
-    sequence.append(intent)
+    if intent != 'forget':
+        sequence.append(intent)
     env.responses.append({'target_refs': []} if intent == 'forget' else {'operations': []})
-    assert await env.executor.process(pending(c, 'Unresolved request'), candidates, c) == ([], [])
+    assert await process_item(env, pending(c, 'Unresolved request', type='forget_request' if intent == 'forget' else 'content'), candidates, c) == ([], [])
     assert len(await env.store.current_rows(env.trace)) == 1
 
 
@@ -266,7 +278,7 @@ async def test_whole_plan_validated_before_any_write(env, jev, bad):
     sequence.append('new')
     valid = dict(action='new', target_ref=None, text='Likes tea', entities=[])
     env.responses.extend([{'operations': [valid, bad]}] * 2)
-    assert await env.executor.process(pending(c, 'New input'), {old: original}, c) == ([], [])
+    assert await process_item(env, pending(c, 'New input'), {old: original}, c) == ([], [])
     assert await row(env, old) == original
     assert len(await env.store.current_rows(env.trace)) == 1
     assert len(env.prompts) == 2
@@ -291,7 +303,7 @@ async def test_second_write_failure_rolls_back_first(env, jev, monkeypatch):
         return await insert(*args, **kwargs)
     monkeypatch.setattr(env.store, '_insert', fail_second)
     with pytest.raises(RuntimeError, match='storage failure'):
-        await env.executor.process(pending(c, 'Change the stored home and work'), originals, c)
+        await process_item(env, pending(c, 'Change the stored home and work'), originals, c)
     for key, original in originals.items():
         assert await row(env, key) == original
         assert len(await env.store.versions(env.trace, split_ref(key)[0])) == 1
@@ -314,7 +326,7 @@ async def test_pipeline_shares_multiple_outputs_then_binds_and_propagates(env, j
         assert {'Home Beijing', 'Work Suzhou'} <= {r['text'] for r in data['candidates']}
         return plan_response(('duplicate', 'Home Beijing', None))(payload)
     env.responses.extend([
-        {'items': [rule_item(rule)]}, {'items': [item(request), item('I still live in Beijing')]},
+        extraction_response(rules=[dict(rule_item(rule), candidate_ref="R1")], contents=[item(request), item('I still live in Beijing')]),
         plan_response(('update', 'Home Shanghai', 'Home Beijing'), ('update', 'Work Shanghai', 'Work Suzhou')),
         confirm,
         bindings_response(['Home Beijing'], ['Exercise swimming']),
@@ -343,9 +355,10 @@ async def test_branch_prompt_is_loaded_from_active_frozen_directory(env, jev, tm
     env.store.prompts = PromptSet(active)
     c = await session(env, 1)
     old = await add(env, c, 'Existing fact')
-    jev[0].append(intent)
+    if intent != 'forget':
+        jev[0].append(intent)
     env.responses.append({'target_refs': []} if intent == 'forget' else {'operations': []})
-    await env.executor.process(pending(c, 'fixture'), {old: await row(env, old)}, c)
+    await process_item(env, pending(c, 'fixture', type='forget_request' if intent == 'forget' else 'content'), {old: await row(env, old)}, c)
     assert marker in env.prompts[0]['messages'][0]['content']
     assert len(env.prompts) == 1
 
@@ -360,7 +373,7 @@ async def test_correction_rejects_new_and_wrong_type_before_writing(env, jev):
         plan_response(('new', None, 'Please change address')),
         plan_response(('revoke', 'Home Shanghai', None)),
     ])
-    assert await env.executor.process(pending(c, 'Change the address'), {fact: original}, c) == ([], [])
+    assert await process_item(env, pending(c, 'Change the address'), {fact: original}, c) == ([], [])
     assert await row(env, fact) == original
 
 
@@ -415,7 +428,7 @@ def test_choice_accepts_rounded_probability_total_without_normalizing():
     ('current', 'The user has a company offsite coming up.'),
 ])
 async def test_empty_new_saves_upstream_content_and_time_without_luna(env, jev, scope, text):
-    env.responses.append({'items': [dict(item(text, temporal_scope=scope), entities=['Oxford'] if scope == 'historical' else [])]})
+    env.responses.append(extraction_response(rules=[], contents=[dict(item(text, temporal_scope=scope), entities=['Oxford'] if scope == 'historical' else [])]))
     jev[0].append('new')
     await env.full_pipeline.ingest(env.trace, 1, [{'role': 'user', 'content': text}])
     assert len(env.prompts) == 1  # extraction only, no p2_new rewrite

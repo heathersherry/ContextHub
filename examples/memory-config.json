@@ -87,7 +87,7 @@
   },
   "code_version": "memory-core-v1",
   "initialize": true,
-  "rule_gate_backend": "llm",
+  "candidate_gate_backend": "llm",
   "p1_backend": "llm",
   "p2_direct_backend": "llm"
 }

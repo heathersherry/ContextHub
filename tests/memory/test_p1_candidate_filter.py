@@ -1,3 +1,5 @@
+from .helpers import extraction_response
+from .helpers import rule_item
 """P1's loose cutoff is applied to both sides of the complete merged pool."""
 
 import json
@@ -26,7 +28,7 @@ def test_rule_queries_preserve_complete_conditions_and_consequences(text, condit
 @pytest.mark.parametrize("text", ["Health affects exercise", "If health changes", "If , then cycle", "If rain, ", "If rain, then"])
 def test_rule_without_query_boundary_is_rejected_during_extraction(text):
     with pytest.raises(ValueError):
-        parse_items(json.dumps({"items": [{"text": text, "entities": [], "topics": []}]}), kind="rule")
+        parse_items(json.dumps(dict(items=[{"text": text, "entities": [], "topics": []}])), kind="rule")
 
 
 def vector(x, y=0):
@@ -137,13 +139,12 @@ async def test_all_filtered_skips_binding_and_preserves_existing_endpoint(env):
 @pytest.mark.asyncio
 async def test_invalid_rule_boundary_retries_existing_extraction_stage(env):
     env.responses.extend([
-        {"items": [{"text": "Health affects exercise", "entities": [], "topics": []}]},
-        {"items": [{"text": "If health changes, then exercise changes", "entities": [], "topics": []}]},
-        {"items": []},
+        extraction_response(rules=[dict(rule_item("Health affects exercise"), candidate_ref="R1")], contents=[]),
+        extraction_response(rules=[dict(rule_item("If health changes, then exercise changes"), candidate_ref="R1")], contents=[]),
     ])
     items = await env.pipeline.ingest(env.trace, 1, [{"role": "user", "content": "If health changes, exercise changes"}])
     assert items[0].text == "If health changes, then exercise changes"
-    assert len(env.prompts) == 3 and not env.responses
+    assert len(env.prompts) == 2 and not env.responses
 
 
 @pytest.mark.asyncio

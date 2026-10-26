@@ -1,3 +1,4 @@
+from .test_jev_direct import process_item
 """Direct-input context pruning with real PG and fixed model/vector fixtures."""
 
 import math
@@ -199,7 +200,7 @@ async def test_same_session_accepted_results_are_filtered_too(env, jev):  # noqa
     candidates = await batch.resolve(1, env.store, c)
     assert old in candidates
     jev[0].append("new")
-    accepted, _ = await env.executor.process(
+    accepted, _ = await process_item(env,
         pending(c, batch.items[1].text), candidates, c, query_vector=batch.query_vectors[1],
     )
     assert len(accepted) == 1 and not env.prompts

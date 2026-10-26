@@ -1,3 +1,4 @@
+from .helpers import extraction_response
 """Unified extraction items are classified before any long-term memory write."""
 
 import json
@@ -17,7 +18,7 @@ async def test_update_and_forget_use_same_p2_interface_and_only_session_sources(
     partner = await add(env, c1, "Partner James")
     update = "Lactose intolerance resolved; the user now has high blood pressure."
     forget = "Forget that the user's partner is James."
-    env.responses.append({"items": [item(update), item(forget)]})
+    env.responses.append(extraction_response(rules=[], contents=[item(update), item(forget)]))
 
     def judge(payload):
         data = input_of(payload)
@@ -66,7 +67,7 @@ async def test_unmatched_forget_is_held_in_session_log_without_fact_or_document_
 ):
     text = "Forget my partner information."
     env.responses.extend(
-        [{"items": [item(text)]}, {"action": "hold", "target_ref": None}]
+        [extraction_response(rules=[], contents=[item(text)]), {"action": "hold", "target_ref": None}]
     )
     assert (
         await env.full_pipeline.ingest(
@@ -93,7 +94,7 @@ async def test_duplicate_merges_sessions_without_new_memory_or_document_embeddin
     original = await add(env, c, "Owner Wang")
     count = len([s for s in env.embedded if s.startswith("document: ")])
     env.responses.extend(
-        [{"items": [item("Owner Wang")]}, direct_response("duplicate", "Owner Wang")]
+        [extraction_response(rules=[], contents=[item("Owner Wang")]), direct_response("duplicate", "Owner Wang")]
     )
     refs = await env.full_pipeline.ingest(
         env.trace, 2, [{"role": "user", "content": "Owner Wang"}]
@@ -110,7 +111,7 @@ async def test_failed_document_embedding_does_not_stale_old_or_save_new_memory(e
     old = await add(env, c, "Owner Wang")
     env.vectors["document: Owner Li"] = [0, 0, 0]
     env.responses.extend(
-        [{"items": [item("Owner Li")]}, direct_response("update", "Owner Wang")]
+        [extraction_response(rules=[], contents=[item("Owner Li")]), direct_response("update", "Owner Wang")]
     )
     with pytest.raises((ResponseSchemaError, ValueError)):
         await env.full_pipeline.ingest(

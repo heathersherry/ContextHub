@@ -109,29 +109,30 @@ class MaintenanceExecutor:
             conn=conn,
         )
 
-    async def process(self, focus, candidates, context, *, query_vector=None):
+    async def process(self, focus, candidates, context, *, query_vector=None, intent=None):
         """Return every accepted reference and transition for one extracted item."""
-        if self.intent_classifier is None:
-            key, changes = await self.direct(focus, candidates, context)
-            return [key] if key else [], changes
-        if focus["type"] == "rule":
-            key, changes = await self.apply_direct(
-                focus, DirectDecision(action="new", target_ref=None), context
-            )
-            return [key], changes
-
-        intent = await self.intent_classifier.classify(focus, context)
         try:
-            if intent == "hold":
-                await self.store.record(context, "p2.held", {"incoming": focus})
-                return [], []
-            if intent == "forget":
+            if focus["type"] == "forget_request":
+                intent = "forget"
                 targets = await self.forget_scope(focus, None, context, query_vector=query_vector)
                 if not targets:
                     await self.store.record(context, "p2.forget_no_targets", {"incoming": focus})
                     return [], []
                 decision = DirectDecision(action="forget", target_ref=targets[0])
                 return [], await self.apply_forget(focus, decision, targets, context)
+            if self.intent_classifier is None:
+                key, changes = await self.direct(focus, candidates, context)
+                return [key] if key else [], changes
+            if focus["type"] == "rule":
+                key, changes = await self.apply_direct(
+                    focus, DirectDecision(action="new", target_ref=None), context
+                )
+                return [key], changes
+            if intent not in ("new", "correction", "hold"):
+                raise ValueError("content requires a session-batch intent")
+            if intent == "hold":
+                await self.store.record(context, "p2.held", {"incoming": focus})
+                return [], []
             plan = await self.plan_direct(
                 intent, focus, candidates, context, query_vector=query_vector,
             )

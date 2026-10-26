@@ -1,3 +1,4 @@
+from .helpers import extraction_response
 from .helpers import link
 """Invalid repair output is local; execution failures still propagate."""
 
@@ -38,11 +39,9 @@ async def test_failed_repair_allows_other_repairs_and_later_session(env):
         seen.append(data)
         if "messages" in data:
             current_text = data["messages"][0]["content"]
-            return {
-                "items": []
+            return extraction_response(rules=[], contents=[]
                 if current_text == "Nothing to add."
-                else [item(confirmed_text)]
-            }
+                else [item(confirmed_text)])
         if "materials" in data:
             repair_targets.append(repair_target(payload))
             if repair_target(payload) == failed_text:

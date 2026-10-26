@@ -1,3 +1,4 @@
+from .test_jev_direct import process_item
 """Real PG topic retrieval, with controlled embedding/model responses."""
 
 import json
@@ -134,7 +135,7 @@ async def test_any_topic_pair_rescues_new_candidate_and_model_still_decides(env,
         )]}
 
     env.responses.append(update)
-    keys, changes = await env.executor.process(focus, candidates, c2, query_vector="[1,0,0]")
+    keys, changes = await process_item(env, focus, candidates, c2, query_vector="[1,0,0]")
     assert len(env.prompts) == 1 and changes[0]["operation"] == "update"
     assert (await row(env, old))["status"] == "stale"
     assert (await row(env, keys[0]))["topics"] == sorted([home, address])

@@ -1,0 +1,50 @@
+MEME-32k sw_009 full rerun: minimal-edit rule extraction
+=====================================================
+
+Hong Kong date: 2026-10-26. All 18 sessions, before/after answering and official
+scoring completed from an empty isolated database. Model execution plus scoring:
+812.17 seconds (13 minutes 32 seconds). No production edits during the run.
+
+Official score: historical 6/8; previous joint-extraction run 5/8; current 7/8.
+Abs recovered from 0/2 to 2/2. Del stayed 1/1. Cas 2/2, ER 1/1, Tr 1/1.
+Agg stayed 0/1: design-system name Quenthar Design v1 was omitted.
+
+The source-preserving rule includes deployment on Narvex Cloud. Jev's condition
+score was 0.94 in session 15; the rule bound to the platform memory. The platform
+update caused Docker image and Dockerfile to become stale, and both after answers
+correctly expressed lack of information. Deletion removed the changelog-location
+fact; the surviving maintenance fact omitted its filename.
+
+Important additional regression: sessions 1 and 2 produced twelve unwanted
+rules from PHP/code explanation and Python/Flask control flow. Total extracted
+rules rose from 6 to 18; condition-binding calls rose from 15 to 87. Session 1
+had exactly the same chat and accepted candidates as the previous run; session 2
+had the same chat but two candidate-membership differences. This narrow benchmark
+score does not penalize those extra rules and must not be treated as an overall
+quality or cost improvement.
+
+All Jev input tokens: 85,160 -> 252,699; DeepSeek input: 161,419 -> 162,161;
+DeepSeek output including reasoning: 82,168 -> 94,389. No total monetary estimate
+is available because most model prices are not configured. Python source snapshots
+match; only core/extractor_rules.txt changed relative to the preceding full run.
+
+Verification: 685 matching started/finished attempts, zero failed attempts,
+zero validation retries, zero skipped operations, zero answer errors and zero
+unjudged questions. There were 73 contents in 12 nonempty sessions, each with one
+intent batch. One explicit forget request was not inserted as a fact.
+
+Initial launch failed before any model call because schema initialization was
+missing. Its log and snapshot were retained; the successful launch initialized
+the new database and verified zero sessions and attempts before starting.
+
+Next investigation: retain minimal rewriting but restore explicit exclusion of
+code control flow/generic examples from user rules. Not implemented in this run.
+This is one previously inspected episode, not a held-out evaluation or a full
+100-case experiment; it is excluded from the 100-case index.
+
+Full report, evidence and complete request/response archives:
+../../outputs/minimal-edit-sw009-20261026/report.txt
+../../outputs/minimal-edit-sw009-20261026/comparison.json
+../../outputs/minimal-edit-sw009-20261026/early-candidate-comparison.json
+../../outputs/minimal-edit-sw009-20261026/source-comparison.json
+../../outputs/minimal-edit-sw009-20261026/runs/

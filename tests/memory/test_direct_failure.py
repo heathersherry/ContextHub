@@ -1,3 +1,4 @@
+from .helpers import extraction_response
 from .helpers import rule_item
 from .helpers import link
 """A rejected direct item does not stop other items or later pipeline stages."""
@@ -26,14 +27,12 @@ async def test_cross_type_failure_continues_binding_conditions_and_later_session
         data = input_of(payload)
         seen.append(data)
         if "messages" in data:
-            if "rule_output" not in data:
-                return {"items": [rule_item(rule_text)]}
             texts = (
                 [failed_text, "The user has recovered."]
                 if data["messages"][0]["content"].startswith("If")
                 else ["The user enjoys painting."]
             )
-            return {"items": [item(t) for t in texts]}
+            return extraction_response(rules=[dict(rule_item(rule_text), candidate_ref="R1")] if data["accepted_candidates"] else [], contents=[item(t) for t in texts])
         if "incoming" in data:
             text = data["incoming"]["text"]
             if text == rule_text:

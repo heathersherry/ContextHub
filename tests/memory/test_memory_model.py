@@ -17,7 +17,7 @@ async def test_low_wire_and_fixed_evaluation_models(tmp_path, model, provider):
     args = argument_parser().parse_args([
         '--config', 'fixture', '--mode', 'check', '--episode', 'pl_001',
         '--output', str(tmp_path), '--memory-model', model, '--memory-provider', provider,
-        '--rule-gate-backend', 'jev', '--p1-backend', 'jev',
+        '--candidate-gate-backend', 'jev', '--p1-backend', 'jev',
         '--p2-direct-backend', 'jev',
     ])
     manifest = freeze(tmp_path / 'frozen', {'index': {'embedding_model': 'text-embedding-3-small', 'dimensions': 1536}}, args)
@@ -26,13 +26,13 @@ async def test_low_wire_and_fixed_evaluation_models(tmp_path, model, provider):
     assert manifest['memory_retry']['timeout_seconds'] == 60
     assert manifest['memory_retry']['timeout_increment_seconds'] == 30
     assert manifest['p2_processing_retry'] == manifest['memory_retry']
-    for role in ('retry', 'p1_retry', 'p2_direct_retry', 'rule_gate_retry'):
+    for role in ('retry', 'p1_retry', 'p2_direct_retry', 'candidate_gate_retry'):
         assert manifest[role]['max_attempts'] == 3
         assert manifest[role]['timeout_increment_seconds'] == 0
     for role in ('extractor', 'p2'):
         assert models[role]['model'] == model
         assert models[role]['reasoning_effort'] == 'low'
-    for role in ('rule_gate', 'p1', 'p2_direct'):
+    for role in ('candidate_gate', 'p1', 'p2_direct'):
         assert models[role]['backend'] == 'jev'
     assert models['answer'] == {'model': 'gpt-4.1-mini', 'temperature': 0, 'max_tokens': 500}
     assert models['judge']['model'] == 'gpt-4o'

@@ -1,3 +1,4 @@
+from .helpers import extraction_response
 from .helpers import rule_item
 from .helpers import bindings_response
 from .helpers import link
@@ -50,8 +51,7 @@ async def test_initial_retrieval_then_split_filter_includes_same_session_facts(e
 
     env.responses.extend(
         [
-            dict(items=[rule_item(rule)]),
-            dict(items=[item(fact), item(request), item(fact)]),
+            extraction_response(rules=[dict(rule_item(rule), candidate_ref="R1")], contents=[item(fact), item(request), item(fact)]),
             *([decide] * 4),
             bindings_response([], [fact]),
         ]
@@ -94,8 +94,7 @@ async def test_incoming_rule_retrieves_both_types_and_reuses_fact_hits_for_bindi
 
     env.responses.extend(
         [
-            dict(items=[rule_item(rule)]),
-            dict(items=[]),
+            extraction_response(rules=[dict(rule_item(rule), candidate_ref="R1")], contents=[]),
             decide,
             bindings_response([], ["Exercise swimming"]),
             dict(triggers=[]),
@@ -116,7 +115,7 @@ async def test_new_fact_uses_old_rule_from_shared_retrieval(env):
     before = len(env.embedded)
     env.responses.extend(
         [
-            dict(items=[item("Exercise swimming")]),
+            extraction_response(rules=[], contents=[item("Exercise swimming")]),
             dict(action="new", target_ref=None),
             bindings_response([], ["Exercise swimming"]),
             dict(triggers=[]),
@@ -154,7 +153,7 @@ async def test_cached_candidates_refresh_deleted_and_superseded_versions(env):
 
     env.responses.extend(
         [
-            dict(items=[item(t) for t in contents]),
+            extraction_response(rules=[], contents=[item(t) for t in contents]),
             direct_response("update", "Owner Wang"),
             direct_response("forget", "Partner James"),
             targets_response(["Partner James"]),
@@ -196,7 +195,7 @@ async def test_condition_check_covers_bound_fact_missing_from_retrieval(
 
     env.responses.extend(
         [
-            dict(items=[item("Health high blood pressure")]),
+            extraction_response(rules=[], contents=[item("Health high blood pressure")]),
             decide,
             trigger_response(["Exercise swimming"], ["C1"]),
             dict(can_repair=False, text=None, entities=[], basis_refs=[], retrieval_query=None),

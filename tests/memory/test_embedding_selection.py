@@ -14,7 +14,7 @@ def test_aliyun_embedding_overrides_frozen_index_only(tmp_path, dimensions):
     args = argument_parser().parse_args([
         '--config', str(BASE), '--mode', 'check', '--output', str(tmp_path),
         '--memory-model', 'gpt-6-luna', '--p1-backend', 'jev',
-        '--p2-direct-backend', 'jev', '--rule-gate-backend', 'jev',
+        '--p2-direct-backend', 'jev', '--candidate-gate-backend', 'jev',
         '--embedding-provider', 'aliyun', '--embedding-model', 'qwen3.7-text-embedding',
         '--embedding-dimensions', str(dimensions),
     ])

@@ -189,3 +189,17 @@ def bindings_response(sources, targets):
             result[role] = selected
         return result
     return response
+
+
+def extraction_response(*, rules, contents, forget_requests=()):
+    """Build the three-array model response with explicit cross-array ordering."""
+    return {
+        "rules": rules,
+        "contents": [dict(item, order=item.get("order", i)) for i, item in enumerate(contents, 1)],
+        "forget_requests": [dict(item, order=item.get("order", i))
+                            for i, item in enumerate(forget_requests, len(contents) + 1)],
+    }
+
+
+def forget_item(text, *, entities=(), topics=(), order=1):
+    return dict(text=text, entities=list(entities), topics=list(topics), order=order)

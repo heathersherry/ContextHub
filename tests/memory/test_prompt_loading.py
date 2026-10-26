@@ -1,3 +1,4 @@
+from .helpers import extraction_response
 from .helpers import rule_item
 from .helpers import bindings_response
 """Exercise frozen prompt loading through actual fixture HTTP requests."""
@@ -45,7 +46,7 @@ def frozen_prompts(tmp_path):
             data="fixture",
             p1_backend="llm",
             p2_direct_backend="llm",
-            rule_gate_backend="llm",
+            candidate_gate_backend="llm",
             p1_jev_threshold=0.5,
             topic_similarity_threshold=0.8,
         ),
@@ -68,7 +69,7 @@ async def test_frozen_prompts_reach_extraction_maintenance_retry_and_answer(
     frozen = frozen_prompts(tmp_path)
     names = [
         "extractor",
-        "extractor_facts",
+        "extractor_rules",
         "p2_direct",
         "p2_forget_scope",
         "p1_conditions",
@@ -98,8 +99,7 @@ async def test_frozen_prompts_reach_extraction_maintenance_retry_and_answer(
     rule_text = "If owner changes, then recipient follows owner"
     env.responses.extend(
         [
-            {"items": [rule_item(rule_text)]},
-            {"items": [item("Owner Wang")]},
+            extraction_response(rules=[dict(rule_item(rule_text), candidate_ref="R1")], contents=[item("Owner Wang")]),
             "{bad",
             direct_response("update", "Owner Wang"),
             bindings_response(["Owner Li"], ["Recipient Wang"]),
@@ -134,31 +134,32 @@ async def test_frozen_prompts_reach_extraction_maintenance_retry_and_answer(
     assert await answerer.answer("Who is the recipient?", c2, timings={}) == "Li"
     await direct(env, pending(c2, "Forget the owner"), c2)
     sent = [r["messages"][0]["content"] for r in env.prompts]
-    assert len(sent) == 10 and not env.responses
+    assert len(sent) == 9 and not env.responses
     for index, name in [
         (0, "extractor"),
-        (1, "extractor_facts"),
-        (2, "p2_direct"),
-        (4, "p1_conditions"),
-        (5, "p2_conditions"),
-        (6, "p2_repair"),
-        (8, "p2_direct"),
-        (9, "p2_forget_scope"),
+        (1, "p2_direct"),
+        (3, "p1_conditions"),
+        (4, "p2_conditions"),
+        (5, "p2_repair"),
+        (7, "p2_direct"),
+        (8, "p2_forget_scope"),
     ]:
         instructions = expected[name]
+        if name == "extractor":
+            instructions = instructions.replace("{rule_instructions}", expected["extractor_rules"])
         if name == "p2_repair":
             instructions = instructions.replace("{target_statement}", '"Recipient Wang"')
         assert sent[index].startswith(instructions + "\n")
         if name in ("p2_repair", "p2_forget_scope", "p1_conditions", "p2_conditions"):
             assert '"timestamp"' not in sent[index].splitlines()[-1]
             assert '"created_in_session"' not in sent[index].splitlines()[-1]
-        elif index >= 2:
+        elif index >= 1:
             assert '"timestamp"' in sent[index].splitlines()[-1]
     assert (await row(env, rule))["timestamp"] == "2026-10-12"
     assert (await row(env, new))["timestamp"] == "2026-10-13"
-    assert sent[3].startswith(expected["output_retry"])
-    assert expected["p2_direct"] in sent[3]
-    assert sent[7].endswith("\nFrozen prompt loading test.\n")
+    assert sent[2].startswith(expected["output_retry"])
+    assert expected["p2_direct"] in sent[2]
+    assert sent[6].endswith("\nFrozen prompt loading test.\n")
 
 
 def test_official_judge_checks_active_frozen_files(tmp_path, monkeypatch):

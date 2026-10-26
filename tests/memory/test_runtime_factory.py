@@ -67,7 +67,7 @@ async def test_real_lifespan_sdk_and_cleanup(env, tmp_path):
             200,
             json={
                 "model": "fixture-chat",
-                "choices": [{"message": {"content": '{"items":[]}'}}],
+                "choices": [{"message": {"content": '{"rules":[],"contents":[],"forget_requests":[]}'}}],
                 "usage": {
                     "prompt_tokens": 1,
                     "completion_tokens": 1,

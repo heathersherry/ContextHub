@@ -1,14 +1,16 @@
+from .helpers import extraction_response, forget_item
 import asyncio
 import json
 
 import httpx
 import pytest
 
-from contexthub.memory.extractor import ExtractionFailed, RULE_HINT, parse_items
+from contexthub.memory.extractor import ExtractionFailed, parse_items
+from contexthub.memory.jev_candidate_gate import RULE_HINT
 
 
 def payload(text="Atlas owner is Li"):
-    return json.dumps({"items": [{"text": text, "topics": [], "entities": [], "temporal_scope": "current"}]})
+    return json.dumps(extraction_response(rules=[], contents=[{"text": text, "topics": [], "entities": [], "temporal_scope": "current"}]))
 
 
 @pytest.mark.parametrize(
@@ -36,12 +38,9 @@ def test_prompt_and_conditional_hints():
 
 @pytest.mark.asyncio
 async def test_extraction_keeps_requests_without_saving_or_embedding_any_item(env):
-    raw = {
-        "items": [
+    raw = extraction_response(rules=[], contents=[
             {"text": "Owner is Li", "topics": [], "entities": [], "temporal_scope": "current"},
-            {"text": "Forget nickname", "topics": [], "entities": [], "temporal_scope": "current"},
-        ]
-    }
+        ], forget_requests=[forget_item("Forget nickname", order=2)])
     env.responses.append(raw)
     items = await env.pipeline.ingest(
         env.trace,
@@ -110,7 +109,7 @@ async def test_four_unusable_responses_stop_trajectory_but_not_other_episode(env
         await env.pipeline.ingest(env.trace, 2, [], timeout_seconds=10)
     assert len(env.prompts) == 4 and env.embedded == []
     other = env.trace.model_copy(update={"namespace": env.trace.namespace + "-other"})
-    env.responses.append('{"items":[]}')
+    env.responses.append('{"rules":[],"contents":[],"forget_requests":[]}')
     assert await env.pipeline.ingest(other, 1, [], timeout_seconds=10) == []
     async with env.store.pool.acquire() as conn:
         assert (
@@ -125,7 +124,7 @@ async def test_four_unusable_responses_stop_trajectory_but_not_other_episode(env
 
 @pytest.mark.asyncio
 async def test_empty_batch_no_retry_and_only_current_session_in_prompt(env):
-    env.responses.extend([payload("OLD SECRET"), '{"items":[]}'])
+    env.responses.extend([payload("OLD SECRET"), '{"rules":[],"contents":[],"forget_requests":[]}'])
     await env.pipeline.ingest(
         env.trace, 1, [{"role": "user", "content": "OLD SECRET"}], timeout_seconds=10
     )

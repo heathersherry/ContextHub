@@ -24,7 +24,7 @@ from contexthub.memory.storage import MemoryStore
 from contexthub.memory.model_io import OUTPUT_ATTEMPTS
 from contexthub.memory.schemas import RetrievalConfig
 from contexthub.memory.index_cli import add_embedding_index_arguments, resolve_index_config
-from contexthub.memory.jev_rule_gate import JevRuleGate
+from contexthub.memory.jev_candidate_gate import JevCandidateGate
 from contexthub.memory.retriever import P1_MIN_SIMILARITY
 from contexthub.memory.direct_candidates import DIRECT_CANDIDATE_POLICY
 from contexthub.memory.jev_condition_binder import JevConditionBinder
@@ -164,10 +164,10 @@ def freeze(output, config, args):
                 "temperature": "omitted",
                 "max_tokens": "omitted",
             },
-            "rule_gate": {
-                "backend": args.rule_gate_backend,
-                "model": JEV_MODEL if args.rule_gate_backend == "jev" else args.memory_model,
-                "question_type": "choice" if args.rule_gate_backend == "jev" else "text",
+            "candidate_gate": {
+                "backend": args.candidate_gate_backend,
+                "model": JEV_MODEL if args.candidate_gate_backend == "jev" else args.memory_model,
+                "question_type": "choice" if args.candidate_gate_backend == "jev" else "text",
             },
             "p1": {
                 "backend": "jev",
@@ -193,7 +193,7 @@ def freeze(output, config, args):
             },
             "p2_direct": {
                 "backend": "jev", "model": JEV_MODEL, "endpoint": JEV_ENDPOINT,
-                "question_type": "choice", "decision": "candidate-free new/forget/correction/hold; then LLM processing",
+                "question_type": "choice", "decision": "one session batch of candidate-free new/correction/hold questions with shared policy; then sequential processing; explicit forgetting bypasses classification",
                 "processing_model": args.memory_model,
                 "processing_reasoning_effort": memory_effort,
             } if args.p2_direct_backend == "jev" else {
@@ -212,7 +212,7 @@ def freeze(output, config, args):
         "p1_retry": decision_retry_policy(args.p1_backend).model_dump(),
         "p2_direct_retry": decision_retry_policy(args.p2_direct_backend).model_dump(),
         "p2_processing_retry": memory_retry_policy().model_dump(),
-        "rule_gate_retry": decision_retry_policy(args.rule_gate_backend).model_dump(),
+        "candidate_gate_retry": decision_retry_policy(args.candidate_gate_backend).model_dump(),
         "model_output_attempts": {
             "p1": 1 if args.p1_backend == "jev" else OUTPUT_ATTEMPTS,
             "p2": OUTPUT_ATTEMPTS,
@@ -223,19 +223,18 @@ def freeze(output, config, args):
         "repair_output_failure": "After two invalid outputs, log p2.repair_skipped, keep the target stale and continue. Other execution failures still stop the trajectory.",
         "direct_output_failure": "Jev malformed typed decisions stop the trajectory without fallback. LLM direct and forget-scope outputs: after two invalid outputs, log p2.direct_skipped and apply no operation for that item. Other execution failures stop the trajectory.",
         "extraction": {
-            "stages": ["rules", "facts"],
-            "prompts": ["extractor_rule_jev.json", "extractor_rules_normalize.txt", "extractor_facts.txt"]
-            if args.rule_gate_backend == "jev" else ["extractor.txt", "extractor_facts.txt"],
-            "rule_gate_backend": args.rule_gate_backend,
-            "rule_candidates": "One source-anchored standalone if occurrence per candidate; Jev sees role and containing sentence only, with sentence-relative offsets and one shared state.rule_policy; pysbd 0.3.4 English spans over equal-length line-break substitutions; questions batched per session"
-            if args.rule_gate_backend == "jev" else "Session-level if check, then full-session LLM rule extraction",
-            "rule_gate_failure": "Malformed Jev answers or request failures stop extraction; no LLM fallback. Only not_rule is omitted; rule and unclear proceed to full-session LLM confirmation."
-            if args.rule_gate_backend == "jev" else None,
-            "normalization": "Full current session plus forwarded sentence candidates with original-message offsets; LLM confirms user adoption and resolves references before normalizing, may reject all candidates; output refs restricted to forwarded candidates and stripped before downstream use"
-            if args.rule_gate_backend == "jev" else "LLM extracts and normalizes rules together",
-            "output_attempts_per_stage": 4,
-            "skip_rules_without_if": True,
-            "merge": "both stages supply text/entities/topics after parsing; normalization candidate refs stay in call logs; program assigns rule/content types and session provenance; only P2-approved content becomes memory",
+            "stages": ["joint"],
+            "prompts": ["extractor_rule_jev.json", "extractor_forget_jev.json", "extractor.txt", "extractor_rules.txt"]
+            if args.candidate_gate_backend == "jev" else ["extractor.txt", "extractor_rules.txt"],
+            "candidate_gate_backend": args.candidate_gate_backend,
+            "rule_candidates": "One source-anchored standalone if per candidate outside recognized code: Markdown fences/inline code, HTML pre/code, and syntactically recognizable bare Python conditional lines or braced if lines. Natural-language code explanations still require semantic confirmation. Original offsets remain in logs only. Model text marks the selected if with <target> tags only for multi-if sentences. Jev sees role and sentence with shared state.rule_policy; without Jev, all program candidates go to extraction.",
+            "candidate_gate_failure": "Malformed Jev answers or request failures stop extraction; no fallback. Only not_rule/not_forget are omitted; positive and unclear candidates proceed to full-session joint extraction."
+            if args.candidate_gate_backend == "jev" else None,
+            "output": "One full-session request returns rules, contents and forget_requests. Rules cite supplied candidates, confirm adoption and resolve references. Contents preserve independent assertions, maintenance intent and time; conditional outcomes are not facts. All three arrays and shared order values must validate before downstream processing.",
+            "forget_candidates": "Case-insensitive standalone remove/forget/delete sentences. One Jev batch with rule candidates; independent policies shared in state. Retained message numbers hint at forgetting requests but never restrict full-chat extraction.",
+            "output_attempts": 4,
+            "empty_candidates": "The joint call still extracts content and forgetting requests; rules must be empty; rule-confirmation instructions are omitted.",
+            "downstream": "Program strips candidate_ref/order, processes rules first, then interleaves contents and forget_requests by order. Jev classifies all contents in one batch as new/correction/hold. Forget requests bypass classification and go to old-memory retrieval and scope selection; they never become facts.",
         },
         "maintenance_prompts": {
             "p1_conditions": "p1_jev.txt"
@@ -365,7 +364,7 @@ def totals(records, paper_prices):
 
 async def run(args):
     jev_key = None
-    if "jev" in (args.p1_backend, args.p2_direct_backend, args.rule_gate_backend):
+    if "jev" in (args.p1_backend, args.p2_direct_backend, args.candidate_gate_backend):
         from dotenv import dotenv_values
 
         jev_key = os.environ.get("TYPESAFE_API_KEY") or dotenv_values(
@@ -494,7 +493,7 @@ async def run(args):
         )
         clients.append(emb)
         jev = None
-        if "jev" in (args.p1_backend, args.p2_direct_backend, args.rule_gate_backend):
+        if "jev" in (args.p1_backend, args.p2_direct_backend, args.candidate_gate_backend):
             jev = JevClient(jev_key)
             clients.append(jev)
         pipeline = assemble_memory_engine(
@@ -510,9 +509,9 @@ async def run(args):
             intent_classifier=JevIntentClassifier(
                 jev, retry=decision_retry_policy("jev"), price=price(JEV_MODEL),
             ) if args.p2_direct_backend == "jev" else None,
-            rule_gate=JevRuleGate(
+            candidate_gate=JevCandidateGate(
                 jev, retry=decision_retry_policy("jev"), price=price(JEV_MODEL),
-            ) if args.rule_gate_backend == "jev" else None,
+            ) if args.candidate_gate_backend == "jev" else None,
         )
         retriever = pipeline.pipeline.retriever
         answerer = MemoryAnswerer(
@@ -681,7 +680,7 @@ def argument_parser():
     parser.add_argument("--topic-similarity-threshold", type=probability_threshold, default=0.8)
     parser.add_argument("--p2-direct-backend", choices=("llm", "jev"), default="llm",
                         help="jev: classify content intent with Jev, then process with the memory LLM; rules are added directly")
-    parser.add_argument("--rule-gate-backend", choices=("llm", "jev"), default="llm")
+    parser.add_argument("--candidate-gate-backend", choices=("llm", "jev"), default="llm")
     return parser
 
 

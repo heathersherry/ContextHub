@@ -1,3 +1,4 @@
+from .helpers import extraction_response
 from .helpers import rule_item
 from .helpers import bindings_response
 from .helpers import link
@@ -404,7 +405,7 @@ async def test_repair_rejects_invalid_or_incomplete_premises(env, bad):
 async def test_full_pipeline_keeps_only_fact_rule_and_processes_forget(env):
     env.responses.extend(
         [
-            dict(items=[item("Partner James")]),
+            extraction_response(rules=[], contents=[item("Partner James")]),
             dict(action="new", target_ref=None),
         ]
     )
@@ -413,7 +414,7 @@ async def test_full_pipeline_keeps_only_fact_rule_and_processes_forget(env):
     )
     env.responses.extend(
         [
-            dict(items=[item("Forget my partner")]),
+            extraction_response(rules=[], contents=[item("Forget my partner")]),
             direct_response("forget", "Partner James"),
             targets_response(["Partner James"]),
         ]
@@ -449,14 +450,8 @@ async def test_schema_rejects_change_and_fact_endpoint_arrays(env):
 async def test_full_pipeline_rule_extraction_binding_update_and_repair(env):
     def initial(payload):
         data = input_of(payload)
-        if "messages" in data and "rule_output" not in data:
-            return dict(
-                items=[rule_item("If owner changes, then recipient follows owner")],
-            )
         if "messages" in data:
-            return dict(
-                items=[item("Owner Wang"), item("Recipient Wang")],
-            )
+            return extraction_response(rules=[dict(rule_item("If owner changes, then recipient follows owner"), candidate_ref="R1")], contents=[item("Owner Wang"), item("Recipient Wang")])
         if "incoming" in data:
             return dict(action="new", target_ref=None)
         if "rule" in data:
@@ -466,7 +461,7 @@ async def test_full_pipeline_rule_extraction_binding_update_and_repair(env):
             return {"triggers": []}
         raise AssertionError(data)
 
-    env.responses.extend([initial] * 7)
+    env.responses.extend([initial] * 6)
     await env.full_pipeline.ingest(
         env.trace,
         1,
@@ -490,7 +485,7 @@ async def test_full_pipeline_rule_extraction_binding_update_and_repair(env):
 
     env.responses.extend(
         [
-            dict(items=[item("Owner Li")]),
+            extraction_response(rules=[], contents=[item("Owner Li")]),
             direct_response("update", "Owner Wang"),
             trigger_response(["Recipient Wang"], ["C1"]),
             repair_response(
@@ -613,8 +608,7 @@ async def test_new_rule_is_bound_before_same_session_change_is_checked(env, acti
 
     env.responses.extend(
         [
-            dict(items=[rule_item(rule_text)]),
-            dict(items=[item(incoming)]),
+            extraction_response(rules=[dict(rule_item(rule_text), candidate_ref="R1")], contents=[item(incoming)]),
             dict(action="new", target_ref=None),
             direct_response(action, "Health lactose intolerance"),
             bind,
@@ -641,8 +635,7 @@ async def test_new_rule_is_bound_before_same_session_change_is_checked(env, acti
         )
     model_inputs = [r["stage"] for r in stages if r["stage"].endswith(".input")]
     assert model_inputs == [
-        "extraction.rules.input",
-        "extraction.facts.input",
+        "extraction.joint.input",
         "p2_direct.input",
         "p2_direct.input",
         "p1.input",

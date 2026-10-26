@@ -1,0 +1,68 @@
+Program-level code exclusion for rule candidates
+================================================
+
+Recorded (Hong Kong): 2026-10-26T16:48:34.405415+08:00
+
+Change
+------
+Rule candidate generation now skips if occurrences in recognized code regions:
+- Markdown fenced blocks (backticks or tildes), including an unclosed fence.
+- Markdown inline code with matching backtick delimiters.
+- HTML pre/code elements, including syntax-highlighted nested spans.
+- Syntactically recognizable bare Python conditional lines, conditional
+  expressions and comprehensions, and braced if lines such as the Go examples.
+
+The program does not execute code. Python syntax checks use ast.parse only.
+Bare block headers require a syntactic indented body. This is a deliberately
+limited syntax filter, not a universal classifier for every language or malformed
+snippet. Natural-language code explanations remain candidates for semantic review.
+
+Original message text and source offsets are unchanged; surviving candidates are
+renumbered. Only candidate selection changes. The extractor still reads the full
+chat, so independent facts can be extracted from mixed prose/code messages.
+When all rule candidates are code and there are no forget hints, Jev is skipped;
+full-chat content extraction still runs. Forgetting candidate behavior is unchanged.
+
+Offline audit
+-------------
+Compared the saved pre-change implementation against the new implementation on
+all MEME-32k sessions, without model calls, database writes or benchmark scoring.
+Raw if candidates: 7,586 -> 6,849; 737 excluded. No candidate was removed from
+any session tagged evidence. Every retained candidate preserved its source text
+and original offsets (only the sequential ref can change).
+
+sw_009:
+- Session 1: 6 -> 4; the two bare Go if occurrences are excluded. The remaining
+  four occurrences describe callback behavior in natural language.
+- Session 2: 15 -> 7; eight Python control-flow/conditional-expression occurrences
+  are excluded. The remaining prose questions and explanations still need Jev
+  screening and full-chat confirmation.
+- Session 15: all six intended dependency candidates remain unchanged.
+- Additional code occurrences were excluded in filler sessions 14 and 18.
+
+The twelve unwanted rules from the previous complete run were not all literal
+code snippets: eight came from code conditions and four from natural-language
+code explanations. This patch addresses the literal-code source of candidates;
+it does not claim to eliminate the four prose-based false positives. No new
+end-to-end score or token-cost reduction has been measured.
+
+Verification
+------------
+75 focused tests passed against the dedicated fixture database, with mocked model
+responses: code/prose boundaries, original offsets, multi-if markers, inline code
+inside a prose rule, unclosed/long fences, HTML code, Python/Go syntax, Jev request
+suppression, joint extraction and frozen prompt loading. No tests skipped.
+Ruff E9/F and git diff --check passed. Removed one obsolete assertion about a
+prompt heading from the earlier minimal-edit prompt change; the behavioral test
+still verifies source refs, full conversation and retry behavior.
+
+Artifacts
+---------
+check.py: reproducible offline candidate comparison.
+results.json: aggregate counts and complete sw_009 removed/retained candidates.
+check.log: traversal and summary.
+
+This offline candidate audit is not a complete 100-case model experiment and is
+excluded from the MEME-32k 100-case experiment index.
+
+Full audit: ../../outputs/code-candidate-filter-20261026/report.txt

@@ -1,3 +1,4 @@
+from .helpers import extraction_response
 """Real SDK -> HTTP -> shared engine -> PostgreSQL, with deterministic models."""
 
 import json
@@ -57,9 +58,9 @@ async def test_sdk_ingest_update_context_and_meme_share_selection(env):
     engine = engine_for(env)
     env.responses.extend(
         [
-            {"items": [item("Owner Wang")]},
+            extraction_response(rules=[], contents=[item("Owner Wang")]),
             {"action": "new", "target_ref": None},
-            {"items": [item("Owner Li")]},
+            extraction_response(rules=[], contents=[item("Owner Li")]),
             direct_response("update", "Owner Wang"),
         ]
     )
@@ -133,14 +134,13 @@ async def test_http_rules_update_invalidate_and_repair(env):
     rule = "If owner changes, then recipient follows owner"
     env.responses.extend(
         [
-            {"items": [rule_item(rule)]},
-            {"items": [item("Owner Wang"), item("Recipient Wang")]},
+            extraction_response(rules=[dict(rule_item(rule), candidate_ref="R1")], contents=[item("Owner Wang"), item("Recipient Wang")]),
             {"action": "new", "target_ref": None},
             {"action": "new", "target_ref": None},
             {"action": "new", "target_ref": None},
             bindings_response(["Owner Wang"], ["Recipient Wang"]),
             trigger_response([], []),
-            {"items": [item("Owner Li")]},
+            extraction_response(rules=[], contents=[item("Owner Li")]),
             direct_response("update", "Owner Wang"),
             trigger_response(["Recipient Wang"], ["C1"]),
             repair_response("Recipient Li", [rule, "Owner Li"]),
@@ -177,7 +177,7 @@ async def test_http_rules_update_invalidate_and_repair(env):
 async def test_scope_isolation_and_concurrent_namespace_locks(env):
     engine = engine_for(env)
     env.responses.extend(
-        [{"items": [item("Private fact")]}, {"action": "new", "target_ref": None}]
+        [extraction_response(rules=[], contents=[item("Private fact")]), {"action": "new", "target_ref": None}]
     )
     await engine.ingest(env.trace, 1, [{"role": "user", "content": "Private fact"}])
     for field in ("tenant_id", "owner_id", "namespace"):

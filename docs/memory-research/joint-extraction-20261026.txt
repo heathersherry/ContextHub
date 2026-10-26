@@ -1,0 +1,67 @@
+Joint extraction and compact if anchors
+======================================
+
+Date: 2026-10-26 (Hong Kong time)
+Scope: implementation and deterministic regression validation; no live-model run.
+
+Changes
+-------
+Jev sentence screening no longer receives if_start or if_end. A single-if sentence
+is unchanged; multiple-if sentences mark only the selected occurrence with
+<target>...</target>. Original sentence_start/if_start/if_end stay in the candidate
+audit record, and original session messages remain unchanged.
+
+The following LLM request now confirms/normalizes rules and extracts independent
+content together. Model input contains messages and accepted_candidates; candidate
+fields are ref, message_no, role and text. Model output is exactly rules and
+contents. Rules require a supplied candidate_ref; content retains text, entities,
+topics and temporal_scope. The complete output must validate before any item is
+passed to maintenance. Candidate refs are stripped and program-owned types are
+assigned, preserving rules-first processing and content order.
+
+With no Jev backend, program-detected candidates use the same joint path. With no
+candidates, one content extraction request still runs, requires an empty rules
+array, and omits the rule-confirmation instruction fragment. Prompt composition
+uses extractor.txt and, when needed, extractor_rules.txt; it does not make a second
+request. The old extractor_facts.txt and extractor_rules_normalize.txt and split
+execution path were removed. Frozen historical runs were not rewritten.
+
+Retry behavior
+--------------
+The gate runs once before extraction. Format retries repeat the complete joint
+request without rerunning Jev; transport retries retain the existing policy.
+There are at most four extraction output attempts. Failure in either output array
+rejects the whole response; no successful half is passed to maintenance. Complete
+request/response attempts remain in the execution ledger under extraction_joint.
+Step logs use extraction.joint.input / extraction.joint.validation_error and the
+final extraction.parsed batch. CLI snapshots describe the new prompts and contract.
+
+Validation
+----------
+372 tests passed, zero failures or skips, against a newly created, isolated local
+PostgreSQL database: contexthub_joint_extract_20261026_01. Embeddings use the existing
+fixture-embedding-v1 configuration with three dimensions. All model and embedding
+responses are deterministic fixtures; no paid or remote model calls were made.
+
+Suite: tests/memory; tests/test_memory_api.py; tests/test_memory_lifespan.py;
+tests/test_memory_sdk.py; tests/test_change_detection.py;
+tests/test_dependency_discovery.py; tests/test_memory_promote.py.
+
+Coverage includes one full-session call, multi-if anchor selection across Jev and
+the joint request, unchanged source/audit offsets, gate rejection and failure,
+unknown refs, partial/obsolete output rejection, atomic output validation, frozen
+prompt composition, no-candidate content extraction, subsequent sessions, and the
+SDK -> HTTP -> shared core -> database update/invalidation/repair path.
+Ruff E9/F and git diff --check passed.
+
+Limits
+------
+These tests validate contracts and orchestration, not real-model semantic quality.
+No new MEME score, measured token saving, latency improvement or cost reduction is
+claimed. Successful extraction with retained candidates removes one full-session
+LLM request and intermediate rule-output input. Actual usage depends on response
+length, reasoning tokens, caching and retries. No-candidate sessions still make
+one LLM call and use the new joint output contract. Live comparisons must check
+conditional-outcome leakage, missed independent facts, adoption, reference
+resolution, and retry overhead before drawing effectiveness conclusions.
+This was not a 100-case experiment; the MEME-32k experiment index is unchanged.

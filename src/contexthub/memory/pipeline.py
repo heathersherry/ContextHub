@@ -11,16 +11,23 @@ class MemoryPipeline:
         self.binder, self.executor, self.code_version = binder, executor, code_version
 
     async def process_direct(self, batch, context):
-        """P2 accepts or applies rule/content items before P1 sees stored memories."""
+        """Classify contents together, then apply all items in order before P1."""
         accepted_refs, transitions, protected = [], [], set()
         session = await self.store.get_session(context.trace, context.session_seq)
-        # Rules first, then content in extraction order. Requests never become facts.
+        content_indices = [i for i, item in enumerate(batch.items) if item.type == "content"]
+        intents = {}
+        if self.executor.intent_classifier is not None:
+            choices = await self.executor.intent_classifier.classify(
+                [batch.items[i].__dict__ for i in content_indices], context,
+            )
+            intents = dict(zip(content_indices, choices, strict=True))
+        # Rules first, then content and forgetting requests in conversational order.
         for index, item in enumerate(batch.items):
             focus = dict(item.__dict__, created_in_session=context.session_seq)
             focus["timestamp"] = session["timestamp"]
             candidates = await batch.resolve(index, self.store, context)
             keys, changes = await self.executor.process(
-                focus, candidates, context, query_vector=batch.query_vectors[index],
+                focus, candidates, context, query_vector=batch.query_vectors[index], intent=intents.get(index),
             )
             if keys:
                 batch.accepted[index] = keys

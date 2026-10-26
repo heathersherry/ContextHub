@@ -1,3 +1,4 @@
+from .helpers import extraction_response
 from .helpers import rule_item
 """Current-session new/update facts are checked without extracted source message IDs."""
 
@@ -9,7 +10,7 @@ import pytest
 from contexthub.llm.jev_client import JevClient
 from contexthub.memory.jev_condition_binder import JevConditionBinder
 from contexthub.memory.jev_intent_classifier import JevIntentClassifier
-from contexthub.memory.jev_rule_gate import JevRuleGate
+from contexthub.memory.jev_candidate_gate import JevCandidateGate
 from integrations.memebench.memory_research.cli import decision_retry_policy
 from .helpers import add, condition_facts, input_of, item, repair_response, session
 from .test_jev import result
@@ -45,7 +46,7 @@ async def test_same_session_writes_checked_without_source_numbers(env, action, a
         answers = {}
         for ref, question in payload["questions"].items():
             if question["type"] == "choice":
-                label = "new" if ref == "intent" else "rule"
+                label = "new" if ref.startswith("C") else "rule"
                 answers[ref] = dict(type="choice", choice=label, confidence=1.0,
                                     probabilities={k: float(k == label) for k in question["criteria"]})
             else:
@@ -59,13 +60,12 @@ async def test_same_session_writes_checked_without_source_numbers(env, action, a
     client = JevClient("fixture", transport=httpx.MockTransport(jev_response))
     retry = decision_retry_policy("jev")
     env.extractor = env.full_pipeline.extractor
-    env.extractor.rule_gate = JevRuleGate(client, retry=retry)
+    env.extractor.candidate_gate = JevCandidateGate(client, retry=retry)
     env.executor.intent_classifier = JevIntentClassifier(client, retry=retry)
     env.full_pipeline.binder = JevConditionBinder(env.store, client, env.retriever, retry=retry)
     contents = sorted([(exercise_no, exercise), (health_no, health)])
     env.responses.extend([
-        {"items": [dict(rule_item(rule), candidate_ref="R1")]},
-        {"items": [item(text) for _, text in contents]},
+        extraction_response(rules=[dict(rule_item(rule), candidate_ref="R1")], contents=[item(text) for _, text in contents]),
     ])
     checks = []
 
@@ -121,7 +121,7 @@ async def test_same_session_writes_checked_without_source_numbers(env, action, a
 
 @pytest.mark.asyncio
 async def test_extraction_accepts_items_without_source_numbers(env):
-    env.responses.append({"items": [item("Exercise swimming")]})
+    env.responses.append(extraction_response(rules=[], contents=[item("Exercise swimming")]))
     extracted = await env.pipeline.ingest(env.trace, 1, [
         {"role": "user", "content": "Exercise swimming"},
     ])
