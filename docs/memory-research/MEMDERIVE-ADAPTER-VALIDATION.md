@@ -1,5 +1,7 @@
 # MemDerive adapter validation
 
+Historical validation of the first per-event adapter. The subsequent session-based adapter and real-model Q1 run are recorded in [the 2026-10-27 experiment](MEMDERIVE-TRIPOPS-W1-Q1-20261027.md).
+
 Validated on 2026-10-26 (Hong Kong, UTC+8) in the isolated
 `codex/memderive-adapter` worktree, starting at
 `7df67566737c2da107396470f0d6ad379146da0b`.

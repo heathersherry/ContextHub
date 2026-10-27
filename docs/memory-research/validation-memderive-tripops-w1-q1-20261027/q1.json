@@ -1,0 +1,211 @@
+{
+  "schema": "deriveval/v1",
+  "name": "contexthub-memderive-q1",
+  "benchmark": {
+    "name": "derivemem",
+    "release": "formal-set-v1.16",
+    "data": "/private/tmp/contexthub-memderive-reference/benchmark/data",
+    "subset": {
+      "worlds": [
+        "tripops_w1"
+      ]
+    }
+  },
+  "backends": [
+    {
+      "id": "contexthub-session",
+      "implementation": "integrations.memderive.backend:ContextHubBackend",
+      "version": "2.0.0",
+      "granularity": "per_session",
+      "api_observability": "external_context_hub_ledger",
+      "parameters": {
+        "memory_config": {
+          "index": {
+            "dimensions": 1536,
+            "embedding_model": "qwen3.7-text-embedding",
+            "document_prefix": "",
+            "query_prefix": "",
+            "text_config": "pg_catalog.english"
+          },
+          "retrieval": {
+            "text_k": 20,
+            "vector_k": 20,
+            "rrf_c": 60.0,
+            "hybrid_limit": 20,
+            "entity_k": 10,
+            "topic_similarity_threshold": 0.8
+          },
+          "chat_model": "deepseek-flash",
+          "chat_base_url": "https://api.deepseek.com",
+          "request_parameters": {
+            "schema_version": 1,
+            "version": "chat-request-v1",
+            "output_limit_field": "max_tokens",
+            "reasoning_effort": "low",
+            "response_format": null,
+            "seed": {
+              "schema_version": 1,
+              "support": "unknown",
+              "enabled": false,
+              "value": null,
+              "evidence_reference": null
+            },
+            "temperature_supported": false,
+            "disabled_unknown_seed_authorization": "No seed parameter is sent in the memory research run"
+          },
+          "retry": {
+            "schema_version": 1,
+            "max_attempts": 5,
+            "timeout_seconds": 60.0,
+            "timeout_increment_seconds": 30.0,
+            "backoff_seconds": [
+              10.0,
+              30.0,
+              30.0,
+              30.0
+            ],
+            "retry_status_codes": [
+              429,
+              500,
+              502,
+              503,
+              504
+            ],
+            "retry_transport_errors": [
+              "ConnectError",
+              "ReadError",
+              "WriteError",
+              "RemoteProtocolError",
+              "ConnectTimeout",
+              "ReadTimeout",
+              "WriteTimeout",
+              "PoolTimeout"
+            ]
+          },
+          "embedding": {
+            "schema_version": 1,
+            "model": "qwen3.7-text-embedding",
+            "base_url": "https://dashscope-intl.aliyuncs.com/compatible-mode/v1",
+            "dimensions": 1536,
+            "send_dimensions": true,
+            "max_batch": 1,
+            "response_archive_directory": "/tmp/contexthub-memory-responses",
+            "retry": {
+              "schema_version": 1,
+              "max_attempts": 3,
+              "timeout_seconds": 60.0,
+              "timeout_increment_seconds": 0.0,
+              "backoff_seconds": [
+                10.0,
+                30.0
+              ],
+              "retry_status_codes": [
+                429,
+                500,
+                502,
+                503,
+                504
+              ],
+              "retry_transport_errors": [
+                "ConnectError",
+                "ReadError",
+                "WriteError",
+                "RemoteProtocolError",
+                "ConnectTimeout",
+                "ReadTimeout",
+                "WriteTimeout",
+                "PoolTimeout"
+              ]
+            }
+          },
+          "code_version": "cdeba41503d0ef299caf883800817db010dce73b:44851d0eaacd78b334802ec6f9b94615664778683a4198cae191c5929ec0eec6",
+          "initialize": true,
+          "candidate_gate_backend": "jev",
+          "p1_backend": "jev",
+          "p2_direct_backend": "jev",
+          "p1_jev_threshold": 0.5,
+          "jev_retry": {
+            "schema_version": 1,
+            "max_attempts": 3,
+            "timeout_seconds": 60.0,
+            "timeout_increment_seconds": 0.0,
+            "backoff_seconds": [
+              10.0,
+              30.0
+            ],
+            "retry_status_codes": [
+              429,
+              500,
+              502,
+              503,
+              504,
+              529
+            ],
+            "retry_transport_errors": [
+              "ConnectError",
+              "ReadError",
+              "WriteError",
+              "RemoteProtocolError",
+              "ConnectTimeout",
+              "ReadTimeout",
+              "WriteTimeout",
+              "PoolTimeout"
+            ]
+          }
+        },
+        "source_sha256": "44851d0eaacd78b334802ec6f9b94615664778683a4198cae191c5929ec0eec6",
+        "state_root": "/Users/sherrylin/.codex/worktrees/memderive-adapter/ContextHub/outputs/memderive-tripops-w1-q1-20261027-r1/q1/state"
+      },
+      "capabilities": {
+        "ingest": true,
+        "retrieve": true,
+        "top_k": true,
+        "read_only_retrieve": true,
+        "source_event_provenance": true,
+        "checkpoint": false,
+        "restore": false
+      }
+    }
+  ],
+  "experiments": [
+    {
+      "type": "end_quality",
+      "panel": "all-1503-end-questions",
+      "parameters": {
+        "evaluation_mode": "derivemem_deterministic"
+      }
+    }
+  ],
+  "models": {
+    "llm": {
+      "model": "gpt-5.6-sol",
+      "prompt_version": "derivemem_answering_v9_checkpoint_safe_persona",
+      "provider": "openlux",
+      "kind": "openai_compatible",
+      "window": "llm",
+      "api_key_env": "LLM_API_KEY",
+      "base_url_env": "LLM_BASE_URL",
+      "reasoning_effort": "none",
+      "temperature": 0
+    }
+  },
+  "retrieval": {
+    "mode": "top_k",
+    "k": 15
+  },
+  "reuse": {
+    "enabled": false,
+    "on_miss": "execute"
+  },
+  "execution": {
+    "api_window_default": 1,
+    "qa_workers": 1,
+    "timeout_seconds": 180,
+    "max_attempts": 1,
+    "retries": 0
+  },
+  "output": {
+    "root": "/Users/sherrylin/.codex/worktrees/memderive-adapter/ContextHub/outputs/memderive-tripops-w1-q1-20261027-r1/q1/runs",
+    "publish": "never"
+  }
+}

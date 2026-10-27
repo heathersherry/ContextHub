@@ -1,0 +1,620 @@
+{
+  "status": {
+    "status": "completed",
+    "started_at": "2026-10-27T09:11:00.118558+00:00",
+    "implementation_commit": "cdeba41503d0ef299caf883800817db010dce73b",
+    "source_sha256": "44851d0eaacd78b334802ec6f9b94615664778683a4198cae191c5929ec0eec6",
+    "world": "tripops_w1",
+    "recipe": "q1",
+    "database": "contexthub_memderive_tripops_w1_20261027_r1",
+    "expected_sessions": 77,
+    "expected_events": 452,
+    "expected_answers": 140,
+    "benchmark_started_at": "2026-10-27T09:11:03.367685+00:00",
+    "experiment_id": "48f13108-94fd-4c54-b4cd-d6ffb9e7ebf5",
+    "finished_at": "2026-10-27T10:35:11.464318+00:00",
+    "tasks": [
+      {
+        "task_id": "ed12ccda-ceff-4afc-8afe-f8665c267b29",
+        "status": "completed"
+      }
+    ]
+  },
+  "elapsed_seconds": 5048.096633,
+  "checks": {
+    "sessions_completed": 77,
+    "sessions_failed": 0,
+    "events_completed": 452,
+    "event_sequence_matches_public_data": true,
+    "answer_rows": 140,
+    "unique_questions": 140,
+    "all_answers_completed": true,
+    "eight_scores_per_answer": true,
+    "source_coordinates_in_range": true,
+    "max_retrieved_items": 15,
+    "fixture_answers": 0,
+    "gold_never_ingested": "only the public chronicle is passed to the shared engine; checked by adapter tests",
+    "source_unchanged_after_run": true,
+    "upstream_unchanged_after_run": true,
+    "all_retrievals_after_final_ingestion": true,
+    "retrieval_sequences": [
+      77
+    ]
+  },
+  "scoring": {
+    "derivemem_answer_accuracy": {
+      "count": 140,
+      "mean_score": 0.29285714285714287,
+      "correct": 41,
+      "accuracy_denominator": 140,
+      "accuracy": 0.29285714285714287,
+      "by_category": {
+        "closure": {
+          "count": 18,
+          "mean_score": 0.3888888888888889,
+          "correct": 7,
+          "accuracy_denominator": 18,
+          "accuracy": 0.3888888888888889
+        },
+        "rules": {
+          "count": 28,
+          "mean_score": 0.07142857142857142,
+          "correct": 2,
+          "accuracy_denominator": 28,
+          "accuracy": 0.07142857142857142
+        },
+        "semantic": {
+          "count": 30,
+          "mean_score": 0.16666666666666666,
+          "correct": 5,
+          "accuracy_denominator": 30,
+          "accuracy": 0.16666666666666666
+        },
+        "set_quant": {
+          "count": 45,
+          "mean_score": 0.28888888888888886,
+          "correct": 13,
+          "accuracy_denominator": 45,
+          "accuracy": 0.28888888888888886
+        },
+        "temporal": {
+          "count": 19,
+          "mean_score": 0.7368421052631579,
+          "correct": 14,
+          "accuracy_denominator": 19,
+          "accuracy": 0.7368421052631579
+        }
+      }
+    },
+    "derivemem_answerability_accuracy": {
+      "count": 140,
+      "mean_score": 0.37857142857142856,
+      "correct": 53,
+      "accuracy_denominator": 140,
+      "accuracy": 0.37857142857142856,
+      "by_category": {
+        "closure": {
+          "count": 18,
+          "mean_score": 0.5555555555555556,
+          "correct": 10,
+          "accuracy_denominator": 18,
+          "accuracy": 0.5555555555555556
+        },
+        "rules": {
+          "count": 28,
+          "mean_score": 0.10714285714285714,
+          "correct": 3,
+          "accuracy_denominator": 28,
+          "accuracy": 0.10714285714285714
+        },
+        "semantic": {
+          "count": 30,
+          "mean_score": 0.2,
+          "correct": 6,
+          "accuracy_denominator": 30,
+          "accuracy": 0.2
+        },
+        "set_quant": {
+          "count": 45,
+          "mean_score": 0.4222222222222222,
+          "correct": 19,
+          "accuracy_denominator": 45,
+          "accuracy": 0.4222222222222222
+        },
+        "temporal": {
+          "count": 19,
+          "mean_score": 0.7894736842105263,
+          "correct": 15,
+          "accuracy_denominator": 19,
+          "accuracy": 0.7894736842105263
+        }
+      }
+    },
+    "derivemem_distractor_hit_rate": {
+      "count": 140,
+      "mean_score": 0.02142857142857143,
+      "correct": 0,
+      "accuracy_denominator": 0,
+      "accuracy": null,
+      "by_category": {
+        "closure": {
+          "count": 18,
+          "mean_score": 0.0,
+          "correct": 0,
+          "accuracy_denominator": 0,
+          "accuracy": null
+        },
+        "rules": {
+          "count": 28,
+          "mean_score": 0.07142857142857142,
+          "correct": 0,
+          "accuracy_denominator": 0,
+          "accuracy": null
+        },
+        "semantic": {
+          "count": 30,
+          "mean_score": 0.03333333333333333,
+          "correct": 0,
+          "accuracy_denominator": 0,
+          "accuracy": null
+        },
+        "set_quant": {
+          "count": 45,
+          "mean_score": 0.0,
+          "correct": 0,
+          "accuracy_denominator": 0,
+          "accuracy": null
+        },
+        "temporal": {
+          "count": 19,
+          "mean_score": 0.0,
+          "correct": 0,
+          "accuracy_denominator": 0,
+          "accuracy": null
+        }
+      }
+    },
+    "derivemem_stale_belief_rate": {
+      "count": 140,
+      "mean_score": 0.04285714285714286,
+      "correct": 0,
+      "accuracy_denominator": 0,
+      "accuracy": null,
+      "by_category": {
+        "closure": {
+          "count": 18,
+          "mean_score": 0.0,
+          "correct": 0,
+          "accuracy_denominator": 0,
+          "accuracy": null
+        },
+        "rules": {
+          "count": 28,
+          "mean_score": 0.03571428571428571,
+          "correct": 0,
+          "accuracy_denominator": 0,
+          "accuracy": null
+        },
+        "semantic": {
+          "count": 30,
+          "mean_score": 0.0,
+          "correct": 0,
+          "accuracy_denominator": 0,
+          "accuracy": null
+        },
+        "set_quant": {
+          "count": 45,
+          "mean_score": 0.06666666666666667,
+          "correct": 0,
+          "accuracy_denominator": 0,
+          "accuracy": null
+        },
+        "temporal": {
+          "count": 19,
+          "mean_score": 0.10526315789473684,
+          "correct": 0,
+          "accuracy_denominator": 0,
+          "accuracy": null
+        }
+      }
+    },
+    "derivemem_witness_f1": {
+      "count": 140,
+      "mean_score": 0.334969463390211,
+      "correct": 0,
+      "accuracy_denominator": 0,
+      "accuracy": null,
+      "by_category": {
+        "closure": {
+          "count": 18,
+          "mean_score": 0.49444444444444446,
+          "correct": 0,
+          "accuracy_denominator": 0,
+          "accuracy": null
+        },
+        "rules": {
+          "count": 28,
+          "mean_score": 0.34113148756005895,
+          "correct": 0,
+          "accuracy_denominator": 0,
+          "accuracy": null
+        },
+        "semantic": {
+          "count": 30,
+          "mean_score": 0.18053169053169055,
+          "correct": 0,
+          "accuracy_denominator": 0,
+          "accuracy": null
+        },
+        "set_quant": {
+          "count": 45,
+          "mean_score": 0.23617983348882604,
+          "correct": 0,
+          "accuracy_denominator": 0,
+          "accuracy": null
+        },
+        "temporal": {
+          "count": 19,
+          "mean_score": 0.6526315789473685,
+          "correct": 0,
+          "accuracy_denominator": 0,
+          "accuracy": null
+        }
+      }
+    },
+    "derivemem_witness_precision": {
+      "count": 140,
+      "mean_score": 0.6196428571428572,
+      "correct": 0,
+      "accuracy_denominator": 0,
+      "accuracy": null,
+      "by_category": {
+        "closure": {
+          "count": 18,
+          "mean_score": 0.5740740740740741,
+          "correct": 0,
+          "accuracy_denominator": 0,
+          "accuracy": null
+        },
+        "rules": {
+          "count": 28,
+          "mean_score": 0.6845238095238095,
+          "correct": 0,
+          "accuracy_denominator": 0,
+          "accuracy": null
+        },
+        "semantic": {
+          "count": 30,
+          "mean_score": 0.6777777777777777,
+          "correct": 0,
+          "accuracy_denominator": 0,
+          "accuracy": null
+        },
+        "set_quant": {
+          "count": 45,
+          "mean_score": 0.524074074074074,
+          "correct": 0,
+          "accuracy_denominator": 0,
+          "accuracy": null
+        },
+        "temporal": {
+          "count": 19,
+          "mean_score": 0.7017543859649124,
+          "correct": 0,
+          "accuracy_denominator": 0,
+          "accuracy": null
+        }
+      }
+    },
+    "derivemem_witness_recall": {
+      "count": 140,
+      "mean_score": 0.32866939326337824,
+      "correct": 0,
+      "accuracy_denominator": 0,
+      "accuracy": null,
+      "by_category": {
+        "closure": {
+          "count": 18,
+          "mean_score": 0.6111111111111112,
+          "correct": 0,
+          "accuracy_denominator": 0,
+          "accuracy": null
+        },
+        "rules": {
+          "count": 28,
+          "mean_score": 0.24742063492063493,
+          "correct": 0,
+          "accuracy_denominator": 0,
+          "accuracy": null
+        },
+        "semantic": {
+          "count": 30,
+          "mean_score": 0.14179782790309106,
+          "correct": 0,
+          "accuracy_denominator": 0,
+          "accuracy": null
+        },
+        "set_quant": {
+          "count": 45,
+          "mean_score": 0.2518222764889432,
+          "correct": 0,
+          "accuracy_denominator": 0,
+          "accuracy": null
+        },
+        "temporal": {
+          "count": 19,
+          "mean_score": 0.6578947368421053,
+          "correct": 0,
+          "accuracy_denominator": 0,
+          "accuracy": null
+        }
+      }
+    },
+    "derivemem_witnessed_accuracy": {
+      "count": 140,
+      "mean_score": 0.17857142857142858,
+      "correct": 25,
+      "accuracy_denominator": 140,
+      "accuracy": 0.17857142857142858,
+      "by_category": {
+        "closure": {
+          "count": 18,
+          "mean_score": 0.2222222222222222,
+          "correct": 4,
+          "accuracy_denominator": 18,
+          "accuracy": 0.2222222222222222
+        },
+        "rules": {
+          "count": 28,
+          "mean_score": 0.07142857142857142,
+          "correct": 2,
+          "accuracy_denominator": 28,
+          "accuracy": 0.07142857142857142
+        },
+        "semantic": {
+          "count": 30,
+          "mean_score": 0.03333333333333333,
+          "correct": 1,
+          "accuracy_denominator": 30,
+          "accuracy": 0.03333333333333333
+        },
+        "set_quant": {
+          "count": 45,
+          "mean_score": 0.1111111111111111,
+          "correct": 5,
+          "accuracy_denominator": 45,
+          "accuracy": 0.1111111111111111
+        },
+        "temporal": {
+          "count": 19,
+          "mean_score": 0.6842105263157895,
+          "correct": 13,
+          "accuracy_denominator": 19,
+          "accuracy": 0.6842105263157895
+        }
+      }
+    }
+  },
+  "native_usage_by_model": {
+    "deepseek-flash": {
+      "requests": 491,
+      "tokens": {
+        "input_tokens": {
+          "known_sum": 1194457,
+          "missing_requests": 0
+        },
+        "output_tokens": {
+          "known_sum": 500811,
+          "missing_requests": 0
+        },
+        "total_tokens": {
+          "known_sum": 1695268,
+          "missing_requests": 0
+        },
+        "cached_input_tokens": {
+          "known_sum": 422144,
+          "missing_requests": 0
+        },
+        "reasoning_tokens": {
+          "known_sum": 455271,
+          "missing_requests": 0
+        }
+      },
+      "outcomes": {
+        "success": 491
+      },
+      "actual_models": {
+        "deepseek-flash": 491
+      },
+      "stages": {
+        "extraction_joint": 77,
+        "p2_new": 409,
+        "p2_correction": 5
+      },
+      "request_seconds_sum": 3123.744061039877
+    },
+    "qwen3.7-text-embedding": {
+      "requests": 1294,
+      "tokens": {
+        "input_tokens": {
+          "known_sum": 40583,
+          "missing_requests": 0
+        },
+        "output_tokens": {
+          "known_sum": 0,
+          "missing_requests": 1294
+        },
+        "total_tokens": {
+          "known_sum": 40583,
+          "missing_requests": 0
+        },
+        "cached_input_tokens": {
+          "known_sum": 0,
+          "missing_requests": 1294
+        },
+        "reasoning_tokens": {
+          "known_sum": 0,
+          "missing_requests": 1294
+        }
+      },
+      "outcomes": {
+        "success": 1294
+      },
+      "actual_models": {
+        "qwen3.7-text-embedding": 1294
+      },
+      "stages": {
+        "topic_embedding": 311,
+        "query_embedding": 575,
+        "indexing": 408
+      },
+      "request_seconds_sum": 374.4685320520075
+    },
+    "jev-1.13.0": {
+      "requests": 77,
+      "tokens": {
+        "input_tokens": {
+          "known_sum": 87232,
+          "missing_requests": 0
+        },
+        "output_tokens": {
+          "known_sum": 16799,
+          "missing_requests": 0
+        },
+        "total_tokens": {
+          "known_sum": 104031,
+          "missing_requests": 0
+        },
+        "cached_input_tokens": {
+          "known_sum": 0,
+          "missing_requests": 77
+        },
+        "reasoning_tokens": {
+          "known_sum": 0,
+          "missing_requests": 77
+        }
+      },
+      "outcomes": {
+        "success": 77
+      },
+      "actual_models": {
+        "jev-1.13.0": 77
+      },
+      "stages": {
+        "p2_intent": 77
+      },
+      "request_seconds_sum": 44.08807371102739
+    }
+  },
+  "official_answer_usage": {
+    "requests": 140,
+    "tokens": {
+      "input_tokens": {
+        "known_sum": 1558921,
+        "missing_requests": 0
+      },
+      "output_tokens": {
+        "known_sum": 27687,
+        "missing_requests": 0
+      },
+      "total_tokens": {
+        "known_sum": 1586608,
+        "missing_requests": 0
+      },
+      "cached_input_tokens": {
+        "known_sum": 400179,
+        "missing_requests": 0
+      },
+      "reasoning_tokens": {
+        "known_sum": 14704,
+        "missing_requests": 0
+      }
+    },
+    "statuses": {
+      "ok": 140
+    },
+    "models": {
+      "gpt-5.6-sol": 140
+    }
+  },
+  "answer_reasoning_usage": {
+    "requested_effort": "none",
+    "nonzero_reported_requests": 87,
+    "reported_reasoning_tokens": 14704,
+    "request_serialization_check": "answer-request-serialization-check.json",
+    "note": "The pinned client serializes reasoning_effort=none and temperature=0; nonzero provider-reported reasoning usage is retained rather than treated as zero. Provider-side behavior is not independently verified."
+  },
+  "preflight_usage": {
+    "prompt_tokens": 4390,
+    "completion_tokens": 5,
+    "total_tokens": 4395,
+    "prompt_tokens_details": {
+      "cached_tokens": 4224
+    }
+  },
+  "dollar_cost": null,
+  "cost_note": "Provider prices were not supplied; known usage is reported without inventing a bill. Route preflight is separate from benchmark usage. Native clients are not included in official API-window totals.",
+  "memory_status_counts": {
+    "fresh": 338,
+    "stale": 70
+  },
+  "memory_type_counts": {
+    "fact": 408
+  },
+  "extraction_validation_errors": 0,
+  "direct_skips": 0,
+  "phase_seconds": {
+    "ingestion_through_last_session_complete": 3557.482507,
+    "retrieval_answer_score_and_finalization": 1490.614126
+  },
+  "diagnostics": {
+    "rule_ingestion": {
+      "literal_if_event_count": 0,
+      "stored_rules": 0,
+      "gate_source": "src/contexthub/memory/jev_candidate_gate.py:10",
+      "explanation": "The rule candidate gate requires a whole-word if. No source event contains it, so the rule extraction path receives no candidates. All 77 Jev calls were p2_intent, with no rule-gate or P1 calls."
+    },
+    "first_session_extraction": {
+      "input_events": 17,
+      "extracted_items": 2,
+      "source_message_numbers": [
+        [
+          16
+        ],
+        [
+          17
+        ]
+      ],
+      "omitted_event_ids": [
+        "w1_e001",
+        "w1_e002",
+        "w1_e003",
+        "w1_e004",
+        "w1_e005",
+        "w1_e006",
+        "w1_e007",
+        "w1_e008",
+        "w1_e009",
+        "w1_e010",
+        "w1_e011",
+        "w1_e012",
+        "w1_e013",
+        "w1_e014",
+        "w1_e015"
+      ],
+      "prompt_source": "src/contexthub/memory/prompts/extractor.txt:17",
+      "interpretation": "The first 15 fictional geography and membership facts were omitted at extraction. The instruction to omit general knowledge unless explicitly retained is consistent with this outcome; it is not a full causal attribution of all semantic errors."
+    },
+    "q001_retrieval_miss": {
+      "stored_booking_ref": "2d39ca73-6eb7-4ea3-b358-69ec7b0be039:1",
+      "booking_status": "fresh",
+      "source_event_id": "w1_e056",
+      "retrieved_top_k": 15,
+      "booking_retrieved": false,
+      "answerability": "unanswerable_incomplete",
+      "answer": null,
+      "explanation": "The active Copperline booking exists as a fresh fact but was absent from the retrieved top 15. The answerer saw the invoice and conference dates and abstained."
+    },
+    "interpretation_limit": "These are directly observed bottlenecks. They do not attribute every wrong answer or estimate the gain from any proposed change."
+  }
+}

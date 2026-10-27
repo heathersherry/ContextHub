@@ -1,0 +1,17 @@
+{
+  "method": "Offline HTTP request serialization with the pinned official client, current route, and installed OpenAI SDK; not packet capture of live calls. No paid API request.",
+  "request_body": {
+    "messages": [
+      {
+        "role": "user",
+        "content": "Offline request serialization check."
+      }
+    ],
+    "model": "gpt-5.6-sol",
+    "max_completion_tokens": 2048,
+    "reasoning_effort": "none",
+    "temperature": 0.0
+  },
+  "reasoning_effort_none_is_sent": true,
+  "temperature_zero_is_sent": true
+}
