@@ -9,7 +9,7 @@ from .helpers import session, add, row, item, input_of, direct_response
 
 
 @pytest.mark.asyncio
-async def test_update_and_forget_use_same_p2_interface_and_only_session_sources(env):
+async def test_update_and_forget_use_same_p2_interface_and_message_sources(env):
     env.retriever.config = env.retriever.config.model_copy(
         update={"text_k": 20, "vector_k": 20, "hybrid_limit": 20, "entity_k": 10}
     )
@@ -48,7 +48,8 @@ async def test_update_and_forget_use_same_p2_interface_and_only_session_sources(
     assert (await row(env, health))["status"] == "stale"
     assert (await row(env, partner))["status"] == "deleted"
     source = await env.store.sources(env.trace, *refs[0])
-    assert source["session_seq"] == [2] and "message_refs" not in source
+    assert source["session_seq"] == [2]
+    assert source["message_refs"] == [{"session_seq": 2, "message_no": 1}]
     saved = await env.store.get_session(env.trace, 2)
     assert saved["messages"][1]["content"] == "RAW_CHAT_ONLY_MARKER"
     assert "document: " + forget not in env.embedded

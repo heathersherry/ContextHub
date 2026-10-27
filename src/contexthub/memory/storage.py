@@ -179,6 +179,7 @@ class MemoryStore:
         memory_id,
         version,
         sources,
+        message_refs=(),
     ):
         timestamp = await conn.fetchval(
             f"SELECT timestamp FROM session_records WHERE {SCOPE} AND session_seq=$4",
@@ -202,11 +203,12 @@ class MemoryStore:
         )
         if sources is not None:
             await conn.execute(
-                "INSERT INTO memory_sources VALUES($1,$2,$3,$4,$5,$6)",
+                "INSERT INTO memory_sources VALUES($1,$2,$3,$4,$5,$6,$7)",
                 *trace.args,
                 memory_id,
                 version,
                 sorted(set(sources)),
+                list(message_refs),
             )
         return memory_id, version
 

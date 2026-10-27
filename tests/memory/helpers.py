@@ -15,11 +15,11 @@ def repair_target(payload):
 
 
 def item(text, *, temporal_scope="current", topics=()):
-    return dict(text=text, entities=[], temporal_scope=temporal_scope, topics=list(topics))
+    return dict(text=text, entities=[], temporal_scope=temporal_scope, topics=list(topics), source_message_nos=[1])
 
 
 def rule_item(text):
-    return dict(text=text, entities=[], topics=[])
+    return dict(text=text, entities=[], topics=[], source_message_nos=[1])
 
 
 def pending(context, text, *, type="content", topics=()):
@@ -30,6 +30,7 @@ def pending(context, text, *, type="content", topics=()):
         topics=list(topics),
         temporal_scope="current" if type == "content" else None,
         created_in_session=context.session_seq,
+        source_message_nos=[1],
     )
 
 
@@ -202,4 +203,4 @@ def extraction_response(*, rules, contents, forget_requests=()):
 
 
 def forget_item(text, *, entities=(), topics=(), order=1):
-    return dict(text=text, entities=list(entities), topics=list(topics), order=order)
+    return dict(text=text, entities=list(entities), topics=list(topics), order=order, source_message_nos=[1])

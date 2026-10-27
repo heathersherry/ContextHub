@@ -34,7 +34,7 @@ def test_topics_are_required_and_normalized_for_facts_and_rules():
     ]}))
     assert parsed[0].topics == ["home", "residence"]
     rules, _ = parse_items(json.dumps({"items": [
-        dict(text="If I move, then my gym changes.", entities=[], topics=["residence", "workout venue"])
+        dict(text="If I move, then my gym changes.", entities=[], topics=["residence", "workout venue"], source_message_nos=[1])
     ]}), kind="rule")
     assert set(rules[0].topics) == {"residence", "workout venue"}
 

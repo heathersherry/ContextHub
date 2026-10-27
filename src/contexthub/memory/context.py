@@ -87,9 +87,8 @@ class ContextBuilder:
                 rendered = trial
         return ContextSelection(purpose, materials, rendered, exhausted)
 
-    async def source_sessions(self, scope, ref, cutoff):
-        # These are session-level sources, not fabricated event-level witnesses.
-        pending, seen, sources = [ref], set(), set()
+    async def sources(self, scope, ref, cutoff):
+        pending, seen, sessions, messages = [ref], set(), set(), set()
         while pending:
             current = pending.pop()
             if current in seen:
@@ -105,34 +104,26 @@ class ContextBuilder:
             else:
                 record = await self.store.sources(scope, *split_ref(current))
                 if record:
-                    sources.update(record["session_seq"])
-        return sorted(s for s in sources if s <= cutoff)
+                    sessions.update(s for s in record["session_seq"] if s <= cutoff)
+                    messages.update((m["session_seq"], m["message_no"])
+                                    for m in record["message_refs"] if m["session_seq"] <= cutoff)
+        return sorted(sessions), [dict(session_seq=s, message_no=n) for s, n in sorted(messages)]
+
+    async def source_sessions(self, scope, ref, cutoff):
+        sessions, _ = await self.sources(scope, ref, cutoff)
+        return sessions
 
     async def result(self, selection, context):
+        items = []
+        for m in selection.materials:
+            sessions, messages = await self.sources(context.trace, m["ref"], context.session_seq)
+            items.append(MemoryContextItem(
+                **{k: m[k] for k in ("ref", "text", "type", "origin", "status",
+                                     "temporal_scope", "basis_refs")},
+                source_sessions=sessions, source_messages=messages,
+            ))
         return MemoryContextResult(
-            namespace=context.trace.namespace,
-            sequence=context.session_seq,
-            mode=selection.mode,
-            context=selection.rendered,
-            budget_exhausted=selection.budget_exhausted,
-            items=[
-                MemoryContextItem(
-                    **{
-                        k: m[k]
-                        for k in (
-                            "ref",
-                            "text",
-                            "type",
-                            "origin",
-                            "status",
-                            "temporal_scope",
-                            "basis_refs",
-                        )
-                    },
-                    source_sessions=await self.source_sessions(
-                        context.trace, m["ref"], context.session_seq
-                    ),
-                )
-                for m in selection.materials
-            ],
+            namespace=context.trace.namespace, sequence=context.session_seq,
+            mode=selection.mode, context=selection.rendered,
+            budget_exhausted=selection.budget_exhausted, items=items,
         )

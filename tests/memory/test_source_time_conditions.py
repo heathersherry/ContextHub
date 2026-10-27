@@ -120,13 +120,13 @@ async def test_same_session_writes_checked_without_source_numbers(env, action, a
 
 
 @pytest.mark.asyncio
-async def test_extraction_accepts_items_without_source_numbers(env):
+async def test_extraction_preserves_message_source_numbers(env):
     env.responses.append(extraction_response(rules=[], contents=[item("Exercise swimming")]))
     extracted = await env.pipeline.ingest(env.trace, 1, [
         {"role": "user", "content": "Exercise swimming"},
     ])
     assert extracted[0].__dict__ == {
-        "text": "Exercise swimming", "entities": [], "type": "content", "temporal_scope": "current", "topics": [],
+        "text": "Exercise swimming", "entities": [], "type": "content", "temporal_scope": "current", "topics": [], "source_message_nos": [1],
     }
     assert len(env.prompts) == 1
     assert not env.responses

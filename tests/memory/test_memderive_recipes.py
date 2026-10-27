@@ -29,7 +29,8 @@ async def test_official_recipe(env, tmp_path, monkeypatch, recipe):
     data_root = Path(os.environ['DERIVEMEM_ROOT'])
     public_events = [json.loads(line) for line in
         (data_root / 'benchmark/data/tripops_w1/chronicle.jsonl').read_text().splitlines() if line]
-    env.responses.extend([dict(rules=[], contents=[], forget_requests=[]) for _ in public_events])
+    session_count = len({e["session_id"] for e in public_events})
+    env.responses.extend([dict(rules=[], contents=[], forget_requests=[]) for _ in range(session_count)])
     instances = []
     async def create(*args, **kwargs):
         engine = engine_for(env)
@@ -68,16 +69,16 @@ async def test_official_recipe(env, tmp_path, monkeypatch, recipe):
         audit = [json.loads(line) for p in audits for line in p.read_text().splitlines()]
         ingested = [row for row in audit if row['kind'] == 'ingest_complete']
         reads = [row for row in audit if row['kind'] == 'retrieve']
-        assert len(ingested) == len(public_events)
-        assert [r['event_id'] for r in ingested] == [e['event_id'] for e in public_events]
+        assert len(ingested) == session_count
+        assert [e for r in ingested for e in r['event_ids']] == [e['event_id'] for e in public_events]
         assert reads
         if recipe == 'q3':
             assert len({r['sequence'] for r in reads}) == 5
-            assert min(r['sequence'] for r in reads) < len(public_events)
+            assert min(r['sequence'] for r in reads) < session_count
         if recipe == 'q2':
             assert len(reads) > 1  # actual official state probes
         report = {'kind': 'offline_protocol_validation', 'recipe': recipe,
-                  'world': 'tripops_w1', 'events_ingested': len(ingested),
+                  'world': 'tripops_w1', 'events_ingested': len(public_events), 'sessions_ingested': len(ingested),
                   'retrievals': len(reads), 'checkpoints': sorted({r['sequence'] for r in reads}),
                   'tasks_completed': len(tasks), 'status': result['status'],
                   'model_calls': 'deterministic fixtures; no paid API requests',

@@ -43,6 +43,7 @@ class ExtractedItem:
     entities: list[str]
     temporal_scope: Literal["current", "historical"] | None
     topics: list[str]
+    source_message_nos: list[int]
 
 
 @dataclass(frozen=True)

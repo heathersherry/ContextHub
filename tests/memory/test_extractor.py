@@ -10,7 +10,7 @@ from contexthub.memory.jev_candidate_gate import RULE_HINT
 
 
 def payload(text="Atlas owner is Li"):
-    return json.dumps(extraction_response(rules=[], contents=[{"text": text, "topics": [], "entities": [], "temporal_scope": "current"}]))
+    return json.dumps(extraction_response(rules=[], contents=[{"text": text, "topics": [], "entities": [], "temporal_scope": "current", "source_message_nos": [1]}]))
 
 
 @pytest.mark.parametrize(
@@ -39,7 +39,7 @@ def test_prompt_and_conditional_hints():
 @pytest.mark.asyncio
 async def test_extraction_keeps_requests_without_saving_or_embedding_any_item(env):
     raw = extraction_response(rules=[], contents=[
-            {"text": "Owner is Li", "topics": [], "entities": [], "temporal_scope": "current"},
+            {"text": "Owner is Li", "topics": [], "entities": [], "temporal_scope": "current", "source_message_nos": [1]},
         ], forget_requests=[forget_item("Forget nickname", order=2)])
     env.responses.append(raw)
     items = await env.pipeline.ingest(
@@ -187,5 +187,22 @@ def test_content_cannot_omit_temporal_scope():
 
 
 def test_historical_scope_survives_parse():
-    items, _ = parse_items('{"items":[{"text":"Lived in Oxford until 2020","topics":[],"entities":["Oxford"],"temporal_scope":"historical"}]}')
+    items, _ = parse_items('{"items":[{"text":"Lived in Oxford until 2020","topics":[],"entities":["Oxford"],"temporal_scope":"historical","source_message_nos":[1]}]}')
     assert items[0].temporal_scope == 'historical'
+
+
+@pytest.mark.parametrize('sources', [[], [0], [-1], [True], ['1'], [1, 1], None])
+def test_message_source_contract_rejects_invalid_numbers(sources):
+    from .helpers import item
+    with pytest.raises(ValueError, match='source_message_nos'):
+        parse_items(json.dumps({'items': [dict(item('Owner Wang'), source_message_nos=sources)]}))
+
+
+@pytest.mark.asyncio
+async def test_extraction_rejects_message_source_outside_session(env):
+    from .helpers import item
+    response = extraction_response(rules=[], contents=[dict(item('Owner Wang'), source_message_nos=[2])])
+    env.responses.extend([response] * 4)
+    with pytest.raises(ExtractionFailed):
+        await env.pipeline.ingest(env.trace, 1, [{'role': 'user', 'content': 'Owner Wang'}])
+    assert not await env.store.current_rows(env.trace)

@@ -1,6 +1,6 @@
 """Translate the official backend protocol into the shared MemoryEngine API.
 
-One public event is one ContextHub session. No gold, typed actions, diagnostic
+One official session is one ContextHub session; message sources retain event IDs. No gold, typed actions, diagnostic
 nodes, or query metadata enter the engine. Runs start fresh; there is no resume
 or checkpoint restoration contract in this version.
 """
@@ -52,13 +52,15 @@ class _Namespace:
     audit_path: Path
     events: list[dict] = field(default_factory=list)
     event_ids: set[str] = field(default_factory=set)
+    sessions: list[list[dict]] = field(default_factory=list)
+    session_ids: set[str] = field(default_factory=set)
     lock: asyncio.Lock = field(default_factory=asyncio.Lock)
     failed: bool = False
 
 
 class ContextHubBackend:
     name = 'contexthub'
-    version = '1.0.0'
+    version = '2.0.0'
     memory_family = 'structural_topological'
     ingest_mode = 'ordered_incremental'
     capabilities = BackendCapabilities(
@@ -85,7 +87,7 @@ class ContextHubBackend:
             'adapter_version': self.version,
             'source_sha256': self.source_sha256,
             'memory_config': self.config.model_dump(mode='json'),
-            'ingest_granularity': 'per_event',
+            'ingest_granularity': 'per_session',
             'source_event_provenance': True,
             'read_only_retrieve': True,
             'checkpoint': False,
@@ -133,40 +135,50 @@ class ContextHubBackend:
         return state
 
     async def ingest(self, events, namespace, metadata=None):
-        if len(events) != 1 or (metadata or {}).get('ingest_granularity', 'per_event') != 'per_event':
-            raise ValueError('ContextHub event provenance requires granularity: per_event')
-        event = events[0]
+        if not events or (metadata or {}).get('ingest_granularity', 'per_session') != 'per_session':
+            raise ValueError('ContextHub requires granularity: per_session with a nonempty session')
+        session_ids = {event.session_id for event in events}
+        if len(session_ids) != 1 or not events[0].session_id:
+            raise ValueError('each batch must contain exactly one official session')
         state = self._state(namespace)
         async with state.lock:
             self._state(namespace)
-            if event.id in state.event_ids:
+            ids = [event.id for event in events]
+            if len(set(ids)) != len(ids) or set(ids) & state.event_ids:
                 raise ValueError('duplicate event ID; ingestion is not idempotent')
-            if not event.id or not event.timestamp:
-                raise ValueError('event ID and timestamp are required')
-            instant = parse_timestamp_instant(event.timestamp)
-            if state.events and instant < parse_timestamp_instant(state.events[-1]['timestamp']):
-                raise ValueError('events must be in chronological order')
-            # Explicit whitelist: the official adapter's public content includes
-            # event ID, time and source. Do not forward event/query metadata.
-            record = dict(id=event.id, role=event.role, content=event.content,
-                          timestamp=event.timestamp, session_id=event.session_id,
-                          speaker_id=event.speaker_id)
-            sequence = len(state.events) + 1
-            _write(state.audit_path, {'kind': 'ingest_started', 'sequence': sequence, 'event': record})
+            if events[0].session_id in state.session_ids:
+                raise ValueError('duplicate session ID; send the complete session once')
+            previous = parse_timestamp_instant(state.events[-1]['timestamp']) if state.events else None
+            records = []
+            for event in events:
+                if not event.id or not event.timestamp:
+                    raise ValueError('event ID and timestamp are required')
+                instant = parse_timestamp_instant(event.timestamp)
+                if previous is not None and instant < previous:
+                    raise ValueError('events must be in chronological order')
+                previous = instant
+                # Public fields only. Gold, typed actions and query metadata stay outside memory.
+                records.append(dict(id=event.id, role=event.role, content=event.content,
+                                    timestamp=event.timestamp, session_id=event.session_id,
+                                    speaker_id=event.speaker_id))
+            sequence = len(state.sessions) + 1
+            _write(state.audit_path, {'kind': 'ingest_started', 'sequence': sequence, 'events': records})
             try:
                 result = await self.engine.ingest(
                     state.scope, sequence,
-                    [dict(role=event.role, content=event.content, timestamp=event.timestamp)],
-                    timestamp=event.timestamp, timeout_seconds=self.session_timeout_seconds,
+                    [dict(role=e.role, content=e.content, timestamp=e.timestamp) for e in events],
+                    timestamp=events[0].timestamp, timeout_seconds=self.session_timeout_seconds,
                 )
                 _write(state.audit_path, {'kind': 'ingest_complete', 'sequence': sequence,
-                                         'event_id': event.id, 'memory_refs': result.memory_refs})
+                                         'event_ids': ids, 'memory_refs': result.memory_refs})
             except BaseException:
                 state.failed = True
                 raise
-            state.events.append(record)
-            state.event_ids.add(event.id)
-            return {'sequence': sequence, 'event_ids': [event.id], 'memory_refs': result.memory_refs}
+            state.sessions.append(records)
+            state.events.extend(records)
+            state.event_ids.update(ids)
+            state.session_ids.add(events[0].session_id)
+            return {'sequence': sequence, 'event_ids': ids, 'memory_refs': result.memory_refs}
 
     async def finalize(self, namespace):
         self._state(namespace)  # Engine.ingest completes synchronously.
@@ -186,7 +198,8 @@ class ContextHubBackend:
             result = await self.engine.context(state.scope, query.text)
             evidence = []
             for item in result.items[:top_k]:
-                source_events = [state.events[seq - 1] for seq in item.source_sessions]
+                source_events = [state.sessions[source.session_seq - 1][source.message_no - 1]
+                                 for source in item.source_messages]
                 ids = [event['id'] for event in source_events]
                 # The standard v9 renderer now produces exactly the official
                 # event-attributed line, without modifying the answer prompt.

@@ -42,8 +42,8 @@ def prepare(*, deriveval_root, derivemem_root, memory_config, output,
         spec['benchmark']['data'] = str(derivemem_root / 'benchmark/data')
         spec['benchmark']['subset'] = {'worlds': list(worlds)}
         spec['backends'] = [{
-            'id': 'contexthub-event', 'implementation': 'integrations.memderive.backend:ContextHubBackend',
-            'version': '1.0.0', 'granularity': 'per_event',
+            'id': 'contexthub-session', 'implementation': 'integrations.memderive.backend:ContextHubBackend',
+            'version': '2.0.0', 'granularity': 'per_session',
             'api_observability': 'external_context_hub_ledger',
             'parameters': {'memory_config': config, 'source_sha256': code_hash,
                            'state_root': str(output / recipe / 'state')},
@@ -65,12 +65,12 @@ def prepare(*, deriveval_root, derivemem_root, memory_config, output,
             # Official API totals omit ContextHub's native clients. Do not
             # publish a misleading total-cost experiment for this adapter.
             spec['experiments'] = [spec['experiments'][0]]
-            spec['experiments'][0]['lineage_id'] = 'contexthub-event-five-checkpoints-v1'
+            spec['experiments'][0]['lineage_id'] = 'contexthub-session-five-checkpoints-v1'
         (output / f'{recipe}.json').write_text(json.dumps(spec, indent=2) + '\n')
     (output / 'provenance.json').write_text(json.dumps({
         'baseline_commit': '7df67566737c2da107396470f0d6ad379146da0b',
         'implementation_commit': commit, 'source_sha256': code_hash,
-        'upstream': lock, 'worlds': worlds, 'ingest_granularity': 'per_event',
+        'upstream': lock, 'worlds': worlds, 'ingest_granularity': 'per_session',
         'usage_accounting': 'DerivEval answers plus ContextHub *.attempts.jsonl; no combined cost claim',
     }, indent=2) + '\n')
     return output

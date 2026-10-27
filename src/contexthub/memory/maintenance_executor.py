@@ -409,6 +409,8 @@ class MaintenanceExecutor:
                 latest is None or ref_of(latest) != ref_of(target)
             ):
                 scope = "historical"
+        incoming_sources = [dict(session_seq=context.session_seq, message_no=n)
+                            for n in focus["source_message_nos"]]
         if action == "duplicate":
             if target["status"] != "fresh" or target["invalidated"] or target["origin"] == "derived":
                 raise ValueError("duplicate requires a fresh direct assertion")
@@ -421,12 +423,19 @@ class MaintenanceExecutor:
             if previous is None:
                 raise ValueError("duplicate target has no direct session source")
             merged = sorted(set(previous) | {context.session_seq})
+            previous_messages = await conn.fetchval(
+                f"SELECT message_refs FROM memory_sources WHERE {SCOPE} AND memory_id=$4 AND version=$5",
+                *context.trace.args, target["memory_id"], target["version"],
+            )
+            pairs = {(m["session_seq"], m["message_no"]) for m in [*previous_messages, *incoming_sources]}
+            message_refs = [dict(session_seq=s, message_no=n) for s, n in sorted(pairs)]
             await conn.execute(
-                f"UPDATE memory_sources SET session_seq=$6 WHERE {SCOPE} AND memory_id=$4 AND version=$5",
+                f"UPDATE memory_sources SET session_seq=$6,message_refs=$7 WHERE {SCOPE} AND memory_id=$4 AND version=$5",
                 *context.trace.args,
                 target["memory_id"],
                 target["version"],
                 merged,
+                message_refs,
             )
             key = ref_of(target)
             await self.store.record(
@@ -456,6 +465,7 @@ class MaintenanceExecutor:
                 uid,
                 version,
                 [context.session_seq],
+                incoming_sources,
             )
             key = f"{new[0]}:{new[1]}"
             await conn.execute(

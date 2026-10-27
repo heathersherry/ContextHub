@@ -409,6 +409,11 @@ class MemoryContextRequest(BaseModel):
     max_chars: int | None = Field(default=None, ge=1)
 
 
+class MemorySourceMessage(BaseModel):
+    session_seq: int = Field(ge=1)
+    message_no: int = Field(ge=1)
+
+
 class MemoryContextItem(BaseModel):
     ref: str
     text: str
@@ -417,6 +422,7 @@ class MemoryContextItem(BaseModel):
     status: Literal["fresh", "stale"]
     temporal_scope: Literal["current", "historical"]
     source_sessions: list[int]
+    source_messages: list[MemorySourceMessage]
     basis_refs: list[str]
 
 

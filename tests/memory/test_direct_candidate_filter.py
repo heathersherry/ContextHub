@@ -98,7 +98,7 @@ async def test_reuse_query_vector_zero_candidates_and_shared_pool_survives(env, 
     old = await add(env, c, text)
     c2 = await session(env, 2)
     incoming = "The user's hobby is pottery."
-    batch = await env.retriever.prepare([ExtractedItem(incoming, "content", [], "current", topics=[])], c2)
+    batch = await env.retriever.prepare([ExtractedItem(incoming, "content", [], "current", topics=[], source_message_nos=[1])], c2)
     assert old in batch.stored[0]
     before = len(env.embedded)
     jev[0].append("new")
@@ -190,8 +190,8 @@ async def test_selected_historical_candidate_keeps_its_current_version(env):
 async def test_same_session_accepted_results_are_filtered_too(env, jev):  # noqa: F811 - imported pytest fixture
     c = await session(env, 1)
     batch = await env.retriever.prepare([
-        ExtractedItem("The user drives a Sedan.", "content", [], "current", topics=[]),
-        ExtractedItem("The user's hobby is pottery.", "content", [], "current", topics=[]),
+        ExtractedItem("The user drives a Sedan.", "content", [], "current", topics=[], source_message_nos=[1]),
+        ExtractedItem("The user's hobby is pottery.", "content", [], "current", topics=[], source_message_nos=[1]),
     ], c)
     old_text = "The user drives a Sedan."
     env.vectors["document: " + old_text] = vector(0.2)

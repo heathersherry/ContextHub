@@ -28,14 +28,14 @@ def parse_items(raw, *, kind="content"):
         item_kind = item.get("type") if kind is None else kind
         if item_kind not in ("content", "rule", "forget_request"):
             raise ValueError("invalid program-owned extraction kind")
-        fields = {"text", "entities", "topics"}
+        fields = {"text", "entities", "topics", "source_message_nos"}
         if item_kind == "content":
             fields.add("temporal_scope")
         if kind is None:
             fields.add("type")
         if set(item) != fields:
             raise ValueError(
-                "item requires text, entities and topics, plus temporal_scope for content; type is program-owned"
+                "item requires text, entities, topics and source_message_nos, plus temporal_scope for content; type is program-owned"
             )
         if (
             not isinstance(item["text"], str)
@@ -44,13 +44,18 @@ def parse_items(raw, *, kind="content"):
             or any(not isinstance(v, str) for v in item["entities"])
         ):
             raise ValueError("item needs nonempty text and string entities")
+        source_nos = item["source_message_nos"]
+        if (not isinstance(source_nos, list) or not source_nos
+                or any(type(n) is not int or n < 1 for n in source_nos)
+                or len(set(source_nos)) != len(source_nos)):
+            raise ValueError("source_message_nos must contain unique positive message numbers")
         if item_kind == "rule":
             rule_queries(item["text"])
         elif item_kind == "content" and item["temporal_scope"] not in ("current", "historical"):
             raise ValueError("content temporal_scope must be current or historical")
         items.append(ExtractedItem(
             item["text"], item_kind, item["entities"], item.get("temporal_scope"),
-            normalize_topics(item["topics"]),
+            normalize_topics(item["topics"]), sorted(source_nos),
         ))
     return items, []
 
@@ -149,7 +154,11 @@ class Extractor:
         allowed_candidates = {c["ref"] for c in inputs["accepted_candidates"]}
 
         def parse(raw):
-            return parse_extraction(raw, allowed_candidates)
+            items, warnings = parse_extraction(raw, allowed_candidates)
+            message_nos = {m["message_no"] for m in inputs["messages"]}
+            if any(set(item.source_message_nos) - message_nos for item in items):
+                raise ValueError("source_message_nos must name messages in this session")
+            return items, warnings
 
         error = None
         for attempt in range(1, 5):

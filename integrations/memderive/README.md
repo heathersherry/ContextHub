@@ -10,8 +10,8 @@ The adapter owns event conversion, source mapping and run isolation. The
 upstream evaluator owns question selection, answer prompts, answer parsing,
 provenance-v2 scoring, diagnostic replay and checkpoint scheduling. No gold
 answers, typed actions, diagnostic graphs or query metadata are passed to the
-memory engine. ContextHub's extraction, maintenance and retrieval prompts are
-unchanged by this integration.
+memory engine. The shared extraction contract now includes source message
+numbers; its maintenance and retrieval decision policies remain unchanged.
 
 ## Supported protocol
 
@@ -25,13 +25,21 @@ The ten formal worlds contain 4,692 events and 1,503 end questions. The full Q3
 panel has 132 trajectories and 660 checkpoint question cells. These are full
 release counts, not the size of the default development subset.
 
-**Ingestion is explicitly `per_event`.** Each public event becomes one
-ContextHub session, retaining the official event ID/time/source header in its
-public text. This gives an exact mapping from the existing session sources to
-public event IDs without changing extraction prompts. The original session ID
-is retained in the audit trail. This condition costs more ingestion calls and
-can behave differently from per-session ingestion; do not label it as the
-paper's per-session memory-system condition.
+**Ingestion is explicitly `per_session`.** Each complete official session becomes
+one ContextHub session. Each public event becomes a numbered message retaining
+its event ID/time/source header. Shared extraction outputs `source_message_nos`
+for every item; the parser requires nonempty, unique, in-range message numbers.
+Direct writes save those coordinates, duplicates merge them, and derived
+memories follow their versioned premises. The public API and SDK expose
+`source_messages` as `{session_seq, message_no}` pairs alongside session sources.
+The adapter maps those coordinates back to official event IDs. These are
+model-attributed sources, not a semantic proof that every cited event entails
+the memory. Unrelated events in the same session are not added automatically.
+
+This shared provenance extension requires a fresh database with the current
+schema and the current extraction output contract. It does not migrate existing
+MEME/application databases. The earlier `0aa7aaac5` validation record describes
+the superseded per-event condition; it is not a session-mode effectiveness run.
 
 Derived memories use the shared engine's recursive `basis_refs` provenance.
 Missing sources stay empty; the adapter never fills them from gold, all events

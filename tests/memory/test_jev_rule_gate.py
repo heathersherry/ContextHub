@@ -225,7 +225,7 @@ async def test_joint_extraction_only_accepts_selected_refs_and_retries_without_r
     finally:
         await client.close()
     assert [(i.type, i.text) for i in extracted] == [('rule', text), ('content', 'Supplier Oak')]
-    assert all(set(i.__dict__) == {'type', 'text', 'entities', 'temporal_scope', 'topics'} for i in extracted)
+    assert all(set(i.__dict__) == {'type', 'text', 'entities', 'temporal_scope', 'topics', 'source_message_nos'} for i in extracted)
     assert len(requests) == 1 and len(env.prompts) == 2 and not env.responses
 
 

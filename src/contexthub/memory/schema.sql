@@ -37,7 +37,7 @@ CREATE TABLE topic_embeddings (
 CREATE TABLE memory_sources (
  tenant_id text NOT NULL, namespace text NOT NULL, owner_id text NOT NULL,
  memory_id uuid NOT NULL, version integer NOT NULL,
- session_seq integer[] NOT NULL,
+ session_seq integer[] NOT NULL, message_refs jsonb NOT NULL,
  PRIMARY KEY(tenant_id,namespace,owner_id,memory_id,version),
  FOREIGN KEY(tenant_id,namespace,owner_id,memory_id,version) REFERENCES memories
 );
