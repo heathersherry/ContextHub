@@ -28,7 +28,7 @@ def test_rule_queries_preserve_complete_conditions_and_consequences(text, condit
 @pytest.mark.parametrize("text", ["Health affects exercise", "If health changes", "If , then cycle", "If rain, ", "If rain, then"])
 def test_rule_without_query_boundary_is_rejected_during_extraction(text):
     with pytest.raises(ValueError):
-        parse_items(json.dumps(dict(items=[{"text": text, "entities": [], "topics": []}])), kind="rule")
+        parse_items(json.dumps(dict(items=[{"type": "rule", "text": text, "entities": [], "topics": []}])))
 
 
 def vector(x, y=0):
@@ -94,7 +94,7 @@ async def test_merge_refresh_deduplicate_then_filter_either_side(env):
 
 
 @pytest.mark.asyncio
-async def test_no_top_k_and_cutoff_applies_to_new_and_previously_bound_candidates(env):
+async def test_no_top_k_for_unlinked_candidates_and_bound_endpoint_is_not_rechecked(env):
     queries(env)
     c = await session(env, 1)
     rule = await add(env, c, "If health changes, then exercise becomes cycling", type="rule")
@@ -117,7 +117,8 @@ async def test_no_top_k_and_cutoff_applies_to_new_and_previously_bound_candidate
     await env.discovery.bind({rule: {}, **{key: {} for key in facts.values()}}, c)
     assert (await row(env, rule))["affected_matter_ids"] == [split_ref(prior)[0]]
     logged = await audit(env)
-    assert len(logged["candidates"]) == 8
+    assert len(logged["candidates"]) == 7
+    assert prior not in {r["ref"] for r in logged["candidates"]}
     assert len(logged["selected_refs"]) == 6
     assert P1_MIN_SIMILARITY == .15
 
@@ -133,14 +134,14 @@ async def test_all_filtered_skips_binding_and_preserves_existing_endpoint(env):
     assert await env.discovery.bind({rule: {}}, c) == []
     assert not env.prompts
     assert (await row(env, rule))["condition_matter_ids"] == [split_ref(source)[0]]
-    assert (await audit(env))["selected_refs"] == []
+    assert await audit(env) is None
 
 
 @pytest.mark.asyncio
 async def test_invalid_rule_boundary_retries_existing_extraction_stage(env):
     env.responses.extend([
-        extraction_response(rules=[dict(rule_item("Health affects exercise"), candidate_ref="R1")], contents=[]),
-        extraction_response(rules=[dict(rule_item("If health changes, then exercise changes"), candidate_ref="R1")], contents=[]),
+        extraction_response(rules=[rule_item("Health affects exercise")], contents=[]),
+        extraction_response(rules=[rule_item("If health changes, then exercise changes")], contents=[]),
     ])
     items = await env.pipeline.ingest(env.trace, 1, [{"role": "user", "content": "If health changes, exercise changes"}])
     assert items[0].text == "If health changes, then exercise changes"

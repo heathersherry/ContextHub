@@ -41,12 +41,12 @@ async def test_answer_omits_stale_statements_and_refs_but_keeps_internal_audit(e
         assert data == {
             "purpose": "answer",
             "memories": [{"text": current_text, "type": "fact"}],
+            "conditional_rules": [{"text": rule_text}],
         }
         assert all(value not in text for value in (
             old_text, deleted_text, invalid_text, stale_rule_text,
-            appointment, deleted, invalid, stale_rule, meetup, rule, rule_text,
+            appointment, deleted, invalid, stale_rule, meetup, rule,
         ))
-        assert "conditional_rules" not in data
         assert text == prompt("evaluation/answer").format(
             context=json.dumps(data, ensure_ascii=False),
             question="What regular appointments do I have?",
@@ -62,7 +62,7 @@ async def test_answer_omits_stale_statements_and_refs_but_keeps_internal_audit(e
             "AND stage='answer.input' ORDER BY step_id DESC LIMIT 1",
             env.trace.tenant_id, env.trace.namespace,
         )
-    assert {m["ref"] for m in audit["materials"]} == {meetup}
+    assert {m["ref"] for m in audit["materials"]} == {meetup, rule}
     assert audit["purpose"] == "answer"
     for purpose in ("answer", "p2"):
         assert appointment not in {
@@ -116,7 +116,7 @@ def test_question_routes_current_facts_policy_and_history(question, purpose):
 
 
 @pytest.mark.asyncio
-async def test_rule_excluded_before_top_k_and_policy_can_still_read_it(env):
+async def test_current_answer_and_policy_share_rule_eligibility_and_budget(env):
     c = await session(env, 1)
     old_name = "Zefiro's Kitchen"
     rule_text = f"If I move, then my favorite restaurant, {old_name}, changes."
@@ -127,7 +127,7 @@ async def test_rule_excluded_before_top_k_and_policy_can_still_read_it(env):
     env.retriever.config = env.retriever.config.model_copy(update={
         "text_k": 1, "vector_k": 1, "hybrid_limit": 1, "entity_k": 0,
     })
-    # Make the rule outrank the valid fact unless excluded before ranking.
+    # The same one-item budget applies to facts and rules, without a rule quota.
     async with env.store.pool.acquire() as conn:
         await conn.execute(
             "UPDATE memories SET memory_embedding='[0,1,0]'::vector WHERE memory_id=$1",
@@ -136,8 +136,10 @@ async def test_rule_excluded_before_top_k_and_policy_can_still_read_it(env):
 
     def current_answer(payload):
         text = payload["messages"][0]["content"]
-        assert fact_text in text and old_name not in text
-        assert "conditional_rules" not in text
+        data = json.JSONDecoder().raw_decode(text.split("Context:\n", 1)[1])[0]
+        assert data["memories"] == []
+        assert data["conditional_rules"] == [{"text": rule_text}]
+        assert fact_text not in text
         return "I don't have that information."
 
     def policy_answer(payload):
@@ -153,7 +155,7 @@ async def test_rule_excluded_before_top_k_and_policy_can_still_read_it(env):
 
     env.responses.extend([current_answer, policy_answer])
     answerer = MemoryAnswerer(env.store, env.retriever, env.executor.client, env.executor.retry)
-    await answerer.answer("What's my favorite restaurant?", c, timings={})
+    await answerer.answer(f"What do I know about {old_name}?", c, timings={})
     await answerer.answer(f"Under what conditions does {old_name} change?", c, timings={})
     assert (await row(env, rule))["status"] == "fresh"
     assert len(env.prompts) == 2  # no extra classifier call
@@ -171,7 +173,7 @@ async def test_answer_uses_official_template_once():
     await answerer.answer(question, context, timings={})
 
     expected = prompt("evaluation/answer").format(
-        context='{"purpose": "answer", "memories": []}', question=question,
+        context='{"purpose": "answer", "memories": [], "conditional_rules": []}', question=question,
     )
     client.complete.assert_awaited_once_with(expected, max_tokens=500, call=None)
     assert store.record.await_args_list[0].args[2]["prompt"] == expected

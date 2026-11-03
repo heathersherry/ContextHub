@@ -23,19 +23,19 @@ def topic(env, name, vector):
 @pytest.mark.parametrize("topics", [None, "residence", [1], [""], ["  "]])
 def test_topics_contract_rejects_invalid_labels(topics):
     with pytest.raises(ValueError, match="topics"):
-        parse_items(json.dumps({"items": [item("Lives in A", topics=[]) | {"topics": topics}]}))
+        parse_items(json.dumps({"items": [item("Lives in A", topics=[]) | {"type": "content", "topics": topics}]}))
 
 
 def test_topics_are_required_and_normalized_for_facts_and_rules():
     with pytest.raises(ValueError, match="topics"):
-        parse_items('{"items":[{"text":"Lives in A","entities":[],"temporal_scope":"current"}]}')
+        parse_items('{"items":[{"type":"content","text":"Lives in A","entities":[],"temporal_scope":"current"}]}')
     parsed, _ = parse_items(json.dumps({"items": [
-        item("Lives in A", topics=[" residence ", "residence", " HOME "])
+        dict(item("Lives in A", topics=[" residence ", "residence", " HOME "]), type="content")
     ]}))
     assert parsed[0].topics == ["home", "residence"]
     rules, _ = parse_items(json.dumps({"items": [
-        dict(text="If I move, then my gym changes.", entities=[], topics=["residence", "workout venue"], source_message_nos=[1])
-    ]}), kind="rule")
+        dict(type="rule", text="If I move, then my gym changes.", entities=[], topics=["residence", "workout venue"], source_message_nos=[1])
+    ]}))
     assert set(rules[0].topics) == {"residence", "workout venue"}
 
 
@@ -124,7 +124,7 @@ async def test_any_topic_pair_rescues_new_candidate_and_model_still_decides(env,
     c2 = await session(env, 2)
     focus = pending(c2, "The user moved to Orinthal Park.", topics=[address])
     candidates = {key: await row(env, key) for key in (old, noise)}
-    jev[0].append("new")
+    jev[0].append("inform")
 
     def update(payload):
         data = input_of(payload)
@@ -142,7 +142,7 @@ async def test_any_topic_pair_rescues_new_candidate_and_model_still_decides(env,
     assert (await row(env, noise))["status"] == "fresh"
     async with env.store.pool.acquire() as conn:
         audit = await conn.fetchval(
-            f"SELECT payload FROM memory_steps WHERE {SCOPE} AND stage='p2_new.candidates'",
+            f"SELECT payload FROM memory_steps WHERE {SCOPE} AND stage='p2_inform.candidates'",
             *env.trace.args,
         )
     assert audit["selected_refs"] == [old]

@@ -248,7 +248,7 @@ async def test_jev_shared_binding_multi_none_and_frozen_prompt(
     try:
         await binder.bind({rule: rows}, c)
         await binder.bind({rule: rows}, c)
-        await binder.bind({rule: {}}, c)  # prior targets remain candidates
+        await binder.bind({rule: {}}, c)  # established endpoints are not rejudged
     finally:
         await client.close()
     rule_row = await row(env, rule)
@@ -261,7 +261,7 @@ async def test_jev_shared_binding_multi_none_and_frozen_prompt(
             "SELECT count(*) FROM memory_steps WHERE tenant_id=$1 AND namespace=$2 AND stage='p1.jev_decisions'",
             *env.trace.args[:2],
         )
-    assert decisions == 3
+    assert decisions == 1
 
 
 def test_cli_defaults_and_frozen_metadata(tmp_path):

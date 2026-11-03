@@ -1,12 +1,13 @@
-"""Three-group extraction, conservative hints, batched intents and ordered deletion."""
+"""Bounded rule/forget candidates, batched intents and ordered deletion."""
 import json
+from unittest.mock import AsyncMock
 
 import httpx
 import pytest
 
 from contexthub.llm.jev_client import JevClient
 from contexthub.llm.retry_policy import ResponseSchemaError
-from contexthub.memory.extractor import parse_extraction, parse_items
+from contexthub.memory.extractor import Extractor, ExtractionFailed, parse_extraction, parse_items
 from contexthub.memory.jev_candidate_gate import JevCandidateGate, forget_candidates
 from contexthub.memory.jev_intent_classifier import JevIntentClassifier
 from contexthub.memory.storage import SCOPE
@@ -60,17 +61,18 @@ async def test_rule_and_forget_use_independent_questions_in_one_gate_call():
 
 
 @pytest.mark.asyncio
-async def test_no_keyword_does_not_block_forget_and_hint_does_not_duplicate_text(env):
+async def test_only_selected_forget_sentences_reach_joint_extraction(env):
     client = gate_client({'F1': 'unclear'}, [])
     env.pipeline.extractor.candidate_gate = JevCandidateGate(client, retry=decision_retry_policy('jev'))
-    requests = [forget_item('Forget James.', entities=['James']),
-                forget_item('Stop retaining my home address.', order=2)]
+    requests = [forget_item('Forget James.', entities=['James'])]
     def extract(payload):
         data = input_of(payload)
-        assert data['forget_candidate_messages'] == [1]
-        assert data['accepted_candidates'] == []
+        assert data['accepted_candidates'] == {
+            'rules': [],
+            'forget_requests': [{'ref': 'F1', 'message_no': 1, 'role': 'user', 'text': 'Forget James.'}],
+        }
         assert data['messages'][1]['content'] == 'Stop retaining my home address.'
-        assert set(data) == {'messages', 'accepted_candidates', 'forget_candidate_messages'}
+        assert set(data) == {'messages', 'accepted_candidates'}
         return extraction_response(rules=[], contents=[], forget_requests=requests)
     env.responses.append(extract)
     try:
@@ -80,47 +82,111 @@ async def test_no_keyword_does_not_block_forget_and_hint_does_not_duplicate_text
         ])
     finally:
         await client.close()
-    assert [i.type for i in extracted] == ['forget_request', 'forget_request']
+    assert [i.type for i in extracted] == ['forget_request']
     assert all(i.temporal_scope is None for i in extracted)
     saved = (await env.store.get_session(env.trace, 1))['extraction_output']
-    restored, _ = parse_items(saved, kind=None)
+    restored, _ = parse_items(saved)
     assert restored == extracted
     assert not env.embedded and not await env.store.current_rows(env.trace)
 
 
-@pytest.mark.parametrize('bad_order', [None, True, 0, -1, '1'])
-def test_order_is_required_positive_integer(bad_order):
-    response = extraction_response(rules=[], contents=[item('fact')])
-    response['contents'][0]['order'] = bad_order
-    if bad_order is None:
-        del response['contents'][0]['order']
-    with pytest.raises(ValueError, match='order'):
-        parse_extraction(json.dumps(response), set())
+@pytest.mark.asyncio
+@pytest.mark.parametrize('labels, expected_refs', [
+    ({'F1': 'forget', 'F2': 'not_forget', 'F3': 'unclear'}, ['F1', 'F3']),
+    ({'F1': 'not_forget', 'F2': 'not_forget', 'F3': 'not_forget'}, []),
+])
+async def test_gate_exclusions_are_preserved_at_sentence_level_without_database(labels, expected_refs):
+    context = Context()
+    context.trace, context.session_seq = None, 1
+    context.save_output = AsyncMock()
+    messages = [{'message_no': 1, 'role': 'user', 'content':
+                 'Forget James. Remove the comma. Delete that. Stop retaining my address.'}]
+    gate_requests, prompts = [], []
+    gate_client_instance = gate_client(labels, gate_requests)
+    response = extraction_response(rules=[], contents=[])
+
+    async def complete(prompt, max_tokens=None, *, call):
+        prompts.append(prompt)
+        call.recorder.raw_output = json.dumps(response)
+        return call.recorder.raw_output
+
+    model = AsyncMock()
+    model.complete.side_effect = complete
+    extractor = Extractor(model, retry=None, candidate_gate=JevCandidateGate(
+        gate_client_instance, retry=decision_retry_policy('jev')))
+    try:
+        await extractor.extract(messages, context)
+    finally:
+        await gate_client_instance.close()
+    data = json.loads(prompts[0].rsplit('\n', 1)[1])
+    assert data['messages'] == messages  # Context stays complete, even within one message.
+    assert set(data) == {'messages', 'accepted_candidates'}
+    selected = data['accepted_candidates']['forget_requests']
+    assert [c['ref'] for c in selected] == expected_refs
+    assert [c['text'] for c in selected] == (['Forget James.', 'Delete that.'] if expected_refs else [])
+    assert all(set(c) == {'ref', 'message_no', 'role', 'text'} for c in selected)
+    assert len(gate_requests) == len(prompts) == 1
 
 
-def test_parser_interleaves_arrays_and_rejects_duplicate_order_or_invalid_forget():
-    response = extraction_response(rules=[], contents=[dict(item('Remember James again'), order=2)],
-                                   forget_requests=[forget_item('Forget James', entities=['James'], order=1)])
-    parsed, _ = parse_extraction(json.dumps(response), set())
+@pytest.mark.asyncio
+@pytest.mark.parametrize('source, labels', [
+    ('Forget James.', {'F1': 'not_forget'}),
+    ('Stop retaining my address.', {}),
+])
+async def test_no_accepted_forget_candidate_rejects_model_request_without_repeating_gate(source, labels):
+    context = Context()
+    context.trace, context.session_seq = None, 1
+    context.save_output = AsyncMock()
+    gate_requests = []
+    gate_client_instance = gate_client(labels, gate_requests)
+    model = AsyncMock()
+
+    async def complete(prompt, max_tokens=None, *, call):
+        call.recorder.raw_output = json.dumps(extraction_response(
+            rules=[], contents=[], forget_requests=[forget_item('Forget James.')]))
+        return call.recorder.raw_output
+
+    model.complete.side_effect = complete
+    extractor = Extractor(model, retry=None, candidate_gate=JevCandidateGate(
+        gate_client_instance, retry=decision_retry_policy('jev')))
+    try:
+        with pytest.raises(ExtractionFailed):
+            await extractor.extract([{'role': 'user', 'content': source}], context)
+    finally:
+        await gate_client_instance.close()
+    assert model.complete.call_count == 4
+    assert len(gate_requests) == bool(labels)
+    assert not any(stage == 'extraction.parsed' for stage, _ in context.steps)
+    errors = [p for stage, p in context.steps if stage == 'extraction.joint.validation_error']
+    assert len(errors) == 4
+    assert all('no forgetting candidates' in p['error'] for p in errors)
+
+
+@pytest.mark.parametrize('order', [None, True, 0, 1, '1'])
+def test_obsolete_order_field_rejected(order):
+    response = {'items': [dict(item('fact'), type='content', order=order)]}
+    with pytest.raises(ValueError):
+        parse_extraction(json.dumps(response), rules_allowed=False, forget_allowed=True)
+
+
+def test_parser_preserves_list_order_and_rejects_invalid_forget():
+    response = {'items': [forget_item('Forget James'), dict(item('Remember James again'), type='content')]}
+    parsed, _ = parse_extraction(json.dumps(response), rules_allowed=False, forget_allowed=True)
     assert [i.type for i in parsed] == ['forget_request', 'content']
     assert all('order' not in i.__dict__ for i in parsed)
-    response['contents'][0]['order'] = 1
-    with pytest.raises(ValueError, match='unique'):
-        parse_extraction(json.dumps(response), set())
-    response['contents'][0]['order'] = 2
-    response['forget_requests'][0]['temporal_scope'] = 'current'
+    response['items'][0]['temporal_scope'] = 'current'
     with pytest.raises(ValueError):
-        parse_extraction(json.dumps(response), set())
+        parse_extraction(json.dumps(response), rules_allowed=False, forget_allowed=True)
 
 
 @pytest.mark.asyncio
 async def test_batch_classifier_shares_rubric_returns_input_order_and_skips_empty():
     requests, context = [], Context()
-    client = choice_client(['new', 'correction', 'hold'], requests)
+    client = choice_client(['inform', 'correction', 'hold'], requests)
     classifier = JevIntentClassifier(client, retry=decision_retry_policy('jev'))
     try:
         assert await classifier.classify([], context) == [] and not requests
-        assert await classifier.classify([{'text': t} for t in ['Likes tea', 'Earlier claim was wrong', 'Why?']], context) == ['new', 'correction', 'hold']
+        assert await classifier.classify([{'text': t} for t in ['Likes tea', 'Earlier claim was wrong', 'Why?']], context) == ['inform', 'correction', 'hold']
     finally:
         await client.close()
     assert len(requests) == 1
@@ -167,15 +233,13 @@ async def test_explicit_forget_removes_james_activity_without_content_classifica
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize('forget_first', [True, False])
-async def test_forget_and_content_execution_follows_cross_array_order(env, jev, forget_first):  # noqa: F811
+async def test_forget_and_content_execution_follows_array_order(env, jev, forget_first):  # noqa: F811
     c = await session(env, 1)
     old = await add(env, c, 'James lives in Paris.')
     request, fact = 'Forget all information about James.', 'James works at Acme.'
-    env.responses.append(extraction_response(
-        rules=[], contents=[dict(item(fact), order=2 if forget_first else 1)],
-        forget_requests=[forget_item(request, entities=['James'], order=1 if forget_first else 2)],
-    ))
-    jev[0].append('new')
+    entries = [forget_item(request, entities=['James']), dict(item(fact), type='content')]
+    env.responses.append({'items': entries if forget_first else list(reversed(entries))})
+    jev[0].append('inform')
     if forget_first:
         env.responses.append(targets_response(['James lives in Paris.']))
     else:
@@ -194,12 +258,11 @@ async def test_bad_forget_scope_skips_only_request_and_continues_content(env, je
     c = await session(env, 1)
     old = await add(env, c, 'James lives in Paris.')
     env.responses.extend([
-        extraction_response(rules=[], contents=[dict(item('Likes tea'), order=2)],
-                            forget_requests=[forget_item('Forget James.', entities=['James'])]),
+        {'items': [forget_item('Forget James.', entities=['James']), dict(item('Likes tea'), type='content')]},
         {'target_refs': ['M999']}, {'target_refs': ['M999']},
         plan_response(('new', None, 'Likes tea')),
     ])
-    jev[0].append('new')
+    jev[0].append('inform')
     await env.full_pipeline.ingest(env.trace, 2, [{'role': 'user', 'content': 'Forget James. I like tea.'}])
     assert (await row(env, old))['status'] == 'fresh'
     assert {r['text'] for r in await env.store.current_rows(env.trace)} == {'James lives in Paris.', 'Likes tea'}
@@ -215,7 +278,7 @@ async def test_bad_forget_scope_skips_only_request_and_continues_content(env, je
 @pytest.mark.asyncio
 async def test_bad_forget_group_retries_whole_extraction_before_any_write(env, jev):  # noqa: F811
     response = extraction_response(rules=[], contents=[item('Likes tea')],
-                                   forget_requests=[dict(forget_item('Forget James.', order=2), temporal_scope='current')])
+                                   forget_requests=[dict(forget_item('Forget James.'), temporal_scope='current')])
     env.responses.extend([response] * 4)
     from contexthub.memory.extractor import ExtractionFailed
     with pytest.raises(ExtractionFailed):

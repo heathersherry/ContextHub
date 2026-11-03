@@ -21,7 +21,7 @@ class MemoryPipeline:
                 [batch.items[i].__dict__ for i in content_indices], context,
             )
             intents = dict(zip(content_indices, choices, strict=True))
-        # Rules first, then content and forgetting requests in conversational order.
+        # Process every type in the extraction array order.
         for index, item in enumerate(batch.items):
             focus = dict(item.__dict__, created_in_session=context.session_seq)
             focus["timestamp"] = session["timestamp"]
@@ -32,8 +32,8 @@ class MemoryPipeline:
             if keys:
                 batch.accepted[index] = keys
                 accepted_refs.extend(keys)
-                # Protect duplicates (including a later reconfirmation of a value
-                # written earlier this session), but inspect new/update facts.
+                # Duplicates return no accepted refs. Preserve the existing protection
+                # for other direct operations, but inspect new/update facts.
                 protected.update(keys)
                 protected.difference_update(
                     f"{t['after']['memory_id']}:{t['after']['version']}"

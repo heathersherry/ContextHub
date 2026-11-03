@@ -1,6 +1,16 @@
 Explicit forgetting and batched intent classification — 2026-10-26
 ================================================================
 
+2026-10-27 correction: the hint-only extraction behavior below is superseded.
+Current extraction confirms only selected sentences in accepted_candidates.rules
+and accepted_candidates.forget_requests. Full messages supply context, not new
+forgetting candidates. Empty candidate groups forbid corresponding item types.
+The ordered items contract, duplicate no-op and incremental P1 now supersede
+the older ordering/source/binding behavior below; see
+validation-ordered-incremental-20261027-r1/report.txt. The content intent is now named inform (formerly new); direct invalidate
+is replaced by update with explicit ended-state text. Conditional/basis invalidation
+remains. See ../memory-core.txt. Validation results below describe the earlier flow.
+
 Implemented flow
 ---------------
 1. Program screening finds standalone if occurrences and sentences containing

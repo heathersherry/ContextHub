@@ -30,7 +30,7 @@ async def test_official_recipe(env, tmp_path, monkeypatch, recipe):
     public_events = [json.loads(line) for line in
         (data_root / 'benchmark/data/tripops_w1/chronicle.jsonl').read_text().splitlines() if line]
     session_count = len({e["session_id"] for e in public_events})
-    env.responses.extend([dict(rules=[], contents=[], forget_requests=[]) for _ in range(session_count)])
+    env.responses.extend([dict(items=[]) for _ in range(session_count)])
     instances = []
     async def create(*args, **kwargs):
         engine = engine_for(env)

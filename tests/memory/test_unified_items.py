@@ -90,7 +90,7 @@ async def test_unmatched_forget_is_held_in_session_log_without_fact_or_document_
 
 
 @pytest.mark.asyncio
-async def test_duplicate_merges_sessions_without_new_memory_or_document_embedding(env):
+async def test_duplicate_ignores_input_without_memory_source_or_document_write(env):
     c = await session(env, 1)
     original = await add(env, c, "Owner Wang")
     count = len([s for s in env.embedded if s.startswith("document: ")])
@@ -100,9 +100,9 @@ async def test_duplicate_merges_sessions_without_new_memory_or_document_embeddin
     refs = await env.full_pipeline.ingest(
         env.trace, 2, [{"role": "user", "content": "Owner Wang"}]
     )
-    assert refs == [split_ref(original)]
-    assert (await env.store.sources(env.trace, *refs[0]))["session_seq"] == [1, 2]
-    assert len(await env.store.versions(env.trace, refs[0][0])) == 1
+    assert refs == []
+    assert (await env.store.sources(env.trace, *split_ref(original)))["session_seq"] == [1]
+    assert len(await env.store.versions(env.trace, split_ref(original)[0])) == 1
     assert len([s for s in env.embedded if s.startswith("document: ")]) == count
 
 

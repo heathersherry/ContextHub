@@ -126,7 +126,7 @@ class MemoryStore:
                 from .extractor import parse_items
 
                 try:
-                    parse_items(output, kind=None)
+                    parse_items(output)
                 except (ValueError, TypeError):
                     raise ValueError(
                         "previous session extraction failed; stop this trajectory"

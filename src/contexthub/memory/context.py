@@ -22,12 +22,11 @@ def answer_context(materials, purpose):
                 if m["status"] == "fresh" and m["type"] == "fact"
             ],
         }
-        if purpose == "policy":
-            result["conditional_rules"] = [
-                {"text": m["text"]}
-                for m in materials
-                if m["status"] == "fresh" and m["type"] == "rule"
-            ]
+        result["conditional_rules"] = [
+            {"text": m["text"]}
+            for m in materials
+            if m["status"] == "fresh" and m["type"] == "rule"
+        ]
         return result
     return {
         "purpose": purpose,
@@ -75,7 +74,6 @@ class ContextBuilder:
                 context,
                 through_session=context.session_seq,
                 purpose=purpose,
-                memory_type="fact" if purpose == "answer" else None,
             )
             for hit in hits:
                 candidate = material(hit.memory)

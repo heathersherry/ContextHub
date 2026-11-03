@@ -85,7 +85,7 @@ def vector(similarity):
 async def saved_audit(env):
     async with env.store.pool.acquire() as conn:
         return await conn.fetchval(
-            f"SELECT payload FROM memory_steps WHERE {SCOPE} AND stage='p2_new.candidates' ORDER BY step_id DESC LIMIT 1",
+            f"SELECT payload FROM memory_steps WHERE {SCOPE} AND stage='p2_inform.candidates' ORDER BY step_id DESC LIMIT 1",
             *env.trace.args,
         )
 
@@ -101,7 +101,7 @@ async def test_reuse_query_vector_zero_candidates_and_shared_pool_survives(env, 
     batch = await env.retriever.prepare([ExtractedItem(incoming, "content", [], "current", topics=[], source_message_nos=[1])], c2)
     assert old in batch.stored[0]
     before = len(env.embedded)
-    jev[0].append("new")
+    jev[0].append("inform")
 
     accepted, changes, protected = await env.full_pipeline.process_direct(batch, c2)
     assert len(accepted) == 1 and len(changes) == 1 and not protected
@@ -199,7 +199,7 @@ async def test_same_session_accepted_results_are_filtered_too(env, jev):  # noqa
     batch.accepted[0] = [old]
     candidates = await batch.resolve(1, env.store, c)
     assert old in candidates
-    jev[0].append("new")
+    jev[0].append("inform")
     accepted, _ = await process_item(env,
         pending(c, batch.items[1].text), candidates, c, query_vector=batch.query_vectors[1],
     )

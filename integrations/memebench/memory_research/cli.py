@@ -193,7 +193,7 @@ def freeze(output, config, args):
             },
             "p2_direct": {
                 "backend": "jev", "model": JEV_MODEL, "endpoint": JEV_ENDPOINT,
-                "question_type": "choice", "decision": "one session batch of candidate-free new/correction/hold questions with shared policy; then sequential processing; explicit forgetting bypasses classification",
+                "question_type": "choice", "decision": "program routes explicit Remember this/these/the following ... word for word/verbatim: content requests to inform; one Jev batch classifies remaining contents, retaining original C positions; no remaining questions means no model call; then sequential processing; explicit forgetting bypasses classification",
                 "processing_model": args.memory_model,
                 "processing_reasoning_effort": memory_effort,
             } if args.p2_direct_backend == "jev" else {
@@ -230,11 +230,11 @@ def freeze(output, config, args):
             "rule_candidates": "One source-anchored standalone if per candidate outside recognized code: Markdown fences/inline code, HTML pre/code, and syntactically recognizable bare Python conditional lines or braced if lines. Natural-language code explanations still require semantic confirmation. Original offsets remain in logs only. Model text marks the selected if with <target> tags only for multi-if sentences. Jev sees role and sentence with shared state.rule_policy; without Jev, all program candidates go to extraction.",
             "candidate_gate_failure": "Malformed Jev answers or request failures stop extraction; no fallback. Only not_rule/not_forget are omitted; positive and unclear candidates proceed to full-session joint extraction."
             if args.candidate_gate_backend == "jev" else None,
-            "output": "One full-session request returns rules, contents and forget_requests. Rules cite supplied candidates, confirm adoption and resolve references. Contents preserve independent assertions, maintenance intent and time; conditional outcomes are not facts. All three arrays and shared order values must validate before downstream processing.",
-            "forget_candidates": "Case-insensitive standalone remove/forget/delete sentences. One Jev batch with rule candidates; independent policies shared in state. Retained message numbers hint at forgetting requests but never restrict full-chat extraction.",
+            "output": "One full-session request returns one typed items array in source conversation order. Rules and forgetting requests are confirmed only from their respective accepted_candidates groups, without returning candidate references. All texts preserve source wording with necessary splitting and reference resolution; entities/topics facilitate retrieval. Contents preserve maintenance intent and time; conditional outcomes are not facts. The whole items array validates before downstream processing; there is no order field or program sorting.",
+            "forget_candidates": "Case-insensitive standalone remove/forget/delete sentences. One Jev batch with rule candidates; independent policies shared in state. Only retained candidate sentences enter accepted_candidates.forget_requests; full messages provide context, not additional forgetting candidates.",
             "output_attempts": 4,
-            "empty_candidates": "The joint call still extracts content and forgetting requests; rules must be empty; rule-confirmation instructions are omitted.",
-            "downstream": "Program strips candidate_ref/order, processes rules first, then interleaves contents and forget_requests by order. Jev classifies all contents in one batch as new/correction/hold. Forget requests bypass classification and go to old-memory retrieval and scope selection; they never become facts.",
+            "empty_candidates": "The joint call still extracts content. Each empty candidate group forbids output items of its corresponding type; rule-confirmation instructions are omitted when rule candidates are empty.",
+            "downstream": "Items have no candidate_ref or order; rule and forget_request items require supplied candidates of the corresponding kind. Program processes all three types in array order. Duplicate produces no write, source merge, accepted result or extra protection. Program routes explicit verbatim memory requests to inform and logs p2_intent.program; Jev classifies remaining contents in one batch as inform/correction/hold. The shortcut does not bypass direct maintenance. Forget requests bypass classification and go to old-memory retrieval and scope selection; they never become facts.",
         },
         "maintenance_prompts": {
             "p1_conditions": "p1_jev.txt"
@@ -243,7 +243,7 @@ def freeze(output, config, args):
             "p2_conditions": "p2_conditions.txt",
             "p2_direct": "p2_intent_jev.json" if args.p2_direct_backend == "jev" else "p2_direct.txt",
             "p2_forget_scope": "p2_forget_scope.txt",
-            **({"p2_new": "p2_new.txt", "p2_correction": "p2_correction.txt"}
+            **({"p2_inform": "p2_inform.txt", "p2_correction": "p2_correction.txt"}
                if args.p2_direct_backend == "jev" else {}),
             "p2_repair": "p2_repair.txt",
         },
@@ -270,7 +270,7 @@ def freeze(output, config, args):
         "topic_candidates": {
             "selection": "additional OR channel; any normalized label pair cosine strictly above threshold",
             "threshold": args.topic_similarity_threshold,
-            "scope": "shared maintenance retrieval (new/correction/default direct), forget supplement, P1 filtering, repair supplement",
+            "scope": "shared maintenance retrieval (inform/correction/default direct), forget supplement, P1 filtering, repair supplement",
             "limits": "eligible rows only; no top-k truncation of topic matches; no topic-only write/delete/binding decision",
             "embedding": "same database embedding model and document prefix on both labels; batch unseen labels and cache in topic_embeddings",
             "answer": "no additional topic-extraction call for answer/history questions",
@@ -278,21 +278,21 @@ def freeze(output, config, args):
         },
         "p1_candidate_filter": {
             "queries": "condition and consequence from normalized rule text",
-            "pool": "initial hits + accepted session facts + prior endpoints; latest current fact per matter",
+            "pool": "New/revised rule version: initial hits + accepted session facts + prior-version endpoints. Existing rule: only newly accepted, unlinked facts whose retrieval pools contained that rule. Exclude established endpoints before filtering; latest current fact per matter",
             "score": "max(condition cosine similarity, affected cosine similarity)",
             "topic_override": "any label-pair similarity > topic_similarity_threshold",
             "min_similarity": P1_MIN_SIMILARITY,
             "top_k": None,
         },
-        "p2_new_candidate_filter": {
+        "p2_inform_candidate_filter": {
             **DIRECT_CANDIDATE_POLICY,
             "enabled": args.p2_direct_backend == "jev",
-            "scope": "new-intent fact view; shared P1 pool and correction unchanged",
+            "scope": "inform-intent fact view; shared P1 pool and correction unchanged",
             "query_vector": "reuse initial retrieval vector",
             "keywords": "PG lexemes; per-matter IDF over accepted non-deleted facts through this session; exclude generic lexemes",
             "identifier_exception": "literal query entity containing letters and digits or a URL/path",
             "versions": "retain current candidate of any selected matter",
-            "empty": "save extracted text directly: current -> new, historical -> history; no p2_new call",
+            "empty": "save extracted text directly: current -> new, historical -> history; no p2_inform call",
         },
         "forget_supplement_filter": {
             **DIRECT_CANDIDATE_POLICY,
@@ -306,7 +306,7 @@ def freeze(output, config, args):
         "extracted_content": {
             "text": "save-ready, self-contained; preserve maintenance intent and exact quotations",
             "temporal_scope": ["current", "historical"],
-            "empty_new_direct_save_enabled": args.p2_direct_backend == "jev",
+            "empty_inform_direct_save_enabled": args.p2_direct_backend == "jev",
             "topics": "required string list; independent assertions remain split; deletion requests describe the requested subject matter",
         },
         "started_at": datetime.now(timezone.utc).isoformat(),

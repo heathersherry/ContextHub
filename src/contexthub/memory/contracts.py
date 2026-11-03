@@ -72,7 +72,6 @@ class DirectDecision(Contract):
         "hold",
         "forget",
         "revoke",
-        "invalidate",
         "retract",
     ]
     target_ref: str | None
@@ -89,7 +88,6 @@ class DirectDecision(Contract):
                 "duplicate",
                 "forget",
                 "revoke",
-                "invalidate",
                 "retract",
             )
             and not self.target_ref

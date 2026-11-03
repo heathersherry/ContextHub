@@ -1,4 +1,4 @@
-"""Batch rule and forgetting hints before full-session confirmation."""
+"""Screen rule and forgetting candidates before full-session confirmation."""
 
 import re
 
@@ -7,7 +7,22 @@ import pysbd
 from contexthub.llm.jev_client import JEV_MODEL
 from .code_regions import code_regions
 
-RULE_HINT = re.compile(r"\bif\b", re.I)
+# Frozen expanded vocabulary from the MemDerive rule-text audit. These are
+# candidate hints, not semantic labels; JEV/the full-session extractor decides.
+RULE_HINT_TERMS = (
+    "if", "unless", "requires", "eligible", "except", "starting from",
+    "require", "required", "requirement", "requirements", "need", "needs",
+    "must", "only", "when", "once", "never", "cannot", "before", "after",
+    "without", "while", "until", "within", "above", "below", "rule", "rules",
+    "policy", "excluded", "excludes", "exclude", "exception", "exceptions",
+    "effective", "at least", "at most", "no more than", "from today onward",
+    "approved by", "handled by", "claimable", "refundable", "allowance",
+    "cap", "caps", "count toward", "counts toward",
+)
+RULE_HINT = re.compile(
+    r"\b(?:" + "|".join(r"\s+".join(map(re.escape, term.split())) for term in RULE_HINT_TERMS) + r")\b",
+    re.I,
+)
 FORGET_HINT = re.compile(r"\b(?:remove|forget|delete)\b", re.I)
 
 
@@ -21,13 +36,14 @@ def rule_candidates(messages):
         if not RULE_HINT.search(source):
             continue
         excluded = code_regions(source)
-        # A soft line break must not separate an if-clause from its consequence.
+        # A soft line break must not separate a rule's condition from its outcome.
         # Equal-length substitutions preserve offsets; the payload uses original text.
         for span in segmenter.segment(source.replace("\n", " ").replace("\r", " ")):
             sentence = source[span.start:span.end].rstrip()
             for match in RULE_HINT.finditer(sentence):
-                if_start = span.start + match.start()
-                if any(start <= if_start < end for start, end in excluded):
+                hint_start = span.start + match.start()
+                hint_end = span.start + match.end()
+                if any(start < hint_end and hint_start < end for start, end in excluded):
                     continue
                 candidates.append({
                     "ref": f"R{len(candidates) + 1}",
@@ -35,20 +51,12 @@ def rule_candidates(messages):
                     "role": message["role"],
                     "text": sentence,
                     "sentence_start": span.start,
-                    "if_start": if_start,
-                    "if_end": span.start + match.end(),
+                    "hint_start": hint_start,
+                    "hint_end": hint_end,
                 })
+                # Judge the whole sentence once, even if several hints match.
+                break
     return candidates
-
-
-def candidate_text(candidate):
-    """Mark only ambiguous if occurrences; keep source offsets in audit records."""
-    text = candidate["text"]
-    if len(RULE_HINT.findall(text)) == 1:
-        return text
-    start = candidate["if_start"] - candidate["sentence_start"]
-    end = candidate["if_end"] - candidate["sentence_start"]
-    return text[:start] + "<target>" + text[start:end] + "</target>" + text[end:]
 
 
 def forget_candidates(messages):
@@ -101,7 +109,7 @@ class JevCandidateGate:
                         "question": f"Apply state.{policy} to candidate.",
                         "candidate": {
                             "role": candidate["role"],
-                            "text": candidate_text(candidate) if kind == "rules" else candidate["text"],
+                            "text": candidate["text"],
                         },
                     },
                     "criteria": {key: f"state.{policy}.criteria.{key}" for key in rubric["criteria"]},

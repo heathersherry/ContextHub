@@ -1,6 +1,99 @@
 # Memory 研究实现
 
-For current runnable instructions, see [MEME-32k reproduction](../../experiments/meme32k/README.md). The dated entries below are historical records.
+The [corrected-entry scoped-content probe](MEMDERIVE-PRESERVE-SCOPE-TRIPOPS7-20261102.md)
+returns to the successful q001 core and changes locator proposals only. q001's
+scope, content query, paths, scores, and final 15 match exactly; its saved answer
+is rescored at full credit. Five questions complete scoped selection (answer
+accuracy 1/5); two insufficient scopes use the explicitly labeled fallback
+(1/2). Overall accuracy is 2/7, with no new non-q001 scoped success claimed.
+The run uses six existing-model embedding calls, four new answers, and three
+exact-input reused answers; retrieval makes no generative LLM calls.
+
+The [seven-question parserless entity-expansion probe](MEMDERIVE-PARSERLESS-TRIPOPS7-20261102.md)
+removes the syntax gate and completes all seven retrievals with 15 items each.
+Expansion reaches 209–219 candidates, but unchanged original-query cosine
+returns exactly the vector top 15 in every case. Seven fresh answers yield
+answer/witnessed accuracy 1/7; q001 regresses relative to its prior entity-scoped
+content-query result. The six other prompts are unchanged from the earlier
+fallback run. Retrieval adds no generative LLM or embedding calls. The report
+records the top-15 invariance and separates coverage from ranking effectiveness.
+
+The [six-question tripops_w1 automatic-retrieval transfer test](MEMDERIVE-AUTOMATIC-TRANSFER-TRIPOPS6-20261102.md)
+finds that the unchanged q001 parser fails on all six fixed questions across five
+categories. With the user's approved original-query vector fallback, each case
+returns 15 items and reaches official scoring: answer and witnessed accuracy
+are both 1/6. These are fallback scores, not successful transfers of entity-path
+retrieval. Six answer calls were made; retrieval used no generative LLM and
+reused existing embeddings. The report separates parsing, retrieval, and old
+snapshot/provenance failures.
+
+The [q001 official-answer follow-up](MEMDERIVE-AUTOMATIC-QUERY-Q001-ANSWER-20261102.md)
+answers the frozen automatic-retrieval top 15 with the existing GPT-5.6-sol
+configuration. The answer and witnessed accuracy are 1, citation precision,
+recall, and F1 are all 1, and both error rates are 0. It uses one answer call;
+retrieval is unchanged and official scoring is deterministic. This is one
+development question, not a full benchmark result.
+
+The [2026-11-02 q001 automatic-query probe](MEMDERIVE-AUTOMATIC-QUERY-Q001-20261102.md)
+uses local dependency parsing and existing entity indexes to resolve Trip-Anser
+from the original question, with no supplied entity or fixed evidence prefix.
+The active hotel, cancellation, and missing coffee receipt rank 4, 6, and 10 in
+the final 15. Retrieval uses one embedding call and zero generative LLM calls.
+The report preserves a synthetic parser failure and remaining ranking noise;
+this is an isolated development probe, not a default-retriever change.
+
+The [2026-11-02 q001 entity/content separation probe](MEMDERIVE-ENTITY-CONTENT-Q001-20261102.md)
+uses the complete 20-fact Trip-Anser entity pool, then compares status queries
+with and without the entity name. Removing the name improves cancellation from
+cosine rank 12 to 5 and final position 13 to 8; coffee drops from final position
+5 to 11. The active hotel remains fixed at position 2, while its cosine rank
+improves from 11 to 6. Both arms retain 15 items. This is offline ranking only.
+
+The [2026-11-02 q001 query-focus ablation](MEMDERIVE-QUERY-FOCUS-Q001-20261102.md)
+keeps the time prefix and tests removing the resolved conference description,
+then asking for hotel-booking status. With the same fixed first three items and
+141 candidates, the cancellation enters at positions 12 and 11 respectively.
+The coffee fact remains above it at position 5 in both arms. Two query embedding
+calls were made; no answers or official scores were rerun, and ranking code is unchanged.
+
+The [2026-11-02 q001 resolved-query continuation](MEMDERIVE-RESOLVED-QUERY-Q001-20261102.md)
+fixes the first three facts and replaces only later direct-relevance cosines with
+a query containing Trip-Anser. The same 141 candidates and frozen group/bridge
+logic produce a new 15-item list. The canceled hotel's cosine rank improves
+from 100 to 18, but it still misses the final 15. This offline comparison uses
+one embedding call and does not test answers or automatic entity resolution.
+
+The [2026-11-02 q001 neighbor-threshold sweep](MEMDERIVE-NEIGHBOR-THRESHOLD-Q001-20261102.md)
+changes only neighbor admission to raw query cosine plus an explicit threshold.
+At 0.45, the pool falls from v2's 114 facts to 52 while the explicit chain and
+correct answer remain; witness recall stays 0.5. A 0.50 threshold loses the
+bridge and fails. All arms keep 15 items, and downstream ranking and shared
+retrieval defaults are unchanged. This one-question result does not calibrate
+a general threshold.
+
+The [q001 entity-group v2 probe](MEMDERIVE-ENTITY-GROUP-Q001-V2-20261030.md)
+adds query-relevant marginal contributions and connected coverage. It retains
+the conference-date, conference-trip, and hotel facts in the first three items;
+official scores match v1 and witness recall remains 0.5. The preliminary offline
+failure is preserved. Default retrieval is unchanged.
+
+The [2026-10-30 programmatic entity-group probe](MEMDERIVE-ENTITY-GROUP-Q001-20261030.md)
+tests only MemDerive q001 with existing vectors and entity tags, keeping 15 items
+and adding no selector-model calls. The answer passes official scoring, but the
+complete conference-to-trip evidence chain still loses in ranking. This remains
+an independent experiment; the default retriever is unchanged.
+
+The [2026-10-30 rule-candidate update](RULE-CANDIDATES-20261030.md) expands the
+keyword filter and semantic prompts to non-if policies and dependencies while
+preserving the normalized output contract. It has local regression coverage,
+not a new live benchmark result.
+
+The [2026-10-30 MemDerive selection probe](MEMDERIVE-SELECTION-PROBE-20261030.md)
+compares original retrieval with candidate retention plus one DeepSeek selection
+on 20 fixed questions. Both arms keep 15 evidence items. This reuses the old
+memory snapshot and does not test the updated extraction prompts or change engine defaults.
+
+For current runnable instructions, see [MEME-32k reproduction](../../experiments/meme32k/README.md) and [MemDerive evaluation](../../integrations/memderive/README.md). Both use the same ContextHub memory core. Use separate databases and output directories; freeze code and prompts while a run is in progress. New runs with message-level provenance require a fresh database. See the [2026-10-28 integration validation](MEMDERIVE-MERGE-20261028.md) for the merged working version. The dated entries below are historical records.
 
 **查完整实验请看 [MEME-32k 100 例实验索引](MEME-32K-EXPERIMENTS.md)**：只列 MEME-32k 覆盖全部 100 个 case 的实验，记录时间、改动内容、结果、耗时和报告。
 

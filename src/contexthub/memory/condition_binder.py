@@ -26,27 +26,34 @@ class ConditionBinder:
             and r["accepted"]
             and r["status"] != "deleted"
         }
-        pending = {key for key in candidates_by_ref if key in rules}
+        accepted_rules = {key for key in candidates_by_ref if key in rules}
+        pending = {key: set() for key in accepted_rules}
         for fact in new_facts.values():
             for key in candidates_by_ref[ref_of(fact)]:
                 if key in rules and fact["memory_id"] not in (
                     rules[key]["condition_matter_ids"]
                     + rules[key]["affected_matter_ids"]
                 ):
-                    pending.add(key)
+                    pending.setdefault(key, set()).add(fact["memory_id"])
         changed = []
         for key in sorted(pending):
             rule = rules[key]
-            # Older versions supply candidates, never inherited conclusions.
-            versions = await self.store.versions(context.trace, rule["memory_id"])
-            related = {
-                uid
-                for r in versions
-                for field in ("condition_matter_ids", "affected_matter_ids")
-                for uid in r[field]
-            }
-            hits = candidates_by_ref.get(key, {})
-            ids = {split_ref(k)[0] for k in hits} | set(new_facts) | related
+            if key in accepted_rules:
+                # A newly accepted rule version needs initial binding. Previous
+                # versions supply candidates, never inherited conclusions.
+                versions = await self.store.versions(context.trace, rule["memory_id"])
+                related = {
+                    uid for r in versions
+                    for field in ("condition_matter_ids", "affected_matter_ids")
+                    for uid in r[field]
+                }
+                hits = candidates_by_ref.get(key, {})
+                ids = {split_ref(k)[0] for k in hits} | set(new_facts) | related
+            else:
+                # Existing rules inspect only incoming, unlinked matters that
+                # retrieved this rule, not their previously established endpoints.
+                ids = pending[key]
+            ids = ids - set(rule["condition_matter_ids"] + rule["affected_matter_ids"])
             candidates = {
                 ref_of(r): r
                 for uid in sorted(ids, key=str)

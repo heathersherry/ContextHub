@@ -70,7 +70,7 @@ RULE_QUERY = re.compile(
 
 
 def answer_purpose(question):
-    # Explicit policy/hypothetical cues opt into rules; otherwise current facts.
+    # These cues label the context; current answers and policies both admit rules.
     if HISTORY.search(question):
         return "history"
     return "policy" if RULE_QUERY.search(question) else "answer"
@@ -298,7 +298,7 @@ class Retriever:
 
     async def filter_direct_candidates(
         self, focus, candidates, context, *, current_refs, query_vector=None,
-        memory_types=("fact",), log_stage="p2_new.candidates",
+        memory_types=("fact",), log_stage="p2_inform.candidates",
     ):
         """Shared filter for new facts and the semantic forget supplement."""
         if not candidates:

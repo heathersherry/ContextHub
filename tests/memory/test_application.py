@@ -97,11 +97,11 @@ async def test_sdk_ingest_update_context_and_meme_share_selection(env):
         assert {tuple(i.source_sessions) for i in history.items} == {(1,), (2,)}
         limited = await client.memory.context(
             MemoryContextRequest(
-                namespace=env.trace.namespace, query="owner", max_chars=40
+                namespace=env.trace.namespace, query="owner", max_chars=70
             )
         )
         assert (
-            len(limited.context) <= 40
+            len(limited.context) <= 70
             and limited.items == []
             and limited.budget_exhausted
         )
@@ -134,7 +134,7 @@ async def test_http_rules_update_invalidate_and_repair(env):
     rule = "If owner changes, then recipient follows owner"
     env.responses.extend(
         [
-            extraction_response(rules=[dict(rule_item(rule), candidate_ref="R1")], contents=[item("Owner Wang"), item("Recipient Wang")]),
+            extraction_response(rules=[rule_item(rule)], contents=[item("Owner Wang"), item("Recipient Wang")]),
             {"action": "new", "target_ref": None},
             {"action": "new", "target_ref": None},
             {"action": "new", "target_ref": None},
@@ -163,7 +163,8 @@ async def test_http_rules_update_invalidate_and_repair(env):
         assert "Recipient Wang" not in response.context
         derived = next(i for i in response.items if i.text == "Recipient Li")
         assert derived.origin == "derived" and derived.source_sessions == [1, 2]
-        assert all(i.type == "fact" for i in response.items)
+        assert any(i.type == "rule" and i.text == rule for i in response.items)
+        assert json.loads(response.context)["conditional_rules"] == [{"text": rule}]
         policy = await client.memory.context(
             MemoryContextRequest(
                 namespace=env.trace.namespace, query="owner", mode="policy"

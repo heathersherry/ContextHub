@@ -7,12 +7,12 @@ from contexthub.llm.retry_policy import ResponseSchemaError
 
 from .contracts import rule_queries
 from .schemas import ExtractedItem, Extraction, normalize_topics
-from .jev_candidate_gate import candidate_text, extraction_candidates
+from .jev_candidate_gate import extraction_candidates
 
 logger = logging.getLogger(__name__)
 
 
-def parse_items(raw, *, kind="content"):
+def parse_items(raw):
     try:
         data = json.loads(raw)
     except (ValueError, TypeError):
@@ -25,17 +25,15 @@ def parse_items(raw, *, kind="content"):
     for item in data["items"]:
         if not isinstance(item, dict):
             raise ValueError("each item must be an object")
-        item_kind = item.get("type") if kind is None else kind
+        item_kind = item.get("type")
         if item_kind not in ("content", "rule", "forget_request"):
-            raise ValueError("invalid program-owned extraction kind")
-        fields = {"text", "entities", "topics", "source_message_nos"}
+            raise ValueError("invalid extraction type")
+        fields = {"type", "text", "entities", "topics", "source_message_nos"}
         if item_kind == "content":
             fields.add("temporal_scope")
-        if kind is None:
-            fields.add("type")
         if set(item) != fields:
             raise ValueError(
-                "item requires text, entities, topics and source_message_nos, plus temporal_scope for content; type is program-owned"
+                "item requires type, text, entities, topics and source_message_nos, plus temporal_scope for content"
             )
         if (
             not isinstance(item["text"], str)
@@ -60,41 +58,14 @@ def parse_items(raw, *, kind="content"):
     return items, []
 
 
-def parse_extraction(raw, allowed_candidates):
-    """Validate all groups and their shared execution order atomically."""
-    try:
-        data = json.loads(raw)
-    except (ValueError, TypeError):
-        raise ValueError("response must contain rules, contents and forget_requests") from None
-    groups = {"rules", "contents", "forget_requests"}
-    if not isinstance(data, dict) or set(data) != groups:
-        raise ValueError("exactly rules, contents and forget_requests are required")
-    if any(not isinstance(data[k], list) for k in groups):
-        raise ValueError("rules, contents and forget_requests must be arrays")
-    rules = []
-    for item in data["rules"]:
-        if (
-            not isinstance(item, dict)
-            or not isinstance(item.get("candidate_ref"), str)
-            or item["candidate_ref"] not in allowed_candidates
-        ):
-            raise ValueError("candidate_ref must name a supplied candidate")
-        rules.append({k: v for k, v in item.items() if k != "candidate_ref"})
-    parsed_rules, _ = parse_items(json.dumps({"items": rules}), kind="rule")
-    ordered, seen = [], set()
-    for group, kind in (("contents", "content"), ("forget_requests", "forget_request")):
-        for item in data[group]:
-            if not isinstance(item, dict) or type(item.get("order")) is not int or item["order"] < 1:
-                raise ValueError("each content and forget request requires a positive integer order")
-            order = item["order"]
-            if order in seen:
-                raise ValueError("order must be unique across contents and forget_requests")
-            seen.add(order)
-            parsed, _ = parse_items(json.dumps({"items": [
-                {k: v for k, v in item.items() if k != "order"}
-            ]}), kind=kind)
-            ordered.append((order, parsed[0]))
-    return parsed_rules + [item for _, item in sorted(ordered)], []
+def parse_extraction(raw, *, rules_allowed, forget_allowed):
+    """Validate one typed list without changing the model's source order."""
+    items, warnings = parse_items(raw)
+    if not rules_allowed and any(item.type == "rule" for item in items):
+        raise ValueError("rule items forbidden when no rule candidates are supplied")
+    if not forget_allowed and any(item.type == "forget_request" for item in items):
+        raise ValueError("forget_request items forbidden when no forgetting candidates are supplied")
+    return items, warnings
 
 
 class ExtractionFailed(RuntimeError):
@@ -119,16 +90,18 @@ class Extractor:
             await context.store.record(context, "extraction.candidates", selected)
         inputs = {
             "messages": messages,
-            "accepted_candidates": [
-                {"ref": c["ref"], "message_no": c["message_no"],
-                 "role": c["role"], "text": candidate_text(c)}
-                for c in selected["rules"]
-            ],
-            # Full source text is already in messages; these are hints, not a whitelist.
-            "forget_candidate_messages": sorted({c["message_no"] for c in selected["forget_requests"]}),
+            "accepted_candidates": {
+                kind: [
+                    {"ref": c["ref"], "message_no": c["message_no"],
+                     "role": c["role"],
+                     "text": c["text"]}
+                    for c in selected[kind]
+                ]
+                for kind in ("rules", "forget_requests")
+            },
         }
         items = await self.extract_items(inputs, context)
-        # One internal batch, rules first; candidates are never persisted as facts.
+        # Preserve the model list order; candidates are never persisted as facts.
         raw = json.dumps({"items": [
             {k: v for k, v in i.__dict__.items() if k != "temporal_scope" or i.type == "content"}
             for i in items
@@ -142,8 +115,8 @@ class Extractor:
     async def extract_items(self, inputs, context):
         rule_instructions = (
             context.store.prompts.text("extractor_rules")
-            if inputs["accepted_candidates"]
-            else "No rule candidates are supplied. Return rules as []; extract contents and forget_requests from all messages."
+            if inputs["accepted_candidates"]["rules"]
+            else "No rule candidates are supplied. Do not emit any rule items."
         )
         instructions = context.store.prompts.text("extractor").replace(
             "{rule_instructions}", rule_instructions
@@ -151,10 +124,13 @@ class Extractor:
         prompt = instructions + "\n" + json.dumps(inputs, ensure_ascii=False)
         log_stage = "extraction.joint"
         await context.store.record(context, log_stage + ".input", {"prompt": prompt})
-        allowed_candidates = {c["ref"] for c in inputs["accepted_candidates"]}
 
         def parse(raw):
-            items, warnings = parse_extraction(raw, allowed_candidates)
+            items, warnings = parse_extraction(
+                raw,
+                rules_allowed=bool(inputs["accepted_candidates"]["rules"]),
+                forget_allowed=bool(inputs["accepted_candidates"]["forget_requests"]),
+            )
             message_nos = {m["message_no"] for m in inputs["messages"]}
             if any(set(item.source_message_nos) - message_nos for item in items):
                 raise ValueError("source_message_nos must name messages in this session")

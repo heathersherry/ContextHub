@@ -32,7 +32,7 @@ async def test_cross_type_failure_continues_binding_conditions_and_later_session
                 if data["messages"][0]["content"].startswith("If")
                 else ["The user enjoys painting."]
             )
-            return extraction_response(rules=[dict(rule_item(rule_text), candidate_ref="R1")] if data["accepted_candidates"] else [], contents=[item(t) for t in texts])
+            return extraction_response(rules=[rule_item(rule_text)] if data["accepted_candidates"]["rules"] else [], contents=[item(t) for t in texts])
         if "incoming" in data:
             text = data["incoming"]["text"]
             if text == rule_text:

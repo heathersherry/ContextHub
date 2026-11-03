@@ -29,8 +29,8 @@ release counts, not the size of the default development subset.
 one ContextHub session. Each public event becomes a numbered message retaining
 its event ID/time/source header. Shared extraction outputs `source_message_nos`
 for every item; the parser requires nonempty, unique, in-range message numbers.
-Direct writes save those coordinates, duplicates merge them, and derived
-memories follow their versioned premises. The public API and SDK expose
+Direct writes save those coordinates; duplicate no-ops retain the existing
+sources, and derived memories follow their versioned premises. The public API and SDK expose
 `source_messages` as `{session_seq, message_no}` pairs alongside session sources.
 The adapter maps those coordinates back to official event IDs. These are
 model-attributed sources, not a semantic proof that every cited event entails
@@ -191,3 +191,33 @@ explicit fixtures; these tests cannot establish benchmark performance. Tests
 skip when the optional upstream package/data or dedicated database is absent.
 
 See [the initial validation record](../../docs/memory-research/MEMDERIVE-ADAPTER-VALIDATION.md).
+
+## Saved-candidate selection experiment
+
+The [2026-10-30 paired probe](../../docs/memory-research/MEMDERIVE-SELECTION-PROBE-20261030.md)
+replays saved retrieval candidates for 20 fixed questions and compares the
+original top 15 with a single DeepSeek selection from the candidate union.
+It uses the official answer prompt, parser and scorers, preserves source
+attribution, and performs no ingestion or embedding calls. This is a separate
+research script, not a backend resume feature or an enabled engine policy.
+
+The subsequent [q001 entity-group probe](../../docs/memory-research/MEMDERIVE-ENTITY-GROUP-Q001-20261030.md)
+uses only existing vectors and entity tags for expansion and group selection,
+with no selector model. The hotel answer passes official scoring, but the full
+conference-to-trip chain is not retained in the 15 items. It remains a separate
+experiment and does not enable a new backend retrieval policy.
+
+The [v2 follow-up](../../docs/memory-research/MEMDERIVE-ENTITY-GROUP-Q001-V2-20261030.md)
+ranks new facts by direct query relevance and contribution within connected
+evidence groups. The complete conference-to-trip-to-hotel chain reaches the
+first three items on q001. Official scores remain the same as v1; the canceled
+booking is still absent. This remains a development probe, not a default policy.
+
+The [2026-11-02 neighbor-threshold sweep](../../docs/memory-research/MEMDERIVE-NEIGHBOR-THRESHOLD-Q001-20261102.md)
+replaces only neighbor admission with raw query cosine >= an explicit threshold,
+preserving v2 downstream ranking and the 15-item budget. Thresholds 0.40 and 0.45
+retain the explicit chain and correct answer; 0.50 fails. At 0.35 the canceled
+booking enters the pool but still loses in final selection. The research CLI now
+requires `--control-v2` and `--neighbor-thresholds`; see the report for frozen
+inputs and the verified official runtime. No universal threshold or shared
+retrieval default is selected from this one-question probe.

@@ -128,7 +128,7 @@ class MaintenanceExecutor:
                     focus, DirectDecision(action="new", target_ref=None), context
                 )
                 return [key], changes
-            if intent not in ("new", "correction", "hold"):
+            if intent not in ("inform", "correction", "hold"):
                 raise ValueError("content requires a session-batch intent")
             if intent == "hold":
                 await self.store.record(context, "p2.held", {"incoming": focus})
@@ -148,6 +148,8 @@ class MaintenanceExecutor:
             return [], []
         prepared = []
         for operation in plan.operations:
+            if operation.action == "duplicate":
+                continue
             target = candidates.get(operation.target_ref)
             content = dict(focus)
             if operation.text is not None:
@@ -157,12 +159,14 @@ class MaintenanceExecutor:
             decision = DirectDecision(action=operation.action, target_ref=operation.target_ref)
             embedding = await self.direct_embedding(content, decision, context)
             prepared.append((content, decision, embedding))
+        if not prepared:
+            return [], []
         accepted, transitions = [], []
         # Validate the whole plan and obtain all embeddings before any memory write.
         # A storage failure rolls back every operation for this incoming item.
         async with self.store.pool.acquire() as conn, conn.transaction():
             for content, decision, embedding in prepared:
-                if decision.action in ("invalidate", "retract", "revoke"):
+                if decision.action in ("retract", "revoke"):
                     transitions.extend(await self.remove_direct(content, decision, context, conn))
                 else:
                     key, changes = await self.write_direct(content, decision, embedding, context, conn)
@@ -177,7 +181,7 @@ class MaintenanceExecutor:
             and (intent == "correction" or row["type"] == "fact")
         }
         current = {ref_of(r) for r in await self.store.current_rows(context.trace)}
-        if intent == "new":
+        if intent == "inform":
             candidates = await self.retriever.filter_direct_candidates(
                 focus, candidates, context, current_refs=current, query_vector=query_vector,
             )
@@ -187,7 +191,7 @@ class MaintenanceExecutor:
                     action=action, target_ref=None,
                     text=focus["text"], entities=focus["entities"],
                 )])
-                await self.store.record(context, "p2_new.direct_save", {
+                await self.store.record(context, "p2_inform.direct_save", {
                     "reason": "no_candidates", "incoming": focus,
                     "result": plan.model_dump(),
                 })
@@ -203,8 +207,8 @@ class MaintenanceExecutor:
             ) for key, row in candidates.items()],
         }
         allowed = {
-            "new": {"new", "update", "duplicate", "history", "invalidate"},
-            "correction": {"correct", "update", "retract", "revoke", "invalidate"},
+            "inform": {"new", "update", "duplicate", "history"},
+            "correction": {"correct", "update", "retract", "revoke"},
         }[intent]
 
         def validate(raw):
@@ -221,12 +225,10 @@ class MaintenanceExecutor:
                     target = candidates[operation.target_ref]
                     if target["type"] == "rule" and operation.text is not None:
                         rule_queries(operation.text)
-                    if operation.action in ("update", "invalidate", "revoke") and operation.target_ref not in current:
+                    if operation.action in ("update", "revoke") and operation.target_ref not in current:
                         raise ValueError("this operation requires a current target")
                     if operation.action == "revoke" and target["type"] != "rule":
                         raise ValueError("revoke requires a rule")
-                    if operation.action == "invalidate" and target["type"] != "fact":
-                        raise ValueError("invalidate requires a fact")
                     if operation.action == "duplicate" and (
                         target["status"] != "fresh" or target["invalidated"] or target["origin"] == "derived"
                     ):
@@ -242,7 +244,7 @@ class MaintenanceExecutor:
                         scope = "historical"
                     signature = (operation.text.strip(), scope)
                     if signature in written:
-                        raise ValueError("do not write the same content twice; retire redundant current targets instead")
+                        raise ValueError("do not write the same content twice; any additional update needs its own supported statement")
                     written.add(signature)
             return plan
 
@@ -281,14 +283,12 @@ class MaintenanceExecutor:
                 ):
                     raise ValueError("replacement must match the target memory type")
                 if (
-                    result.action in ("update", "revoke", "invalidate")
+                    result.action in ("update", "revoke")
                     and result.target_ref not in current
                 ):
                     raise ValueError("this operation requires the current version")
                 if result.action == "revoke" and target["type"] != "rule":
                     raise ValueError("revoke requires a rule")
-                if result.action == "invalidate" and target["type"] != "fact":
-                    raise ValueError("invalidate requires a fact")
                 if result.action == "duplicate" and (
                     target["status"] != "fresh"
                     or target["invalidated"]
@@ -354,6 +354,8 @@ class MaintenanceExecutor:
 
     async def apply_direct(self, focus, decision, context, *, forget_refs=None):
         action = decision.action
+        if action == "duplicate":
+            return None, []
         if action == "hold":
             await self.store.record(
                 context,
@@ -361,7 +363,7 @@ class MaintenanceExecutor:
                 {"incoming": focus, "source_session": context.session_seq},
             )
             return None, []
-        if action in ("forget", "revoke", "invalidate", "retract"):
+        if action in ("forget", "revoke", "retract"):
             return None, await self.apply_removal(
                 focus, decision, context, forget_refs=forget_refs
             )
@@ -403,119 +405,82 @@ class MaintenanceExecutor:
         ):
             raise ValueError("update requires the current target")
         scope = "historical" if action == "history" else "current"
-        if target and action in ("correct", "duplicate"):
+        if target and action == "correct":
             scope = target["temporal_scope"]
-            if action == "correct" and (
-                latest is None or ref_of(latest) != ref_of(target)
-            ):
+            if latest is None or ref_of(latest) != ref_of(target):
                 scope = "historical"
-        incoming_sources = [dict(session_seq=context.session_seq, message_no=n)
-                            for n in focus["source_message_nos"]]
-        if action == "duplicate":
-            if target["status"] != "fresh" or target["invalidated"] or target["origin"] == "derived":
-                raise ValueError("duplicate requires a fresh direct assertion")
-            previous = await conn.fetchval(
-                f"SELECT session_seq FROM memory_sources WHERE {SCOPE} AND memory_id=$4 AND version=$5",
-                *context.trace.args,
-                target["memory_id"],
-                target["version"],
-            )
-            if previous is None:
-                raise ValueError("duplicate target has no direct session source")
-            merged = sorted(set(previous) | {context.session_seq})
-            previous_messages = await conn.fetchval(
-                f"SELECT message_refs FROM memory_sources WHERE {SCOPE} AND memory_id=$4 AND version=$5",
-                *context.trace.args, target["memory_id"], target["version"],
-            )
-            pairs = {(m["session_seq"], m["message_no"]) for m in [*previous_messages, *incoming_sources]}
-            message_refs = [dict(session_seq=s, message_no=n) for s, n in sorted(pairs)]
-            await conn.execute(
-                f"UPDATE memory_sources SET session_seq=$6,message_refs=$7 WHERE {SCOPE} AND memory_id=$4 AND version=$5",
-                *context.trace.args,
-                target["memory_id"],
-                target["version"],
-                merged,
-                message_refs,
-            )
-            key = ref_of(target)
-            await self.store.record(
-                context,
-                "p2.sources_merged",
-                {"ref": key, "before": previous, "after": merged},
-                conn=conn,
-            )
-        else:
-            uid = target["memory_id"] if target else uuid4()
-            version = await conn.fetchval(
-                f"SELECT coalesce(max(version),0)+1 FROM memories WHERE {SCOPE} AND memory_id=$4",
-                *context.trace.args,
-                uid,
-            )
-            new = await self.store._insert(
-                conn,
-                context.trace,
-                context.session_seq,
-                focus["text"],
-                memory_type,
-                focus["entities"],
-                normalize_entities(
-                    focus["topics"] + (list(target["topics"]) if target else [])
-                ),
-                "extracted",
-                uid,
-                version,
-                [context.session_seq],
-                incoming_sources,
-            )
-            key = f"{new[0]}:{new[1]}"
-            await conn.execute(
-                f"UPDATE memories SET search_vector=to_tsvector($6::regconfig,text),memory_embedding=$7::vector WHERE {SCOPE} AND memory_id=$4 AND version=$5",
-                *context.trace.args,
-                *new,
-                self.store.config.text_config,
-                embedding,
-            )
+        uid = target["memory_id"] if target else uuid4()
+        version = await conn.fetchval(
+            f"SELECT coalesce(max(version),0)+1 FROM memories WHERE {SCOPE} AND memory_id=$4",
+            *context.trace.args,
+            uid,
+        )
+        new = await self.store._insert(
+            conn,
+            context.trace,
+            context.session_seq,
+            focus["text"],
+            memory_type,
+            focus["entities"],
+            normalize_entities(
+                focus["topics"] + (list(target["topics"]) if target else [])
+            ),
+            "extracted",
+            uid,
+            version,
+            [context.session_seq],
+            [dict(session_seq=context.session_seq, message_no=n)
+             for n in focus["source_message_nos"]],
+        )
+        key = f"{new[0]}:{new[1]}"
+        await conn.execute(
+            f"UPDATE memories SET search_vector=to_tsvector($6::regconfig,text),memory_embedding=$7::vector WHERE {SCOPE} AND memory_id=$4 AND version=$5",
+            *context.trace.args,
+            *new,
+            self.store.config.text_config,
+            embedding,
+        )
+        await self.mutate(
+            key,
+            {
+                "status": "fresh",
+                "accepted": True,
+                "temporal_scope": scope,
+                "status_reason": "Direct " + action,
+            },
+            context,
+            conn,
+        )
+        if target and action in ("update", "correct"):
             await self.mutate(
-                key,
+                ref_of(target),
                 {
-                    "status": "fresh",
-                    "accepted": True,
-                    "temporal_scope": scope,
+                    "status": "stale",
+                    "invalidated": target["invalidated"] or action == "correct",
                     "status_reason": "Direct " + action,
                 },
                 context,
                 conn,
             )
-            if target and action in ("update", "correct"):
-                await self.mutate(
-                    ref_of(target),
-                    {
-                        "status": "stale",
-                        "invalidated": target["invalidated"] or action == "correct",
-                        "status_reason": "Direct " + action,
-                    },
+            transitions.extend(
+                await self.invalidate_basis(
+                    [ref_of(target)],
                     context,
                     conn,
+                    exclude_history=action == "correct",
                 )
-                transitions.extend(
-                    await self.invalidate_basis(
-                        [ref_of(target)],
-                        context,
-                        conn,
-                        exclude_history=action == "correct",
-                    )
-                )
-            if scope == "current":
-                transitions.insert(
-                    0,
-                    {
-                        "operation": action,
-                        "before": dict(target) if target else None,
-                        "after": dict(
-                            await self.store.read_ref(context.trace, key, conn=conn)
-                        ),
-                    },
-                )
+            )
+        if scope == "current":
+            transitions.insert(
+                0,
+                {
+                    "operation": action,
+                    "before": dict(target) if target else None,
+                    "after": dict(
+                        await self.store.read_ref(context.trace, key, conn=conn)
+                    ),
+                },
+            )
         await self.store.record(
             context,
             "p2.direct_applied",
@@ -546,14 +511,9 @@ class MaintenanceExecutor:
             raise ValueError("removal target unavailable")
         current = await self.current(target["memory_id"], context, conn)
         is_current = current and ref_of(current) == key
-        if action in ("revoke", "invalidate") and not is_current:
+        if action == "revoke" and not is_current:
             raise ValueError("removal requires a current target")
-        if (
-            action == "revoke"
-            and target["type"] != "rule"
-            or action == "invalidate"
-            and target["type"] != "fact"
-        ):
+        if action == "revoke" and target["type"] != "rule":
             raise ValueError("removal target has the wrong type")
         rows = [target]
         for row in rows:
@@ -561,8 +521,7 @@ class MaintenanceExecutor:
                 ref_of(row),
                 {
                     "status": "stale",
-                    "invalidated": row["invalidated"]
-                    or action in ("retract", "revoke"),
+                    "invalidated": True,
                     "status_reason": "Explicit " + action,
                 },
                 context,
@@ -573,7 +532,7 @@ class MaintenanceExecutor:
                 [ref_of(r) for r in rows],
                 context,
                 conn,
-                exclude_history=action != "invalidate",
+                exclude_history=True,
             )
         )
         changed = target if is_current else None

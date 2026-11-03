@@ -51,15 +51,16 @@ async def test_initial_retrieval_then_split_filter_includes_same_session_facts(e
 
     env.responses.extend(
         [
-            extraction_response(rules=[dict(rule_item(rule), candidate_ref="R1")], contents=[item(fact), item(request), item(fact)]),
+            extraction_response(rules=[rule_item(rule)], contents=[item(fact), item(request), item(fact)]),
             *([decide] * 4),
             bindings_response([], [fact]),
+            dict(triggers=[]),
         ]
     )
     refs = await env.full_pipeline.ingest(
         env.trace, 1, [dict(role="user", content=rule)]
     )
-    assert refs[1] == refs[2] and len(refs) == 3
+    assert len(refs) == 2
     current = await env.store.current_rows(env.trace)
     saved_rule = next(r for r in current if r["type"] == "rule")
     saved_fact = next(r for r in current if r["type"] == "fact")
@@ -94,7 +95,7 @@ async def test_incoming_rule_retrieves_both_types_and_reuses_fact_hits_for_bindi
 
     env.responses.extend(
         [
-            extraction_response(rules=[dict(rule_item(rule), candidate_ref="R1")], contents=[]),
+            extraction_response(rules=[rule_item(rule)], contents=[]),
             decide,
             bindings_response([], ["Exercise swimming"]),
             dict(triggers=[]),

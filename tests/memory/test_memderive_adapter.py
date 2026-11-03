@@ -98,7 +98,7 @@ async def test_derived_sources_and_official_answer_citation_scoring(env, tmp_pat
     backend = await open_backend(env, tmp_path, monkeypatch)
     rule = 'If owner changes, then recipient follows owner'
     env.responses.extend([
-        extraction_response(rules=[dict(rule_item(rule), candidate_ref='R1')],
+        extraction_response(rules=[rule_item(rule)],
                             contents=[dict(item('Owner Wang'), source_message_nos=[2]), dict(item('Recipient Wang'), source_message_nos=[3])]),
         {'action': 'new', 'target_ref': None}, {'action': 'new', 'target_ref': None},
         {'action': 'new', 'target_ref': None},
@@ -174,7 +174,7 @@ async def test_real_factory_configuration_and_resource_cleanup(env, tmp_path, mo
                        'usage': {'prompt_tokens': 1, 'total_tokens': 1}}
         else:
             payload = {'model': 'fixture-chat',
-                       'choices': [{'message': {'content': '{"rules":[],"contents":[],"forget_requests":[]}'}}],
+                       'choices': [{'message': {'content': '{"items":[]}'}}],
                        'usage': {'prompt_tokens': 1, 'completion_tokens': 1, 'total_tokens': 2}}
         return httpx.Response(200, json=payload)
 
@@ -198,7 +198,7 @@ async def test_real_factory_configuration_and_resource_cleanup(env, tmp_path, mo
 
 
 @pytest.mark.asyncio
-async def test_session_sources_exclude_neighbors_and_merge_duplicates(env, tmp_path, monkeypatch):
+async def test_session_sources_exclude_neighbors_and_keep_duplicate_noop(env, tmp_path, monkeypatch):
     backend = await open_backend(env, tmp_path, monkeypatch)
     env.responses.extend([
         extraction_response(rules=[], contents=[dict(item('Owner Wang'), source_message_nos=[2])]),
@@ -213,7 +213,7 @@ async def test_session_sources_exclude_neighbors_and_merge_duplicates(env, tmp_p
     assert first[0].metadata['event_ids'] == ['e2']
     await backend.ingest([event(4, 'Owner Wang'), replace(event(5, 'Unrelated email'), session_id='s4')], 'world')
     second = await backend.retrieve(query, 'world', 15)
-    assert second[0].metadata['event_ids'] == ['e2', 'e4']
+    assert second[0].metadata['event_ids'] == ['e2']  # duplicate is a shared-core no-op
     assert await backend.engine.store.latest_session(backend.namespaces['world'].scope) == 2
     assert len(backend.namespaces['world'].events) == 5
     with pytest.raises(ValueError, match='predates'):

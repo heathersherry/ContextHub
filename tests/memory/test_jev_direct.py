@@ -44,7 +44,7 @@ def choice_client(sequence, requests):
         answers = {}
         for ref, question in data['questions'].items():
             assert set(question['instructions']['incoming']) == {'text'}
-            assert set(question['criteria']) == {'new', 'correction', 'hold'}
+            assert set(question['criteria']) == {'inform', 'correction', 'hold'}
             selected = sequence.pop(0)
             answers[ref] = {
                 'type': 'choice', 'choice': selected, 'confidence': 1.0,
@@ -89,7 +89,7 @@ def plan_response(*operations):
 
 
 @pytest.mark.asyncio
-@pytest.mark.parametrize('intent', ['new', 'correction', 'hold'])
+@pytest.mark.parametrize('intent', ['inform', 'correction', 'hold'])
 async def test_single_question_uses_frozen_prompt_without_candidates(tmp_path, monkeypatch, intent):
     question = json.loads((PromptSet().root / 'p2_intent_jev.json').read_text())
     question['instructions'] += '\nFrozen marker'
@@ -120,7 +120,7 @@ async def test_rule_add_and_content_hold_need_no_llm(env, jev):
 
 
 @pytest.mark.asyncio
-async def test_new_updates_one_duplicate_retires_another_and_leaves_other_matter(env, jev):
+async def test_inform_updates_one_copy_and_records_supported_ending_for_another(env, jev):
     sequence, requests = jev
     c1 = await session(env, 1)
     old = await add(env, c1, 'Home Shanghai')
@@ -128,21 +128,23 @@ async def test_new_updates_one_duplicate_retires_another_and_leaves_other_matter
     food = await add(env, c1, 'Likes Shanghai food')
     rule = await add(env, c1, 'If home changes commute changes', type='rule')
     c2 = await session(env, 2)
-    sequence.append('new')
+    sequence.append('inform')
     def response(payload):
         assert all(r['type'] == 'fact' for r in input_of(payload)['candidates'])
         return plan_response(('update', 'Home Shanghai', 'Home Beijing'),
-                             ('invalidate', 'Currently living in Shanghai', None))(payload)
+                             ('update', 'Currently living in Shanghai', 'The user no longer lives in Shanghai'))(payload)
     env.responses.append(response)
     keys, changes = await process_item(env, pending(c2, 'I moved to Beijing'),
         {key: await row(env, key) for key in [old, redundant, food, rule]}, c2)
-    assert len(keys) == 1
+    assert len(keys) == 2
+    assert (await row(env, keys[1]))['text'] == 'The user no longer lives in Shanghai'
+    assert (await row(env, keys[1]))['memory_id'] == split_ref(redundant)[0]
     saved = await row(env, keys[0])
     assert saved['text'] == 'Home Beijing' and saved['memory_id'] == split_ref(old)[0]
     assert not (await row(env, old))['invalidated']
     assert (await row(env, redundant))['status'] == 'stale'
     assert (await row(env, food))['status'] == 'fresh'
-    assert {t['operation'] for t in changes} == {'update', 'invalidate'}
+    assert len(changes) == 2 and all(t['operation'] == 'update' for t in changes)
     assert len(requests) == len(env.prompts) == 1
 
 
@@ -152,7 +154,7 @@ async def test_new_history_then_duplicate_does_not_replace_current(env, jev):
     c1 = await session(env, 1)
     current = await add(env, c1, 'Home Beijing')
     c2 = await session(env, 2)
-    sequence.extend(['new', 'new'])
+    sequence.extend(['inform', 'inform'])
     env.responses.extend([plan_response(('history', 'Home Beijing', 'Home Shanghai last year')),
                           plan_response(('duplicate', 'Home Beijing', None))])
     keys, changes = await process_item(env, pending(c2, 'Last year I lived in Shanghai'),
@@ -162,12 +164,12 @@ async def test_new_history_then_duplicate_does_not_replace_current(env, jev):
     assert (await row(env, current))['status'] == 'fresh'
     keys, changes = await process_item(env, pending(c2, 'I still live in Beijing'),
         {current: await row(env, current)}, c2)
-    assert keys == [current] and changes == []
+    assert keys == [] and changes == []
     assert len(await env.store.versions(env.trace, split_ref(current)[0])) == 2
     async with env.store.pool.acquire() as conn:
         sources = await conn.fetchval(f'SELECT session_seq FROM memory_sources WHERE {SCOPE} AND memory_id=$4 AND version=$5',
                                       *env.trace.args, *split_ref(current))
-    assert sources == [1, 2]
+    assert sources == [1]
 
 
 @pytest.mark.asyncio
@@ -195,7 +197,7 @@ async def test_historical_correction_does_not_change_current(env, jev):
     c1 = await session(env, 1)
     current = await add(env, c1, 'Home Beijing')
     env.responses.append(plan_response(('history', 'Home Beijing', 'Home Shanghai last year')))
-    sequence.append('new')
+    sequence.append('inform')
     keys, _ = await process_item(env, pending(c1, 'Home Shanghai last year'), {current: await row(env, current)}, c1)
     history = keys[0]
     c2 = await session(env, 2)
@@ -251,7 +253,7 @@ async def test_forget_scans_beyond_retrieval_including_history_rules_and_embedde
 
 
 @pytest.mark.asyncio
-@pytest.mark.parametrize('intent', ['new', 'correction', 'forget'])
+@pytest.mark.parametrize('intent', ['inform', 'correction', 'forget'])
 async def test_no_action_never_saves_request(env, jev, intent):
     sequence, _ = jev
     c = await session(env, 1)
@@ -275,7 +277,7 @@ async def test_whole_plan_validated_before_any_write(env, jev, bad):
     c = await session(env, 1)
     old = await add(env, c, 'Home Shanghai')
     original = await row(env, old)
-    sequence.append('new')
+    sequence.append('inform')
     valid = dict(action='new', target_ref=None, text='Likes tea', entities=[])
     env.responses.extend([{'operations': [valid, bad]}] * 2)
     assert await process_item(env, pending(c, 'New input'), {old: original}, c) == ([], [])
@@ -320,13 +322,13 @@ async def test_pipeline_shares_multiple_outputs_then_binds_and_propagates(env, j
     exercise = await add(env, c1, 'Exercise swimming')
     rule = 'If home changes, then exercise becomes cycling'
     request = 'Change saved home to Beijing and work to Suzhou'
-    sequence.extend(['correction', 'new'])
+    sequence.extend(['correction', 'inform'])
     def confirm(payload):
         data = input_of(payload)
         assert {'Home Beijing', 'Work Suzhou'} <= {r['text'] for r in data['candidates']}
         return plan_response(('duplicate', 'Home Beijing', None))(payload)
     env.responses.extend([
-        extraction_response(rules=[dict(rule_item(rule), candidate_ref="R1")], contents=[item(request), item('I still live in Beijing')]),
+        extraction_response(rules=[rule_item(rule)], contents=[item(request), item('I still live in Beijing')]),
         plan_response(('update', 'Home Shanghai', 'Home Beijing'), ('update', 'Work Shanghai', 'Work Suzhou')),
         confirm,
         bindings_response(['Home Beijing'], ['Exercise swimming']),
@@ -334,7 +336,7 @@ async def test_pipeline_shares_multiple_outputs_then_binds_and_propagates(env, j
         repair_response('Exercise cycling', [rule, 'Home Beijing']),
     ])
     refs = await env.full_pipeline.ingest(env.trace, 2, [{'role': 'user', 'content': rule + '. ' + request}])
-    assert len(refs) == 4 and refs[1] == refs[3]
+    assert len(refs) == 3
     current = await env.store.current_rows(env.trace)
     assert {'Home Beijing', 'Work Suzhou', 'Exercise cycling'} <= {r['text'] for r in current}
     assert (await row(env, home))['status'] == (await row(env, work))['status'] == 'stale'
@@ -343,7 +345,7 @@ async def test_pipeline_shares_multiple_outputs_then_binds_and_propagates(env, j
 
 
 @pytest.mark.asyncio
-@pytest.mark.parametrize('intent,name', [('new', 'p2_new'), ('correction', 'p2_correction'), ('forget', 'p2_forget_scope')])
+@pytest.mark.parametrize('intent,name', [('inform', 'p2_inform'), ('correction', 'p2_correction'), ('forget', 'p2_forget_scope')])
 async def test_branch_prompt_is_loaded_from_active_frozen_directory(env, jev, tmp_path, monkeypatch, intent, name):
     active = tmp_path / 'active-prompts'
     active.mkdir()
@@ -386,7 +388,7 @@ def test_cli_p2_only_and_manifest(tmp_path):
     assert manifest['model_parameters']['p2_direct']['processing_model'] == 'gpt-6-luna'
     assert manifest['model_parameters']['p2_direct']['processing_reasoning_effort'] == 'low'
     assert manifest['maintenance_prompts']['p2_direct'] == 'p2_intent_jev.json'
-    assert manifest['maintenance_prompts']['p2_new'] == 'p2_new.txt'
+    assert manifest['maintenance_prompts']['p2_inform'] == 'p2_inform.txt'
     assert manifest['maintenance_prompts']['p2_correction'] == 'p2_correction.txt'
     assert manifest['model_output_attempts']['p2_intent'] == 1
     assert manifest['model_output_attempts']['p2_direct'] == 2
@@ -429,9 +431,9 @@ def test_choice_accepts_rounded_probability_total_without_normalizing():
 ])
 async def test_empty_new_saves_upstream_content_and_time_without_luna(env, jev, scope, text):
     env.responses.append(extraction_response(rules=[], contents=[dict(item(text, temporal_scope=scope), entities=['Oxford'] if scope == 'historical' else [])]))
-    jev[0].append('new')
+    jev[0].append('inform')
     await env.full_pipeline.ingest(env.trace, 1, [{'role': 'user', 'content': text}])
-    assert len(env.prompts) == 1  # extraction only, no p2_new rewrite
+    assert len(env.prompts) == 1  # extraction only, no p2_inform rewrite
     assert len(jev[1]) == 1
     assert not env.responses
     async with env.store.pool.acquire() as conn:
@@ -442,5 +444,5 @@ async def test_empty_new_saves_upstream_content_and_time_without_luna(env, jev, 
     assert saved['text'] == text and saved['temporal_scope'] == scope and saved['accepted']
     assert saved['created_in_session'] == 1 and saved['origin'] == 'extracted'
     assert ('oxford' in saved['entities']) == (scope == 'historical')
-    assert 'p2_new.direct_save' in [r['stage'] for r in stages]
-    assert 'p2_new.input' not in [r['stage'] for r in stages]
+    assert 'p2_inform.direct_save' in [r['stage'] for r in stages]
+    assert 'p2_inform.input' not in [r['stage'] for r in stages]

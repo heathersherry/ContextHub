@@ -25,26 +25,57 @@ Optional Jev screening uses one request with separate three-way questions:
 rule/not_rule/unclear and forget/not_forget/unclear. Each policy and its detailed
 criteria appear once in shared state. Positive and unclear candidates survive.
 Numeric source offsets stay in audit logs; multi-if sentences use <target> tags.
-The extractor receives compact rule candidates and only message numbers for
-forgetting hints. Forgetting hints never restrict full-conversation extraction.
+The extractor receives selected source sentences under accepted_candidates.rules
+and accepted_candidates.forget_requests. It confirms only candidates in the
+corresponding group; full messages provide adoption, reference and scope context,
+not additional rule or forgetting candidates. Jev-rejected sentences stay excluded,
+including when another sentence in the same message survives. Without Jev, all
+program candidates enter these groups. An empty group forbids output items of
+that type, enforced by the parser; forgetting requests without a screening keyword
+are not discovered by the joint extractor.
 
-The model must return rules, contents and forget_requests. Content and forgetting
-requests carry unique positive order values across both arrays; the program
-validates all three arrays atomically, strips transport metadata and processes
-rules first, followed by content and forgetting requests interleaved by order.
-Only content has temporal_scope. Internal forgetting items have type
-forget_request; they are recorded in the session output, never inserted as facts.
+The model returns one items array with type=rule/content/forget_request, directly
+in source conversation order. The parser validates the whole array atomically and
+preserves its order; there is no numeric order field, regrouping or rules-first
+pass. Only content has temporal_scope. Forgetting requests are recorded in session
+output, never inserted as facts.
 
-With p2_direct_backend=jev, all contents receive new/correction/hold classifications
-in one batch with shared instructions and criteria. Rules and forget_requests
-are excluded, and an empty content batch makes no classification call. Actual
+With p2_direct_backend=jev, explicit verbatim memory requests are routed to inform
+by the program: an imperative Remember/Please remember this/these/the following
+header, followed by word for word/verbatim and a colon with supplied content.
+Only the header is matched; quoted payload words do not determine the route.
+Bare remember mentions, questions, negations and other forms stay with Jev.
+The remaining contents receive inform/correction/hold classifications in one
+batch with shared instructions and criteria. Original C positions are preserved.
+Program decisions are logged as p2_intent.program, separate from Jev answers.
+Rules and forget_requests are excluded; no remaining questions means no Jev call.
+This shortcut only selects inform; normal new/update/duplicate/history maintenance
+still applies. It does not bypass old-memory checks or guarantee verbatim storage. Actual
 maintenance remains sequential, so later operations see earlier accepted writes.
+The inform intent means providing information, not necessarily creating a record.
+Its p2_inform prompt selects new/update/duplicate/history against old facts.
+Duplicate ignores the incoming item: no memory/version write, source merge,
+accepted result or new protection. The existing record remains unchanged and
+can still be checked by downstream conditions.
+Direct maintenance no longer accepts invalidate: an ended state is saved with
+update as an explicit, supported negative fact in the same matter. The old version
+remains potentially true history. Coexisting hobbies/subscriptions do not replace
+one another without evidence; extra records may be updated to ended states only
+when the statement establishes the same superseded state. Conditional and
+basis-reference invalidation still propagate downstream changes.
 Forgetting bypasses content classification, retrieves old disclosures at execution
 time, confirms deletion scope, and marks selected matters and all versions deleted.
 It reuses the prepared query embedding without a redundant generic candidate search.
 The shared-activity deletion policy (including the James cooking example) remains
 in p2_forget_scope.txt. See memory-research/forget-batch-flow-20261026.txt for
 implementation details and validation limits.
+
+P1 checks an existing rule only against newly accepted, unlinked fact matters
+whose retrieval pool contained that rule. Known condition/affected endpoints are
+removed before candidate filtering and are not rejudged. New or revised rule
+versions still receive initial binding using their retrieval hits, accepted
+session facts and prior-version endpoints. Selected new links are appended; old
+links are not automatically reviewed or removed. Empty pools make no model call.
 
 Application entry points
 ------------------------

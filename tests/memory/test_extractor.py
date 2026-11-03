@@ -40,7 +40,7 @@ def test_prompt_and_conditional_hints():
 async def test_extraction_keeps_requests_without_saving_or_embedding_any_item(env):
     raw = extraction_response(rules=[], contents=[
             {"text": "Owner is Li", "topics": [], "entities": [], "temporal_scope": "current", "source_message_nos": [1]},
-        ], forget_requests=[forget_item("Forget nickname", order=2)])
+        ], forget_requests=[forget_item("Forget nickname")])
     env.responses.append(raw)
     items = await env.pipeline.ingest(
         env.trace,
@@ -109,7 +109,7 @@ async def test_four_unusable_responses_stop_trajectory_but_not_other_episode(env
         await env.pipeline.ingest(env.trace, 2, [], timeout_seconds=10)
     assert len(env.prompts) == 4 and env.embedded == []
     other = env.trace.model_copy(update={"namespace": env.trace.namespace + "-other"})
-    env.responses.append('{"rules":[],"contents":[],"forget_requests":[]}')
+    env.responses.append('{"items":[]}')
     assert await env.pipeline.ingest(other, 1, [], timeout_seconds=10) == []
     async with env.store.pool.acquire() as conn:
         assert (
@@ -124,7 +124,7 @@ async def test_four_unusable_responses_stop_trajectory_but_not_other_episode(env
 
 @pytest.mark.asyncio
 async def test_empty_batch_no_retry_and_only_current_session_in_prompt(env):
-    env.responses.extend([payload("OLD SECRET"), '{"rules":[],"contents":[],"forget_requests":[]}'])
+    env.responses.extend([payload("OLD SECRET"), '{"items":[]}'])
     await env.pipeline.ingest(
         env.trace, 1, [{"role": "user", "content": "OLD SECRET"}], timeout_seconds=10
     )
@@ -178,16 +178,16 @@ async def test_session_deadline_stops_without_extra_requests(env):
 @pytest.mark.parametrize('scope', [None, 'past', '', 1, []])
 def test_content_requires_explicit_valid_temporal_scope(scope):
     with pytest.raises(ValueError):
-        parse_items(json.dumps({'items': [{'text': 'A past fact', 'topics': [], 'entities': [], 'temporal_scope': scope}]}))
+        parse_items(json.dumps({'items': [{'type': 'content', 'text': 'A past fact', 'topics': [], 'entities': [], 'source_message_nos': [1], 'temporal_scope': scope}]}))
 
 
 def test_content_cannot_omit_temporal_scope():
     with pytest.raises(ValueError):
-        parse_items('{"items":[{"text":"A fact","entities":[]}]}')
+        parse_items('{"items":[{"type":"content","text":"A fact","topics":[],"entities":[],"source_message_nos":[1]}]}')
 
 
 def test_historical_scope_survives_parse():
-    items, _ = parse_items('{"items":[{"text":"Lived in Oxford until 2020","topics":[],"entities":["Oxford"],"temporal_scope":"historical","source_message_nos":[1]}]}')
+    items, _ = parse_items('{"items":[{"type":"content","text":"Lived in Oxford until 2020","topics":[],"entities":["Oxford"],"temporal_scope":"historical","source_message_nos":[1]}]}')
     assert items[0].temporal_scope == 'historical'
 
 
@@ -195,7 +195,7 @@ def test_historical_scope_survives_parse():
 def test_message_source_contract_rejects_invalid_numbers(sources):
     from .helpers import item
     with pytest.raises(ValueError, match='source_message_nos'):
-        parse_items(json.dumps({'items': [dict(item('Owner Wang'), source_message_nos=sources)]}))
+        parse_items(json.dumps({'items': [dict(item('Owner Wang'), type='content', source_message_nos=sources)]}))
 
 
 @pytest.mark.asyncio

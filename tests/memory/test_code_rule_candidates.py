@@ -2,7 +2,7 @@
 
 import pytest
 
-from contexthub.memory.jev_candidate_gate import candidate_text, rule_candidates
+from contexthub.memory.jev_candidate_gate import rule_candidates
 
 
 @pytest.mark.parametrize('code', [
@@ -25,12 +25,12 @@ def test_code_is_excluded_but_adjacent_prose_keeps_original_offsets(code):
     source = 'If I move, change gyms.\n' + code + '\nIf my shift changes, move the meeting.'
     candidates = rule_candidates([{'role': 'user', 'content': source}])
     assert len(candidates) == 2
-    assert [source[c['if_start']:c['if_start'] + 16] for c in candidates] == [
+    assert [source[c['hint_start']:c['hint_start'] + 16] for c in candidates] == [
         'If I move, chang', 'If my shift chan',
     ]
     for c in candidates:
         assert c['text'] == source[c['sentence_start']:c['sentence_start'] + len(c['text'])]
-        assert source[c['if_start']:c['if_end']] == 'If'
+        assert source[c['hint_start']:c['hint_end']] == 'If'
 
 
 def test_inline_code_does_not_remove_the_enclosing_natural_language_rule():
@@ -38,14 +38,13 @@ def test_inline_code_does_not_remove_the_enclosing_natural_language_rule():
     candidates = rule_candidates([{'role': 'user', 'content': source}])
     assert len(candidates) == 1
     assert candidates[0]['text'] == source
-    assert candidate_text(candidates[0]) == '<target>If</target> `if ready: run()` fails, alert the team.'
 
 
 def test_unclosed_fence_excludes_remaining_code_only():
     source = 'If I move, change gyms.\n```python\nif ready: run()'
     candidates = rule_candidates([{'role': 'user', 'content': source}])
     assert len(candidates) == 1
-    assert candidates[0]['if_start'] == 0
+    assert candidates[0]['hint_start'] == 0
 
 
 @pytest.mark.parametrize('source', [
@@ -57,4 +56,4 @@ def test_unclosed_fence_excludes_remaining_code_only():
 ])
 def test_natural_language_including_code_explanations_is_left_to_semantic_gate(source):
     candidates = rule_candidates([{'role': 'user', 'content': source}])
-    assert len(candidates) == (2 if 'callback' in source else 1)
+    assert len(candidates) == 1

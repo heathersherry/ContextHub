@@ -47,7 +47,7 @@ async def apply(env, context, text, action, target=None, **kwargs):
 
 
 @pytest.mark.asyncio
-async def test_rule_duplicate_merges_session_sources_without_candidate_evidence(env):
+async def test_rule_duplicate_ignored_without_source_write(env):
     text = "If owner changes, then recipient follows owner"
     c1 = await session(env, 1)
     env.responses.append(dict(action="new", target_ref=None))
@@ -56,13 +56,13 @@ async def test_rule_duplicate_merges_session_sources_without_candidate_evidence(
     c2 = await session(env, 2)
     env.responses.append(direct_response("duplicate", text))
     repeated, changes = await direct(env, pending(c2, text, type="rule"), c2)
-    assert repeated == original and changes == []
+    assert repeated is None and changes == []
     saved = await row(env, original)
     assert saved["namespace"] == env.trace.namespace
     assert saved["created_in_session"] == 1 and "rule_evidence" not in saved
     assert (await env.store.sources(env.trace, *split_ref(original)))[
         "session_seq"
-    ] == [1, 2]
+    ] == [1]
     assert len(await env.store.versions(env.trace, saved["memory_id"])) == 1
     assert len(env.embedded) == embedded + 1  # Query only; no new document embedding.
     assert not env.responses
@@ -75,11 +75,8 @@ async def test_new_update_duplicate_history_and_source_merge(env):
     assert changes[0]["operation"] == "new"
     c2 = await session(env, 2)
     same, changes = await apply(env, c2, "Owner Wang", "duplicate", old)
-    assert same == old and changes == []
-    assert (await env.store.sources(env.trace, *split_ref(old)))["session_seq"] == [
-        1,
-        2,
-    ]
+    assert same is None and changes == []
+    assert (await env.store.sources(env.trace, *split_ref(old)))["session_seq"] == [1]
     fresh, changes = await apply(env, c2, "Owner Li", "update", old)
     assert (
         split_ref(fresh)[0] == split_ref(old)[0]
@@ -131,7 +128,7 @@ async def test_exact_basis_correction_excludes_multilevel_history(env):
 
 
 @pytest.mark.asyncio
-@pytest.mark.parametrize("kind", ["forget", "retract", "invalidate", "revoke"])
+@pytest.mark.parametrize("kind", ["forget", "retract", "revoke"])
 async def test_temporary_instruction_and_provenance(env, kind):
     c = await session(env, 1)
     target = await add(
@@ -153,7 +150,7 @@ async def test_temporary_instruction_and_provenance(env, kind):
     assert len(changes) == 2
     t, d = await row(env, target), await row(env, derived)
     assert t["status"] == ("deleted" if kind == "forget" else "stale")
-    assert d["status"] == "stale" and d["invalidated"] == (kind != "invalidate")
+    assert d["status"] == "stale" and d["invalidated"]
     async with env.store.pool.acquire() as conn:
         assert (
             await conn.fetchval(
@@ -330,7 +327,7 @@ async def test_two_level_invalidation_and_repair_with_new_values(env):
 
 
 @pytest.mark.asyncio
-async def test_current_session_duplicate_confirmation_protected_from_condition(env):
+async def test_duplicate_is_not_protected_from_condition(env):
     c = await session(env, 1)
     r = await add(env, c, "If owner changes, then recipient follows owner", type="rule")
     old = await add(env, c, "Recipient Wang")
@@ -339,8 +336,10 @@ async def test_current_session_duplicate_confirmation_protected_from_condition(e
     c2 = await session(env, 2)
     _, changes = await apply(env, c2, "Owner Li", "update", owner)
     now, _ = await apply(env, c2, "Recipient Wang", "duplicate", old)
-    assert await env.executor.check_conditions(changes, {now}, c2) == []
-    assert not env.prompts and (await row(env, now))["status"] == "fresh"
+    assert now is None
+    env.responses.append(trigger_response(["Recipient Wang"], ["C1"]))
+    assert await env.executor.check_conditions(changes, set(), c2)
+    assert not env.responses and (await row(env, old))["status"] == "stale"
 
 
 @pytest.mark.asyncio
@@ -451,7 +450,7 @@ async def test_full_pipeline_rule_extraction_binding_update_and_repair(env):
     def initial(payload):
         data = input_of(payload)
         if "messages" in data:
-            return extraction_response(rules=[dict(rule_item("If owner changes, then recipient follows owner"), candidate_ref="R1")], contents=[item("Owner Wang"), item("Recipient Wang")])
+            return extraction_response(rules=[rule_item("If owner changes, then recipient follows owner")], contents=[item("Owner Wang"), item("Recipient Wang")])
         if "incoming" in data:
             return dict(action="new", target_ref=None)
         if "rule" in data:
@@ -564,18 +563,16 @@ async def test_forget_used_evidence_never_enters_repair_materials(env):
 
 
 @pytest.mark.asyncio
-@pytest.mark.parametrize("action", ["update", "invalidate"])
-async def test_new_rule_is_bound_before_same_session_change_is_checked(env, action):
+@pytest.mark.parametrize("incoming", [
+    "Health high blood pressure",
+    "The old health condition is no longer current; the new condition is unknown.",
+])
+async def test_new_rule_is_bound_before_same_session_change_is_checked(env, incoming):
     c1 = await session(env, 1)
     health = await add(env, c1, "Health lactose intolerance")
     exercise = await add(env, c1, "Exercise swimming")
     await add(env, c1, "Unrelated current preference tea")
     rule_text = "If health changes, then exercise changes"
-    incoming = (
-        "Health high blood pressure"
-        if action == "update"
-        else "The old health condition is no longer current; the new condition is unknown."
-    )
 
     def bind(payload):
         data = input_of(payload)
@@ -583,16 +580,13 @@ async def test_new_rule_is_bound_before_same_session_change_is_checked(env, acti
         assert all(
             set(r) == {"ref", "text"} for r in data["candidates"]
         )
-        return bindings_response([incoming if action == "update" else "Health lactose intolerance"], ["Exercise swimming"])(payload)
+        return bindings_response([incoming], ["Exercise swimming"])(payload)
 
     def trigger(payload):
         data = input_of(payload)
-        change = next(t for t in data["changes"] if t["operation"] == action)
+        change = next(t for t in data["changes"] if t["operation"] == "update")
         assert change["before"]["text"] == "Health lactose intolerance"
-        if action == "invalidate":
-            assert change["after"] is None
-        else:
-            assert change["after"]["text"] == incoming
+        assert change["after"]["text"] == incoming
         assert any(c["rule"]["text"] == rule_text for c in data["checks"])
         target = next(
             t for t in condition_facts(data) if t["text"] == "Exercise swimming"
@@ -608,9 +602,9 @@ async def test_new_rule_is_bound_before_same_session_change_is_checked(env, acti
 
     env.responses.extend(
         [
-            extraction_response(rules=[dict(rule_item(rule_text), candidate_ref="R1")], contents=[item(incoming)]),
+            extraction_response(rules=[rule_item(rule_text)], contents=[item(incoming)]),
             dict(action="new", target_ref=None),
-            direct_response(action, "Health lactose intolerance"),
+            direct_response("update", "Health lactose intolerance"),
             bind,
             trigger,
             repair,
@@ -621,7 +615,7 @@ async def test_new_rule_is_bound_before_same_session_change_is_checked(env, acti
         2,
         [dict(role="user", content=rule_text), dict(role="user", content=incoming)],
     )
-    assert not env.responses and len(refs) == (2 if action == "update" else 1)
+    assert not env.responses and len(refs) == 2
     assert (await row(env, health))["status"] == "stale"
     saved_exercise = await row(env, exercise)
     assert saved_exercise["status"] == "stale"

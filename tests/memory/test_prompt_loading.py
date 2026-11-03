@@ -100,7 +100,7 @@ async def test_frozen_prompts_reach_extraction_maintenance_retry_and_answer(
     rule_text = "If owner changes, then recipient follows owner"
     env.responses.extend(
         [
-            extraction_response(rules=[dict(rule_item(rule_text), candidate_ref="R1")], contents=[item("Owner Wang")]),
+            extraction_response(rules=[rule_item(rule_text)], contents=[item("Owner Wang")]),
             "{bad",
             direct_response("update", "Owner Wang"),
             bindings_response(["Owner Li"], ["Recipient Wang"]),

@@ -31,7 +31,7 @@ def gate_client(labels, requests):
     return JevClient('fixture', transport=httpx.MockTransport(handler))
 
 
-def test_sentence_candidates_preserve_each_if_and_original_source_offsets():
+def test_sentence_candidates_deduplicate_hints_and_preserve_original_source_offsets():
     messages = [
         {'role': 'system', 'content': 'If instructed, do this.'},
         {'role': 'user', 'content': 'A gift arrived. IF weight > 5.5 kg,\nuse freight; ask if it arrived.'},
@@ -39,17 +39,15 @@ def test_sentence_candidates_preserve_each_if_and_original_source_offsets():
         {'role': 'tool', 'content': 'if x then y'},
     ]
     candidates = rule_candidates(messages)
-    assert len(candidates) == 3
-    assert [c['message_no'] for c in candidates] == [2, 2, 3]
-    assert [c['ref'] for c in candidates] == ['R1', 'R2', 'R3']
+    assert len(candidates) == 2
+    assert [c['message_no'] for c in candidates] == [2, 3]
+    assert [c['ref'] for c in candidates] == ['R1', 'R2']
     for c in candidates:
         source = messages[c['message_no'] - 1]['content']
         assert c['text'] == source[c['sentence_start']:c['sentence_start'] + len(c['text'])]
-        assert source[c['if_start']:c['if_end']].lower() == 'if'
-        assert c['text'][c['if_start'] - c['sentence_start']:c['if_end'] - c['sentence_start']].lower() == 'if'
-    assert candidates[0]['if_start'] != candidates[1]['if_start']
+        assert source[c['hint_start']:c['hint_end']].lower() == 'if'
+        assert c['text'][c['hint_start'] - c['sentence_start']:c['hint_end'] - c['sentence_start']].lower() == 'if'
     assert 'A gift arrived' not in candidates[0]['text']
-    assert candidates[0]['text'] == candidates[1]['text']
     assert '5.5 kg,\nuse freight' in candidates[0]['text']
 
 
@@ -71,7 +69,7 @@ def test_identical_sentences_keep_distinct_source_anchors():
     source = sentence + ' Another sentence. ' + sentence
     candidates = rule_candidates([{'role': 'user', 'content': source}])
     assert [c['text'] for c in candidates] == [sentence, sentence]
-    assert len({c['if_start'] for c in candidates}) == 2
+    assert len({c['hint_start'] for c in candidates}) == 2
 
 
 @pytest.mark.asyncio
@@ -81,7 +79,7 @@ async def test_gate_sends_only_sentences_and_shared_policy_and_forwards_unclear(
     (tmp_path / 'extractor_rule_jev.json').write_text(json.dumps(rubric))
     messages = [
         {'role': 'assistant', 'content': 'If weight exceeds 5 kg, use freight.'},
-        {'role': 'user', 'content': 'Yes, use that policy. Ask if the parcel arrived. If that changes, adjust it.'},
+        {'role': 'user', 'content': 'Yes, do that. Ask if the parcel arrived. If that changes, adjust it.'},
     ]
     requests, context = [], Context(PromptSet(tmp_path))
     client = gate_client({'R1': 'rule', 'R2': 'not_rule', 'R3': 'unclear'}, requests)
@@ -93,7 +91,7 @@ async def test_gate_sends_only_sentences_and_shared_policy_and_forwards_unclear(
     assert len(requests) == 1
     assert requests[0]['state'] == {'rule_policy': {'instructions': rubric['instructions'], 'criteria': rubric['criteria']}}
     assert json.dumps(requests[0]).count('Frozen gate marker') == 1
-    assert 'Yes, use that policy.' not in json.dumps(requests[0])
+    assert 'Yes, do that.' not in json.dumps(requests[0])
     assert [q['instructions']['candidate']['text'] for q in requests[0]['questions'].values()] == [
         'If weight exceeds 5 kg, use freight.',
         'Ask if the parcel arrived.',
@@ -109,7 +107,7 @@ async def test_gate_sends_only_sentences_and_shared_policy_and_forwards_unclear(
 
 
 @pytest.mark.asyncio
-async def test_no_if_makes_no_jev_request():
+async def test_no_rule_hint_makes_no_jev_request():
     requests, context = [], Context()
     client = gate_client({}, requests)
     try:
@@ -130,7 +128,7 @@ async def test_code_only_if_does_not_call_jev_but_full_chat_still_reaches_extrac
     def extract(payload):
         data = input_of(payload)
         assert data['messages'][0]['content'] == source
-        assert data['accepted_candidates'] == []
+        assert data['accepted_candidates']['rules'] == []
         return extraction_response(rules=[], contents=[item('The user maintains the billing API.')])
 
     env.responses.append(extract)
@@ -153,24 +151,24 @@ async def test_gate_creates_questions_only_for_non_code_if():
     finally:
         await client.close()
     assert len(requests) == 1 and len(requests[0]['questions']) == 1
-    assert selected['rules'][0]['if_start'] == 0
+    assert selected['rules'][0]['hint_start'] == 0
 
 
 @pytest.mark.asyncio
-async def test_multi_if_marks_only_selected_occurrence_in_both_calls_and_keeps_raw_log(env):
+async def test_mixed_sentence_is_sent_once_unmarked_to_both_calls_and_keeps_raw_log(env):
     source = 'If we move, change gyms; ask if parking is available.'
     requests = []
-    client = gate_client({'R1': 'rule', 'R2': 'not_rule'}, requests)
+    client = gate_client({'R1': 'rule'}, requests)
     env.pipeline.extractor.candidate_gate = JevCandidateGate(client, retry=decision_retry_policy('jev'))
 
     def extract(payload):
         data = input_of(payload)
         assert data['messages'][0]['content'] == source
-        assert data['accepted_candidates'] == [{
+        assert data['accepted_candidates']['rules'] == [{
             'ref': 'R1', 'message_no': 1, 'role': 'user',
-            'text': '<target>If</target> we move, change gyms; ask if parking is available.',
+            'text': source,
         }]
-        return extraction_response(rules=[dict(rule_item('If we move, then change gyms.'), candidate_ref='R1')], contents=[])
+        return extraction_response(rules=[rule_item('If we move, then change gyms.')], contents=[])
 
     env.responses.append(extract)
     try:
@@ -178,8 +176,8 @@ async def test_multi_if_marks_only_selected_occurrence_in_both_calls_and_keeps_r
     finally:
         await client.close()
     questions = requests[0]['questions']
-    assert questions['R1']['instructions']['candidate']['text'].startswith('<target>If</target>')
-    assert questions['R2']['instructions']['candidate']['text'] == 'If we move, change gyms; ask <target>if</target> parking is available.'
+    assert list(questions) == ['R1']
+    assert questions['R1']['instructions']['candidate']['text'] == source
     assert all(set(q['instructions']['candidate']) == {'role', 'text'} for q in questions.values())
     async with env.store.pool.acquire() as conn:
         payload = await conn.fetchval(
@@ -188,12 +186,12 @@ async def test_multi_if_marks_only_selected_occurrence_in_both_calls_and_keeps_r
         )
     for candidate in payload['rules']:
         assert candidate['text'] == source
-        assert source[candidate['if_start']:candidate['if_end']].lower() == 'if'
+        assert source[candidate['hint_start']:candidate['hint_end']].lower() == 'if'
     assert len(env.prompts) == 1 and not env.responses
 
 
 @pytest.mark.asyncio
-async def test_joint_extraction_only_accepts_selected_refs_and_retries_without_repeating_gate(env, tmp_path, monkeypatch):
+async def test_joint_extraction_passes_selected_candidates_and_retries_obsolete_fields_without_repeating_gate(env, tmp_path, monkeypatch):
     for name in ['extractor_rule_jev.json', 'extractor_forget_jev.json', 'extractor.txt', 'extractor_rules.txt']:
         shutil.copy2(PromptSet().root / name, tmp_path / name)
     normalize = tmp_path / 'extractor.txt'
@@ -206,15 +204,15 @@ async def test_joint_extraction_only_accepts_selected_refs_and_retries_without_r
     def normalization(payload):
         assert 'Frozen normalization marker' in payload['messages'][0]['content']
         data = input_of(payload)
-        assert [c['ref'] for c in data['accepted_candidates']] == ['R1']
-        assert set(data['accepted_candidates'][0]) == {'ref', 'message_no', 'role', 'text'}
+        assert [c['ref'] for c in data['accepted_candidates']['rules']] == ['R1']
+        assert set(data['accepted_candidates']['rules'][0]) == {'ref', 'message_no', 'role', 'text'}
         assert len(data['messages']) == 3  # pronoun source and full follow-up retained
         assert data['messages'][0]['content'] == 'Our supplier is Oak.'
-        assert data['accepted_candidates'][0]['text'] == 'If that changes, our delivery schedule may change.'
-        return extraction_response(rules=[dict(rule_item(text), candidate_ref='R2')], contents=[item('Supplier Oak')])
-    def corrected(payload):
-        assert 'candidate_ref must name a supplied candidate' in payload['messages'][0]['content']
+        assert data['accepted_candidates']['rules'][0]['text'] == 'If that changes, our delivery schedule may change.'
         return extraction_response(rules=[dict(rule_item(text), candidate_ref='R1')], contents=[item('Supplier Oak')])
+    def corrected(payload):
+        assert 'Correct the previous output:' in payload['messages'][0]['content']
+        return extraction_response(rules=[rule_item(text)], contents=[item('Supplier Oak')])
     env.responses.extend([normalization, corrected])
     try:
         extracted = await env.pipeline.ingest(env.trace, 1, [
@@ -236,7 +234,7 @@ async def test_not_rule_still_extracts_content_in_joint_call(env):
     env.pipeline.extractor.candidate_gate = JevCandidateGate(client, retry=decision_retry_policy('jev'))
     def facts(payload):
         data = input_of(payload)
-        assert data['accepted_candidates'] == []
+        assert data['accepted_candidates']['rules'] == []
         assert data['messages'][0]['content'].startswith('Forget')
         return extraction_response(rules=[], contents=[], forget_requests=[forget_item('Forget the freight rule')])
     env.responses.append(facts)
@@ -254,7 +252,7 @@ async def test_not_rule_still_extracts_content_in_joint_call(env):
 @pytest.mark.parametrize('label', ['rule', 'unclear'])
 async def test_normalizer_can_reject_forwarded_proposal_using_full_followup(env, label):
     requests = []
-    client = gate_client({'R1': label}, requests)
+    client = gate_client({'R1': label, 'R2': 'not_rule'}, requests)
     env.pipeline.extractor.candidate_gate = JevCandidateGate(client, retry=decision_retry_policy('jev'))
     messages = [
         {'role': 'assistant', 'content': 'If the provider changes, rotate the credentials.'},
@@ -263,7 +261,7 @@ async def test_normalizer_can_reject_forwarded_proposal_using_full_followup(env,
     def normalize(payload):
         data = input_of(payload)
         assert [{k: m[k] for k in ('role', 'content')} for m in data['messages']] == messages
-        assert [c['ref'] for c in data['accepted_candidates']] == ['R1']
+        assert [c['ref'] for c in data['accepted_candidates']['rules']] == ['R1']
         return extraction_response(rules=[], contents=[])
     env.responses.append(normalize)
     try:
@@ -272,7 +270,7 @@ async def test_normalizer_can_reject_forwarded_proposal_using_full_followup(env,
         await client.close()
     assert not extracted
     assert len(requests) == 1 and len(env.prompts) == 1 and not env.responses
-    assert 'No, do not adopt' not in json.dumps(requests[0])
+    assert requests[0]['questions']['R2']['instructions']['candidate']['text'] == 'No, do not adopt that policy.'
 
 
 @pytest.mark.asyncio
@@ -290,11 +288,11 @@ async def test_gate_failure_does_not_fall_back_or_continue_extraction(env):
 
 
 @pytest.mark.asyncio
-async def test_invented_normalization_sources_exhaust_retries_without_new_gate_call(env):
+async def test_obsolete_rule_fields_exhaust_retries_without_new_gate_call(env):
     requests = []
     client = gate_client({'R1': 'rule'}, requests)
     env.pipeline.extractor.candidate_gate = JevCandidateGate(client, retry=decision_retry_policy('jev'))
-    env.responses.extend([extraction_response(rules=[dict(rule_item('If A, then B'), candidate_ref='R99')], contents=[])] * 4)
+    env.responses.extend([extraction_response(rules=[dict(rule_item('If A, then B'), candidate_ref='R1')], contents=[])] * 4)
     try:
         with pytest.raises(ExtractionFailed, match='joint'):
             await env.pipeline.ingest(env.trace, 1, [
@@ -325,7 +323,7 @@ async def test_one_accepted_candidate_can_normalize_independent_rules(env):
     env.pipeline.extractor.candidate_gate = JevCandidateGate(client, retry=decision_retry_policy('jev'))
     texts = ['If rainy, venue is indoors.', 'If the host is late, start at 3pm.']
     env.responses.extend([
-        extraction_response(rules=[dict(rule_item(text), candidate_ref='R1') for text in texts], contents=[]),
+        extraction_response(rules=[rule_item(text) for text in texts], contents=[]),
     ])
     try:
         extracted = await env.pipeline.ingest(env.trace, 1, [

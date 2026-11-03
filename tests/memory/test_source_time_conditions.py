@@ -46,7 +46,7 @@ async def test_same_session_writes_checked_without_source_numbers(env, action, a
         answers = {}
         for ref, question in payload["questions"].items():
             if question["type"] == "choice":
-                label = "new" if ref.startswith("C") else "rule"
+                label = "inform" if ref.startswith("C") else "rule"
                 answers[ref] = dict(type="choice", choice=label, confidence=1.0,
                                     probabilities={k: float(k == label) for k in question["criteria"]})
             else:
@@ -65,7 +65,7 @@ async def test_same_session_writes_checked_without_source_numbers(env, action, a
     env.full_pipeline.binder = JevConditionBinder(env.store, client, env.retriever, retry=retry)
     contents = sorted([(exercise_no, exercise), (health_no, health)])
     env.responses.extend([
-        extraction_response(rules=[dict(rule_item(rule), candidate_ref="R1")], contents=[item(text) for _, text in contents]),
+        {'items': [dict(rule_item(text), type='rule') if text == rule else dict(item(text), type='content') for text in [m['content'] for m in messages]]},
     ])
     checks = []
 
@@ -92,7 +92,7 @@ async def test_same_session_writes_checked_without_source_numbers(env, action, a
             assert "source_messages" not in data["checks"][0]["rule"]
             assert "source_messages" not in fact
             if len(checks) == 1:
-                assert fact["text"] == exercise
+                assert fact["text"] == ("Exercise swimming" if action == "duplicate" else exercise)
                 change = next(t for t in data["changes"] if t["operation"] == "update"
                               and t["after"]["text"] == health)
                 assert change["after"]["text"] == health
@@ -103,16 +103,16 @@ async def test_same_session_writes_checked_without_source_numbers(env, action, a
         assert "materials" in data
         return repair_response("Exercise cycling", [rule, health])(payload)
 
-    env.responses.extend([model] * (2 if action == "duplicate" else 3 if already_reflected else 4))
+    env.responses.extend([model] * (3 if already_reflected else 4))
     try:
         await env.full_pipeline.ingest(env.trace, 2, messages, timestamp=session_time)
     finally:
         await client.close()
     assert not env.responses
-    assert len(checks) == (0 if action == "duplicate" else 1)
+    assert len(checks) == 1
     rows = await env.store.current_rows(env.trace)
     current_exercise = next(r for r in rows if r["text"].startswith("Exercise"))
-    assert current_exercise["text"] == ("Exercise swimming" if action == "duplicate" else exercise if already_reflected else "Exercise cycling")
+    assert current_exercise["text"] == (exercise if already_reflected else "Exercise cycling")
     assert current_exercise["status"] == "fresh"
     saved = await env.store.get_session(env.trace, 2)
     assert saved["messages"][0]["timestamp"] == first_time

@@ -193,14 +193,16 @@ def bindings_response(sources, targets):
 
 
 def extraction_response(*, rules, contents, forget_requests=()):
-    """Build the three-array model response with explicit cross-array ordering."""
-    return {
-        "rules": rules,
-        "contents": [dict(item, order=item.get("order", i)) for i, item in enumerate(contents, 1)],
-        "forget_requests": [dict(item, order=item.get("order", i))
-                            for i, item in enumerate(forget_requests, len(contents) + 1)],
-    }
+    """Convenience for fixtures whose source lists rules before other items.
+
+    Interleaved scenarios construct the typed items list explicitly.
+    """
+    return {"items": [
+        dict(entry, type=kind)
+        for kind, group in (("rule", rules), ("content", contents), ("forget_request", forget_requests))
+        for entry in group
+    ]}
 
 
-def forget_item(text, *, entities=(), topics=(), order=1):
-    return dict(text=text, entities=list(entities), topics=list(topics), order=order, source_message_nos=[1])
+def forget_item(text, *, entities=(), topics=()):
+    return dict(type="forget_request", text=text, entities=list(entities), topics=list(topics), source_message_nos=[1])
