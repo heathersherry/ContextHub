@@ -1,0 +1,17 @@
+[
+  {
+    "route": "/compatible-mode/v1/chat/completions",
+    "status_code": 403,
+    "model": null,
+    "usage": null
+  },
+  {
+    "route": "/compatible-mode/v1/embeddings",
+    "status_code": 200,
+    "model": "text-embedding-v4",
+    "usage": {
+      "prompt_tokens": 5,
+      "total_tokens": 5
+    }
+  }
+]

@@ -1,0 +1,122 @@
+{
+  "files": {
+    "docs/hydrabench/artifacts/20261104-paper-metrics/token-usage.json": "3bdfcbdabd5c704ac1a1db1a0ce9e9458bfefe75435eb02fb4356e7622ace971",
+    "docs/hydrabench/artifacts/20261105-document-layers-qwen38-27b/validation.json": "3094cbf298f7ff5029495be020d678913776126e41026bcb7b07048e3c992daf",
+    "docs/hydrabench/artifacts/20261105-document-layers-qwen38-27b/provider-usage.json": "b9f3e1ad08871af98835f07d7e7a2bf73cc6d7ef81fd264cbf5ebe79f6ea789f",
+    "docs/hydrabench/artifacts/20261105-section-snippets/comparison.json": "52b9a8a2f14f1472021412d5d3e7c0a9ae1e7604bea380f1c766bc91d15ed431"
+  },
+  "hydra_retrieval_20261104": {
+    "contexts": 18340,
+    "embedded": 18340,
+    "content_fingerprint": "266a21457a387b68246f596c9ce494e7"
+  },
+  "hydra_layers_sample_20261105_qwen38_27b": {
+    "contexts": 4,
+    "embedded": 3,
+    "content_fingerprint": "abe0e77168814c8d0aa27faa7bad5fd5",
+    "contexts_sha256": "3550cc04cbc2d5f1a3ff99b7b65ab45fff84cfb7549e80ab6d03e7c8703f9cec",
+    "document_sections_sha256": "91f4241dae19d99ac2757de66ec84d78afd47c2014584c3b3a66145fd14f37df",
+    "retrieval_trace_sha256": "df2f120f9f14e0814979a06c471f76384dff81b666b12bb4446a5f1da820b185"
+  },
+  "hydra_chunks_sample_20261105": {
+    "contexts": {
+      "count": 1,
+      "sha256": "5edb94f41b3f63e2a144120176b998d3353c686aee69e984d8f09b311a22cc2f"
+    },
+    "document_sections": {
+      "count": 17,
+      "sha256": "e8b65fb0e807190ac24bb5a15f7556a94cfff1990ccec3277663987cb701f70a"
+    },
+    "document_chunk_embeddings": {
+      "count": 16,
+      "sha256": "468d41fa9f1a2268e1c62f3af46071e9a8099f7660dd4146cb04b1441c6df8e2"
+    },
+    "retrieval_trace": {
+      "count": 6,
+      "sha256": "df2f120f9f14e0814979a06c471f76384dff81b666b12bb4446a5f1da820b185"
+    }
+  },
+  "existing_source_and_artifacts": {
+    "docs/hydrabench/artifacts/20261105-chunk-vectors/fixture.json": "244abe27aa5a7f841c62fd77824f8941544c67301e067ca5d227553aa07a14a7",
+    "docs/hydrabench/artifacts/20261105-chunk-vectors/chunk-inputs.json": "6cbb023351fb3f182ec3493da55cec85bef6256e378af05cae48c1b9e0693e4f",
+    "docs/hydrabench/artifacts/20261105-chunk-vectors/before-report.json": "f8c0c003632c071d86c0c9c155417c06f44c2d2c75083ee48b30a3f3c81549e5",
+    "docs/hydrabench/artifacts/20261105-chunk-vectors/queries-provider-usage.json": "d2ededd2aead2f1152f73ccc5695eb1859a935f9392468d168ac3c05c388c46f",
+    "docs/hydrabench/artifacts/20261105-chunk-vectors/protected-after.json": "682ade33eca92790fb5ac067285f9345b7f6e68178d3e4f4d41a4a405c283ad6",
+    "docs/hydrabench/artifacts/20261105-chunk-vectors/literal-agent-before.json": "3f2853ee5e11eccd7c8c7e00b8badc1d0d6a01bba5e352099fe9f4fd12803adf",
+    "docs/hydrabench/artifacts/20261105-chunk-vectors/index-provider-usage.json": "25815db9f7a25831efd23ac972fd04463baf033874167e8e4d33ac25ac929228",
+    "docs/hydrabench/artifacts/20261105-chunk-vectors/rls-check.json": "de6294aa4709afab5145aa7d7c1469197e4835a543e2444fa67421e56aa2c71f",
+    "docs/hydrabench/artifacts/20261105-chunk-vectors/literal-agent-after.json": "9e515d2314f5d79f9001e876f5d1b74f547548435609fd4a5c825a1801d92be5",
+    "docs/hydrabench/artifacts/20261105-chunk-vectors/semantic-content-before.txt": "20fdfde8325408b3590297eb80266adcc8cd425a232bdfc833d3bc669e7cc8d8",
+    "docs/hydrabench/artifacts/20261105-chunk-vectors/chunk-index.json": "c8e0194f561703441d16c78ea787a10bcc458b43aea8cae51a5f1c8fdd6b116d",
+    "docs/hydrabench/artifacts/20261105-chunk-vectors/migration.sql": "c99d779a16d1240df02b6bf4360c26e80195cb72dc7491f67ef06c1b331700eb",
+    "docs/hydrabench/artifacts/20261105-chunk-vectors/semantic-agent-before.json": "d75a829acf6cb453de5e881faf24d89e50011c98a8dc50a8a97bffd661c19e1d",
+    "docs/hydrabench/artifacts/20261105-chunk-vectors/comparison.json": "e25ac2f904e4f7df2d0782577c31057e32d9b9483401d8ff9e6003ad78bc7fb7",
+    "docs/hydrabench/artifacts/20261105-chunk-vectors/query-vectors.json": "64f12f40c02c1ca763e13d4d1787912d2971ffe1d2fcd2e037d3701bc9ce301d",
+    "docs/hydrabench/artifacts/20261105-chunk-vectors/semantic-content-after.txt": "b3b088d129060114169851333a2425fa6f1e2d676e00eac6078032408936bf58",
+    "docs/hydrabench/artifacts/20261105-chunk-vectors/literal-content-before.txt": "a8692f681599c386f6a4d30da21759d6a2a19cb23059f7e4177034733f9b4a7a",
+    "docs/hydrabench/artifacts/20261105-chunk-vectors/after-report.json": "2658efe3f075628df378e1074bde886619e637bd4214a74769c359d5a9a33001",
+    "docs/hydrabench/artifacts/20261105-chunk-vectors/exact-vector-ranks.json": "d93dece7d8b6bcb5de810545be965eb2e6bec40277b86e67481c90f24bdf1d5f",
+    "docs/hydrabench/artifacts/20261105-chunk-vectors/literal-content-after.txt": "a8692f681599c386f6a4d30da21759d6a2a19cb23059f7e4177034733f9b4a7a",
+    "docs/hydrabench/artifacts/20261105-chunk-vectors/semantic-agent-after.json": "ed62ca7c4e3abbfc25d3e5736cc3ba7c3338318a581bb2fcefd87414b1d155d5",
+    "docs/hydrabench/artifacts/20261105-chunk-vectors/protected-before.json": "682ade33eca92790fb5ac067285f9345b7f6e68178d3e4f4d41a4a405c283ad6",
+    "docs/hydrabench/artifacts/20261105-chunk-vectors/read-check-attempt-1/literal-agent-after.json": "bddf38a7896a600ee42e9e2f66ad5f688c5379c9f4e0b0e105e2bc5d791d5fb6",
+    "docs/hydrabench/artifacts/20261105-chunk-vectors/read-check-attempt-1/literal-content-after.txt": "a8692f681599c386f6a4d30da21759d6a2a19cb23059f7e4177034733f9b4a7a",
+    "docs/hydrabench/artifacts/20261105-chunk-vectors/read-check-attempt-1/status.json": "47ffc19a2b88073b7f32febfb79a104a0686ac449c900d056b4a0e93a7ec47f2",
+    "docs/hydrabench/artifacts/20261105-chunk-vectors/setup-attempt-1/chunk-inputs.json": "6cbb023351fb3f182ec3493da55cec85bef6256e378af05cae48c1b9e0693e4f",
+    "docs/hydrabench/artifacts/20261105-chunk-vectors/setup-attempt-1/index-provider-usage.json": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "docs/hydrabench/artifacts/20261105-chunk-vectors/setup-attempt-1/status.json": "dbc23fdbad9e0fd6bf41a26bb936bf681b79b7ccd7147b274afa27cce9bb389c",
+    "docs/hydrabench/artifacts/20261105-chunk-vectors/documents/microarchitecture/source.md": "17571bc69825350c0f464fb9e4ff1478f3dc0fc4f7d6c6cb9f7836783bae808c",
+    "docs/hydrabench/artifacts/20261105-chunk-vectors/documents/microarchitecture/extracted.md": "17571bc69825350c0f464fb9e4ff1478f3dc0fc4f7d6c6cb9f7836783bae808c",
+    "docs/hydrabench/artifacts/20261105-chunk-vectors/documents/microarchitecture/extracted.txt": "17571bc69825350c0f464fb9e4ff1478f3dc0fc4f7d6c6cb9f7836783bae808c",
+    "docs/hydrabench/artifacts/20261105-chunk-ranking-audit/audit.json": "d9fae4222dce03956cf1dc5c83b517c14b034472c53d15a1903dd94aaa8eb746",
+    "docs/hydrabench/artifacts/20261105-chunk-ranking-audit/audit_chunk_stages.py": "fe5119175c8f31a71de14557d4410666dee6f45b374a4f2673f5f7af838272f7",
+    "docs/hydrabench/artifacts/20261105-chunk-ranking-audit/current-config-redacted.json": "6829cd4da281a728fe1af8dce242d31046fb23e721758e3df6763a9fcd23ffbc",
+    "docs/hydrabench/artifacts/20261105-chunk-ranking-audit/audit_chunk_rankings.py": "29982f1a0dd6cec02d57b09801041d07d410254315a065413aac8aa56c7c4a68",
+    "docs/hydrabench/artifacts/20261105-chunk-ranking-audit/stages.json": "aedd73d66536722899dba2d964e9c72ac248a61765984de8b257470c57e09b90",
+    "docs/hydrabench/artifacts/20261105-chunk-ranking-audit/pipelining-actual-embedding-input.txt": "55350ae9327d608404feee1453724d2bdf3105e090540aa07c1687901d98656b"
+  },
+  "qwen37_artifacts": {
+    "fixture.json": "1adc0438e6f372862c15f41d4c7da5bbc55d9e98e9d06f729ae1dae5b4996d29",
+    "chunk-inputs.json": "4b1f068822d0293cbc1c70ae9a653f6e4f5f71124b4c115bb56438e0c65f4633",
+    "provider-call-3.json": "6558f5516d9c444cbfd7445c8b2f29a1c6d2c21592b7bc141a22830d1f87cc94",
+    "literal-agent-mixed.json": "b3ed0ea3fad9afba077c7b2ee44803c40b0bd7707ffafc6c74b4588e80a42e5d",
+    "protected-after.json": "81c53376e7253f965f52b498395699224e1239d070b5dbcd0c1698e8611d0986",
+    "semantic-content-mixed.txt": "fb9bbd00734f765845bd9ef063838d8d3a068f1d13c97741c79417d252d0b682",
+    "provider-call-2.json": "5e73e632145592936864ad73cef334f77a3168b7ef9b4b0f1645eb72a6f82c57",
+    "semantic-agent-originals_only.json": "7b2d515d4dac7040b8071f28a4a1dfa3c5c3f9508f91ac12b6dd309979097ea5",
+    "literal-content-mixed.txt": "a8692f681599c386f6a4d30da21759d6a2a19cb23059f7e4177034733f9b4a7a",
+    "comparison.json": "d10715d765b097ae8426bb6b38ff50d021e400aed04bf4539ed2a536d646a0e1",
+    "query-vectors.json": "eaad12ddc4137bebeafe8cb116a35d89691f2f239fbbbbde1396a404751d3b99",
+    "full-vector-ranks.json": "13bbe48e6d507390f253e11dbb387feefb1d95ecd2431e3723efc2ff6c23e30b",
+    "configuration.json": "f13d4c87be5a3feda2812024320474a08cff08b698be5e8725d300827efb397a",
+    "index-check.json": "ac08c3ef3c7ce8ded54732baf240258b8811ee4a230266b8903e5863c9fa14e7",
+    "provider-call-1.json": "ec9e3c3701c86a4caf05935cbe96b2b303d968a3c09d64c055f71d9d2e786a83",
+    "literal-agent-originals_only.json": "6843d175ed2afd702b4fc951d64af8e9293828556c1492eda1fbed8790f4b836",
+    "semantic-agent-mixed.json": "f6d98f797c379f17dcc1835721da7da50e052b29626dc422db0013705f179a6e",
+    "semantic-content-originals_only.txt": "fb9bbd00734f765845bd9ef063838d8d3a068f1d13c97741c79417d252d0b682",
+    "provider-usage.json": "3bf90a03484f9d082167d3bdd38730dd5b23458c7f14f7ad37b64254b18113d1",
+    "protected-before.json": "81c53376e7253f965f52b498395699224e1239d070b5dbcd0c1698e8611d0986",
+    "literal-content-originals_only.txt": "a8692f681599c386f6a4d30da21759d6a2a19cb23059f7e4177034733f9b4a7a",
+    "documents/microarchitecture/source.md": "17571bc69825350c0f464fb9e4ff1478f3dc0fc4f7d6c6cb9f7836783bae808c",
+    "documents/microarchitecture/extracted.md": "17571bc69825350c0f464fb9e4ff1478f3dc0fc4f7d6c6cb9f7836783bae808c",
+    "documents/microarchitecture/extracted.txt": "17571bc69825350c0f464fb9e4ff1478f3dc0fc4f7d6c6cb9f7836783bae808c"
+  },
+  "qwen37_database": {
+    "contexts": {
+      "count": 1,
+      "sha256": "8af5ff18096872c9ff4262bf5ed8061e3efefae093c62476272ffed9fab079a0"
+    },
+    "document_sections": {
+      "count": 17,
+      "sha256": "e8b65fb0e807190ac24bb5a15f7556a94cfff1990ccec3277663987cb701f70a"
+    },
+    "document_chunk_embeddings": {
+      "count": 16,
+      "sha256": "58d391311720e11c3c256eb2da2c9437a05192d44942f550b239c39444355dd6"
+    },
+    "retrieval_trace": {
+      "count": 6,
+      "sha256": "df2f120f9f14e0814979a06c471f76384dff81b666b12bb4446a5f1da820b185"
+    }
+  }
+}

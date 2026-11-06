@@ -1,0 +1,294 @@
+{
+  "1986 VAX 8800": [
+    {
+      "section_id": 7,
+      "title": "Multicycle Microarchitecture.",
+      "cosine": 0.30935277063884614,
+      "range": [
+        5393,
+        7303
+      ]
+    },
+    {
+      "section_id": 8,
+      "title": "Increasing execution speed.",
+      "cosine": 0.281847113198719,
+      "range": [
+        7303,
+        8317
+      ]
+    },
+    {
+      "section_id": 9,
+      "title": "Instruction set choice.",
+      "cosine": 0.27131710808106324,
+      "range": [
+        8317,
+        9617
+      ]
+    },
+    {
+      "section_id": 13,
+      "title": "Superscalar.",
+      "cosine": 0.2701494086571809,
+      "range": [
+        15121,
+        16310
+      ]
+    },
+    {
+      "section_id": 3,
+      "title": "Relation to instruction set architecture.",
+      "cosine": 0.2699286482221869,
+      "range": [
+        573,
+        3111
+      ]
+    },
+    {
+      "section_id": 10,
+      "title": "Instruction pipelining.",
+      "cosine": 0.2676841913126671,
+      "range": [
+        9617,
+        11920
+      ]
+    },
+    {
+      "section_id": 2,
+      "title": "Microarchitecture",
+      "cosine": 0.26448485715450565,
+      "range": [
+        0,
+        573
+      ]
+    },
+    {
+      "section_id": 5,
+      "title": "Microarchitectural concepts.",
+      "cosine": 0.26073729059643597,
+      "range": [
+        4924,
+        4957
+      ]
+    },
+    {
+      "section_id": 17,
+      "title": "See also.",
+      "cosine": 0.2605375829171061,
+      "range": [
+        20817,
+        21522
+      ]
+    },
+    {
+      "section_id": 6,
+      "title": "Instruction cycles.",
+      "cosine": 0.2507280870079187,
+      "range": [
+        4957,
+        5393
+      ]
+    },
+    {
+      "section_id": 16,
+      "title": "Multiprocessing and multithreading.",
+      "cosine": 0.24909272039067643,
+      "range": [
+        17627,
+        20817
+      ]
+    },
+    {
+      "section_id": 4,
+      "title": "Aspects of microarchitecture.",
+      "cosine": 0.23593473668436982,
+      "range": [
+        3111,
+        4924
+      ]
+    },
+    {
+      "section_id": 12,
+      "title": "Branch prediction.",
+      "cosine": 0.23265896963418314,
+      "range": [
+        13335,
+        15121
+      ]
+    },
+    {
+      "section_id": 15,
+      "title": "Register renaming.",
+      "cosine": 0.22580861155542922,
+      "range": [
+        17132,
+        17627
+      ]
+    },
+    {
+      "section_id": 14,
+      "title": "Out-of-order execution.",
+      "cosine": 0.22335956503157284,
+      "range": [
+        16310,
+        17132
+      ]
+    },
+    {
+      "section_id": 11,
+      "title": "Cache.",
+      "cosine": 0.22247746920988956,
+      "range": [
+        11920,
+        13335
+      ]
+    }
+  ],
+  "How can a CPU make progress on several instructions at once by handling different stages simultaneously?": [
+    {
+      "section_id": 6,
+      "title": "Instruction cycles.",
+      "cosine": 0.6508774219731501,
+      "range": [
+        4957,
+        5393
+      ]
+    },
+    {
+      "section_id": 12,
+      "title": "Branch prediction.",
+      "cosine": 0.5727569470128822,
+      "range": [
+        13335,
+        15121
+      ]
+    },
+    {
+      "section_id": 8,
+      "title": "Increasing execution speed.",
+      "cosine": 0.561595319679233,
+      "range": [
+        7303,
+        8317
+      ]
+    },
+    {
+      "section_id": 14,
+      "title": "Out-of-order execution.",
+      "cosine": 0.5519052646512016,
+      "range": [
+        16310,
+        17132
+      ]
+    },
+    {
+      "section_id": 7,
+      "title": "Multicycle Microarchitecture.",
+      "cosine": 0.5356327816453044,
+      "range": [
+        5393,
+        7303
+      ]
+    },
+    {
+      "section_id": 16,
+      "title": "Multiprocessing and multithreading.",
+      "cosine": 0.5071140232603553,
+      "range": [
+        17627,
+        20817
+      ]
+    },
+    {
+      "section_id": 10,
+      "title": "Instruction pipelining.",
+      "cosine": 0.5042646360730132,
+      "range": [
+        9617,
+        11920
+      ]
+    },
+    {
+      "section_id": 13,
+      "title": "Superscalar.",
+      "cosine": 0.5004914892917278,
+      "range": [
+        15121,
+        16310
+      ]
+    },
+    {
+      "section_id": 15,
+      "title": "Register renaming.",
+      "cosine": 0.4968056063209948,
+      "range": [
+        17132,
+        17627
+      ]
+    },
+    {
+      "section_id": 4,
+      "title": "Aspects of microarchitecture.",
+      "cosine": 0.4958902495179169,
+      "range": [
+        3111,
+        4924
+      ]
+    },
+    {
+      "section_id": 9,
+      "title": "Instruction set choice.",
+      "cosine": 0.45304871534060803,
+      "range": [
+        8317,
+        9617
+      ]
+    },
+    {
+      "section_id": 3,
+      "title": "Relation to instruction set architecture.",
+      "cosine": 0.44553714336387484,
+      "range": [
+        573,
+        3111
+      ]
+    },
+    {
+      "section_id": 11,
+      "title": "Cache.",
+      "cosine": 0.41474860310277856,
+      "range": [
+        11920,
+        13335
+      ]
+    },
+    {
+      "section_id": 2,
+      "title": "Microarchitecture",
+      "cosine": 0.3886829896048911,
+      "range": [
+        0,
+        573
+      ]
+    },
+    {
+      "section_id": 17,
+      "title": "See also.",
+      "cosine": 0.35290146364576325,
+      "range": [
+        20817,
+        21522
+      ]
+    },
+    {
+      "section_id": 5,
+      "title": "Microarchitectural concepts.",
+      "cosine": 0.3254717175042054,
+      "range": [
+        4924,
+        4957
+      ]
+    }
+  ]
+}

@@ -1,0 +1,144 @@
+{
+  "case_id": "dev_5",
+  "type": "s2a",
+  "db_id": "formula_1",
+  "reference_tables": [
+    "circuits"
+  ],
+  "top_k": 3,
+  "table_schema": {
+    "query": "Database: formula_1. What are the location coordinates of the racing circuit, Silverstone, which was built on the site of a World War II Royal Air Force bomber station and features runways in a classic WWII triangle format within its track outline?",
+    "response": {
+      "results": [
+        {
+          "uri": "ctx://datalake/hydra/formula_1/circuits",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 0.3706096631651923,
+          "l0_content": "Database: formula_1\nTable: circuits\nCREATE TABLE circuits\n(\n    circuitId  INTEGER\n        primary key autoincrement,\n    circuitRef TEXT default '' not null,\n    name       TEXT default '' not null,\n    location   TEXT,\n    country    TEXT,\n    lat        REAL,\n    lng        REAL,\n    alt        INTEGER,\n    url        TEXT default '' not null\n        unique\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\ncircuitId,circuit Id ,unique identification number of the circuit ,integer ,\r\ncircuitRef,circuit reference name ,circuit reference name ,text,\r\nname ,,full name of circuit ,text,\r\nlocation  ,,location of circuit ,text,\r\ncountry ,,country of circuit ,text,\r\nlat ,latitude  ,latitude of location of circuit ,real,\r\nlng ,longitude  ,longitude of location of circuit ,real,\"commonsense evidence: \nLocation coordinates: (lat, lng)\"\r\nalt ,,,integer ,not useful \r\nurl ,,url ,text,",
+          "l1_content": "Database: formula_1\nTable: circuits\nCREATE TABLE circuits\n(\n    circuitId  INTEGER\n        primary key autoincrement,\n    circuitRef TEXT default '' not null,\n    name       TEXT default '' not null,\n    location   TEXT,\n    country    TEXT,\n    lat        REAL,\n    lng        REAL,\n    alt        INTEGER,\n    url        TEXT default '' not null\n        unique\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\ncircuitId,circuit Id ,unique identification number of the circuit ,integer ,\r\ncircuitRef,circuit reference name ,circuit reference name ,text,\r\nname ,,full name of circuit ,text,\r\nlocation  ,,location of circuit ,text,\r\ncountry ,,country of circuit ,text,\r\nlat ,latitude  ,latitude of location of circuit ,real,\r\nlng ,longitude  ,longitude of location of circuit ,real,\"commonsense evidence: \nLocation coordinates: (lat, lng)\"\r\nalt ,,,integer ,not useful \r\nurl ,,url ,text,",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://datalake/hydra/formula_1/races",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 0.33002146065363114,
+          "l0_content": "Database: formula_1\nTable: races\nCREATE TABLE races\n(\n    raceId    INTEGER\n        primary key autoincrement,\n    year      INTEGER default 0            not null,\n    round     INTEGER default 0            not null,\n    circuitId INTEGER default 0            not null,\n    name      TEXT    default ''           not null,\n    date      DATE    default '0000-00-00' not null,\n    time      TEXT,\n    url       TEXT unique,\n    foreign key (year) references seasons(year),\n    foreign key (circuitId) references circuits(circuitId)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nraceId ,race ID ,the unique identification number identifying the race ,integer ,\r\nyear ,,year ,integer ,\r\nround ,,round ,integer ,\r\ncircuitId ,Circuit Id ,circuit Id ,integer ,\r\nname ,,name of the race ,text,\r\ndate ,,duration time ,date,\r\ntime ,,time of the location ,text,\r\nurl ,,introduction of races ,text,",
+          "l1_content": "Database: formula_1\nTable: races\nCREATE TABLE races\n(\n    raceId    INTEGER\n        primary key autoincrement,\n    year      INTEGER default 0            not null,\n    round     INTEGER default 0            not null,\n    circuitId INTEGER default 0            not null,\n    name      TEXT    default ''           not null,\n    date      DATE    default '0000-00-00' not null,\n    time      TEXT,\n    url       TEXT unique,\n    foreign key (year) references seasons(year),\n    foreign key (circuitId) references circuits(circuitId)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nraceId ,race ID ,the unique identification number identifying the race ,integer ,\r\nyear ,,year ,integer ,\r\nround ,,round ,integer ,\r\ncircuitId ,Circuit Id ,circuit Id ,integer ,\r\nname ,,name of the race ,text,\r\ndate ,,duration time ,date,\r\ntime ,,time of the location ,text,\r\nurl ,,introduction of races ,text,",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://datalake/hydra/formula_1/constructorStandings",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 0.2934195661621899,
+          "l0_content": "Database: formula_1\nTable: constructorStandings\nCREATE TABLE constructorStandings\n(\n    constructorStandingsId INTEGER\n        primary key autoincrement,\n    raceId                 INTEGER default 0 not null,\n    constructorId          INTEGER default 0 not null,\n    points                 REAL   default 0 not null,\n    position               INTEGER,\n    positionText           TEXT,\n    wins                   INTEGER default 0 not null,\n    foreign key (raceId) references races(raceId),\n    foreign key (constructorId) references constructors(constructorId)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nconstructorStandingsId ,constructor Standings Id ,unique identification of the constructor standing records ,integer ,\r\nraceId ,race id ,id number identifying which races ,integer ,\r\nconstructorId ,constructor id ,id number identifying which id ,integer ,\r\npoints,,how many points acquired in each race ,,\r\nposition ,,position or track of circuits ,integer ,\r\npositionText ,position text ,,text,\"same with position, not quite useful \"\r\nwins ,,wins ,integer ,\r\n",
+          "l1_content": "Database: formula_1\nTable: constructorStandings\nCREATE TABLE constructorStandings\n(\n    constructorStandingsId INTEGER\n        primary key autoincrement,\n    raceId                 INTEGER default 0 not null,\n    constructorId          INTEGER default 0 not null,\n    points                 REAL   default 0 not null,\n    position               INTEGER,\n    positionText           TEXT,\n    wins                   INTEGER default 0 not null,\n    foreign key (raceId) references races(raceId),\n    foreign key (constructorId) references constructors(constructorId)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nconstructorStandingsId ,constructor Standings Id ,unique identification of the constructor standing records ,integer ,\r\nraceId ,race id ,id number identifying which races ,integer ,\r\nconstructorId ,constructor id ,id number identifying which id ,integer ,\r\npoints,,how many points acquired in each race ,,\r\nposition ,,position or track of circuits ,integer ,\r\npositionText ,position text ,,text,\"same with position, not quite useful \"\r\nwins ,,wins ,integer ,\r\n",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        }
+      ],
+      "total": 3,
+      "retrieval_id": "147c0d0f-7aff-42b0-a037-4dd9b644dc57",
+      "stale_notices": []
+    }
+  },
+  "resource": {
+    "query": "Which racing circuit, built on the site of a World War II Royal Air Force bomber station, features runways in a classic WWII triangle format within its track outline?",
+    "response": {
+      "results": [
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/522676/0001",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 0.5793085443561412,
+          "l0_content": "Silverstone Circuit — The circuit.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 522676\nThe Silverstone circuit is on the site of a World War II Royal Air Force bomber station, RAF Silverstone, which opened in 1943. The station was the base for No. 17 Operational Training Unit. The airfield's three runways, in classic WWII triangle format, lie within the outline of the present track.",
+          "l1_content": "Silverstone Circuit — The circuit.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 522676\nThe Silverstone circuit is on the site of a World War II Royal Air Force bomber station, RAF Silverstone, which opened in 1943. The station was the base for No. 17 Operational Training Unit. The airfield's three runways, in classic WWII triangle format, lie within the outline of the present track.",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/812294/0002",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 0.5368782761882197,
+          "l0_content": "RAF Silverstone — Current use.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 812294\nToday the airfield is a major racing circuit known as Silverstone Circuit. The circuit hosted the first ever Formula One World Championship race, the 1950 British Grand Prix, held on 13 May 1950. Since 1987 the track has hosted the British Grand Prix every year. The airfield's three runways, in a standard World War II era triangle, lie within the outline of the classic racetrack; after recent development of a new section of track, the main runway is transected by the circuit.",
+          "l1_content": "RAF Silverstone — Current use.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 812294\nToday the airfield is a major racing circuit known as Silverstone Circuit. The circuit hosted the first ever Formula One World Championship race, the 1950 British Grand Prix, held on 13 May 1950. Since 1987 the track has hosted the British Grand Prix every year. The airfield's three runways, in a standard World War II era triangle, lie within the outline of the classic racetrack; after recent development of a new section of track, the main runway is transected by the circuit.",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/522676/0003",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 0.4879946999546716,
+          "l0_content": "Silverstone Circuit — The circuit.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 522676\nHe and eleven other drivers raced over a two-mile circuit, during the course of which Geoghegan himself ran over a sheep that had wandered onto the airfield. The sheep was killed and the car written off, and in the aftermath of this event the informal race became known as the \"Mutton Grand Prix\". The next year the Royal Automobile Club took a lease on the airfield and set out a more formal racing circuit. Their first two races were held on the runways themselves, with long straights separated by tight hairpin corners, the track demarcated by hay bales.",
+          "l1_content": "Silverstone Circuit — The circuit.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 522676\nHe and eleven other drivers raced over a two-mile circuit, during the course of which Geoghegan himself ran over a sheep that had wandered onto the airfield. The sheep was killed and the car written off, and in the aftermath of this event the informal race became known as the \"Mutton Grand Prix\". The next year the Royal Automobile Club took a lease on the airfield and set out a more formal racing circuit. Their first two races were held on the runways themselves, with long straights separated by tight hairpin corners, the track demarcated by hay bales.",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        }
+      ],
+      "total": 3,
+      "retrieval_id": "55c5557f-bce3-4bfb-8f1b-2afbcc59907a",
+      "stale_notices": []
+    }
+  },
+  "table_metrics": {
+    "required": 1,
+    "hits_at_3": 1,
+    "recall_at_3": 1.0,
+    "all_required_at_3": true,
+    "first_hit_rank": 1
+  }
+}

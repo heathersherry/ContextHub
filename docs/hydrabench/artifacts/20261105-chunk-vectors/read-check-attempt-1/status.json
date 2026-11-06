@@ -1,0 +1,5 @@
+{
+  "status": "read_check_setup_failed",
+  "reason": "SDK section-read fixture omitted masking/lifecycle dependencies; added the same existing services before retry. Search result preserved.",
+  "provider_calls": 0
+}

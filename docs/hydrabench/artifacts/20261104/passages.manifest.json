@@ -1,0 +1,37 @@
+{
+  "original_source": "https://dl.fbaipublicfiles.com/KILT/kilt_knowledgesource.json",
+  "retrieved_from": [
+    "https://huggingface.co/datasets/s-nlp/kilt"
+  ],
+  "snapshot": "2019-08-01",
+  "selection": "First 20 chemical elements by atomic number",
+  "titles": [
+    "Hydrogen",
+    "Helium",
+    "Lithium",
+    "Beryllium",
+    "Boron",
+    "Carbon",
+    "Nitrogen",
+    "Oxygen",
+    "Fluorine",
+    "Neon",
+    "Sodium",
+    "Magnesium",
+    "Aluminium",
+    "Silicon",
+    "Phosphorus",
+    "Sulfur",
+    "Chlorine",
+    "Argon",
+    "Potassium",
+    "Calcium"
+  ],
+  "articles": 20,
+  "passages": 1494,
+  "character_cap": 3000,
+  "truncated_passages": 2,
+  "source_subset_sha256": "b33080d21baa4b494db4beaca870ceab5e6cc405e192c76f2efdc6b4a736c8a3",
+  "passages_sha256": "75974a218733229119d0670668083ceceb8664e13bc4e05ea84ab578a18f9c5f",
+  "chunking": "Abstract retained as one passage; body split by punctuation into groups of four sentences; each stored context capped at 3000 characters including provenance."
+}

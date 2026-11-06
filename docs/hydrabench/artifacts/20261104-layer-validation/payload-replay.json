@@ -1,0 +1,592 @@
+{
+  "method": "Offline projection of preserved model-history search ToolMessages; unchanged hit bodies, URIs and versions. No model run, rank change, or index write. JSON encoded with ensure_ascii=False and default separators for both sides.",
+  "counts": {
+    "search_messages": 82,
+    "hits": 246,
+    "same_l0_l1": 246,
+    "duplicated_body_characters": 241074,
+    "before_json_characters": 586741,
+    "after_json_characters": 338604
+  },
+  "estimated_tokens_chars_div_4": {
+    "before_json_characters": 146685.25,
+    "after_json_characters": 84651.0
+  },
+  "actual_new_model_usage": null,
+  "records": [
+    {
+      "case_id": "dev_0",
+      "tool_call_id": "call_6facc7ba1d9945ad93a37dcb",
+      "hits": 3,
+      "before_characters": 7233,
+      "after_characters": 4165
+    },
+    {
+      "case_id": "dev_0",
+      "tool_call_id": "call_ca257b7198064bc09c6a9690",
+      "hits": 3,
+      "before_characters": 7818,
+      "after_characters": 4457
+    },
+    {
+      "case_id": "dev_0",
+      "tool_call_id": "call_7b262e03668b42699244c0db",
+      "hits": 3,
+      "before_characters": 4486,
+      "after_characters": 2800
+    },
+    {
+      "case_id": "dev_0",
+      "tool_call_id": "call_7371961c309a4e26b8358dcb",
+      "hits": 3,
+      "before_characters": 6184,
+      "after_characters": 3649
+    },
+    {
+      "case_id": "dev_0",
+      "tool_call_id": "call_9f1485326e754a0b96b1be58",
+      "hits": 3,
+      "before_characters": 3707,
+      "after_characters": 2410
+    },
+    {
+      "case_id": "dev_10",
+      "tool_call_id": "call_17a15ed119e8468d8a0ba704",
+      "hits": 3,
+      "before_characters": 10117,
+      "after_characters": 5605
+    },
+    {
+      "case_id": "dev_10",
+      "tool_call_id": "call_7bc3c1ed841e4d5aaeb94b5f",
+      "hits": 3,
+      "before_characters": 9797,
+      "after_characters": 5442
+    },
+    {
+      "case_id": "dev_11",
+      "tool_call_id": "call_e7032aeae245411d9b55d14f",
+      "hits": 3,
+      "before_characters": 6966,
+      "after_characters": 4028
+    },
+    {
+      "case_id": "dev_11",
+      "tool_call_id": "call_e357532cf5964c8994269bf7",
+      "hits": 3,
+      "before_characters": 4456,
+      "after_characters": 2782
+    },
+    {
+      "case_id": "dev_13",
+      "tool_call_id": "call_0a7538d5cbcd4881992eb5b3",
+      "hits": 3,
+      "before_characters": 3659,
+      "after_characters": 2384
+    },
+    {
+      "case_id": "dev_13",
+      "tool_call_id": "call_fc5ca46e011c4d77ba946e4d",
+      "hits": 3,
+      "before_characters": 14199,
+      "after_characters": 7648
+    },
+    {
+      "case_id": "dev_13",
+      "tool_call_id": "call_76b5df69b9f245a0adcfa7f0",
+      "hits": 3,
+      "before_characters": 10450,
+      "after_characters": 5775
+    },
+    {
+      "case_id": "dev_13",
+      "tool_call_id": "call_468a0cdd0f4d4fe8bd9f8bef",
+      "hits": 3,
+      "before_characters": 13925,
+      "after_characters": 7506
+    },
+    {
+      "case_id": "dev_20",
+      "tool_call_id": "call_d9e5b323c2a641198042ba03",
+      "hits": 3,
+      "before_characters": 9783,
+      "after_characters": 5449
+    },
+    {
+      "case_id": "dev_20",
+      "tool_call_id": "call_0a90264ecc3f4684a925fca1",
+      "hits": 3,
+      "before_characters": 8255,
+      "after_characters": 4683
+    },
+    {
+      "case_id": "dev_26",
+      "tool_call_id": "call_9458dc9b04e14cd3a17cbae0",
+      "hits": 3,
+      "before_characters": 13616,
+      "after_characters": 7363
+    },
+    {
+      "case_id": "dev_26",
+      "tool_call_id": "call_b0ef485c336140d5910936eb",
+      "hits": 3,
+      "before_characters": 4415,
+      "after_characters": 2764
+    },
+    {
+      "case_id": "dev_31",
+      "tool_call_id": "call_fa3331855c9649d7a2670bb8",
+      "hits": 3,
+      "before_characters": 13618,
+      "after_characters": 7365
+    },
+    {
+      "case_id": "dev_31",
+      "tool_call_id": "call_32e9fa7969294e48b719a709",
+      "hits": 3,
+      "before_characters": 13615,
+      "after_characters": 7362
+    },
+    {
+      "case_id": "dev_31",
+      "tool_call_id": "call_d6962967fd4d402eafcd7cb3",
+      "hits": 3,
+      "before_characters": 5281,
+      "after_characters": 3194
+    },
+    {
+      "case_id": "dev_31",
+      "tool_call_id": "call_d4af33b6f77f4a7ab0e3451d",
+      "hits": 3,
+      "before_characters": 14063,
+      "after_characters": 7584
+    },
+    {
+      "case_id": "dev_32",
+      "tool_call_id": "call_dde6705a225e472688bc62a3",
+      "hits": 3,
+      "before_characters": 5229,
+      "after_characters": 3163
+    },
+    {
+      "case_id": "dev_32",
+      "tool_call_id": "call_119a30b037374d31bf00ddf4",
+      "hits": 3,
+      "before_characters": 6402,
+      "after_characters": 3740
+    },
+    {
+      "case_id": "dev_32",
+      "tool_call_id": "call_29acfc641bff4d3da71608d3",
+      "hits": 3,
+      "before_characters": 5177,
+      "after_characters": 3145
+    },
+    {
+      "case_id": "dev_32",
+      "tool_call_id": "call_0bc0a25c3e8b47fb90c1042a",
+      "hits": 3,
+      "before_characters": 5912,
+      "after_characters": 3514
+    },
+    {
+      "case_id": "dev_32",
+      "tool_call_id": "call_5ddb0e59d9ef48869bb80ae1",
+      "hits": 3,
+      "before_characters": 5555,
+      "after_characters": 3335
+    },
+    {
+      "case_id": "dev_32",
+      "tool_call_id": "call_5f49d30944f345c9bf19d25a",
+      "hits": 3,
+      "before_characters": 4856,
+      "after_characters": 2985
+    },
+    {
+      "case_id": "dev_32",
+      "tool_call_id": "call_630c521618a842819b85c0e3",
+      "hits": 3,
+      "before_characters": 5138,
+      "after_characters": 3127
+    },
+    {
+      "case_id": "dev_32",
+      "tool_call_id": "call_2017d6279b5f4ec6b3bde97d",
+      "hits": 3,
+      "before_characters": 3116,
+      "after_characters": 2116
+    },
+    {
+      "case_id": "dev_32",
+      "tool_call_id": "call_c6f825703d804ab2bf5a5a56",
+      "hits": 3,
+      "before_characters": 5654,
+      "after_characters": 3386
+    },
+    {
+      "case_id": "dev_32",
+      "tool_call_id": "call_e04276b23b094f5392b4e1bc",
+      "hits": 3,
+      "before_characters": 6564,
+      "after_characters": 3838
+    },
+    {
+      "case_id": "dev_32",
+      "tool_call_id": "call_686bfa49d7bc41db80ef5bb1",
+      "hits": 3,
+      "before_characters": 7748,
+      "after_characters": 4416
+    },
+    {
+      "case_id": "dev_35",
+      "tool_call_id": "call_d52b5f43776144c08204f7ba",
+      "hits": 3,
+      "before_characters": 6033,
+      "after_characters": 3566
+    },
+    {
+      "case_id": "dev_35",
+      "tool_call_id": "call_c9f5882e1a624c278fc402e8",
+      "hits": 3,
+      "before_characters": 9797,
+      "after_characters": 5442
+    },
+    {
+      "case_id": "dev_35",
+      "tool_call_id": "call_2830222c8ada425b9e215f1e",
+      "hits": 3,
+      "before_characters": 5446,
+      "after_characters": 3280
+    },
+    {
+      "case_id": "dev_35",
+      "tool_call_id": "call_06a6b32f5f4840ef9791e95f",
+      "hits": 3,
+      "before_characters": 5112,
+      "after_characters": 3112
+    },
+    {
+      "case_id": "dev_35",
+      "tool_call_id": "call_4a75acb93d4249d099df93ef",
+      "hits": 3,
+      "before_characters": 6822,
+      "after_characters": 3966
+    },
+    {
+      "case_id": "dev_42",
+      "tool_call_id": "call_97f6d965d21947ef956a528b",
+      "hits": 3,
+      "before_characters": 5703,
+      "after_characters": 3393
+    },
+    {
+      "case_id": "dev_42",
+      "tool_call_id": "call_5135f5f9ee6a4af0a730b7c1",
+      "hits": 3,
+      "before_characters": 2518,
+      "after_characters": 1816
+    },
+    {
+      "case_id": "dev_42",
+      "tool_call_id": "call_01766b924f76424789c95c24",
+      "hits": 3,
+      "before_characters": 7786,
+      "after_characters": 4436
+    },
+    {
+      "case_id": "dev_43",
+      "tool_call_id": "call_a5d114a3ce7449e7a6f4c13a",
+      "hits": 3,
+      "before_characters": 13927,
+      "after_characters": 7508
+    },
+    {
+      "case_id": "dev_43",
+      "tool_call_id": "call_0f8c2c854b9c4d7395ea9416",
+      "hits": 3,
+      "before_characters": 10211,
+      "after_characters": 5660
+    },
+    {
+      "case_id": "dev_43",
+      "tool_call_id": "call_8b819f9c61b140f99466f7a9",
+      "hits": 3,
+      "before_characters": 9493,
+      "after_characters": 5302
+    },
+    {
+      "case_id": "dev_46",
+      "tool_call_id": "call_a8115e590388488c927c19df",
+      "hits": 3,
+      "before_characters": 7090,
+      "after_characters": 4084
+    },
+    {
+      "case_id": "dev_46",
+      "tool_call_id": "call_6051fc9b8ae84364bce7ab2a",
+      "hits": 3,
+      "before_characters": 7788,
+      "after_characters": 4438
+    },
+    {
+      "case_id": "dev_46",
+      "tool_call_id": "call_a63df8bd878d451db6cd8cee",
+      "hits": 3,
+      "before_characters": 8179,
+      "after_characters": 4643
+    },
+    {
+      "case_id": "dev_46",
+      "tool_call_id": "call_230b3b1f319f4a4b9b199267",
+      "hits": 3,
+      "before_characters": 8125,
+      "after_characters": 4616
+    },
+    {
+      "case_id": "dev_5",
+      "tool_call_id": "call_a739c15f3aaa4749a738660b",
+      "hits": 3,
+      "before_characters": 7485,
+      "after_characters": 4292
+    },
+    {
+      "case_id": "dev_5",
+      "tool_call_id": "call_db6073b7221a4cb2ba258a51",
+      "hits": 3,
+      "before_characters": 4162,
+      "after_characters": 2634
+    },
+    {
+      "case_id": "dev_55",
+      "tool_call_id": "call_1da013ad6be34e5d9e5939d0",
+      "hits": 3,
+      "before_characters": 6967,
+      "after_characters": 4029
+    },
+    {
+      "case_id": "dev_55",
+      "tool_call_id": "call_205f51026cbf4e3cb4f6fcb8",
+      "hits": 3,
+      "before_characters": 7060,
+      "after_characters": 4075
+    },
+    {
+      "case_id": "dev_55",
+      "tool_call_id": "call_4888f581ba8341dca013ceda",
+      "hits": 3,
+      "before_characters": 7883,
+      "after_characters": 4488
+    },
+    {
+      "case_id": "dev_55",
+      "tool_call_id": "call_92d324f1bcc3416b87cde5d1",
+      "hits": 3,
+      "before_characters": 7818,
+      "after_characters": 4457
+    },
+    {
+      "case_id": "dev_55",
+      "tool_call_id": "call_171da31256f843aaaaf9e143",
+      "hits": 3,
+      "before_characters": 7740,
+      "after_characters": 4416
+    },
+    {
+      "case_id": "dev_55",
+      "tool_call_id": "call_47d2b19479b64a9f99349901",
+      "hits": 3,
+      "before_characters": 3985,
+      "after_characters": 2549
+    },
+    {
+      "case_id": "dev_6",
+      "tool_call_id": "call_1f36b397fde349feb55961cc",
+      "hits": 3,
+      "before_characters": 6926,
+      "after_characters": 4019
+    },
+    {
+      "case_id": "dev_6",
+      "tool_call_id": "call_8fb885f5229142e89c21a5a0",
+      "hits": 3,
+      "before_characters": 12335,
+      "after_characters": 6722
+    },
+    {
+      "case_id": "dev_6",
+      "tool_call_id": "call_a0b573573d8649ab89b97071",
+      "hits": 3,
+      "before_characters": 4413,
+      "after_characters": 2762
+    },
+    {
+      "case_id": "dev_6",
+      "tool_call_id": "call_f9059f4085d243a0b3034388",
+      "hits": 3,
+      "before_characters": 6191,
+      "after_characters": 3652
+    },
+    {
+      "case_id": "dev_6",
+      "tool_call_id": "call_5b330d5043cc4bbf960b9138",
+      "hits": 3,
+      "before_characters": 3507,
+      "after_characters": 2311
+    },
+    {
+      "case_id": "dev_6",
+      "tool_call_id": "call_46fba4aef6e048aabaa0ad99",
+      "hits": 3,
+      "before_characters": 4243,
+      "after_characters": 2678
+    },
+    {
+      "case_id": "dev_6",
+      "tool_call_id": "call_08ffb214e6734d92bd2ae541",
+      "hits": 3,
+      "before_characters": 3169,
+      "after_characters": 2141
+    },
+    {
+      "case_id": "dev_6",
+      "tool_call_id": "call_e3fd39b523f74c759a9fcacc",
+      "hits": 3,
+      "before_characters": 4511,
+      "after_characters": 2810
+    },
+    {
+      "case_id": "dev_6",
+      "tool_call_id": "call_604bc4da86af44efa9ba555f",
+      "hits": 3,
+      "before_characters": 6380,
+      "after_characters": 3746
+    },
+    {
+      "case_id": "dev_6",
+      "tool_call_id": "call_86b4fe934d8647ad9333487d",
+      "hits": 3,
+      "before_characters": 4507,
+      "after_characters": 2810
+    },
+    {
+      "case_id": "dev_6",
+      "tool_call_id": "call_c0897e8b554f484bbbd025bc",
+      "hits": 3,
+      "before_characters": 4479,
+      "after_characters": 2796
+    },
+    {
+      "case_id": "dev_60",
+      "tool_call_id": "call_ed42c14b1cd8466490c1a7d0",
+      "hits": 3,
+      "before_characters": 5704,
+      "after_characters": 3394
+    },
+    {
+      "case_id": "dev_60",
+      "tool_call_id": "call_2c76ef3f86894f75abe48833",
+      "hits": 3,
+      "before_characters": 7542,
+      "after_characters": 4324
+    },
+    {
+      "case_id": "dev_60",
+      "tool_call_id": "call_1a76de54fba442b69e6c9c4f",
+      "hits": 3,
+      "before_characters": 7787,
+      "after_characters": 4437
+    },
+    {
+      "case_id": "dev_62",
+      "tool_call_id": "call_d90414eed2214ed8bddc86df",
+      "hits": 3,
+      "before_characters": 6864,
+      "after_characters": 3990
+    },
+    {
+      "case_id": "dev_62",
+      "tool_call_id": "call_8b3b83fffdeb4c9abec3331f",
+      "hits": 3,
+      "before_characters": 6863,
+      "after_characters": 3989
+    },
+    {
+      "case_id": "dev_62",
+      "tool_call_id": "call_3066de417ca3494b869d2600",
+      "hits": 3,
+      "before_characters": 6625,
+      "after_characters": 3865
+    },
+    {
+      "case_id": "dev_66",
+      "tool_call_id": "call_7df70a1952784f589e11d577",
+      "hits": 3,
+      "before_characters": 7790,
+      "after_characters": 4442
+    },
+    {
+      "case_id": "dev_66",
+      "tool_call_id": "call_c4192dfc3e9b4687bb8a5ab9",
+      "hits": 3,
+      "before_characters": 7885,
+      "after_characters": 4490
+    },
+    {
+      "case_id": "dev_66",
+      "tool_call_id": "call_527549ba411b4c4f8ac6821a",
+      "hits": 3,
+      "before_characters": 7884,
+      "after_characters": 4489
+    },
+    {
+      "case_id": "dev_66",
+      "tool_call_id": "call_0245be4e753344eca53c733c",
+      "hits": 3,
+      "before_characters": 5425,
+      "after_characters": 3265
+    },
+    {
+      "case_id": "dev_68",
+      "tool_call_id": "call_a0e44a2b6914427a933b7e9e",
+      "hits": 3,
+      "before_characters": 8842,
+      "after_characters": 4965
+    },
+    {
+      "case_id": "dev_68",
+      "tool_call_id": "call_0e1b9ab572ea45368485dc8a",
+      "hits": 3,
+      "before_characters": 5881,
+      "after_characters": 3488
+    },
+    {
+      "case_id": "dev_68",
+      "tool_call_id": "call_c511b77badb54580bdaf713c",
+      "hits": 3,
+      "before_characters": 3452,
+      "after_characters": 2281
+    },
+    {
+      "case_id": "dev_72",
+      "tool_call_id": "call_c932439051084f0e82acd64d",
+      "hits": 3,
+      "before_characters": 9511,
+      "after_characters": 5302
+    },
+    {
+      "case_id": "dev_72",
+      "tool_call_id": "call_78c9b80b660a43088fb959dc",
+      "hits": 3,
+      "before_characters": 9510,
+      "after_characters": 5301
+    },
+    {
+      "case_id": "dev_72",
+      "tool_call_id": "call_b2a44386dacc43178e7f3772",
+      "hits": 3,
+      "before_characters": 4391,
+      "after_characters": 2753
+    }
+  ]
+}

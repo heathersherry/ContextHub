@@ -1,0 +1,42 @@
+{
+  "url": "https://bird-bench.oss-cn-beijing.aliyuncs.com/dev.zip",
+  "sha256": "cdd6d19faeb45a23970b98d3ef6c40a87987c95459c2cf12076897a60cf5a630",
+  "files": [
+    {
+      "path": "databases/toxicology/.DS_Store",
+      "member": "dev_databases/toxicology/.DS_Store",
+      "sha256": "12142300dd6d2897301c975154d288c63ceedcd14fff69af7536cb638d892bf5",
+      "bytes": 6148
+    },
+    {
+      "path": "databases/toxicology/toxicology.sqlite",
+      "member": "dev_databases/toxicology/toxicology.sqlite",
+      "sha256": "f5fa7f21af1ad878ff8fef1b0582b8cb2d7ed63dbac65ff16d2ba05667650c5b",
+      "bytes": 2678784
+    },
+    {
+      "path": "databases/toxicology/database_description/bond.csv",
+      "member": "dev_databases/toxicology/database_description/bond.csv",
+      "sha256": "7d200d38b0dcc07e8fe22718bd6bdb1bdf4b6522b7a84a5d0c95340b6d8cb4bc",
+      "bytes": 382
+    },
+    {
+      "path": "databases/toxicology/database_description/molecule.csv",
+      "member": "dev_databases/toxicology/database_description/molecule.csv",
+      "sha256": "a6ff2966916d03b07fd3ce275823d9ec65abb0b55158e871b07c40972b292d70",
+      "bytes": 293
+    },
+    {
+      "path": "databases/toxicology/database_description/atom.csv",
+      "member": "dev_databases/toxicology/database_description/atom.csv",
+      "sha256": "9de75492701c77c1229242e8c3b688ced9eb9095ac59d37361dfb0ec34300245",
+      "bytes": 538
+    },
+    {
+      "path": "databases/toxicology/database_description/connected.csv",
+      "member": "dev_databases/toxicology/database_description/connected.csv",
+      "sha256": "589b24206b9f884863ca57f3e339abcb2409a15feeaff0b08afcd955cd211036",
+      "bytes": 238
+    }
+  ]
+}

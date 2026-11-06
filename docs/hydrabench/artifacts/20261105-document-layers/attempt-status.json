@@ -1,0 +1,39 @@
+{
+  "time_hong_kong": "2026-11-05T11:17:54.233846+08:00",
+  "live_attempt_status": "Validation stopped after ingestion fell back from HTTP 403; partial attempt preserved, not a successful generated-description validation.",
+  "chat_generation_attempts": 1,
+  "chat_generation_usage": null,
+  "chat_generation_usage_reason": "Provider returned HTTP 403 without usage; do not infer zero billable tokens.",
+  "embedding_attempts": 1,
+  "embedding_provider_prompt_tokens": 5,
+  "answer_model_calls": 0,
+  "offline_validation": "3 sources in validation.json plus 1 supplementary unstructured article in unstructured-validation.json; zero provider calls.",
+  "databases": {
+    "hydra_retrieval_20261104": {
+      "contexts": 18340,
+      "embedded": 18340,
+      "content_fingerprint": "266a21457a387b68246f596c9ce494e7"
+    },
+    "hydra_layers_sample_20261105_documents": {
+      "contexts": 3,
+      "embedded": 3,
+      "content_fingerprint": "29427a64678ca55e9b16458d20613ed4",
+      "document": {
+        "id": "6e390fc5-5ba9-4072-b138-83a647c29295",
+        "uri": "ctx://resources/hydra-layer-validation/microarchitecture",
+        "version": 1,
+        "l0_content": "Document: microarchitecture",
+        "l1_content": "- Microarchitecture [section_id=2, chars=0:21522]\n  - Relation to instruction set architecture. [section_id=3, chars=573:3111]\n  - Aspects of microarchitecture. [section_id=4, chars=3111:4924]\n  - Microarchitectural concepts. [section_id=5, chars=4924:20817]\n    - Instruction cycles. [section_id=6, chars=4957:5393]\n    - Multicycle Microarchitecture. [section_id=7, chars=5393:7303]\n    - Increasing execution speed. [section_id=8, chars=7303:8317]\n    - Instruction set choice. [section_id=9, chars=8317:9617]\n    - Instruction pipelining. [section_id=10, chars=9617:11920]\n    - Cache. [section_id=11, chars=11920:13335]\n    - Branch prediction. [section_id=12, chars=13335:15121]\n    - Superscalar. [section_id=13, chars=15121:16310]\n    - Out-of-order execution. [section_id=14, chars=16310:17132]\n    - Register renaming. [section_id=15, chars=17132:17627]\n    - Multiprocessing and multithreading. [section_id=16, chars=17627:20817]\n  - See also. [section_id=17, chars=20817:21522]",
+        "l2_content": null,
+        "file_path": "/Users/sherrylin/.codex/worktrees/hydra-smoke/ContextHub/docs/hydrabench/artifacts/20261105-document-layers/documents/c3e3ef69eeef67f4",
+        "embedded": true
+      }
+    },
+    "hydra_layers_sample_20261105_documents_offline": {
+      "contexts": 4,
+      "embedded": 2,
+      "content_fingerprint": "0b45e0af96467e35d2db085fdb088389"
+    }
+  },
+  "original_token_usage_sha256": "3bdfcbdabd5c704ac1a1db1a0ce9e9458bfefe75435eb02fb4356e7622ace971"
+}

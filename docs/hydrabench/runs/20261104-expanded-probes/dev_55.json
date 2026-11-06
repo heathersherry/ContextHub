@@ -1,0 +1,145 @@
+{
+  "case_id": "dev_55",
+  "type": "a2s",
+  "db_id": "student_club",
+  "reference_tables": [
+    "major",
+    "member"
+  ],
+  "top_k": 3,
+  "table_schema": {
+    "query": "Database: student_club. What is the relationship between the student from the Art and Design Department in the Student_Club and Peter Firth?",
+    "response": {
+      "results": [
+        {
+          "uri": "ctx://datalake/hydra/student_club/budget",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 6.916211559895674,
+          "l0_content": "Database: student_club\nTable: budget\nCREATE TABLE \"budget\"\n(\n    budget_id     TEXT\n            primary key,\n    category      TEXT,\n    spent         REAL,\n    remaining     REAL,\n    amount        INTEGER,\n    event_status  TEXT,\n    link_to_event TEXT,\n    foreign key (link_to_event) references event(event_id)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nbudget_id,budget id,A unique identifier for the budget entry,text,\r\ncategory,,\"The area for which the amount is budgeted, such as, advertisement, food, parking\",text,\r\nspent,,The total amount spent in the budgeted category for an event.,real,the unit is dollar. This is summarized from the Expense table\r\nremaining,,A value calculated as the amount budgeted minus the amount spent,real,\"the unit is dollar \ncommonsense evidence: If the remaining < 0, it means that the cost has exceeded the budget.\"\r\namount,,The amount budgeted for the specified category and event,integer,\"the unit is dollar \ncommonsense evidence:\nsome computation like: amount = spent + remaining \"\r\nevent_status,event status,the status of the event,text,\"Closed / Open/ Planning \ncommonsense evidence: \n• Closed: It means that the event is closed. The spent and the remaining won't change anymore.\n• Open: It means that the event is already opened. The spent and the remaining will change with new expenses.\n• Planning: The event is not started yet but is planning. The spent and the remaining won't change at this stage. \"\r\nlink_to_event,link to event,The unique identifier of the event to which the budget line applies.,text,References the Event table",
+          "l1_content": "Database: student_club\nTable: budget\nCREATE TABLE \"budget\"\n(\n    budget_id     TEXT\n            primary key,\n    category      TEXT,\n    spent         REAL,\n    remaining     REAL,\n    amount        INTEGER,\n    event_status  TEXT,\n    link_to_event TEXT,\n    foreign key (link_to_event) references event(event_id)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nbudget_id,budget id,A unique identifier for the budget entry,text,\r\ncategory,,\"The area for which the amount is budgeted, such as, advertisement, food, parking\",text,\r\nspent,,The total amount spent in the budgeted category for an event.,real,the unit is dollar. This is summarized from the Expense table\r\nremaining,,A value calculated as the amount budgeted minus the amount spent,real,\"the unit is dollar \ncommonsense evidence: If the remaining < 0, it means that the cost has exceeded the budget.\"\r\namount,,The amount budgeted for the specified category and event,integer,\"the unit is dollar \ncommonsense evidence:\nsome computation like: amount = spent + remaining \"\r\nevent_status,event status,the status of the event,text,\"Closed / Open/ Planning \ncommonsense evidence: \n• Closed: It means that the event is closed. The spent and the remaining won't change anymore.\n• Open: It means that the event is already opened. The spent and the remaining will change with new expenses.\n• Planning: The event is not started yet but is planning. The spent and the remaining won't change at this stage. \"\r\nlink_to_event,link to event,The unique identifier of the event to which the budget line applies.,text,References the Event table",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://datalake/hydra/student_club/expense",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 5.949717729753994,
+          "l0_content": "Database: student_club\nTable: expense\nCREATE TABLE \"expense\"\n(\n    expense_id          TEXT\n            primary key,\n    expense_description TEXT,\n    expense_date        TEXT,\n    cost                REAL,\n    approved            TEXT,\n    link_to_member      TEXT,\n    link_to_budget      TEXT,\n    foreign key (link_to_budget) references budget(budget_id),\n    foreign key (link_to_member) references member(member_id)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nexpense_id,expense id,unique id of income,text,\r\nexpense_description,expense description,A textual description of what the money was spend for,text,\r\nexpense_date,expense date,The date the expense was incurred,text,e.g. YYYY-MM-DD\r\ncost,,The dollar amount of the expense,real,the unit is dollar\r\napproved,,A true or false value indicating if the expense was approved,text,true/ false\r\nlink_to_member,link to member,The member who incurred the expense,text,\r\nlink_to_budget,link to budget,The unique identifier of the record in the Budget table that indicates the expected total expenditure for a given category and event. ,text,References the Budget table",
+          "l1_content": "Database: student_club\nTable: expense\nCREATE TABLE \"expense\"\n(\n    expense_id          TEXT\n            primary key,\n    expense_description TEXT,\n    expense_date        TEXT,\n    cost                REAL,\n    approved            TEXT,\n    link_to_member      TEXT,\n    link_to_budget      TEXT,\n    foreign key (link_to_budget) references budget(budget_id),\n    foreign key (link_to_member) references member(member_id)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nexpense_id,expense id,unique id of income,text,\r\nexpense_description,expense description,A textual description of what the money was spend for,text,\r\nexpense_date,expense date,The date the expense was incurred,text,e.g. YYYY-MM-DD\r\ncost,,The dollar amount of the expense,real,the unit is dollar\r\napproved,,A true or false value indicating if the expense was approved,text,true/ false\r\nlink_to_member,link to member,The member who incurred the expense,text,\r\nlink_to_budget,link to budget,The unique identifier of the record in the Budget table that indicates the expected total expenditure for a given category and event. ,text,References the Budget table",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://datalake/hydra/student_club/member",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 5.891281144727063,
+          "l0_content": "Database: student_club\nTable: member\nCREATE TABLE \"member\"\n(\n    member_id     TEXT\n        constraint member_pk\n            primary key,\n    first_name    TEXT,\n    last_name     TEXT,\n    email         TEXT,\n    position      TEXT,\n    t_shirt_size  TEXT,\n    phone         TEXT,\n    zip           INTEGER,\n    link_to_major TEXT,\n    foreign key (link_to_major) references major(major_id),\n    foreign key (zip) references zip_code(zip_code)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nmember_id,member id,unique id of member,text,\r\nfirst_name,first name,member's first name,text,\r\nlast_name,last name,member's last name,text,\"commonsense evidence: \nfull name is first_name + last_name. e.g. A member's first name is Angela and last name is Sanders. Thus, his/her full name is Angela Sanders.\"\r\nemail,,member's email,text,\r\nposition,,The position the member holds in the club,text,\r\nt_shirt_size,,The size of tee shirt that member wants when shirts are ordered,text,commonsense evidence: usually the student ordered t-shirt with lager size has bigger body shape \r\nphone,,The best telephone at which to contact the member,text,\r\nzip,,the zip code of the member's hometown,integer,\r\nlink_to_major,link to major,The unique identifier of the major of the member. References the Major table,text,",
+          "l1_content": "Database: student_club\nTable: member\nCREATE TABLE \"member\"\n(\n    member_id     TEXT\n        constraint member_pk\n            primary key,\n    first_name    TEXT,\n    last_name     TEXT,\n    email         TEXT,\n    position      TEXT,\n    t_shirt_size  TEXT,\n    phone         TEXT,\n    zip           INTEGER,\n    link_to_major TEXT,\n    foreign key (link_to_major) references major(major_id),\n    foreign key (zip) references zip_code(zip_code)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nmember_id,member id,unique id of member,text,\r\nfirst_name,first name,member's first name,text,\r\nlast_name,last name,member's last name,text,\"commonsense evidence: \nfull name is first_name + last_name. e.g. A member's first name is Angela and last name is Sanders. Thus, his/her full name is Angela Sanders.\"\r\nemail,,member's email,text,\r\nposition,,The position the member holds in the club,text,\r\nt_shirt_size,,The size of tee shirt that member wants when shirts are ordered,text,commonsense evidence: usually the student ordered t-shirt with lager size has bigger body shape \r\nphone,,The best telephone at which to contact the member,text,\r\nzip,,the zip code of the member's hometown,integer,\r\nlink_to_major,link to major,The unique identifier of the major of the member. References the Major table,text,",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        }
+      ],
+      "total": 3,
+      "retrieval_id": "ce6fea55-d3ef-4c50-841e-1752c8eb29e5",
+      "stale_notices": []
+    }
+  },
+  "resource": {
+    "query": "What is the relationship between Amy Firth and Peter Firth?",
+    "response": {
+      "results": [
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/937587/0000",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 3.698726850637879,
+          "l0_content": "Peter Firth — Abstract\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 937587\nPeter Macintosh Firth (born 27 October 1953) is an English actor. He is best known for his role as Sir Harry Pearce in the BBC One show \"Spooks\"; he is the only actor to have appeared in every episode of the show's ten-series lifespan. He has given myriad additional television and film performances, most notably as Alan Strang in \"Equus\" (1977), earning a Golden Globe Award and an Academy Award nomination for the role.",
+          "l1_content": "Peter Firth — Abstract\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 937587\nPeter Macintosh Firth (born 27 October 1953) is an English actor. He is best known for his role as Sir Harry Pearce in the BBC One show \"Spooks\"; he is the only actor to have appeared in every episode of the show's ten-series lifespan. He has given myriad additional television and film performances, most notably as Alan Strang in \"Equus\" (1977), earning a Golden Globe Award and an Academy Award nomination for the role.",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/937587/0010",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 2.6781806067728247,
+          "l0_content": "Peter Firth — Personal life.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 937587\nFirth lived with Peter Shaffer throughout the Broadway run of \"Equus\". He has been married three times and has four children; Rory Firth, from his first marriage, Amy, Alex, and James Firth from his second. He married Alexandra Pigg on Christmas Eve 2017. The couple had briefly dated after they played a couple in \"Letter to Brezhnev\".",
+          "l1_content": "Peter Firth — Personal life.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 937587\nFirth lived with Peter Shaffer throughout the Broadway run of \"Equus\". He has been married three times and has four children; Rory Firth, from his first marriage, Amy, Alex, and James Firth from his second. He married Alexandra Pigg on Christmas Eve 2017. The couple had briefly dated after they played a couple in \"Letter to Brezhnev\".",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/937587/0011",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 2.348763635762599,
+          "l0_content": "Peter Firth — Personal life.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 937587\nDuring an interview for \"BBC Breakfast\" in April 2017 they explained that they met again in 2010 and have been in a relationship since then. On 17 July 2009, he was awarded an honorary degree by the University of Bradford as a Doctor of Letters for his services to acting, having been nominated by the School of Computing, Informatics & Media; he received his award during the school's degree ceremony.",
+          "l1_content": "Peter Firth — Personal life.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 937587\nDuring an interview for \"BBC Breakfast\" in April 2017 they explained that they met again in 2010 and have been in a relationship since then. On 17 July 2009, he was awarded an honorary degree by the University of Bradford as a Doctor of Letters for his services to acting, having been nominated by the School of Computing, Informatics & Media; he received his award during the school's degree ceremony.",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        }
+      ],
+      "total": 3,
+      "retrieval_id": "ef9dd6db-a4d3-40f0-9463-4fe39e468853",
+      "stale_notices": []
+    }
+  },
+  "table_metrics": {
+    "required": 2,
+    "hits_at_3": 1,
+    "recall_at_3": 0.5,
+    "all_required_at_3": false,
+    "first_hit_rank": 3
+  }
+}

@@ -1,0 +1,1252 @@
+{
+  "scope": "Observed usage_metadata for 104 AI messages in the 20 preserved thinking-enabled runs. Not a provider invoice; excludes indexing/query embeddings, earlier failed runs, other experiments, this Codex conversation and hypothetical independent judges. Cached input is a subset of input; reasoning is a subset of output.",
+  "summary": {
+    "model_calls": 104,
+    "input_tokens": 968658,
+    "output_tokens": 41509,
+    "total_tokens": 1010167,
+    "cached_input_tokens": 753408,
+    "reasoning_output_tokens": 27257,
+    "uncached_input_tokens": 215250,
+    "nonreasoning_output_tokens": 14252,
+    "cases": 20,
+    "average_total_tokens_per_case": 50508.35,
+    "median_total_tokens_per_case": 38395.5,
+    "input_share_of_total": 0.9589087744897626,
+    "cache_share_of_input": 0.7777853483892148,
+    "reasoning_share_of_output": 0.6566527740971837
+  },
+  "embedding_usage": {
+    "online_search_embedding_requests": 82,
+    "document_contexts_indexed": 18340,
+    "exact_provider_embedding_tokens": null,
+    "reason": "Embedding client keeps data/embedding and discards response usage."
+  },
+  "duplicate_search_payload": {
+    "result_occurrences": 246,
+    "l0_equals_l1_occurrences": 246,
+    "duplicated_content_characters_by_type": {
+      "table_schema": 147127,
+      "resource": 93947
+    },
+    "caution": "Character counts are not token counts or a measured saving. Effects on future rounds and cache billing require a separate controlled run."
+  },
+  "records": [
+    {
+      "case_id": "dev_0",
+      "model_calls": 6,
+      "input_tokens": 56594,
+      "output_tokens": 3046,
+      "total_tokens": 59640,
+      "cached_input_tokens": 45696,
+      "reasoning_output_tokens": 2249,
+      "uncached_input_tokens": 10898,
+      "nonreasoning_output_tokens": 797,
+      "calls": [
+        {
+          "input_tokens": 3434,
+          "output_tokens": 182,
+          "total_tokens": 3616,
+          "cached_input_tokens": 3072,
+          "reasoning_output_tokens": 87,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 7446,
+          "output_tokens": 412,
+          "total_tokens": 7858,
+          "cached_input_tokens": 3072,
+          "reasoning_output_tokens": 305,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 8858,
+          "output_tokens": 370,
+          "total_tokens": 9228,
+          "cached_input_tokens": 7168,
+          "reasoning_output_tokens": 234,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 11332,
+          "output_tokens": 1478,
+          "total_tokens": 12810,
+          "cached_input_tokens": 8448,
+          "reasoning_output_tokens": 1335,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 12674,
+          "output_tokens": 182,
+          "total_tokens": 12856,
+          "cached_input_tokens": 11264,
+          "reasoning_output_tokens": 128,
+          "finish_reason": "tool_calls",
+          "tool_calls": 1
+        },
+        {
+          "input_tokens": 12850,
+          "output_tokens": 422,
+          "total_tokens": 13272,
+          "cached_input_tokens": 12672,
+          "reasoning_output_tokens": 160,
+          "finish_reason": "stop",
+          "tool_calls": 0
+        }
+      ],
+      "trace_sha256": "302423e6efd132e2cb04d6e519dc98524aef8911b58d0167ee004b1c1c441755"
+    },
+    {
+      "case_id": "dev_10",
+      "model_calls": 3,
+      "input_tokens": 19972,
+      "output_tokens": 664,
+      "total_tokens": 20636,
+      "cached_input_tokens": 13312,
+      "reasoning_output_tokens": 342,
+      "uncached_input_tokens": 6660,
+      "nonreasoning_output_tokens": 322,
+      "calls": [
+        {
+          "input_tokens": 3413,
+          "output_tokens": 230,
+          "total_tokens": 3643,
+          "cached_input_tokens": 3072,
+          "reasoning_output_tokens": 133,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 8148,
+          "output_tokens": 280,
+          "total_tokens": 8428,
+          "cached_input_tokens": 3072,
+          "reasoning_output_tokens": 161,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 8411,
+          "output_tokens": 154,
+          "total_tokens": 8565,
+          "cached_input_tokens": 7168,
+          "reasoning_output_tokens": 48,
+          "finish_reason": "stop",
+          "tool_calls": 0
+        }
+      ],
+      "trace_sha256": "a5161e46b173599ffec47c8d6960e85187c83cb66264e5ed8ab5cf60491b4086"
+    },
+    {
+      "case_id": "dev_11",
+      "model_calls": 4,
+      "input_tokens": 23342,
+      "output_tokens": 1151,
+      "total_tokens": 24493,
+      "cached_input_tokens": 18688,
+      "reasoning_output_tokens": 772,
+      "uncached_input_tokens": 4654,
+      "nonreasoning_output_tokens": 379,
+      "calls": [
+        {
+          "input_tokens": 3414,
+          "output_tokens": 328,
+          "total_tokens": 3742,
+          "cached_input_tokens": 3072,
+          "reasoning_output_tokens": 234,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 6435,
+          "output_tokens": 473,
+          "total_tokens": 6908,
+          "cached_input_tokens": 3072,
+          "reasoning_output_tokens": 380,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 6685,
+          "output_tokens": 145,
+          "total_tokens": 6830,
+          "cached_input_tokens": 6272,
+          "reasoning_output_tokens": 89,
+          "finish_reason": "tool_calls",
+          "tool_calls": 1
+        },
+        {
+          "input_tokens": 6808,
+          "output_tokens": 205,
+          "total_tokens": 7013,
+          "cached_input_tokens": 6272,
+          "reasoning_output_tokens": 69,
+          "finish_reason": "stop",
+          "tool_calls": 0
+        }
+      ],
+      "trace_sha256": "3a9ca2d420af619ce9735d81058285330719d88774077b1ef53600a34a3f6b70"
+    },
+    {
+      "case_id": "dev_13",
+      "model_calls": 5,
+      "input_tokens": 56089,
+      "output_tokens": 1266,
+      "total_tokens": 57355,
+      "cached_input_tokens": 43392,
+      "reasoning_output_tokens": 664,
+      "uncached_input_tokens": 12697,
+      "nonreasoning_output_tokens": 602,
+      "calls": [
+        {
+          "input_tokens": 3423,
+          "output_tokens": 170,
+          "total_tokens": 3593,
+          "cached_input_tokens": 3072,
+          "reasoning_output_tokens": 66,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 8235,
+          "output_tokens": 161,
+          "total_tokens": 8396,
+          "cached_input_tokens": 3072,
+          "reasoning_output_tokens": 62,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 14636,
+          "output_tokens": 351,
+          "total_tokens": 14987,
+          "cached_input_tokens": 8192,
+          "reasoning_output_tokens": 224,
+          "finish_reason": "tool_calls",
+          "tool_calls": 1
+        },
+        {
+          "input_tokens": 14820,
+          "output_tokens": 325,
+          "total_tokens": 15145,
+          "cached_input_tokens": 14336,
+          "reasoning_output_tokens": 225,
+          "finish_reason": "tool_calls",
+          "tool_calls": 1
+        },
+        {
+          "input_tokens": 14975,
+          "output_tokens": 259,
+          "total_tokens": 15234,
+          "cached_input_tokens": 14720,
+          "reasoning_output_tokens": 87,
+          "finish_reason": "stop",
+          "tool_calls": 0
+        }
+      ],
+      "trace_sha256": "3714490613fe756905f744d72cbf74b803a17f85a4a3dad04e85bdd2c409dbf8"
+    },
+    {
+      "case_id": "dev_20",
+      "model_calls": 4,
+      "input_tokens": 29682,
+      "output_tokens": 2188,
+      "total_tokens": 31870,
+      "cached_input_tokens": 23040,
+      "reasoning_output_tokens": 1630,
+      "uncached_input_tokens": 6642,
+      "nonreasoning_output_tokens": 558,
+      "calls": [
+        {
+          "input_tokens": 3413,
+          "output_tokens": 181,
+          "total_tokens": 3594,
+          "cached_input_tokens": 3072,
+          "reasoning_output_tokens": 84,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 8550,
+          "output_tokens": 650,
+          "total_tokens": 9200,
+          "cached_input_tokens": 3072,
+          "reasoning_output_tokens": 562,
+          "finish_reason": "tool_calls",
+          "tool_calls": 1
+        },
+        {
+          "input_tokens": 8802,
+          "output_tokens": 626,
+          "total_tokens": 9428,
+          "cached_input_tokens": 8448,
+          "reasoning_output_tokens": 558,
+          "finish_reason": "tool_calls",
+          "tool_calls": 1
+        },
+        {
+          "input_tokens": 8917,
+          "output_tokens": 731,
+          "total_tokens": 9648,
+          "cached_input_tokens": 8448,
+          "reasoning_output_tokens": 426,
+          "finish_reason": "stop",
+          "tool_calls": 0
+        }
+      ],
+      "trace_sha256": "3a19ae7323c31af21e6affe206bfc72fb449427ae0724b53f6e7a9d89db09d21"
+    },
+    {
+      "case_id": "dev_26",
+      "model_calls": 6,
+      "input_tokens": 51490,
+      "output_tokens": 3074,
+      "total_tokens": 54564,
+      "cached_input_tokens": 41216,
+      "reasoning_output_tokens": 1958,
+      "uncached_input_tokens": 10274,
+      "nonreasoning_output_tokens": 1116,
+      "calls": [
+        {
+          "input_tokens": 3432,
+          "output_tokens": 246,
+          "total_tokens": 3678,
+          "cached_input_tokens": 3072,
+          "reasoning_output_tokens": 142,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 8050,
+          "output_tokens": 146,
+          "total_tokens": 8196,
+          "cached_input_tokens": 3072,
+          "reasoning_output_tokens": 50,
+          "finish_reason": "tool_calls",
+          "tool_calls": 1
+        },
+        {
+          "input_tokens": 9116,
+          "output_tokens": 449,
+          "total_tokens": 9565,
+          "cached_input_tokens": 7168,
+          "reasoning_output_tokens": 266,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 9854,
+          "output_tokens": 439,
+          "total_tokens": 10293,
+          "cached_input_tokens": 8448,
+          "reasoning_output_tokens": 254,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 10286,
+          "output_tokens": 667,
+          "total_tokens": 10953,
+          "cached_input_tokens": 9216,
+          "reasoning_output_tokens": 462,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 10752,
+          "output_tokens": 1127,
+          "total_tokens": 11879,
+          "cached_input_tokens": 10240,
+          "reasoning_output_tokens": 784,
+          "finish_reason": "stop",
+          "tool_calls": 0
+        }
+      ],
+      "trace_sha256": "a146188dd0040c2195ae8ca42c3432bdf4a1fd9629a49b70395a7783db6dedf9"
+    },
+    {
+      "case_id": "dev_31",
+      "model_calls": 5,
+      "input_tokens": 50019,
+      "output_tokens": 734,
+      "total_tokens": 50753,
+      "cached_input_tokens": 35840,
+      "reasoning_output_tokens": 306,
+      "uncached_input_tokens": 14179,
+      "nonreasoning_output_tokens": 428,
+      "calls": [
+        {
+          "input_tokens": 3420,
+          "output_tokens": 199,
+          "total_tokens": 3619,
+          "cached_input_tokens": 3072,
+          "reasoning_output_tokens": 104,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 10043,
+          "output_tokens": 101,
+          "total_tokens": 10144,
+          "cached_input_tokens": 3072,
+          "reasoning_output_tokens": 29,
+          "finish_reason": "tool_calls",
+          "tool_calls": 1
+        },
+        {
+          "input_tokens": 10199,
+          "output_tokens": 95,
+          "total_tokens": 10294,
+          "cached_input_tokens": 9216,
+          "reasoning_output_tokens": 48,
+          "finish_reason": "tool_calls",
+          "tool_calls": 1
+        },
+        {
+          "input_tokens": 11593,
+          "output_tokens": 89,
+          "total_tokens": 11682,
+          "cached_input_tokens": 9216,
+          "reasoning_output_tokens": 39,
+          "finish_reason": "tool_calls",
+          "tool_calls": 1
+        },
+        {
+          "input_tokens": 14764,
+          "output_tokens": 250,
+          "total_tokens": 15014,
+          "cached_input_tokens": 11264,
+          "reasoning_output_tokens": 86,
+          "finish_reason": "stop",
+          "tool_calls": 0
+        }
+      ],
+      "trace_sha256": "c57c67ca1874fb44d63a392445f30490b314508ceb504cdc7a036d3ca469508c"
+    },
+    {
+      "case_id": "dev_32",
+      "model_calls": 8,
+      "input_tokens": 92694,
+      "output_tokens": 3562,
+      "total_tokens": 96256,
+      "cached_input_tokens": 72320,
+      "reasoning_output_tokens": 2476,
+      "uncached_input_tokens": 20374,
+      "nonreasoning_output_tokens": 1086,
+      "calls": [
+        {
+          "input_tokens": 3436,
+          "output_tokens": 173,
+          "total_tokens": 3609,
+          "cached_input_tokens": 3072,
+          "reasoning_output_tokens": 77,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 6649,
+          "output_tokens": 136,
+          "total_tokens": 6785,
+          "cached_input_tokens": 3072,
+          "reasoning_output_tokens": 58,
+          "finish_reason": "tool_calls",
+          "tool_calls": 1
+        },
+        {
+          "input_tokens": 6799,
+          "output_tokens": 179,
+          "total_tokens": 6978,
+          "cached_input_tokens": 6272,
+          "reasoning_output_tokens": 78,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 9742,
+          "output_tokens": 245,
+          "total_tokens": 9987,
+          "cached_input_tokens": 6272,
+          "reasoning_output_tokens": 143,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 12498,
+          "output_tokens": 350,
+          "total_tokens": 12848,
+          "cached_input_tokens": 9216,
+          "reasoning_output_tokens": 253,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 14932,
+          "output_tokens": 553,
+          "total_tokens": 15485,
+          "cached_input_tokens": 12288,
+          "reasoning_output_tokens": 455,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 18198,
+          "output_tokens": 1107,
+          "total_tokens": 19305,
+          "cached_input_tokens": 14720,
+          "reasoning_output_tokens": 1057,
+          "finish_reason": "tool_calls",
+          "tool_calls": 1
+        },
+        {
+          "input_tokens": 20440,
+          "output_tokens": 819,
+          "total_tokens": 21259,
+          "cached_input_tokens": 17408,
+          "reasoning_output_tokens": 355,
+          "finish_reason": "stop",
+          "tool_calls": 0
+        }
+      ],
+      "trace_sha256": "9a104a8c7d8088d026478f24d6173423948e7fe79086b29fc891ecfc8f356119"
+    },
+    {
+      "case_id": "dev_35",
+      "model_calls": 8,
+      "input_tokens": 75316,
+      "output_tokens": 9519,
+      "total_tokens": 84835,
+      "cached_input_tokens": 61440,
+      "reasoning_output_tokens": 8672,
+      "uncached_input_tokens": 13876,
+      "nonreasoning_output_tokens": 847,
+      "calls": [
+        {
+          "input_tokens": 3412,
+          "output_tokens": 146,
+          "total_tokens": 3558,
+          "cached_input_tokens": 3072,
+          "reasoning_output_tokens": 55,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 7255,
+          "output_tokens": 186,
+          "total_tokens": 7441,
+          "cached_input_tokens": 3072,
+          "reasoning_output_tokens": 73,
+          "finish_reason": "tool_calls",
+          "tool_calls": 1
+        },
+        {
+          "input_tokens": 7711,
+          "output_tokens": 430,
+          "total_tokens": 8141,
+          "cached_input_tokens": 7168,
+          "reasoning_output_tokens": 276,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 8153,
+          "output_tokens": 1717,
+          "total_tokens": 9870,
+          "cached_input_tokens": 7168,
+          "reasoning_output_tokens": 1576,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 9931,
+          "output_tokens": 753,
+          "total_tokens": 10684,
+          "cached_input_tokens": 7168,
+          "reasoning_output_tokens": 619,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 11616,
+          "output_tokens": 887,
+          "total_tokens": 12503,
+          "cached_input_tokens": 9216,
+          "reasoning_output_tokens": 835,
+          "finish_reason": "tool_calls",
+          "tool_calls": 1
+        },
+        {
+          "input_tokens": 13428,
+          "output_tokens": 1304,
+          "total_tokens": 14732,
+          "cached_input_tokens": 11264,
+          "reasoning_output_tokens": 1142,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 13810,
+          "output_tokens": 4096,
+          "total_tokens": 17906,
+          "cached_input_tokens": 13312,
+          "reasoning_output_tokens": 4096,
+          "finish_reason": "length",
+          "tool_calls": 0
+        }
+      ],
+      "trace_sha256": "a69c5e679e632a9da238a42cd60c8e2ef39902ad5e97a026e024d2dbe0260a5d"
+    },
+    {
+      "case_id": "dev_42",
+      "model_calls": 5,
+      "input_tokens": 34984,
+      "output_tokens": 1483,
+      "total_tokens": 36467,
+      "cached_input_tokens": 27904,
+      "reasoning_output_tokens": 847,
+      "uncached_input_tokens": 7080,
+      "nonreasoning_output_tokens": 636,
+      "calls": [
+        {
+          "input_tokens": 3430,
+          "output_tokens": 309,
+          "total_tokens": 3739,
+          "cached_input_tokens": 3072,
+          "reasoning_output_tokens": 207,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 6016,
+          "output_tokens": 108,
+          "total_tokens": 6124,
+          "cached_input_tokens": 3072,
+          "reasoning_output_tokens": 58,
+          "finish_reason": "tool_calls",
+          "tool_calls": 1
+        },
+        {
+          "input_tokens": 8276,
+          "output_tokens": 390,
+          "total_tokens": 8666,
+          "cached_input_tokens": 5120,
+          "reasoning_output_tokens": 236,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 8554,
+          "output_tokens": 237,
+          "total_tokens": 8791,
+          "cached_input_tokens": 8192,
+          "reasoning_output_tokens": 128,
+          "finish_reason": "tool_calls",
+          "tool_calls": 1
+        },
+        {
+          "input_tokens": 8708,
+          "output_tokens": 439,
+          "total_tokens": 9147,
+          "cached_input_tokens": 8448,
+          "reasoning_output_tokens": 218,
+          "finish_reason": "stop",
+          "tool_calls": 0
+        }
+      ],
+      "trace_sha256": "0776701b3e53aadfe6fa148f2c32f73ca7a6bc0e816fb22d79a243060180bc85"
+    },
+    {
+      "case_id": "dev_43",
+      "model_calls": 4,
+      "input_tokens": 35514,
+      "output_tokens": 1333,
+      "total_tokens": 36847,
+      "cached_input_tokens": 21504,
+      "reasoning_output_tokens": 598,
+      "uncached_input_tokens": 14010,
+      "nonreasoning_output_tokens": 735,
+      "calls": [
+        {
+          "input_tokens": 3426,
+          "output_tokens": 184,
+          "total_tokens": 3610,
+          "cached_input_tokens": 0,
+          "reasoning_output_tokens": 82,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 9519,
+          "output_tokens": 106,
+          "total_tokens": 9625,
+          "cached_input_tokens": 3072,
+          "reasoning_output_tokens": 50,
+          "finish_reason": "tool_calls",
+          "tool_calls": 1
+        },
+        {
+          "input_tokens": 9761,
+          "output_tokens": 245,
+          "total_tokens": 10006,
+          "cached_input_tokens": 9216,
+          "reasoning_output_tokens": 134,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 12808,
+          "output_tokens": 798,
+          "total_tokens": 13606,
+          "cached_input_tokens": 9216,
+          "reasoning_output_tokens": 332,
+          "finish_reason": "stop",
+          "tool_calls": 0
+        }
+      ],
+      "trace_sha256": "de040bef9008c05feda65bcf9084c75db5f3f8d68755f09918e631e96fd1546b"
+    },
+    {
+      "case_id": "dev_46",
+      "model_calls": 5,
+      "input_tokens": 42511,
+      "output_tokens": 2092,
+      "total_tokens": 44603,
+      "cached_input_tokens": 31744,
+      "reasoning_output_tokens": 1070,
+      "uncached_input_tokens": 10767,
+      "nonreasoning_output_tokens": 1022,
+      "calls": [
+        {
+          "input_tokens": 3410,
+          "output_tokens": 292,
+          "total_tokens": 3702,
+          "cached_input_tokens": 3072,
+          "reasoning_output_tokens": 200,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 7556,
+          "output_tokens": 631,
+          "total_tokens": 8187,
+          "cached_input_tokens": 3072,
+          "reasoning_output_tokens": 355,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 8248,
+          "output_tokens": 195,
+          "total_tokens": 8443,
+          "cached_input_tokens": 7168,
+          "reasoning_output_tokens": 87,
+          "finish_reason": "tool_calls",
+          "tool_calls": 1
+        },
+        {
+          "input_tokens": 10530,
+          "output_tokens": 137,
+          "total_tokens": 10667,
+          "cached_input_tokens": 8192,
+          "reasoning_output_tokens": 72,
+          "finish_reason": "tool_calls",
+          "tool_calls": 1
+        },
+        {
+          "input_tokens": 12767,
+          "output_tokens": 837,
+          "total_tokens": 13604,
+          "cached_input_tokens": 10240,
+          "reasoning_output_tokens": 356,
+          "finish_reason": "stop",
+          "tool_calls": 0
+        }
+      ],
+      "trace_sha256": "3cac0c13d66cf5cba0ab7de727cdaa8f44f0b870174150cef86095ca293640d1"
+    },
+    {
+      "case_id": "dev_5",
+      "model_calls": 3,
+      "input_tokens": 17041,
+      "output_tokens": 569,
+      "total_tokens": 17610,
+      "cached_input_tokens": 12416,
+      "reasoning_output_tokens": 133,
+      "uncached_input_tokens": 4625,
+      "nonreasoning_output_tokens": 436,
+      "calls": [
+        {
+          "input_tokens": 3437,
+          "output_tokens": 132,
+          "total_tokens": 3569,
+          "cached_input_tokens": 3072,
+          "reasoning_output_tokens": 31,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 6701,
+          "output_tokens": 175,
+          "total_tokens": 6876,
+          "cached_input_tokens": 3072,
+          "reasoning_output_tokens": 57,
+          "finish_reason": "tool_calls",
+          "tool_calls": 1
+        },
+        {
+          "input_tokens": 6903,
+          "output_tokens": 262,
+          "total_tokens": 7165,
+          "cached_input_tokens": 6272,
+          "reasoning_output_tokens": 45,
+          "finish_reason": "stop",
+          "tool_calls": 0
+        }
+      ],
+      "trace_sha256": "202f40f621256212209e93c9f1b3752b948b9f035880cc9aac44ae0934e25a75"
+    },
+    {
+      "case_id": "dev_55",
+      "model_calls": 7,
+      "input_tokens": 71273,
+      "output_tokens": 2259,
+      "total_tokens": 73532,
+      "cached_input_tokens": 55424,
+      "reasoning_output_tokens": 1191,
+      "uncached_input_tokens": 15849,
+      "nonreasoning_output_tokens": 1068,
+      "calls": [
+        {
+          "input_tokens": 3416,
+          "output_tokens": 109,
+          "total_tokens": 3525,
+          "cached_input_tokens": 3072,
+          "reasoning_output_tokens": 15,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 7153,
+          "output_tokens": 244,
+          "total_tokens": 7397,
+          "cached_input_tokens": 3072,
+          "reasoning_output_tokens": 88,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 7455,
+          "output_tokens": 277,
+          "total_tokens": 7732,
+          "cached_input_tokens": 6272,
+          "reasoning_output_tokens": 169,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 9736,
+          "output_tokens": 322,
+          "total_tokens": 10058,
+          "cached_input_tokens": 7168,
+          "reasoning_output_tokens": 198,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 13884,
+          "output_tokens": 241,
+          "total_tokens": 14125,
+          "cached_input_tokens": 9216,
+          "reasoning_output_tokens": 127,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 14130,
+          "output_tokens": 310,
+          "total_tokens": 14440,
+          "cached_input_tokens": 13312,
+          "reasoning_output_tokens": 211,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 15499,
+          "output_tokens": 756,
+          "total_tokens": 16255,
+          "cached_input_tokens": 13312,
+          "reasoning_output_tokens": 383,
+          "finish_reason": "stop",
+          "tool_calls": 0
+        }
+      ],
+      "trace_sha256": "d1a8e24a3961621d9092677619c5621d3546b11456aed3452e0e9186d691ba11"
+    },
+    {
+      "case_id": "dev_6",
+      "model_calls": 10,
+      "input_tokens": 157891,
+      "output_tokens": 3304,
+      "total_tokens": 161195,
+      "cached_input_tokens": 136320,
+      "reasoning_output_tokens": 1815,
+      "uncached_input_tokens": 21571,
+      "nonreasoning_output_tokens": 1489,
+      "calls": [
+        {
+          "input_tokens": 3415,
+          "output_tokens": 192,
+          "total_tokens": 3607,
+          "cached_input_tokens": 3072,
+          "reasoning_output_tokens": 95,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 8312,
+          "output_tokens": 149,
+          "total_tokens": 8461,
+          "cached_input_tokens": 3072,
+          "reasoning_output_tokens": 32,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 11344,
+          "output_tokens": 170,
+          "total_tokens": 11514,
+          "cached_input_tokens": 8192,
+          "reasoning_output_tokens": 72,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 13724,
+          "output_tokens": 148,
+          "total_tokens": 13872,
+          "cached_input_tokens": 11264,
+          "reasoning_output_tokens": 51,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 16135,
+          "output_tokens": 187,
+          "total_tokens": 16322,
+          "cached_input_tokens": 13312,
+          "reasoning_output_tokens": 85,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 19219,
+          "output_tokens": 154,
+          "total_tokens": 19373,
+          "cached_input_tokens": 15360,
+          "reasoning_output_tokens": 50,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 20660,
+          "output_tokens": 742,
+          "total_tokens": 21402,
+          "cached_input_tokens": 18944,
+          "reasoning_output_tokens": 586,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 21418,
+          "output_tokens": 770,
+          "total_tokens": 22188,
+          "cached_input_tokens": 20480,
+          "reasoning_output_tokens": 542,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 21732,
+          "output_tokens": 186,
+          "total_tokens": 21918,
+          "cached_input_tokens": 21120,
+          "reasoning_output_tokens": 43,
+          "finish_reason": "tool_calls",
+          "tool_calls": 1
+        },
+        {
+          "input_tokens": 21932,
+          "output_tokens": 606,
+          "total_tokens": 22538,
+          "cached_input_tokens": 21504,
+          "reasoning_output_tokens": 259,
+          "finish_reason": "stop",
+          "tool_calls": 0
+        }
+      ],
+      "trace_sha256": "7b6e6f658bbb0e1c68f3814c0063a153621f5d384e589affdb80de03fd645c2c"
+    },
+    {
+      "case_id": "dev_60",
+      "model_calls": 5,
+      "input_tokens": 38720,
+      "output_tokens": 1224,
+      "total_tokens": 39944,
+      "cached_input_tokens": 30848,
+      "reasoning_output_tokens": 666,
+      "uncached_input_tokens": 7872,
+      "nonreasoning_output_tokens": 558,
+      "calls": [
+        {
+          "input_tokens": 3414,
+          "output_tokens": 149,
+          "total_tokens": 3563,
+          "cached_input_tokens": 3072,
+          "reasoning_output_tokens": 58,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 6982,
+          "output_tokens": 116,
+          "total_tokens": 7098,
+          "cached_input_tokens": 3072,
+          "reasoning_output_tokens": 66,
+          "finish_reason": "tool_calls",
+          "tool_calls": 1
+        },
+        {
+          "input_tokens": 9242,
+          "output_tokens": 321,
+          "total_tokens": 9563,
+          "cached_input_tokens": 6272,
+          "reasoning_output_tokens": 213,
+          "finish_reason": "tool_calls",
+          "tool_calls": 1
+        },
+        {
+          "input_tokens": 9416,
+          "output_tokens": 269,
+          "total_tokens": 9685,
+          "cached_input_tokens": 9216,
+          "reasoning_output_tokens": 174,
+          "finish_reason": "tool_calls",
+          "tool_calls": 1
+        },
+        {
+          "input_tokens": 9666,
+          "output_tokens": 369,
+          "total_tokens": 10035,
+          "cached_input_tokens": 9216,
+          "reasoning_output_tokens": 155,
+          "finish_reason": "stop",
+          "tool_calls": 0
+        }
+      ],
+      "trace_sha256": "d17db603fcd36bb4fe79309c227b183dabb3e859c950fa125ad10e165016551f"
+    },
+    {
+      "case_id": "dev_62",
+      "model_calls": 4,
+      "input_tokens": 26603,
+      "output_tokens": 1659,
+      "total_tokens": 28262,
+      "cached_input_tokens": 18688,
+      "reasoning_output_tokens": 942,
+      "uncached_input_tokens": 7915,
+      "nonreasoning_output_tokens": 717,
+      "calls": [
+        {
+          "input_tokens": 3419,
+          "output_tokens": 156,
+          "total_tokens": 3575,
+          "cached_input_tokens": 3072,
+          "reasoning_output_tokens": 61,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 6828,
+          "output_tokens": 262,
+          "total_tokens": 7090,
+          "cached_input_tokens": 3072,
+          "reasoning_output_tokens": 125,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 7162,
+          "output_tokens": 616,
+          "total_tokens": 7778,
+          "cached_input_tokens": 6272,
+          "reasoning_output_tokens": 503,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 9194,
+          "output_tokens": 625,
+          "total_tokens": 9819,
+          "cached_input_tokens": 6272,
+          "reasoning_output_tokens": 253,
+          "finish_reason": "stop",
+          "tool_calls": 0
+        }
+      ],
+      "trace_sha256": "e13bb3398bc760c90cd78e3dde279d4c8ee6ee77411212ed22300e0b505379ab"
+    },
+    {
+      "case_id": "dev_66",
+      "model_calls": 4,
+      "input_tokens": 32588,
+      "output_tokens": 780,
+      "total_tokens": 33368,
+      "cached_input_tokens": 22528,
+      "reasoning_output_tokens": 275,
+      "uncached_input_tokens": 10060,
+      "nonreasoning_output_tokens": 505,
+      "calls": [
+        {
+          "input_tokens": 3408,
+          "output_tokens": 139,
+          "total_tokens": 3547,
+          "cached_input_tokens": 3072,
+          "reasoning_output_tokens": 44,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 7578,
+          "output_tokens": 182,
+          "total_tokens": 7760,
+          "cached_input_tokens": 3072,
+          "reasoning_output_tokens": 48,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 9896,
+          "output_tokens": 202,
+          "total_tokens": 10098,
+          "cached_input_tokens": 7168,
+          "reasoning_output_tokens": 120,
+          "finish_reason": "tool_calls",
+          "tool_calls": 1
+        },
+        {
+          "input_tokens": 11706,
+          "output_tokens": 257,
+          "total_tokens": 11963,
+          "cached_input_tokens": 9216,
+          "reasoning_output_tokens": 63,
+          "finish_reason": "stop",
+          "tool_calls": 0
+        }
+      ],
+      "trace_sha256": "c1f2ae197119ad2661788c82f00ac6dff0942e3a7d284046847f43c6babb6658"
+    },
+    {
+      "case_id": "dev_68",
+      "model_calls": 4,
+      "input_tokens": 27371,
+      "output_tokens": 831,
+      "total_tokens": 28202,
+      "cached_input_tokens": 20608,
+      "reasoning_output_tokens": 377,
+      "uncached_input_tokens": 6763,
+      "nonreasoning_output_tokens": 454,
+      "calls": [
+        {
+          "input_tokens": 3421,
+          "output_tokens": 243,
+          "total_tokens": 3664,
+          "cached_input_tokens": 3072,
+          "reasoning_output_tokens": 148,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 7083,
+          "output_tokens": 223,
+          "total_tokens": 7306,
+          "cached_input_tokens": 3072,
+          "reasoning_output_tokens": 106,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 8365,
+          "output_tokens": 107,
+          "total_tokens": 8472,
+          "cached_input_tokens": 6272,
+          "reasoning_output_tokens": 45,
+          "finish_reason": "tool_calls",
+          "tool_calls": 1
+        },
+        {
+          "input_tokens": 8502,
+          "output_tokens": 258,
+          "total_tokens": 8760,
+          "cached_input_tokens": 8192,
+          "reasoning_output_tokens": 78,
+          "finish_reason": "stop",
+          "tool_calls": 0
+        }
+      ],
+      "trace_sha256": "3e2dc0441c6b989c77a2c4ceb2993d922e8d235b4af05208d2187159907d8742"
+    },
+    {
+      "case_id": "dev_72",
+      "model_calls": 4,
+      "input_tokens": 28964,
+      "output_tokens": 771,
+      "total_tokens": 29735,
+      "cached_input_tokens": 20480,
+      "reasoning_output_tokens": 274,
+      "uncached_input_tokens": 8484,
+      "nonreasoning_output_tokens": 497,
+      "calls": [
+        {
+          "input_tokens": 3411,
+          "output_tokens": 207,
+          "total_tokens": 3618,
+          "cached_input_tokens": 3072,
+          "reasoning_output_tokens": 113,
+          "finish_reason": "tool_calls",
+          "tool_calls": 2
+        },
+        {
+          "input_tokens": 7962,
+          "output_tokens": 94,
+          "total_tokens": 8056,
+          "cached_input_tokens": 3072,
+          "reasoning_output_tokens": 29,
+          "finish_reason": "tool_calls",
+          "tool_calls": 1
+        },
+        {
+          "input_tokens": 8115,
+          "output_tokens": 110,
+          "total_tokens": 8225,
+          "cached_input_tokens": 7168,
+          "reasoning_output_tokens": 37,
+          "finish_reason": "tool_calls",
+          "tool_calls": 1
+        },
+        {
+          "input_tokens": 9476,
+          "output_tokens": 360,
+          "total_tokens": 9836,
+          "cached_input_tokens": 7168,
+          "reasoning_output_tokens": 95,
+          "finish_reason": "stop",
+          "tool_calls": 0
+        }
+      ],
+      "trace_sha256": "24e6074afe34a829531ce7c7655bcc98b4816fb71a5b46b011b860fc8fce2d16"
+    }
+  ]
+}

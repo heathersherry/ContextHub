@@ -1,0 +1,326 @@
+{
+  "literal": [
+    {
+      "section_id": 17,
+      "source_range": [
+        20817,
+        21522
+      ],
+      "score": 0.4232275325249084,
+      "strategy": "vector",
+      "title": "See also."
+    },
+    {
+      "section_id": 13,
+      "source_range": [
+        15121,
+        16310
+      ],
+      "score": 0.41605841373875485,
+      "strategy": "vector",
+      "title": "Superscalar."
+    },
+    {
+      "section_id": 8,
+      "source_range": [
+        7303,
+        8317
+      ],
+      "score": 0.3956873361151856,
+      "strategy": "vector",
+      "title": "Increasing execution speed."
+    },
+    {
+      "section_id": 14,
+      "source_range": [
+        16310,
+        17132
+      ],
+      "score": 0.3876395031310933,
+      "strategy": "vector",
+      "title": "Out-of-order execution."
+    },
+    {
+      "section_id": 10,
+      "source_range": [
+        9617,
+        11920
+      ],
+      "score": 0.38551063710324596,
+      "strategy": "vector",
+      "title": "Instruction pipelining."
+    },
+    {
+      "section_id": 16,
+      "source_range": [
+        17627,
+        20817
+      ],
+      "score": 0.38176133795726686,
+      "strategy": "vector",
+      "title": "Multiprocessing and multithreading."
+    },
+    {
+      "section_id": 11,
+      "source_range": [
+        11920,
+        13335
+      ],
+      "score": 0.37635127446942485,
+      "strategy": "vector",
+      "title": "Cache."
+    },
+    {
+      "section_id": 9,
+      "source_range": [
+        8317,
+        9617
+      ],
+      "score": 0.36567881124994617,
+      "strategy": "vector",
+      "title": "Instruction set choice."
+    },
+    {
+      "section_id": 2,
+      "source_range": [
+        0,
+        573
+      ],
+      "score": 0.35582175850869235,
+      "strategy": "vector",
+      "title": "Microarchitecture"
+    },
+    {
+      "section_id": 4,
+      "source_range": [
+        3111,
+        4924
+      ],
+      "score": 0.34522690233863806,
+      "strategy": "vector",
+      "title": "Aspects of microarchitecture."
+    },
+    {
+      "section_id": 3,
+      "source_range": [
+        573,
+        3111
+      ],
+      "score": 0.34519612577030856,
+      "strategy": "vector",
+      "title": "Relation to instruction set architecture."
+    },
+    {
+      "section_id": 5,
+      "source_range": [
+        4924,
+        4957
+      ],
+      "score": 0.3394873727284605,
+      "strategy": "vector",
+      "title": "Microarchitectural concepts."
+    },
+    {
+      "section_id": 15,
+      "source_range": [
+        17132,
+        17627
+      ],
+      "score": 0.33305724465164843,
+      "strategy": "vector",
+      "title": "Register renaming."
+    },
+    {
+      "section_id": 7,
+      "source_range": [
+        5393,
+        7303
+      ],
+      "score": 0.3295400444084402,
+      "strategy": "vector",
+      "title": "Multicycle Microarchitecture."
+    },
+    {
+      "section_id": 6,
+      "source_range": [
+        4957,
+        5393
+      ],
+      "score": 0.31614964411859203,
+      "strategy": "vector",
+      "title": "Instruction cycles."
+    },
+    {
+      "section_id": 12,
+      "source_range": [
+        13335,
+        15121
+      ],
+      "score": 0.3050233837948262,
+      "strategy": "vector",
+      "title": "Branch prediction."
+    }
+  ],
+  "semantic": [
+    {
+      "section_id": 8,
+      "source_range": [
+        7303,
+        8317
+      ],
+      "score": 0.6981527029366912,
+      "strategy": "vector",
+      "title": "Increasing execution speed."
+    },
+    {
+      "section_id": 10,
+      "source_range": [
+        9617,
+        11920
+      ],
+      "score": 0.6974353402088687,
+      "strategy": "vector",
+      "title": "Instruction pipelining."
+    },
+    {
+      "section_id": 6,
+      "source_range": [
+        4957,
+        5393
+      ],
+      "score": 0.6863367762069936,
+      "strategy": "vector",
+      "title": "Instruction cycles."
+    },
+    {
+      "section_id": 13,
+      "source_range": [
+        15121,
+        16310
+      ],
+      "score": 0.6767034933986362,
+      "strategy": "vector",
+      "title": "Superscalar."
+    },
+    {
+      "section_id": 14,
+      "source_range": [
+        16310,
+        17132
+      ],
+      "score": 0.6620509435428439,
+      "strategy": "vector",
+      "title": "Out-of-order execution."
+    },
+    {
+      "section_id": 16,
+      "source_range": [
+        17627,
+        20817
+      ],
+      "score": 0.6603635347106179,
+      "strategy": "vector",
+      "title": "Multiprocessing and multithreading."
+    },
+    {
+      "section_id": 4,
+      "source_range": [
+        3111,
+        4924
+      ],
+      "score": 0.6529114440951185,
+      "strategy": "vector",
+      "title": "Aspects of microarchitecture."
+    },
+    {
+      "section_id": 12,
+      "source_range": [
+        13335,
+        15121
+      ],
+      "score": 0.6388981913535173,
+      "strategy": "vector",
+      "title": "Branch prediction."
+    },
+    {
+      "section_id": 17,
+      "source_range": [
+        20817,
+        21522
+      ],
+      "score": 0.6260343007435138,
+      "strategy": "vector",
+      "title": "See also."
+    },
+    {
+      "section_id": 7,
+      "source_range": [
+        5393,
+        7303
+      ],
+      "score": 0.5998554587278043,
+      "strategy": "vector",
+      "title": "Multicycle Microarchitecture."
+    },
+    {
+      "section_id": 9,
+      "source_range": [
+        8317,
+        9617
+      ],
+      "score": 0.5902051153717924,
+      "strategy": "vector",
+      "title": "Instruction set choice."
+    },
+    {
+      "section_id": 5,
+      "source_range": [
+        4924,
+        4957
+      ],
+      "score": 0.5892854157303173,
+      "strategy": "vector",
+      "title": "Microarchitectural concepts."
+    },
+    {
+      "section_id": 15,
+      "source_range": [
+        17132,
+        17627
+      ],
+      "score": 0.5745430163902946,
+      "strategy": "vector",
+      "title": "Register renaming."
+    },
+    {
+      "section_id": 3,
+      "source_range": [
+        573,
+        3111
+      ],
+      "score": 0.559568030847074,
+      "strategy": "vector",
+      "title": "Relation to instruction set architecture."
+    },
+    {
+      "section_id": 2,
+      "source_range": [
+        0,
+        573
+      ],
+      "score": 0.5405956120186488,
+      "strategy": "vector",
+      "title": "Microarchitecture"
+    },
+    {
+      "section_id": 11,
+      "source_range": [
+        11920,
+        13335
+      ],
+      "score": 0.5309904096416007,
+      "strategy": "vector",
+      "title": "Cache."
+    }
+  ]
+}

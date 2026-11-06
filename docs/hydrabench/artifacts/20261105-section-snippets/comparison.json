@@ -1,0 +1,66 @@
+{
+  "time_hong_kong": "2026-11-05T11:54:00.279087+08:00",
+  "database": "hydra_layers_sample_20261105_qwen38_27b",
+  "uri": "ctx://resources/hydra-layer-validation/microarchitecture",
+  "version": 1,
+  "query": "1986 VAX 8800",
+  "scope": "One existing query; prior saved ToolMessage versus current SDK/DeepAgents ToolMessage. No answering model invoked.",
+  "provider_model_calls": 0,
+  "provider_embedding_calls": 0,
+  "new_actual_model_usage": null,
+  "baseline_sha256": "3094cbf298f7ff5029495be020d678913776126e41026bcb7b07048e3c992daf",
+  "source_sha256": "17571bc69825350c0f464fb9e4ff1478f3dc0fc4f7d6c6cb9f7836783bae808c",
+  "before": {
+    "section_id": 5,
+    "offsets": [
+      10291,
+      13636
+    ],
+    "content_characters": 3345,
+    "payload_size": {
+      "characters": 3896,
+      "estimated_tokens_chars_div_4": 974.0
+    }
+  },
+  "after": {
+    "section_id": 10,
+    "offsets": [
+      9617,
+      11920
+    ],
+    "content_characters": 2303,
+    "payload_size": {
+      "characters": 2843,
+      "estimated_tokens_chars_div_4": 710.75
+    }
+  },
+  "state_before": {
+    "contexts": {
+      "rows": 4,
+      "sha256": "3550cc04cbc2d5f1a3ff99b7b65ab45fff84cfb7549e80ab6d03e7c8703f9cec"
+    },
+    "document_sections": {
+      "rows": 19,
+      "sha256": "91f4241dae19d99ac2757de66ec84d78afd47c2014584c3b3a66145fd14f37df"
+    },
+    "retrieval_trace": {
+      "rows": 6,
+      "sha256": "df2f120f9f14e0814979a06c471f76384dff81b666b12bb4446a5f1da820b185"
+    }
+  },
+  "state_after": {
+    "contexts": {
+      "rows": 4,
+      "sha256": "3550cc04cbc2d5f1a3ff99b7b65ab45fff84cfb7549e80ab6d03e7c8703f9cec"
+    },
+    "document_sections": {
+      "rows": 19,
+      "sha256": "91f4241dae19d99ac2757de66ec84d78afd47c2014584c3b3a66145fd14f37df"
+    },
+    "retrieval_trace": {
+      "rows": 6,
+      "sha256": "df2f120f9f14e0814979a06c471f76384dff81b666b12bb4446a5f1da820b185"
+    }
+  },
+  "note": "All search counter/trace writes rolled back. Contexts (including vectors), sections and source unchanged. Character/4 is a heuristic, not actual model usage or cost."
+}

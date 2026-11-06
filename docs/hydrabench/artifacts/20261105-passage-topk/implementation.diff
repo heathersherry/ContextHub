@@ -1,0 +1,392 @@
+--- before/src/contexthub/models/search.py
++++ after/src/contexthub/models/search.py
+@@ -36,6 +36,8 @@
+     tags: list[str] = Field(default_factory=list)
+     snippet: str | None = None
+     section_id: int | None = None
++    # Half-open character range [start, end) in the versioned extracted original.
++    snippet_offset: tuple[int, int] | None = None
+     retrieval_strategy: str | None = None
+ 
+ 
+--- before/src/contexthub/services/retrieval_service.py
++++ after/src/contexthub/services/retrieval_service.py
+@@ -60,20 +60,30 @@
+     return "_rerank_score" if "_rerank_score" in candidate else "cosine_similarity"
+ 
+ 
++def _evidence_key(candidate: dict) -> tuple:
++    offset = candidate.get("snippet_offset")
++    return candidate["id"], candidate["version"], tuple(offset) if offset is not None else None
++
++
+ def _fuse_original_hits(candidates: list[dict], originals: list[dict]) -> list[dict]:
+-    """Reciprocal rank fusion: route scores have different units.
+-
+-    Preserve the original-evidence window on overlap, and key by exact version.
+-    Common quality, validity, ACL and MVCC checks run after fusion.
++    """Prefer original ranges over the same document's representative hit.
++
++    Preserve original-route scores when it is the only remaining route. If other
++    contexts remain, use the existing equal-weight RRF to combine result lists,
++    keyed by document/version/range rather than collapsing a document's ranges.
+     """
+     if not originals:
+         return candidates
++    original_versions = {(c["id"], c["version"]) for c in originals}
++    candidates = [c for c in candidates if (c["id"], c["version"]) not in original_versions]
++    if not candidates:
++        return originals
+     fused: dict[tuple, dict] = {}
+     scores: dict[tuple, float] = {}
+     for route in (candidates, originals):
+         ranked = sorted(route, key=lambda c: c.get(_score_key(c), 0), reverse=True)
+         for rank, candidate in enumerate(ranked, start=1):
+-            key = (candidate["id"], candidate["version"])
++            key = _evidence_key(candidate)
+             scores[key] = scores.get(key, 0.0) + 1.0 / (60 + rank)
+             fused[key] = dict(candidate)
+     for key, candidate in fused.items():
+@@ -376,12 +386,12 @@
+             originals = await self._search_document_originals(
+                 db, request, ctx, filter_types, filter_scopes, query_embedding,
+             )
+-            known = {(c["id"], c["version"]) for c in candidates}
+             candidate_trace.extend({
+                 "node_id": str(c["id"]), "version": c["version"],
++                "section_id": c.get("section_id"), "snippet_offset": c.get("snippet_offset"),
+                 "status": c["status"], "validity_status": c["validity_status"],
+                 "filtered": False, "filter_reasons": [], "route": "original",
+-            } for c in originals if (c["id"], c["version"]) not in known)
++            } for c in originals)
+             candidates = _fuse_original_hits(candidates, originals)
+ 
+         # 4. Quality factor
+@@ -457,14 +467,15 @@
+                         {**candidate, "validity_status": row["validity_status"]}
+                     )
+                 for trace_item in candidate_trace:
+-                    if trace_item["node_id"] == str(candidate["id"]):
++                    if (trace_item["node_id"] == str(candidate["id"])
++                            and trace_item.get("version") == candidate.get("version")
++                            and not trace_item["filtered"]):
+                         trace_item["filtered"] = True
+                         trace_item["filter_reasons"].append(
+                             "materialization_version_changed"
+                             if not same_version
+                             else f"materialization_validity:{row['validity_status']}"
+                         )
+-                        break
+         candidates = revalidated
+         candidate_masks = revalidated_masks
+ 
+@@ -474,7 +485,19 @@
+             await self._build_stale_notices(db, withheld, ctx) if withheld else []
+         )
+ 
+-        # 8. Truncate to top_k
++        # L0 is document discovery; avoid repeating an overview per source range.
++        if request.level.value == "L0":
++            seen = set()
++            document_candidates, document_masks = [], []
++            for candidate, masks in zip(candidates, candidate_masks):
++                key = (candidate["id"], candidate["version"])
++                if key not in seen:
++                    seen.add(key)
++                    document_candidates.append(candidate)
++                    document_masks.append(masks)
++            candidates, candidate_masks = document_candidates, document_masks
++
++        # 8. Global top_k: a document can contribute multiple distinct ranges.
+         candidates = candidates[: request.top_k]
+         candidate_masks = candidate_masks[: request.top_k]
+ 
+@@ -518,6 +541,10 @@
+             l1 = c.get("l1_content")
+             l2 = c.get("l2_content")
+             snippet = c.get("snippet")
++            if c.get("file_path") and snippet is not None and request.level.value != "L0":
++                # Evidence hits carry one original slice. Document layers remain
++                # available through document reads, rather than repeated per hit.
++                l0 = l1 = l2 = None
+ 
+             if masks:
+                 l0 = self._masking.apply_masks(l0, masks)
+@@ -541,6 +568,7 @@
+                 tags=c.get("tags", []),
+                 snippet=snippet,
+                 section_id=c.get("section_id"),
++                snippet_offset=c.get("snippet_offset"),
+                 retrieval_strategy=c.get("retrieval_strategy"),
+             ))
+ 
+@@ -549,6 +577,8 @@
+                 "node_id": str(candidate["id"]),
+                 "version": candidate.get("version"),
+                 "validity_status": candidate.get("validity_status", "unknown"),
++                "section_id": candidate.get("section_id"),
++                "snippet_offset": candidate.get("snippet_offset"),
+             }
+             for candidate in candidates
+         ]
+--- before/src/contexthub/retrieval/long_doc/coordinator.py
++++ after/src/contexthub/retrieval/long_doc/coordinator.py
+@@ -60,7 +60,7 @@
+         return self._merge_results(candidates, all_results)
+ 
+     async def search_originals(self, db, query, documents, *, query_embedding=None, top_k=30):
+-        """Fuse exact original ranges before selecting one evidence body per document."""
++        """Fuse exact original ranges; each distinct range remains a candidate."""
+         if not documents:
+             return []
+         routes = []
+@@ -79,8 +79,15 @@
+                 strategy = "hybrid" if key in fused else result.strategy
+                 fused[key] = replace(result, strategy=strategy)
+         results = [replace(result, relevance_score=scores[key]) for key, result in fused.items()]
+-        matched_ids = {result.context_id for result in results}
+-        return self._merge_results([doc for doc in documents if doc["id"] in matched_ids], results)
++        by_id = {doc["id"]: doc for doc in documents}
++        return [self._materialize(by_id[result.context_id], result)
++                for result in sorted(results, key=lambda r: r.relevance_score, reverse=True)]
++
++    @staticmethod
++    def _materialize(candidate: dict, result: LongDocRetrievalResult) -> dict:
++        return {**candidate, "snippet": result.snippet, "section_id": result.section_id,
++                "snippet_offset": result.snippet_offset, "retrieval_strategy": result.strategy,
++                "_rerank_score": result.relevance_score}
+ 
+     def _merge_results(
+         self,
+@@ -99,11 +106,5 @@
+             if result is None:
+                 merged.append(candidate)
+                 continue
+-            replacement = dict(candidate)
+-            replacement["snippet"] = result.snippet
+-            replacement["section_id"] = result.section_id
+-            replacement["snippet_offset"] = result.snippet_offset
+-            replacement["retrieval_strategy"] = result.strategy
+-            replacement["_rerank_score"] = result.relevance_score
+-            merged.append(replacement)
++            merged.append(self._materialize(candidate, result))
+         return merged
+--- before/sdk/src/contexthub_sdk/models.py
++++ after/sdk/src/contexthub_sdk/models.py
+@@ -151,6 +151,8 @@
+     tags: list[str] = Field(default_factory=list)
+     snippet: str | None = None
+     section_id: int | None = None
++    # Half-open character range [start, end) in the versioned extracted original.
++    snippet_offset: tuple[int, int] | None = None
+     retrieval_strategy: str | None = None
+ 
+ 
+--- before/plugins/deepagents/src/contexthub_deepagents/tools.py
++++ after/plugins/deepagents/src/contexthub_deepagents/tools.py
+@@ -91,6 +91,9 @@
+         """Search visible ContextHub contexts; returns sources and a retrieval_id.
+ 
+         Filter context_type to memory, resource, table_schema, or skill as needed.
++        top_k limits returned evidence hits, not distinct documents. Different
++        source ranges can share a URI/version/section_id; snippet_offset locates
++        each range. L0 discovery returns at most one overview per document.
+         Each hit contains one content body and its content_level. L1 prefers
+         located source evidence (snippet), then the stored overview. Summaries
+         are optional; raw-only sources return their original text as a snippet.
+--- before/tests/test_long_doc_retrieval.py
++++ after/tests/test_long_doc_retrieval.py
+@@ -1292,8 +1292,10 @@
+     original = {**first, "snippet": "raw evidence", "_rerank_score": 9999}
+     fused = _fuse_original_hits([first, second], [original])
+     assert len(fused) == 2
+-    assert fused[0]["snippet"] == "raw evidence"
+-    assert fused[0]["_rerank_score"] == pytest.approx(2 / 61)
++    evidence = next(hit for hit in fused if hit["id"] == first["id"])
++    assert evidence["snippet"] == "raw evidence"
++    assert evidence["_rerank_score"] == pytest.approx(1 / 61)
++    assert all(hit["_rerank_score"] == pytest.approx(1 / 61) for hit in fused)
+ 
+ 
+ @pytest.mark.asyncio
+@@ -1469,3 +1471,88 @@
+         hit=result.results[0]
+         assert hit.retrieval_strategy=='vector' and hit.section_id==42
+         assert hit.snippet=='[MASKED] original evidence with no literal query terms.'
++
++
++
++def test_outer_fusion_preserves_multiple_original_ranges_and_drops_tree_representative():
++    from contexthub.services.retrieval_service import _fuse_original_hits
++    doc = _doc_candidate(uuid.uuid4(), uri="ctx://resources/ranges", file_path="/tmp/ranges")
++    tree = {**doc, "snippet": "overlapping tree", "snippet_offset": (2, 10)}
++    originals = [
++        {**doc, "snippet": "first", "snippet_offset": (0, 5), "_rerank_score": .03},
++        {**doc, "snippet": "second", "snippet_offset": (6, 12), "_rerank_score": .02},
++    ]
++    # A single remaining route keeps its existing range scores.
++    assert _fuse_original_hits([], originals) == originals
++    assert _fuse_original_hits([tree], originals) == originals
++    other = _doc_candidate(uuid.uuid4(), uri="ctx://resources/other", file_path=None)
++    fused = _fuse_original_hits([tree, other], originals)
++    assert len(fused) == 3
++    hits = [hit for hit in fused if hit["id"] == doc["id"]]
++    assert [hit["snippet_offset"] for hit in hits] == [(0, 5), (6, 12)]
++    assert [hit["_rerank_score"] for hit in hits] == pytest.approx([1/61, 1/62])
++    assert all(hit.get("snippet") != "overlapping tree" for hit in fused)
++
++
++@pytest.mark.asyncio
++@pytest.mark.parametrize("level,top_k,changed", [
++    ("L1", 1, False), ("L1", 2, False), ("L1", 3, False),
++    ("L1", 3, True), ("L2", 3, False), ("L0", 3, False),
++])
++async def test_global_passage_topk_with_shared_sections_masks_and_version_barrier(monkeypatch, level, top_k, changed):
++    from dataclasses import replace
++    from contexthub.services import retrieval_service as module
++    a = _doc_candidate(uuid.uuid4(), uri="ctx://resources/a", file_path="/source/a")
++    b = _doc_candidate(uuid.uuid4(), uri="ctx://resources/b", file_path="/source/b")
++    hidden = _doc_candidate(uuid.uuid4(), uri="ctx://resources/hidden", file_path="/must-not-read")
++    for doc in (a, b, hidden): doc["validity_status"] = "fresh"
++    ranges = [
++        LongDocRetrievalResult(a['id'], a['uri'], 'keyword', 7, 'secret A', (0, 8), 3),
++        LongDocRetrievalResult(b['id'], b['uri'], 'keyword', 8, 'secret B', (0, 8), 2),
++        LongDocRetrievalResult(a['id'], a['uri'], 'keyword', 7, 'secret C', (9, 17), 1),
++    ]
++    class DB(RetrievalFlowDB):
++        async def fetch(self, sql, *args):
++            if 'file_path IS NOT NULL' in sql: return [a, b, hidden]
++            if 'SELECT id, version, l2_content' in sql:
++                return [dict(id=d['id'],version=d['version'],l2_content=None) for d in [a,b]]
++            rows = await super().fetch(sql,*args)
++            if changed and 'SELECT id, version, status, validity_status' in sql:
++                return [{**r,'version':r['version']+1} if r['id']==a['id'] else r for r in rows]
++            return rows
++    class Keyword:
++        async def retrieve(self, db, query, documents):
++            assert [d['id'] for d in documents] == [a['id'],b['id']]
++            return ranges
++    class Vector:
++        async def retrieve(self, db, vector, documents, budget):
++            assert budget == top_k * 3
++            return [replace(r,strategy='vector',relevance_score=1-i*.1) for i,r in enumerate(ranges)]
++    class Embedding:
++        calls=0
++        async def embed(self, query): self.calls+=1; return [1.]
++    async def empty(*args, **kwargs): return []
++    monkeypatch.setattr(module,'vector_search',empty)
++    coordinator=LongDocRetrievalCoordinator()
++    coordinator.register_strategy('keyword',Keyword())
++    coordinator.register_strategy('vector',Vector())
++    embedding=Embedding()
++    service=RetrievalService(RetrievalRouter.default(),embedding,
++        StubACL(masks=['secret'],visible_uris={a['uri'],b['uri']}),
++        masking_service=MaskingService(),long_doc_coordinator=coordinator)
++    result=await service.search(DB([a,b,hidden]),SearchRequest(query='evidence',level=level,top_k=top_k),
++        RequestContext(account_id='acme',agent_id='query-agent'))
++    assert embedding.calls==1
++    expected = [ranges[1]] if changed else ranges[:2] if level=='L0' else ranges[:top_k]
++    assert [(h.uri,h.snippet_offset) for h in result.results] == [(r.uri,r.snippet_offset) for r in expected]
++    assert len({(h.uri,h.version,h.snippet_offset) for h in result.results}) == len(result.results)
++    for hit in result.results:
++        assert hit.retrieval_strategy=='hybrid' and 'secret' not in hit.snippet
++        if level=='L0': assert hit.l0_content == a['l0_content']
++        else: assert hit.l0_content is hit.l1_content is hit.l2_content is None
++    assert len(result.trace['final_materialized']) == len(expected)
++    assert [v['snippet_offset'] for v in result.trace['final_versions']] == [r.snippet_offset for r in expected]
++    if changed:
++        removed=[c for c in result.trace['candidates'] if c['node_id']==str(a['id'])]
++        assert len(removed)==2
++        assert all(c['filtered'] and c['filter_reasons']==['materialization_version_changed'] for c in removed)
+--- before/tests/test_document_chunk_vectors.py
++++ after/tests/test_document_chunk_vectors.py
+@@ -111,9 +111,11 @@
+     coordinator.register_strategy('keyword', Keyword())
+     coordinator.register_strategy('vector', Vector())
+     hits = await coordinator.search_originals(None,'query',[doc],query_embedding=[1.])
+-    assert len(hits) == 1 and hits[0]['snippet'] == 'first evidence'
++    assert [hit['snippet'] for hit in hits] == ['first evidence', 'different evidence']
+     assert hits[0]['retrieval_strategy'] == 'hybrid'
+     assert hits[0]['_rerank_score'] == pytest.approx(1/61+1/62)
++    assert hits[1]['_rerank_score'] == pytest.approx(1/61)
++    assert len({hit['snippet_offset'] for hit in hits}) == 2
+ 
+ 
+ @pytest.mark.asyncio
+--- before/plugins/deepagents/tests/test_tools.py
++++ after/plugins/deepagents/tests/test_tools.py
+@@ -397,3 +397,21 @@
+         }
+         # The adapter must not close a client owned by the calling application.
+         await first.ainvoke({"query": "next turn"})
++
++
++
++async def test_search_preserves_two_ranges_in_the_same_document_and_section(tools, respx_mock):
++    rows = [{"uri": URI, "context_type": "resource", "scope": "team", "score": 0.9,
++             "status": "active", "version": 7, "section_id": 42,
++             "snippet": body, "snippet_offset": offset, "retrieval_strategy": "hybrid"}
++            for body, offset in [("First original.", [0,15]), ("Second original.", [16,32])]]
++    route=respx_mock.post("https://hub.test/api/v1/search").respond(200,json={
++        "results": rows, "total": 2, "retrieval_id": "same-document-ranges"})
++    message=await tools["contexthub_search"].ainvoke({
++        "type":"tool_call","id":"ranges","name":"contexthub_search","args":{"query":"originals"}})
++    payload=json.loads(message.content)
++    assert json.loads(route.calls.last.request.content)['top_k']==5
++    assert [hit['content'] for hit in payload['results']]==['First original.','Second original.']
++    assert [hit['snippet_offset'] for hit in payload['results']]==[[0,15],[16,32]]
++    assert all(hit['uri']==URI and hit['version']==7 and hit['section_id']==42 for hit in payload['results'])
++    assert all(hit['content_level']=='snippet' for hit in payload['results'])
+--- before/docs/setup/document-section-generation.md
++++ after/docs/setup/document-section-generation.md
+@@ -76,16 +76,26 @@
+    versions. Check the source hash before reading the exact stored range. Resolve
+    each hit to its original section ID.
+ 6. Fuse lexical/vector ranks by document, version and exact range using
+-   `1 / (60 + rank)`, then select one evidence body per document. Combine these
+-   original hits with document-level discovery, deduplicating by ID and version.
++   `1 / (60 + rank)`. Retain different ranges from the same document, including
++   different ranges sharing a section ID. A range found by both routes is one hit.
++   Replace that document/version's old discovery/tree representative with its
++   original ranges. When other contexts remain, combine the lists with the same
++   equal-weight RRF constant, keyed by document/version/range. When only originals
++   remain, keep their existing range scores without another document-level fusion.
+ 7. Apply common quality factors, validity handling, ACL masks and the final exact
+-   version check. Original-only hits do not trigger extra tree-navigation calls
+-   and are not reranked using only their L0/L1.
++   version check, then take global `top_k` evidence hits. There is no one-hit-per-
++   document quota. Explicit L0 discovery still returns one result per document.
++   Original-only hits do not trigger extra tree-navigation calls and are not
++   reranked using only their L0/L1. The existing vector candidate budget remains
++   `top_k * 3`; API/SDK defaults remain 10 and the DeepAgents tool default remains 5.
+ 
+ The old conditional keyword fallback after tree navigation has been removed;
+ independent original discovery supplies that evidence. Searches restricted to
+-non-resource types do not scan document files. Source coordinates appear in the
+-service trace; existing section IDs support reads without a new search API field.
++non-resource types do not scan document files. `snippet_offset` carries a half-open
++character range `[start, end)` through the API, SDK and DeepAgents tool, alongside
++URI, version and section ID. It locates the unmasked extracted original, even if
++field masking changes the delivered text's length. Existing section reads remain
++available. Candidate and materialized traces retain individual range locations.
+ The public materialized trace now uses the same masked text as served results.
+ See the [single-query section-boundary check](../hydrabench/2026-11-05-SECTION-SNIPPETS.md)
+ for the exact before/after Agent bodies. This selection change does not rebuild
+@@ -93,8 +103,15 @@
+ 
+ The DeepAgents adapter emits one `content` body per hit. For L1 requests, a located
+ original snippet takes priority over navigation/description; URI, version and
+-section ID remain available. The SDK and generic search response retain their
+-existing layer fields. Full document and section reads remain separate.
++section ID and source range remain available. For file-backed evidence hits,
++the generic search result leaves L0/L1/L2 body fields empty instead of repeating
++document layers alongside each snippet. Explicit L0 discovery retains overview
++fields. Stored layers and complete document/section reads are unchanged.
++
++See the [saved-vector passage top-k replay](../hydrabench/2026-11-05-PASSAGE-TOPK.md)
++for actual before/after Agent bodies. This change requires no schema migration,
++new model call, chunk regeneration or index rebuild. More distinct evidence can
++increase the returned text; it does not by itself improve relevance.
+ 
+ ## Limits and index handling
+ 

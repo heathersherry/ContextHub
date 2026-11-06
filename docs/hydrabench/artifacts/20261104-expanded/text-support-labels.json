@@ -1,0 +1,350 @@
+{
+  "created_at": "2026-11-04T03:34:21.150954+00:00",
+  "method": "Assistant-inspected non-exhaustive core-fact anchors, frozen before retrieval probes and model runs. A miss on these anchors is not necessarily a semantic evidence miss; inspect returned text separately. No official passage labels exist in the release.",
+  "labels": {
+    "dev_43": {
+      "known_support_uris": [
+        "ctx://team/engineering/hydra/kilt/2325040/0000"
+      ],
+      "coverage": "core_support_located",
+      "note": "",
+      "support": [
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/2325040/0000",
+          "title": "Joint Declaration on the Doctrine of Justification",
+          "content_sha256": "e787a75ee8a5d8984ccac16229b2ac0076cc582f1fdd3751558b337d9c057a6e"
+        }
+      ]
+    },
+    "dev_62": {
+      "known_support_uris": [
+        "ctx://team/engineering/hydra/kilt/18564164/0001",
+        "ctx://team/engineering/hydra/kilt/738698/0000"
+      ],
+      "coverage": "core_support_located",
+      "note": "",
+      "support": [
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/18564164/0001",
+          "title": "Mercedes-Benz",
+          "content_sha256": "d47125bb3b41fccbe81e7342d954a1d182cc1df3396fc49f635a484e9669dcb5"
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/738698/0000",
+          "title": "Emil Jellinek",
+          "content_sha256": "af7a0b246a624055d66df7ddb7069e7350c629f46d45a8e321bec6ca73638be7"
+        }
+      ]
+    },
+    "dev_5": {
+      "known_support_uris": [
+        "ctx://team/engineering/hydra/kilt/522676/0001",
+        "ctx://team/engineering/hydra/kilt/812294/0002"
+      ],
+      "coverage": "core_support_located",
+      "note": "",
+      "support": [
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/522676/0001",
+          "title": "Silverstone Circuit",
+          "content_sha256": "cedfd94cc214454aba4032f2b916bbce7ec764f066833fc35634742bff5fd4e1"
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/812294/0002",
+          "title": "RAF Silverstone",
+          "content_sha256": "e8cfb56ee5af8ededc49b3d3bda0088d0a66709c0adf7cdfba7ce7da8fb02b3c"
+        }
+      ]
+    },
+    "dev_13": {
+      "known_support_uris": [
+        "ctx://team/engineering/hydra/kilt/424417/0052"
+      ],
+      "coverage": "core_support_located",
+      "note": "",
+      "support": [
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/424417/0052",
+          "title": "Eddie Irvine",
+          "content_sha256": "d505d05bd45029dc2ab1148fa24de8ac11b1cbb51f7f0ba5527fc985ba7c9d5d"
+        }
+      ]
+    },
+    "dev_35": {
+      "known_support_uris": [
+        "ctx://team/engineering/hydra/kilt/2285389/0003",
+        "ctx://team/engineering/hydra/kilt/51429008/0020"
+      ],
+      "coverage": "core_support_located",
+      "note": "",
+      "support": [
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/2285389/0003",
+          "title": "Cosmic entity",
+          "content_sha256": "23865ffec201168db6e7642bd5071e5489eb627a40f044e64eeb1a297a8a7c89"
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/51429008/0020",
+          "title": "Theosophy (Blavatskian)",
+          "content_sha256": "a3d6063d254ec07f0846a0f504d906806f4d2b7808965e16cbad731ce57646c8"
+        }
+      ]
+    },
+    "dev_72": {
+      "known_support_uris": [
+        "ctx://team/engineering/hydra/kilt/25769371/0000",
+        "ctx://team/engineering/hydra/kilt/25769371/0001"
+      ],
+      "coverage": "core_support_located",
+      "note": "",
+      "support": [
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/25769371/0000",
+          "title": "Brightest Day",
+          "content_sha256": "3fbdc1a1919f820b877a43c39379b0ad9484087a53686bc6833e1a045c8c7f54"
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/25769371/0001",
+          "title": "Brightest Day",
+          "content_sha256": "4a4f2499f5af490cb937f405a72b120f9dde9d6ec1e52434b2e123c0c2c790ae"
+        }
+      ]
+    },
+    "dev_10": {
+      "known_support_uris": [
+        "ctx://team/engineering/hydra/kilt/850460/0000",
+        "ctx://team/engineering/hydra/kilt/850460/0001"
+      ],
+      "coverage": "core_support_located",
+      "note": "",
+      "support": [
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/850460/0000",
+          "title": "Abomination (comics)",
+          "content_sha256": "53be351e2325c446959b1dea60c65cad3dcd70fd014173a72832e533c22ebb21"
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/850460/0001",
+          "title": "Abomination (comics)",
+          "content_sha256": "35c57b269b901554f17f234f42c3415b538c865fa2f98b70279656500a784715"
+        }
+      ]
+    },
+    "dev_68": {
+      "known_support_uris": [
+        "ctx://team/engineering/hydra/kilt/565879/0001"
+      ],
+      "coverage": "core_support_located",
+      "note": "",
+      "support": [
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/565879/0001",
+          "title": "The Incredibles",
+          "content_sha256": "e948fb9c26afa6a2c63e888199436acd051f6a371e5b337a148164959f8e31a6"
+        }
+      ]
+    },
+    "dev_26": {
+      "known_support_uris": [
+        "ctx://team/engineering/hydra/kilt/10726541/0000",
+        "ctx://team/engineering/hydra/kilt/10726541/0003",
+        "ctx://team/engineering/hydra/kilt/10726541/0019",
+        "ctx://team/engineering/hydra/kilt/7838811/0007"
+      ],
+      "coverage": "core_support_located",
+      "note": "",
+      "support": [
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/10726541/0000",
+          "title": "Holm–Bonferroni method",
+          "content_sha256": "b6801f1cb9cf234db6f673b96763eb24f34868b707e8a4357b31e0ea8c484d33"
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/10726541/0003",
+          "title": "Holm–Bonferroni method",
+          "content_sha256": "108aca016b43323b54b8c0250d78922ce382976c15f9b13513567fcbacd5715b"
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/10726541/0019",
+          "title": "Holm–Bonferroni method",
+          "content_sha256": "d1e471f5c398e798455b67892f86d13f011f2bb2ef9257bfd3645d08b881aa9f"
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/7838811/0007",
+          "title": "Bonferroni correction",
+          "content_sha256": "3cc3de4ad0707e48a52b4a0fb29be5512535038b94d6647e3048d31c0432e491"
+        }
+      ]
+    },
+    "dev_31": {
+      "known_support_uris": [
+        "ctx://team/engineering/hydra/kilt/31726/0000",
+        "ctx://team/engineering/hydra/kilt/31717/0000"
+      ],
+      "coverage": "core_support_located",
+      "note": "",
+      "support": [
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/31726/0000",
+          "title": "Politics of the United Kingdom",
+          "content_sha256": "c2134daa7c4aa14e58e63decee69b8356ad9414e46be5d3e18d105248d92e772"
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/31717/0000",
+          "title": "United Kingdom",
+          "content_sha256": "3d268d7b8ce3329431821b5f6d98c91f2869a1c4859433cc6ae120382ef5cb5f"
+        }
+      ]
+    },
+    "dev_6": {
+      "known_support_uris": [],
+      "coverage": "not_located",
+      "note": "No passage about the Indian Half-bred horse was located in the frozen corpus; do not count as a proven ranking miss.",
+      "support": []
+    },
+    "dev_20": {
+      "known_support_uris": [
+        "ctx://team/engineering/hydra/kilt/27307590/0011"
+      ],
+      "coverage": "core_support_located",
+      "note": "The selected-showings passage lists predominantly New York venues; city is inferred from the list, not a verbatim majority statement.",
+      "support": [
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/27307590/0011",
+          "title": "Leonard Rosenfeld",
+          "content_sha256": "ae17d87616b6a878a36b9b27ca829bb907c4a5f1a1e3738fcdaae3d54f3285a7"
+        }
+      ]
+    },
+    "dev_32": {
+      "known_support_uris": [
+        "ctx://team/engineering/hydra/kilt/17182301/0064"
+      ],
+      "coverage": "core_support_located",
+      "note": "The source supports prepaid cards marketed to teenagers and their financial-management benefit, but does not establish that the database category junior always means prepaid.",
+      "support": [
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/17182301/0064",
+          "title": "Credit card",
+          "content_sha256": "39e330d4ec0171f0525808fbd5e1298366398eb0a4ac95c6c784437b8bc22ffa"
+        }
+      ]
+    },
+    "dev_46": {
+      "known_support_uris": [
+        "ctx://team/engineering/hydra/kilt/20216/0000",
+        "ctx://team/engineering/hydra/kilt/20216/0031",
+        "ctx://team/engineering/hydra/kilt/20216/0032"
+      ],
+      "coverage": "core_support_located",
+      "note": "Reference describes broader Moravian history; anchors support that history, not every possible interpretation of South Moravia.",
+      "support": [
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/20216/0000",
+          "title": "Moravia",
+          "content_sha256": "2fcf25a7a47ecc22f551ba24a5069d1cb97b098e3b2e7928258ef4ccfef46a15"
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/20216/0031",
+          "title": "Moravia",
+          "content_sha256": "f72ecb9d9cb6d1de775be7dbb26f109568fd00cb68836a7c424b1967537b1795"
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/20216/0032",
+          "title": "Moravia",
+          "content_sha256": "a0276270139eb4418c2c7c2d7405f4c0ce8f2bdd8db988474c1e5d607f8f5988"
+        }
+      ]
+    },
+    "dev_42": {
+      "known_support_uris": [
+        "ctx://team/engineering/hydra/kilt/20014218/0000"
+      ],
+      "coverage": "core_support_located",
+      "note": "",
+      "support": [
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/20014218/0000",
+          "title": "Nikolai Sokolov (footballer)",
+          "content_sha256": "62fd6fcbe8a18127f1d572a57c8657f1f1799e6976e546dc613a4385fcf31a5d"
+        }
+      ]
+    },
+    "dev_60": {
+      "known_support_uris": [
+        "ctx://team/engineering/hydra/kilt/23844/0000"
+      ],
+      "coverage": "core_support_located",
+      "note": "",
+      "support": [
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/23844/0000",
+          "title": "Prague",
+          "content_sha256": "f7414a18e44806e727850c8d57bbcc67b300dd1e75545806e0cfdf9bc06f6593"
+        }
+      ]
+    },
+    "dev_55": {
+      "known_support_uris": [
+        "ctx://team/engineering/hydra/kilt/937587/0010"
+      ],
+      "coverage": "core_support_located",
+      "note": "",
+      "support": [
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/937587/0010",
+          "title": "Peter Firth",
+          "content_sha256": "220616469b1c852b6d6a8fd0475f1b56b183aeec861afeb2afb44a12a32aceeb"
+        }
+      ]
+    },
+    "dev_66": {
+      "known_support_uris": [
+        "ctx://team/engineering/hydra/kilt/21648/0000",
+        "ctx://team/engineering/hydra/kilt/67234/0000"
+      ],
+      "coverage": "core_support_located",
+      "note": "",
+      "support": [
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/21648/0000",
+          "title": "New Jersey",
+          "content_sha256": "7238347f97420177258b512864b6357b8dbb5c230dd3f09db77b9506185d5c07"
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/67234/0000",
+          "title": "Newark, New Jersey",
+          "content_sha256": "6e55053332ddc1f50f78e6b4019cbdbc735d168d928b0c282741432d623a860e"
+        }
+      ]
+    },
+    "dev_0": {
+      "known_support_uris": [
+        "ctx://team/engineering/hydra/kilt/30861034/0015"
+      ],
+      "coverage": "core_support_located",
+      "note": "",
+      "support": [
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/30861034/0015",
+          "title": "American University of Science and Technology",
+          "content_sha256": "54663f645a6166fef81cc1ce8404c456b0581263b36cc0b2f2b2079af0be44b8"
+        }
+      ]
+    },
+    "dev_11": {
+      "known_support_uris": [
+        "ctx://team/engineering/hydra/kilt/10158450/0000"
+      ],
+      "coverage": "core_support_located",
+      "note": "",
+      "support": [
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/10158450/0000",
+          "title": "Vice President of Afghanistan",
+          "content_sha256": "b04aa45b92675cb593324e964cc65493c3e6c3039ebf44a9a019ab50b802da85"
+        }
+      ]
+    }
+  }
+}

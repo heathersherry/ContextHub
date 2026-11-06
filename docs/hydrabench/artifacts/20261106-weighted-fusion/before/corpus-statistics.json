@@ -1,0 +1,435 @@
+{
+  "fragment_count": 16,
+  "token_count": 3318,
+  "average_fragment_tokens": 207.375,
+  "k1": 1.5,
+  "b": 0.75,
+  "queries": {
+    "literal": {
+      "terms": [
+        "1986",
+        "vax",
+        "8800"
+      ],
+      "document_frequency": {
+        "1986": 1,
+        "vax": 1,
+        "8800": 1
+      },
+      "fragments": [
+        {
+          "range": [
+            0,
+            573
+          ],
+          "section_id": 2,
+          "token_count": 78,
+          "matched_terms": {},
+          "bm25_score": 0.0
+        },
+        {
+          "range": [
+            573,
+            3111
+          ],
+          "section_id": 3,
+          "token_count": 381,
+          "matched_terms": {},
+          "bm25_score": 0.0
+        },
+        {
+          "range": [
+            3111,
+            4924
+          ],
+          "section_id": 4,
+          "token_count": 248,
+          "matched_terms": {},
+          "bm25_score": 0.0
+        },
+        {
+          "range": [
+            4924,
+            4957
+          ],
+          "section_id": 5,
+          "token_count": 2,
+          "matched_terms": {},
+          "bm25_score": 0.0
+        },
+        {
+          "range": [
+            4957,
+            5393
+          ],
+          "section_id": 6,
+          "token_count": 64,
+          "matched_terms": {},
+          "bm25_score": 0.0
+        },
+        {
+          "range": [
+            5393,
+            7303
+          ],
+          "section_id": 7,
+          "token_count": 300,
+          "matched_terms": {},
+          "bm25_score": 0.0
+        },
+        {
+          "range": [
+            7303,
+            8317
+          ],
+          "section_id": 8,
+          "token_count": 154,
+          "matched_terms": {},
+          "bm25_score": 0.0
+        },
+        {
+          "range": [
+            8317,
+            9617
+          ],
+          "section_id": 9,
+          "token_count": 190,
+          "matched_terms": {},
+          "bm25_score": 0.0
+        },
+        {
+          "range": [
+            9617,
+            11920
+          ],
+          "section_id": 10,
+          "token_count": 385,
+          "matched_terms": {
+            "1986": 1,
+            "vax": 3,
+            "8800": 2
+          },
+          "bm25_score": 7.8044344248575594
+        },
+        {
+          "range": [
+            11920,
+            13335
+          ],
+          "section_id": 11,
+          "token_count": 258,
+          "matched_terms": {},
+          "bm25_score": 0.0
+        },
+        {
+          "range": [
+            13335,
+            15121
+          ],
+          "section_id": 12,
+          "token_count": 294,
+          "matched_terms": {},
+          "bm25_score": 0.0
+        },
+        {
+          "range": [
+            15121,
+            16310
+          ],
+          "section_id": 13,
+          "token_count": 194,
+          "matched_terms": {},
+          "bm25_score": 0.0
+        },
+        {
+          "range": [
+            16310,
+            17132
+          ],
+          "section_id": 14,
+          "token_count": 139,
+          "matched_terms": {},
+          "bm25_score": 0.0
+        },
+        {
+          "range": [
+            17132,
+            17627
+          ],
+          "section_id": 15,
+          "token_count": 80,
+          "matched_terms": {},
+          "bm25_score": 0.0
+        },
+        {
+          "range": [
+            17627,
+            20817
+          ],
+          "section_id": 16,
+          "token_count": 477,
+          "matched_terms": {},
+          "bm25_score": 0.0
+        },
+        {
+          "range": [
+            20817,
+            21522
+          ],
+          "section_id": 17,
+          "token_count": 74,
+          "matched_terms": {},
+          "bm25_score": 0.0
+        }
+      ]
+    },
+    "semantic": {
+      "terms": [
+        "can",
+        "cpu",
+        "make",
+        "progress",
+        "several",
+        "instructions",
+        "once",
+        "handling",
+        "different",
+        "stages",
+        "simultaneously"
+      ],
+      "document_frequency": {
+        "can": 7,
+        "cpu": 6,
+        "make": 3,
+        "progress": 0,
+        "several": 5,
+        "instructions": 9,
+        "once": 1,
+        "handling": 0,
+        "different": 6,
+        "stages": 3,
+        "simultaneously": 3
+      },
+      "fragments": [
+        {
+          "range": [
+            0,
+            573
+          ],
+          "section_id": 2,
+          "token_count": 78,
+          "matched_terms": {
+            "different": 2
+          },
+          "bm25_score": 1.717942888558066
+        },
+        {
+          "range": [
+            573,
+            3111
+          ],
+          "section_id": 3,
+          "token_count": 381,
+          "matched_terms": {
+            "can": 1,
+            "several": 1,
+            "different": 2,
+            "simultaneously": 1
+          },
+          "bm25_score": 3.6441753521502944
+        },
+        {
+          "range": [
+            3111,
+            4924
+          ],
+          "section_id": 4,
+          "token_count": 248,
+          "matched_terms": {
+            "can": 1,
+            "several": 1,
+            "instructions": 1,
+            "different": 1,
+            "stages": 3
+          },
+          "bm25_score": 5.7184636861052605
+        },
+        {
+          "range": [
+            4924,
+            4957
+          ],
+          "section_id": 5,
+          "token_count": 2,
+          "matched_terms": {},
+          "bm25_score": 0.0
+        },
+        {
+          "range": [
+            4957,
+            5393
+          ],
+          "section_id": 6,
+          "token_count": 64,
+          "matched_terms": {},
+          "bm25_score": 0.0
+        },
+        {
+          "range": [
+            5393,
+            7303
+          ],
+          "section_id": 7,
+          "token_count": 300,
+          "matched_terms": {
+            "can": 4,
+            "several": 1,
+            "instructions": 1,
+            "stages": 1
+          },
+          "bm25_score": 4.103378872116863
+        },
+        {
+          "range": [
+            7303,
+            8317
+          ],
+          "section_id": 8,
+          "token_count": 154,
+          "matched_terms": {
+            "cpu": 1,
+            "instructions": 2
+          },
+          "bm25_score": 1.9936459803523008
+        },
+        {
+          "range": [
+            8317,
+            9617
+          ],
+          "section_id": 9,
+          "token_count": 190,
+          "matched_terms": {
+            "cpu": 1,
+            "several": 1,
+            "instructions": 2
+          },
+          "bm25_score": 3.026083526363524
+        },
+        {
+          "range": [
+            9617,
+            11920
+          ],
+          "section_id": 10,
+          "token_count": 385,
+          "matched_terms": {
+            "cpu": 1,
+            "instructions": 4
+          },
+          "bm25_score": 1.5942422782947059
+        },
+        {
+          "range": [
+            11920,
+            13335
+          ],
+          "section_id": 11,
+          "token_count": 258,
+          "matched_terms": {
+            "can": 1,
+            "cpu": 1,
+            "make": 1
+          },
+          "bm25_score": 3.027576443217713
+        },
+        {
+          "range": [
+            13335,
+            15121
+          ],
+          "section_id": 12,
+          "token_count": 294,
+          "matched_terms": {
+            "can": 2,
+            "several": 1,
+            "instructions": 2,
+            "stages": 1
+          },
+          "bm25_score": 4.0438249255028325
+        },
+        {
+          "range": [
+            15121,
+            16310
+          ],
+          "section_id": 13,
+          "token_count": 194,
+          "matched_terms": {
+            "instructions": 3,
+            "different": 1,
+            "simultaneously": 1
+          },
+          "bm25_score": 3.6036043242779643
+        },
+        {
+          "range": [
+            16310,
+            17132
+          ],
+          "section_id": 14,
+          "token_count": 139,
+          "matched_terms": {
+            "make": 1
+          },
+          "bm25_score": 1.8558001012531036
+        },
+        {
+          "range": [
+            17132,
+            17627
+          ],
+          "section_id": 15,
+          "token_count": 80,
+          "matched_terms": {
+            "can": 1,
+            "instructions": 4,
+            "different": 1
+          },
+          "bm25_score": 3.6696112185288285
+        },
+        {
+          "range": [
+            17627,
+            20817
+          ],
+          "section_id": 16,
+          "token_count": 477,
+          "matched_terms": {
+            "can": 1,
+            "cpu": 5,
+            "make": 1,
+            "instructions": 1,
+            "once": 1,
+            "different": 1,
+            "simultaneously": 1
+          },
+          "bm25_score": 6.524940742368258
+        },
+        {
+          "range": [
+            20817,
+            21522
+          ],
+          "section_id": 17,
+          "token_count": 74,
+          "matched_terms": {
+            "cpu": 3
+          },
+          "bm25_score": 1.909356708337251
+        }
+      ]
+    }
+  },
+  "tokenization": "lowercase whole word/number runs; Han characters individually; no stemming"
+}

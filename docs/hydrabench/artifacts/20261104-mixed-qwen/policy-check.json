@@ -1,0 +1,39 @@
+{
+  "prompt_unchanged": true,
+  "checks": [
+    {
+      "case_id": "dev_0",
+      "context_type": "table_schema",
+      "expected_policy": "vector",
+      "query": "Database: student_club. What is the name of the social event attended by the vice president of an organization established at the American University of Science and Technology to promote student interests, located at 900 E. Washington St.?",
+      "expected_uris": [
+        "ctx://datalake/hydra/student_club/event",
+        "ctx://datalake/hydra/student_club/attendance",
+        "ctx://datalake/hydra/student_club/member"
+      ],
+      "observed_uris": [
+        "ctx://datalake/hydra/student_club/event",
+        "ctx://datalake/hydra/student_club/attendance",
+        "ctx://datalake/hydra/student_club/member"
+      ],
+      "retrieval_id": "72263888-748a-4ca1-acbe-0fab8e6c15c6"
+    },
+    {
+      "case_id": "dev_62",
+      "context_type": "resource",
+      "expected_policy": "keyword",
+      "query": "What is the origin of the name \"Mercedes\" as it relates to the automotive brand?",
+      "expected_uris": [
+        "ctx://team/engineering/hydra/kilt/18564164/0000",
+        "ctx://team/engineering/hydra/kilt/18564164/0006",
+        "ctx://team/engineering/hydra/kilt/738698/0019"
+      ],
+      "observed_uris": [
+        "ctx://team/engineering/hydra/kilt/18564164/0000",
+        "ctx://team/engineering/hydra/kilt/18564164/0006",
+        "ctx://team/engineering/hydra/kilt/738698/0019"
+      ],
+      "retrieval_id": "b17bb642-30bb-45a4-9a8d-cf314ad67716"
+    }
+  ]
+}

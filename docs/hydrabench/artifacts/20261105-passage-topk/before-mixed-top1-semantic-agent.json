@@ -1,0 +1,25 @@
+{
+  "results": [
+    {
+      "uri": "ctx://resources/hydra-layer-validation/microarchitecture",
+      "context_type": "resource",
+      "scope": "team",
+      "owner_space": "",
+      "score": 0.03278688524590164,
+      "status": "active",
+      "version": 1,
+      "validity_status": "fresh",
+      "tags": [
+        "kilt-2019",
+        "source-sha256:17571bc69825350c0f464fb9e4ff1478f3dc0fc4f7d6c6cb9f7836783bae808c"
+      ],
+      "section_id": 8,
+      "retrieval_strategy": "hybrid",
+      "content": "### Increasing execution speed.\n\nComplicating this simple-looking series of steps is the fact that the memory hierarchy, which includes caching, main memory and non-volatile storage like hard disks (where the program instructions and data reside), has always been slower than the processor itself. Step (2) often introduces a lengthy (in CPU terms) delay while the data arrives over the computer bus. A considerable amount of research has been put into designs that avoid these delays as much as possible. Over the years, a central goal was to execute more instructions in parallel, thus increasing the effective execution speed of a program. These efforts introduced complicated logic and circuit structures. Initially, these techniques could only be implemented on expensive mainframes or supercomputers due to the amount of circuitry needed for these techniques. As semiconductor manufacturing progressed, more and more of these techniques could be implemented on a single semiconductor chip. See Moore's law.\n\n",
+      "content_level": "snippet"
+    }
+  ],
+  "total": 1,
+  "retrieval_id": "806b5361-4ff9-43e5-880b-25cc5b981f7b",
+  "stale_notices": []
+}

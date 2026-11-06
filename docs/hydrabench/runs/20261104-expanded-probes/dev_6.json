@@ -1,0 +1,145 @@
+{
+  "case_id": "dev_6",
+  "type": "s2a",
+  "db_id": "codebase_community",
+  "reference_tables": [
+    "badges",
+    "users"
+  ],
+  "top_k": 3,
+  "table_schema": {
+    "query": "Database: codebase_community. How many users from the country where the Indian Half-bred horse type is primarily found have the teacher badges?",
+    "response": {
+      "results": [
+        {
+          "uri": "ctx://datalake/hydra/codebase_community/badges",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 4.436542792785833,
+          "l0_content": "Database: codebase_community\nTable: badges\nCREATE TABLE badges\n(\n    Id     INTEGER          not null\n        primary key,\n    UserId INTEGER          null,\n    Name   TEXT null,\n    Date   DATETIME     null,\n        foreign key (UserId) references users (Id)\n            on update cascade on delete cascade\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nId,,the badge id,integer,\r\nUserId,User Id,the unique id of the user,integer,\r\nName,,the badge name the user obtained,text,\r\nDate,,the date that the user obtained the badge,datetime,",
+          "l1_content": "Database: codebase_community\nTable: badges\nCREATE TABLE badges\n(\n    Id     INTEGER          not null\n        primary key,\n    UserId INTEGER          null,\n    Name   TEXT null,\n    Date   DATETIME     null,\n        foreign key (UserId) references users (Id)\n            on update cascade on delete cascade\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nId,,the badge id,integer,\r\nUserId,User Id,the unique id of the user,integer,\r\nName,,the badge name the user obtained,text,\r\nDate,,the date that the user obtained the badge,datetime,",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://datalake/hydra/codebase_community/comments",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 4.2180608191863325,
+          "l0_content": "Database: codebase_community\nTable: comments\nCREATE TABLE comments\n(\n    Id              INTEGER          not null\n        primary key,\n    PostId          INTEGER          null,\n    Score           INTEGER          null,\n    Text            TEXT     null,\n    CreationDate    DATETIME     null,\n    UserId          INTEGER          null,\n    UserDisplayName TEXT null,\n        foreign key (PostId) references posts (Id)\n            on update cascade on delete cascade,\n        foreign key (UserId) references users (Id)\n            on update cascade on delete cascade\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nId,,the comment Id,integer,\r\nPostId,Post Id,the unique id of the post,integer,\r\nScore,,rating score,integer,\"commonsense evidence:\nThe score is from 0 to 100. The score more than 60 refers that the comment is a positive comment. The score less than 60 refers that the comment is a negative comment. \"\r\nText,,the detailed content of the comment,text,\r\nCreationDate,Creation Date,the creation date of the comment,datetime,\r\nUserId,User Id,the id of the user who post the comment,integer,\r\nUserDisplayName,User Display Name,user's display name,text,",
+          "l1_content": "Database: codebase_community\nTable: comments\nCREATE TABLE comments\n(\n    Id              INTEGER          not null\n        primary key,\n    PostId          INTEGER          null,\n    Score           INTEGER          null,\n    Text            TEXT     null,\n    CreationDate    DATETIME     null,\n    UserId          INTEGER          null,\n    UserDisplayName TEXT null,\n        foreign key (PostId) references posts (Id)\n            on update cascade on delete cascade,\n        foreign key (UserId) references users (Id)\n            on update cascade on delete cascade\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nId,,the comment Id,integer,\r\nPostId,Post Id,the unique id of the post,integer,\r\nScore,,rating score,integer,\"commonsense evidence:\nThe score is from 0 to 100. The score more than 60 refers that the comment is a positive comment. The score less than 60 refers that the comment is a negative comment. \"\r\nText,,the detailed content of the comment,text,\r\nCreationDate,Creation Date,the creation date of the comment,datetime,\r\nUserId,User Id,the id of the user who post the comment,integer,\r\nUserDisplayName,User Display Name,user's display name,text,",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://datalake/hydra/codebase_community/votes",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 3.2272211981924377,
+          "l0_content": "Database: codebase_community\nTable: votes\nCREATE TABLE votes\n(\n    Id           INTEGER  not null\n        primary key,\n    PostId       INTEGER  null,\n    VoteTypeId   INTEGER  null,\n    CreationDate DATE null,\n    UserId       INTEGER  null,\n    BountyAmount INTEGER  null,\n        foreign key (PostId) references posts (Id)\n            on update cascade on delete cascade,\n        foreign key (UserId) references users (Id)\n            on update cascade on delete cascade\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\nId,,the vote id,integer,\nPostId,Post Id,the id of the post that is voted,integer,\nVoteTypeId,Vote Type Id,the id of the vote type,integer,\nCreationDate,Creation Date,the creation date of the vote,datetime,\nUserId,User Id,the id of the voter,integer,\nBountyAmount,Bounty Amount,the amount of bounty,integer,\n",
+          "l1_content": "Database: codebase_community\nTable: votes\nCREATE TABLE votes\n(\n    Id           INTEGER  not null\n        primary key,\n    PostId       INTEGER  null,\n    VoteTypeId   INTEGER  null,\n    CreationDate DATE null,\n    UserId       INTEGER  null,\n    BountyAmount INTEGER  null,\n        foreign key (PostId) references posts (Id)\n            on update cascade on delete cascade,\n        foreign key (UserId) references users (Id)\n            on update cascade on delete cascade\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\nId,,the vote id,integer,\nPostId,Post Id,the id of the post that is voted,integer,\nVoteTypeId,Vote Type Id,the id of the vote type,integer,\nCreationDate,Creation Date,the creation date of the vote,datetime,\nUserId,User Id,the id of the voter,integer,\nBountyAmount,Bounty Amount,the amount of bounty,integer,\n",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        }
+      ],
+      "total": 3,
+      "retrieval_id": "9598a018-d171-4ab7-acea-1912cc07f9fb",
+      "stale_notices": []
+    }
+  },
+  "resource": {
+    "query": "In which country is the Indian Half-bred horse type primarily found?",
+    "response": {
+      "results": [
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/14533/0035",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 3.469702079248529,
+          "l0_content": "India — Biodiversity.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 14533\nThis had the effect of lowering endemism among India's mammals, which stands at 12.6%, contrasting with 45.8% among reptiles and 55.8% among amphibians. Notable endemics are the vulnerable Hooded leaf monkey and the threatened Beddom's toad of the Western Ghats. India contains 172 IUCN-designated threatened animal species, or 2.9% of endangered forms. These include the endangered Ganges river dolphin and the critically endangered: Gharial, a crocodilian; the Great Indian bustard; and the Indian white-rumped vulture, which has become nearly extinct by having ingested the carrion of diclofenac-treated cattle.",
+          "l1_content": "India — Biodiversity.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 14533\nThis had the effect of lowering endemism among India's mammals, which stands at 12.6%, contrasting with 45.8% among reptiles and 55.8% among amphibians. Notable endemics are the vulnerable Hooded leaf monkey and the threatened Beddom's toad of the Western Ghats. India contains 172 IUCN-designated threatened animal species, or 2.9% of endangered forms. These include the endangered Ganges river dolphin and the critically endangered: Gharial, a crocodilian; the Great Indian bustard; and the Indian white-rumped vulture, which has become nearly extinct by having ingested the carrion of diclofenac-treated cattle.",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/38209875/0000",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 3.137459349957829,
+          "l0_content": "Limia cattle — Abstract\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 38209875\nLimia, Spanish Limiana or in Galician raza Limiá, is a primitive cattle breed from the Province of Ourense in Galicia in northwest Spain, which in some features resembles the extinct aurochs.",
+          "l1_content": "Limia cattle — Abstract\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 38209875\nLimia, Spanish Limiana or in Galician raza Limiá, is a primitive cattle breed from the Province of Ourense in Galicia in northwest Spain, which in some features resembles the extinct aurochs.",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/12955849/0001",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 2.948082442779452,
+          "l0_content": "Indian Fantail — Description.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 12955849\nThe Indian Fantail pigeon is a breed of fancy pigeon; it originated in India. They have a distinct fan shaped tail, and are bigger than the English Fantail pigeon. Indian Fantail pigeons are most commonly white with light tan spots, although breeders have introduced more new colours. Their feet are covered in feathers, and the birds walk on their toes.",
+          "l1_content": "Indian Fantail — Description.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 12955849\nThe Indian Fantail pigeon is a breed of fancy pigeon; it originated in India. They have a distinct fan shaped tail, and are bigger than the English Fantail pigeon. Indian Fantail pigeons are most commonly white with light tan spots, although breeders have introduced more new colours. Their feet are covered in feathers, and the birds walk on their toes.",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        }
+      ],
+      "total": 3,
+      "retrieval_id": "f07843c9-4307-4872-bcb6-cda787a82012",
+      "stale_notices": []
+    }
+  },
+  "table_metrics": {
+    "required": 2,
+    "hits_at_3": 1,
+    "recall_at_3": 0.5,
+    "all_required_at_3": false,
+    "first_hit_rank": 1
+  }
+}

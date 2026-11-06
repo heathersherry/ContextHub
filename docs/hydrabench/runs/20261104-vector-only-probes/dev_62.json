@@ -1,0 +1,145 @@
+{
+  "case_id": "dev_62",
+  "type": "a2s",
+  "db_id": "formula_1",
+  "reference_tables": [
+    "constructorStandings",
+    "constructors"
+  ],
+  "top_k": 3,
+  "table_schema": {
+    "query": "Database: formula_1. Which constructor has the highest points, and what is the origin of the name of that constructor as it relates to the automotive brand?",
+    "response": {
+      "results": [
+        {
+          "uri": "ctx://datalake/hydra/formula_1/constructors",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 0.47292983531951904,
+          "l0_content": "Database: formula_1\nTable: constructors\nCREATE TABLE constructors\n(\n    constructorId  INTEGER\n        primary key autoincrement,\n    constructorRef TEXT default '' not null,\n    name           TEXT default '' not null\n        unique,\n    nationality    TEXT,\n    url            TEXT default '' not null\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nconstructorId ,constructor Id ,the unique identification number identifying constructors ,integer ,\r\nconstructorRef ,Constructor Reference name ,Constructor Reference name ,text,\r\nname ,,full name of the constructor ,text,\r\nnationality ,,nationality of the constructor ,text,\r\nurl ,,the introduction website of the constructor ,text,commonsense evidence: How to find out the detailed introduction of the constructor: through its url",
+          "l1_content": "Database: formula_1\nTable: constructors\nCREATE TABLE constructors\n(\n    constructorId  INTEGER\n        primary key autoincrement,\n    constructorRef TEXT default '' not null,\n    name           TEXT default '' not null\n        unique,\n    nationality    TEXT,\n    url            TEXT default '' not null\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nconstructorId ,constructor Id ,the unique identification number identifying constructors ,integer ,\r\nconstructorRef ,Constructor Reference name ,Constructor Reference name ,text,\r\nname ,,full name of the constructor ,text,\r\nnationality ,,nationality of the constructor ,text,\r\nurl ,,the introduction website of the constructor ,text,commonsense evidence: How to find out the detailed introduction of the constructor: through its url",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://datalake/hydra/formula_1/constructorStandings",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 0.4213314181963034,
+          "l0_content": "Database: formula_1\nTable: constructorStandings\nCREATE TABLE constructorStandings\n(\n    constructorStandingsId INTEGER\n        primary key autoincrement,\n    raceId                 INTEGER default 0 not null,\n    constructorId          INTEGER default 0 not null,\n    points                 REAL   default 0 not null,\n    position               INTEGER,\n    positionText           TEXT,\n    wins                   INTEGER default 0 not null,\n    foreign key (raceId) references races(raceId),\n    foreign key (constructorId) references constructors(constructorId)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nconstructorStandingsId ,constructor Standings Id ,unique identification of the constructor standing records ,integer ,\r\nraceId ,race id ,id number identifying which races ,integer ,\r\nconstructorId ,constructor id ,id number identifying which id ,integer ,\r\npoints,,how many points acquired in each race ,,\r\nposition ,,position or track of circuits ,integer ,\r\npositionText ,position text ,,text,\"same with position, not quite useful \"\r\nwins ,,wins ,integer ,\r\n",
+          "l1_content": "Database: formula_1\nTable: constructorStandings\nCREATE TABLE constructorStandings\n(\n    constructorStandingsId INTEGER\n        primary key autoincrement,\n    raceId                 INTEGER default 0 not null,\n    constructorId          INTEGER default 0 not null,\n    points                 REAL   default 0 not null,\n    position               INTEGER,\n    positionText           TEXT,\n    wins                   INTEGER default 0 not null,\n    foreign key (raceId) references races(raceId),\n    foreign key (constructorId) references constructors(constructorId)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nconstructorStandingsId ,constructor Standings Id ,unique identification of the constructor standing records ,integer ,\r\nraceId ,race id ,id number identifying which races ,integer ,\r\nconstructorId ,constructor id ,id number identifying which id ,integer ,\r\npoints,,how many points acquired in each race ,,\r\nposition ,,position or track of circuits ,integer ,\r\npositionText ,position text ,,text,\"same with position, not quite useful \"\r\nwins ,,wins ,integer ,\r\n",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://datalake/hydra/formula_1/constructorResults",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 0.41571328546325725,
+          "l0_content": "Database: formula_1\nTable: constructorResults\nCREATE TABLE constructorResults\n(\n    constructorResultsId INTEGER\n        primary key autoincrement,\n    raceId               INTEGER default 0 not null,\n    constructorId        INTEGER default 0 not null,\n    points               REAL,\n    status               TEXT,\n    foreign key (raceId) references races(raceId),\n    foreign key (constructorId) references constructors(constructorId)\n\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nconstructorResultsId,constructor Results Id,constructor Results Id,integer,\r\nraceId,race Id,race id,integer,\r\nconstructorId,constructor Id,constructor id,integer,\r\npoints,,points,real,\r\nstatus,,status,text,",
+          "l1_content": "Database: formula_1\nTable: constructorResults\nCREATE TABLE constructorResults\n(\n    constructorResultsId INTEGER\n        primary key autoincrement,\n    raceId               INTEGER default 0 not null,\n    constructorId        INTEGER default 0 not null,\n    points               REAL,\n    status               TEXT,\n    foreign key (raceId) references races(raceId),\n    foreign key (constructorId) references constructors(constructorId)\n\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nconstructorResultsId,constructor Results Id,constructor Results Id,integer,\r\nraceId,race Id,race id,integer,\r\nconstructorId,constructor Id,constructor id,integer,\r\npoints,,points,real,\r\nstatus,,status,text,",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        }
+      ],
+      "total": 3,
+      "retrieval_id": "b59dfeeb-bbee-41e5-98b4-aa3da2db2cd1",
+      "stale_notices": []
+    }
+  },
+  "resource": {
+    "query": "What is the origin of the name \"Mercedes\" as it relates to the automotive brand?",
+    "response": {
+      "results": [
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/18564164/0003",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 0.5392636931381418,
+          "l0_content": "Mercedes-Benz — History.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 18564164\nIn 1901, the name \"Mercedes\" was registered by Daimler-Motoren-Gesellschaft (DMG) worldwide as a protected trademark. The first Mercedes-Benz brand name vehicles were produced in 1926, following the merger of Karl Benz's and Gottlieb Daimler's companies into the Daimler-Benz company on 28 June of the same year. Gottlieb Daimler was born on 17 March 1834 in Schorndorf. After training as a gunsmith and working in France, he attended the Polytechnic School in Stuttgart from 1857 to 1859.",
+          "l1_content": "Mercedes-Benz — History.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 18564164\nIn 1901, the name \"Mercedes\" was registered by Daimler-Motoren-Gesellschaft (DMG) worldwide as a protected trademark. The first Mercedes-Benz brand name vehicles were produced in 1926, following the merger of Karl Benz's and Gottlieb Daimler's companies into the Daimler-Benz company on 28 June of the same year. Gottlieb Daimler was born on 17 March 1834 in Schorndorf. After training as a gunsmith and working in France, he attended the Polytechnic School in Stuttgart from 1857 to 1859.",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/18564164/0000",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 0.5347423234735544,
+          "l0_content": "Mercedes-Benz — Abstract\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 18564164\nMercedes-Benz () is a German global automobile marque and a division of Daimler AG. The brand is known for luxury vehicles, buses, coaches, and trucks. The headquarters is in Stuttgart, Baden-Württemberg. The name first appeared in 1926 under Daimler-Benz. In 2018, Mercedes-Benz was the biggest selling premium vehicle brand in the world, having sold 2.31 million passenger cars.\nMercedes-Benz traces its origins to Daimler-Motoren-Gesellschaft's 1901 Mercedes and Karl Benz's 1886 Benz Patent-Motorwagen, which is widely regarded as the first gasoline-powered automobile. The slogan for the brand is \"the best or nothing\".",
+          "l1_content": "Mercedes-Benz — Abstract\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 18564164\nMercedes-Benz () is a German global automobile marque and a division of Daimler AG. The brand is known for luxury vehicles, buses, coaches, and trucks. The headquarters is in Stuttgart, Baden-Württemberg. The name first appeared in 1926 under Daimler-Benz. In 2018, Mercedes-Benz was the biggest selling premium vehicle brand in the world, having sold 2.31 million passenger cars.\nMercedes-Benz traces its origins to Daimler-Motoren-Gesellschaft's 1901 Mercedes and Karl Benz's 1886 Benz Patent-Motorwagen, which is widely regarded as the first gasoline-powered automobile. The slogan for the brand is \"the best or nothing\".",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/18564164/0001",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 0.5139807462692261,
+          "l0_content": "Mercedes-Benz — History.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 18564164\nMercedes-Benz traces its origins to Karl Benz's creation of the first petrol-powered car, the Benz Patent Motorwagen, financed by Bertha Benz and patented in January 1886, and Gottlieb Daimler and engineer Wilhelm Maybach's conversion of a stagecoach by the addition of a petrol engine later that year. The Mercedes automobile was first marketed in 1901 by Daimler-Motoren-Gesellschaft (Daimler Motors Corporation). Emil Jellinek, a European automobile entrepreneur who worked with DMG, created the trademark in 1902, naming the 1901 Mercedes 35 hp after his daughter Mercedes Jellinek. Jellinek was a businessman and marketing strategist who promoted \"horseless\" Daimler automobiles among the highest circles of society in his adopted home, which, at that time, was a meeting place for the \"Haute Volée\" of France and Europe, especially in winter.",
+          "l1_content": "Mercedes-Benz — History.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 18564164\nMercedes-Benz traces its origins to Karl Benz's creation of the first petrol-powered car, the Benz Patent Motorwagen, financed by Bertha Benz and patented in January 1886, and Gottlieb Daimler and engineer Wilhelm Maybach's conversion of a stagecoach by the addition of a petrol engine later that year. The Mercedes automobile was first marketed in 1901 by Daimler-Motoren-Gesellschaft (Daimler Motors Corporation). Emil Jellinek, a European automobile entrepreneur who worked with DMG, created the trademark in 1902, naming the 1901 Mercedes 35 hp after his daughter Mercedes Jellinek. Jellinek was a businessman and marketing strategist who promoted \"horseless\" Daimler automobiles among the highest circles of society in his adopted home, which, at that time, was a meeting place for the \"Haute Volée\" of France and Europe, especially in winter.",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        }
+      ],
+      "total": 3,
+      "retrieval_id": "a567b4bb-398e-4ed8-b6bc-81a8895050c9",
+      "stale_notices": []
+    }
+  },
+  "table_metrics": {
+    "required": 2,
+    "hits_at_3": 2,
+    "recall_at_3": 1.0,
+    "all_required_at_3": true,
+    "first_hit_rank": 1
+  }
+}

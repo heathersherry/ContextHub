@@ -1,0 +1,620 @@
+{
+  "dev_46_largest_district_total": {
+    "db_id": "financial",
+    "sql": "SELECT d.district_id,d.A2,d.A3,SUM(l.amount) AS amount,COUNT(*) AS loans FROM loan l JOIN account a ON a.account_id=l.account_id JOIN district d ON d.district_id=a.district_id WHERE l.status IN ('C','D') GROUP BY d.district_id ORDER BY amount DESC LIMIT 5",
+    "result": {
+      "columns": [
+        "district_id",
+        "A2",
+        "A3",
+        "amount",
+        "loans"
+      ],
+      "rows": [
+        [
+          1,
+          "Hl.m. Praha",
+          "Prague",
+          9291852,
+          47
+        ],
+        [
+          54,
+          "Brno - mesto",
+          "south Moravia",
+          3552216,
+          18
+        ],
+        [
+          74,
+          "Ostrava - mesto",
+          "north Moravia",
+          2530812,
+          12
+        ],
+        [
+          64,
+          "Zlin",
+          "south Moravia",
+          2500008,
+          11
+        ],
+        [
+          70,
+          "Karvina",
+          "north Moravia",
+          2313996,
+          15
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0003
+    }
+  },
+  "dev_46_largest_region_total": {
+    "db_id": "financial",
+    "sql": "SELECT d.A3,SUM(l.amount) AS amount,COUNT(*) AS loans FROM loan l JOIN account a ON a.account_id=l.account_id JOIN district d ON d.district_id=a.district_id WHERE l.status IN ('C','D') GROUP BY d.A3 ORDER BY amount DESC LIMIT 5",
+    "result": {
+      "columns": [
+        "A3",
+        "amount",
+        "loans"
+      ],
+      "rows": [
+        [
+          "south Moravia",
+          15776220,
+          88
+        ],
+        [
+          "north Moravia",
+          14045388,
+          76
+        ],
+        [
+          "east Bohemia",
+          12209484,
+          65
+        ],
+        [
+          "central Bohemia",
+          10839696,
+          59
+        ],
+        [
+          "Prague",
+          9291852,
+          47
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0003
+    }
+  },
+  "dev_42_district_grain": {
+    "db_id": "financial",
+    "sql": "SELECT district_id,A2,A3,A5,A6,A7,A8 FROM district WHERE A2='Sokolov'",
+    "result": {
+      "columns": [
+        "district_id",
+        "A2",
+        "A3",
+        "A5",
+        "A6",
+        "A7",
+        "A8"
+      ],
+      "rows": [
+        [
+          30,
+          "Sokolov",
+          "west Bohemia",
+          "15",
+          "13",
+          "8",
+          2
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0001
+    }
+  },
+  "dev_42_with_without_account": {
+    "db_id": "financial",
+    "sql": "SELECT COUNT(*) AS district_female_pre1950, SUM(EXISTS(SELECT 1 FROM disp p JOIN account a ON a.account_id=p.account_id WHERE p.client_id=c.client_id)) AS with_actual_account FROM client c JOIN district d ON d.district_id=c.district_id WHERE c.gender='F' AND c.birth_date<'1950-01-01' AND d.A2='Sokolov'",
+    "result": {
+      "columns": [
+        "district_female_pre1950",
+        "with_actual_account"
+      ],
+      "rows": [
+        [
+          8,
+          8
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0007
+    }
+  },
+  "dev_35_ties": {
+    "db_id": "superhero",
+    "sql": "SELECT MAX(attribute_value) AS maximum,COUNT(*) AS maximum_rows,COUNT(DISTINCT hero_id) AS heroes,COUNT(DISTINCT r.race) AS non_null_race_labels FROM hero_attribute ha JOIN superhero s ON s.id=ha.hero_id LEFT JOIN race r ON r.id=s.race_id WHERE ha.attribute_value=(SELECT MAX(attribute_value) FROM hero_attribute)",
+    "result": {
+      "columns": [
+        "maximum",
+        "maximum_rows",
+        "heroes",
+        "non_null_race_labels"
+      ],
+      "rows": [
+        [
+          100,
+          279,
+          117,
+          25
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0003
+    }
+  },
+  "dev_55_exact_department": {
+    "db_id": "student_club",
+    "sql": "SELECT m.first_name,m.last_name,mj.major_name,mj.department FROM member m JOIN major mj ON mj.major_id=m.link_to_major WHERE mj.department='Art and Design Department'",
+    "result": {
+      "columns": [
+        "first_name",
+        "last_name",
+        "major_name",
+        "department"
+      ],
+      "rows": [
+        [
+          "Amy",
+          "Firth",
+          "Interior Design",
+          "Art and Design Department"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0001
+    }
+  },
+  "dev_0_11_club_position": {
+    "db_id": "student_club",
+    "sql": "SELECT m.first_name,m.last_name,m.position,mj.major_name FROM member m JOIN major mj ON mj.major_id=m.link_to_major WHERE m.position='Vice President'",
+    "result": {
+      "columns": [
+        "first_name",
+        "last_name",
+        "position",
+        "major_name"
+      ],
+      "rows": [
+        [
+          "Phillip",
+          "Cullen",
+          "Vice President",
+          "Communication Studies"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0001
+    }
+  },
+  "constructor_standings_max": {
+    "db_id": "formula_1",
+    "sql": "SELECT c.name, r.year, r.round, r.name AS race, cs.points FROM constructorStandings cs JOIN constructors c ON c.constructorId=cs.constructorId JOIN races r ON r.raceId=cs.raceId ORDER BY cs.points DESC LIMIT 5",
+    "result": {
+      "columns": [
+        "name",
+        "year",
+        "round",
+        "race",
+        "points"
+      ],
+      "rows": [
+        [
+          "Mercedes",
+          2016,
+          21,
+          "Abu Dhabi Grand Prix",
+          765.0
+        ],
+        [
+          "Mercedes",
+          2016,
+          20,
+          "Brazilian Grand Prix",
+          722.0
+        ],
+        [
+          "Mercedes",
+          2015,
+          19,
+          "Abu Dhabi Grand Prix",
+          703.0
+        ],
+        [
+          "Mercedes",
+          2014,
+          19,
+          "Abu Dhabi Grand Prix",
+          701.0
+        ],
+        [
+          "Mercedes",
+          2016,
+          19,
+          "Mexican Grand Prix",
+          679.0
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.001
+    }
+  },
+  "mercedes_race_and_standing_samples": {
+    "db_id": "formula_1",
+    "sql": "SELECT r.year,r.round,cr.points AS race_points,cs.points AS standing_points FROM constructorStandings cs JOIN constructors c ON c.constructorId=cs.constructorId JOIN races r ON r.raceId=cs.raceId LEFT JOIN constructorResults cr ON cr.raceId=cs.raceId AND cr.constructorId=cs.constructorId WHERE c.name='Mercedes' AND r.year=2016 AND r.round IN (1,2,20,21) ORDER BY r.round",
+    "result": {
+      "columns": [
+        "year",
+        "round",
+        "race_points",
+        "standing_points"
+      ],
+      "rows": [
+        [
+          2016,
+          1,
+          43.0,
+          43.0
+        ],
+        [
+          2016,
+          2,
+          40.0,
+          83.0
+        ],
+        [
+          2016,
+          20,
+          43.0,
+          722.0
+        ],
+        [
+          2016,
+          21,
+          43.0,
+          765.0
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0028
+    }
+  },
+  "mercedes_2016_sum": {
+    "db_id": "formula_1",
+    "sql": "SELECT COUNT(*) AS races,SUM(cr.points) AS points FROM constructorResults cr JOIN constructors c ON c.constructorId=cr.constructorId JOIN races r ON r.raceId=cr.raceId WHERE c.name='Mercedes' AND r.year=2016",
+    "result": {
+      "columns": [
+        "races",
+        "points"
+      ],
+      "rows": [
+        [
+          21,
+          765.0
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0004
+    }
+  },
+  "irvine_2000_rounds": {
+    "db_id": "formula_1",
+    "sql": "SELECT r.round,r.name,rr.points AS race_points,ds.points AS standing_points FROM races r LEFT JOIN results rr ON rr.raceId=r.raceId AND rr.driverId=(SELECT driverId FROM drivers WHERE forename='Eddie' AND surname='Irvine') LEFT JOIN driverStandings ds ON ds.raceId=r.raceId AND ds.driverId=(SELECT driverId FROM drivers WHERE forename='Eddie' AND surname='Irvine') WHERE r.year=2000 ORDER BY r.round",
+    "result": {
+      "columns": [
+        "round",
+        "name",
+        "race_points",
+        "standing_points"
+      ],
+      "rows": [
+        [
+          1,
+          "Australian Grand Prix",
+          0.0,
+          null
+        ],
+        [
+          2,
+          "Brazilian Grand Prix",
+          0.0,
+          null
+        ],
+        [
+          3,
+          "San Marino Grand Prix",
+          0.0,
+          0.0
+        ],
+        [
+          4,
+          "British Grand Prix",
+          0.0,
+          0.0
+        ],
+        [
+          5,
+          "Spanish Grand Prix",
+          0.0,
+          0.0
+        ],
+        [
+          6,
+          "European Grand Prix",
+          0.0,
+          0.0
+        ],
+        [
+          7,
+          "Monaco Grand Prix",
+          3.0,
+          3.0
+        ],
+        [
+          8,
+          "Canadian Grand Prix",
+          0.0,
+          3.0
+        ],
+        [
+          9,
+          "French Grand Prix",
+          0.0,
+          3.0
+        ],
+        [
+          10,
+          "Austrian Grand Prix",
+          null,
+          3.0
+        ],
+        [
+          11,
+          "German Grand Prix",
+          0.0,
+          3.0
+        ],
+        [
+          12,
+          "Hungarian Grand Prix",
+          0.0,
+          3.0
+        ],
+        [
+          13,
+          "Belgian Grand Prix",
+          0.0,
+          3.0
+        ],
+        [
+          14,
+          "Italian Grand Prix",
+          0.0,
+          3.0
+        ],
+        [
+          15,
+          "United States Grand Prix",
+          0.0,
+          3.0
+        ],
+        [
+          16,
+          "Japanese Grand Prix",
+          0.0,
+          3.0
+        ],
+        [
+          17,
+          "Malaysian Grand Prix",
+          1.0,
+          4.0
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0111
+    }
+  },
+  "irvine_2000_standing_aggregate": {
+    "db_id": "formula_1",
+    "sql": "SELECT COUNT(*) AS standing_rows,SUM(ds.points) AS sum_standing_points,AVG(ds.points) AS average FROM driverStandings ds JOIN drivers d ON d.driverId=ds.driverId JOIN races r ON r.raceId=ds.raceId WHERE d.forename='Eddie' AND d.surname='Irvine' AND r.year=2000",
+    "result": {
+      "columns": [
+        "standing_rows",
+        "sum_standing_points",
+        "average"
+      ],
+      "rows": [
+        [
+          15,
+          34.0,
+          2.2666666666666666
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0046
+    }
+  },
+  "india_teacher_exact_count": {
+    "db_id": "codebase_community",
+    "sql": "SELECT COUNT(b.Id) AS badge_rows,COUNT(DISTINCT u.Id) AS distinct_users FROM badges b JOIN users u ON u.Id=b.UserId WHERE b.Name='Teacher' AND u.Location='India'",
+    "result": {
+      "columns": [
+        "badge_rows",
+        "distinct_users"
+      ],
+      "rows": [
+        [
+          18,
+          18
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0047
+    }
+  },
+  "india_teacher_location_breakdown": {
+    "db_id": "codebase_community",
+    "sql": "SELECT u.Location,COUNT(b.Id) AS badge_rows,COUNT(DISTINCT u.Id) AS users FROM badges b JOIN users u ON u.Id=b.UserId WHERE b.Name='Teacher' AND (LOWER(u.Location)='india' OR LOWER(u.Location) LIKE '%, india' OR LOWER(u.Location) LIKE '%, india,%' OR LOWER(u.Location) LIKE '% ,india' OR LOWER(u.Location) LIKE '%,india') GROUP BY u.Location ORDER BY users DESC,u.Location",
+    "result": {
+      "columns": [
+        "Location",
+        "badge_rows",
+        "users"
+      ],
+      "rows": [
+        [
+          "India",
+          18,
+          18
+        ],
+        [
+          "Bangalore, India",
+          10,
+          10
+        ],
+        [
+          "Chennai, India",
+          3,
+          3
+        ],
+        [
+          "Gurgaon, India",
+          2,
+          2
+        ],
+        [
+          "Mumbai, India",
+          2,
+          2
+        ],
+        [
+          "Ahmedabad, India",
+          1,
+          1
+        ],
+        [
+          "Amritsar, India",
+          1,
+          1
+        ],
+        [
+          "Chennai,India",
+          1,
+          1
+        ],
+        [
+          "Delhi, India",
+          1,
+          1
+        ],
+        [
+          "Gandhinagar, Gujarat, India",
+          1,
+          1
+        ],
+        [
+          "Kerala, India",
+          1,
+          1
+        ],
+        [
+          "Kolkata, India",
+          1,
+          1
+        ],
+        [
+          "New Delhi, India",
+          1,
+          1
+        ],
+        [
+          "Pune, India",
+          1,
+          1
+        ],
+        [
+          "Thiruvananthapuram, India",
+          1,
+          1
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0055
+    }
+  },
+  "new_york_locations": {
+    "db_id": "codebase_community",
+    "sql": "SELECT Location,COUNT(*) AS users FROM users WHERE Location LIKE '%New York%' GROUP BY Location ORDER BY users DESC,Location",
+    "result": {
+      "columns": [
+        "Location",
+        "users"
+      ],
+      "rows": [
+        [
+          "New York, United States",
+          148
+        ],
+        [
+          "New York, NY",
+          116
+        ],
+        [
+          "New York",
+          15
+        ],
+        [
+          "New York City",
+          8
+        ],
+        [
+          "New York, NY, United States",
+          2
+        ],
+        [
+          "Hudson Valley, New York, USA",
+          1
+        ],
+        [
+          "New York City, New York",
+          1
+        ],
+        [
+          "New York City, New York, United States",
+          1
+        ],
+        [
+          "New York, NY, USA",
+          1
+        ],
+        [
+          "New York, NYC",
+          1
+        ],
+        [
+          "New York, New York",
+          1
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0022
+    }
+  }
+}

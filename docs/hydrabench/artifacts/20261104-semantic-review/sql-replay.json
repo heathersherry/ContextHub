@@ -1,0 +1,2487 @@
+[
+  {
+    "case_id": "dev_43",
+    "kind": "agent",
+    "sql": "SELECT raceId, round, name, date FROM races WHERE year = 1999 ORDER BY round DESC LIMIT 5;",
+    "result": {
+      "columns": [
+        "raceId",
+        "round",
+        "name",
+        "date"
+      ],
+      "rows": [
+        [
+          190,
+          16,
+          "Japanese Grand Prix",
+          "1999-10-31"
+        ],
+        [
+          189,
+          15,
+          "Malaysian Grand Prix",
+          "1999-10-17"
+        ],
+        [
+          188,
+          14,
+          "European Grand Prix",
+          "1999-09-26"
+        ],
+        [
+          187,
+          13,
+          "Italian Grand Prix",
+          "1999-09-12"
+        ],
+        [
+          186,
+          12,
+          "Belgian Grand Prix",
+          "1999-08-29"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0052
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_43",
+    "kind": "reference",
+    "sql": "SELECT name, date FROM races WHERE year = 1999 ORDER BY round DESC LIMIT 1",
+    "result": {
+      "columns": [
+        "name",
+        "date"
+      ],
+      "rows": [
+        [
+          "Japanese Grand Prix",
+          "1999-10-31"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0003
+    }
+  },
+  {
+    "case_id": "dev_62",
+    "kind": "agent",
+    "sql": "SELECT c.name, SUM(cr.points) AS total_points FROM constructorResults cr JOIN constructors c ON cr.constructorId = c.constructorId GROUP BY c.constructorId ORDER BY total_points DESC LIMIT 5;",
+    "result": {
+      "columns": [
+        "name",
+        "total_points"
+      ],
+      "rows": [
+        [
+          "Ferrari",
+          7081.5
+        ],
+        [
+          "McLaren",
+          5232.5
+        ],
+        [
+          "Red Bull",
+          3750.5
+        ],
+        [
+          "Williams",
+          3541.0
+        ],
+        [
+          "Mercedes",
+          3525.0
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.002
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_62",
+    "kind": "agent",
+    "sql": "SELECT c.name, MAX(cs.points) AS max_points FROM constructorStandings cs JOIN constructors c ON cs.constructorId = c.constructorId GROUP BY c.constructorId ORDER BY max_points DESC LIMIT 5;",
+    "result": {
+      "columns": [
+        "name",
+        "max_points"
+      ],
+      "rows": [
+        [
+          "Mercedes",
+          765.0
+        ],
+        [
+          "Red Bull",
+          650.0
+        ],
+        [
+          "McLaren",
+          497.0
+        ],
+        [
+          "Ferrari",
+          428.0
+        ],
+        [
+          "Williams",
+          320.0
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.002
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_62",
+    "kind": "agent",
+    "sql": "SELECT name, nationality, url FROM constructors WHERE name = 'Ferrari';",
+    "result": {
+      "columns": [
+        "name",
+        "nationality",
+        "url"
+      ],
+      "rows": [
+        [
+          "Ferrari",
+          "Italian",
+          "http://en.wikipedia.org/wiki/Scuderia_Ferrari"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0002
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_62",
+    "kind": "reference",
+    "sql": "SELECT T2.name FROM constructorStandings AS T1 INNER JOIN constructors AS T2 on T1.constructorId = T2.constructorId ORDER BY T1.points DESC LIMIT 1",
+    "result": {
+      "columns": [
+        "name"
+      ],
+      "rows": [
+        [
+          "Mercedes"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0009
+    }
+  },
+  {
+    "case_id": "dev_5",
+    "kind": "agent",
+    "sql": "SELECT name, location, country, lat, lng FROM circuits WHERE name LIKE '%Silverstone%'",
+    "result": {
+      "columns": [
+        "name",
+        "location",
+        "country",
+        "lat",
+        "lng"
+      ],
+      "rows": [
+        [
+          "Silverstone Circuit",
+          "Silverstone",
+          "UK",
+          52.0786,
+          -1.01694
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0002
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_5",
+    "kind": "reference",
+    "sql": "SELECT lat, lng FROM circuits WHERE name = 'Silverstone Circuit'",
+    "result": {
+      "columns": [
+        "lat",
+        "lng"
+      ],
+      "rows": [
+        [
+          52.0786,
+          -1.01694
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0002
+    }
+  },
+  {
+    "case_id": "dev_13",
+    "kind": "agent",
+    "sql": "SELECT AVG(r.points) AS avg_points, COUNT(*) AS races\nFROM results r\nJOIN races ra ON r.raceId = ra.raceId\nJOIN drivers d ON r.driverId = d.driverId\nWHERE d.forename = 'Eddie' AND d.surname = 'Irvine' AND ra.year = 2000;",
+    "result": {
+      "columns": [
+        "avg_points",
+        "races"
+      ],
+      "rows": [
+        [
+          0.25,
+          16
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0023
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_13",
+    "kind": "agent",
+    "sql": "SELECT SUM(r.points) AS total_points, COUNT(*) AS races\nFROM results r\nJOIN races ra ON r.raceId = ra.raceId\nJOIN drivers d ON r.driverId = d.driverId\nWHERE d.forename = 'Eddie' AND d.surname = 'Irvine' AND ra.year = 2000;",
+    "result": {
+      "columns": [
+        "total_points",
+        "races"
+      ],
+      "rows": [
+        [
+          4.0,
+          16
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0022
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_13",
+    "kind": "reference",
+    "sql": "SELECT AVG(T2.points) FROM drivers AS T1 INNER JOIN driverStandings AS T2 ON T2.driverId = T1.driverId INNER JOIN races AS T3 ON T3.raceId = T2.raceId WHERE T1.forename = 'Eddie' AND T1.surname = 'Irvine' AND T3.year = 2000",
+    "result": {
+      "columns": [
+        "AVG(T2.points)"
+      ],
+      "rows": [
+        [
+          2.2666666666666666
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0025
+    }
+  },
+  {
+    "case_id": "dev_35",
+    "kind": "agent",
+    "sql": "SELECT ha.hero_id, s.superhero_name, s.race_id, r.race, ha.attribute_id, a.attribute_name, ha.attribute_value\nFROM hero_attribute ha\nJOIN superhero s ON s.id = ha.hero_id\nLEFT JOIN race r ON r.id = s.race_id\nLEFT JOIN attribute a ON a.id = ha.attribute_id\nORDER BY ha.attribute_value DESC\nLIMIT 10;",
+    "result": {
+      "columns": [
+        "hero_id",
+        "superhero_name",
+        "race_id",
+        "race",
+        "attribute_id",
+        "attribute_name",
+        "attribute_value"
+      ],
+      "rows": [
+        [
+          6,
+          "Abraxas",
+          12,
+          "Cosmic Entity",
+          1,
+          "Intelligence",
+          100
+        ],
+        [
+          31,
+          "Ant-Man",
+          24,
+          "Human",
+          1,
+          "Intelligence",
+          100
+        ],
+        [
+          36,
+          "Apocalypse",
+          42,
+          "Mutant",
+          1,
+          "Intelligence",
+          100
+        ],
+        [
+          73,
+          "Batman",
+          24,
+          "Human",
+          1,
+          "Intelligence",
+          100
+        ],
+        [
+          79,
+          "Beast",
+          42,
+          "Mutant",
+          1,
+          "Intelligence",
+          100
+        ],
+        [
+          84,
+          "Beyonder",
+          21,
+          "God / Eternal",
+          1,
+          "Intelligence",
+          100
+        ],
+        [
+          139,
+          "Brainiac",
+          5,
+          "Android",
+          1,
+          "Intelligence",
+          100
+        ],
+        [
+          140,
+          "Brainiac 5",
+          1,
+          "-",
+          1,
+          "Intelligence",
+          100
+        ],
+        [
+          216,
+          "Data",
+          5,
+          "Android",
+          1,
+          "Intelligence",
+          100
+        ],
+        [
+          228,
+          "Doctor Doom",
+          24,
+          "Human",
+          1,
+          "Intelligence",
+          100
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0005
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_35",
+    "kind": "agent",
+    "sql": "SELECT COUNT(*) AS cnt, COUNT(DISTINCT hero_id) AS heroes FROM hero_attribute WHERE attribute_value = (SELECT MAX(attribute_value) FROM hero_attribute);",
+    "result": {
+      "columns": [
+        "cnt",
+        "heroes"
+      ],
+      "rows": [
+        [
+          279,
+          117
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0003
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_35",
+    "kind": "agent",
+    "sql": "SELECT r.race, COUNT(*) AS n\nFROM hero_attribute ha\nJOIN superhero s ON s.id = ha.hero_id\nLEFT JOIN race r ON r.id = s.race_id\nWHERE ha.attribute_value = (SELECT MAX(attribute_value) FROM hero_attribute)\nGROUP BY r.race\nORDER BY n DESC;",
+    "result": {
+      "columns": [
+        "race",
+        "n"
+      ],
+      "rows": [
+        [
+          "Human",
+          60
+        ],
+        [
+          "-",
+          52
+        ],
+        [
+          "God / Eternal",
+          41
+        ],
+        [
+          "Kryptonian",
+          34
+        ],
+        [
+          "Mutant",
+          17
+        ],
+        [
+          "Cosmic Entity",
+          14
+        ],
+        [
+          "Alien",
+          11
+        ],
+        [
+          "Eternal",
+          9
+        ],
+        [
+          "Strontian",
+          5
+        ],
+        [
+          "New God",
+          4
+        ],
+        [
+          "Inhuman",
+          4
+        ],
+        [
+          "Human / Radiation",
+          4
+        ],
+        [
+          "Bizarro",
+          4
+        ],
+        [
+          "Android",
+          4
+        ],
+        [
+          "Saiyan",
+          2
+        ],
+        [
+          "Human / Cosmic",
+          2
+        ],
+        [
+          "Czarnian",
+          2
+        ],
+        [
+          "Asgardian",
+          2
+        ],
+        [
+          "Martian",
+          1
+        ],
+        [
+          "Human / Altered",
+          1
+        ],
+        [
+          "Frost Giant",
+          1
+        ],
+        [
+          "Demi-God",
+          1
+        ],
+        [
+          "Cyborg",
+          1
+        ],
+        [
+          "Animal",
+          1
+        ],
+        [
+          "Amazon",
+          1
+        ],
+        [
+          null,
+          1
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0004
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_35",
+    "kind": "agent",
+    "sql": "SELECT s.id, s.superhero_name, r.race, SUM(ha.attribute_value) AS total\nFROM superhero s\nJOIN hero_attribute ha ON ha.hero_id = s.id\nLEFT JOIN race r ON r.id = s.race_id\nGROUP BY s.id\nORDER BY total DESC\nLIMIT 5;",
+    "result": {
+      "columns": [
+        "id",
+        "superhero_name",
+        "race",
+        "total"
+      ],
+      "rows": [
+        [
+          683,
+          "The Presence",
+          "God / Eternal",
+          600
+        ],
+        [
+          667,
+          "Superman",
+          "Kryptonian",
+          600
+        ],
+        [
+          666,
+          "Supergirl",
+          "Kryptonian",
+          600
+        ],
+        [
+          665,
+          "Superboy-Prime",
+          "Kryptonian",
+          600
+        ],
+        [
+          541,
+          "Power Girl",
+          "Kryptonian",
+          600
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0008
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_35",
+    "kind": "agent",
+    "sql": "SELECT s.superhero_name, r.race, ha.attribute_value\nFROM hero_attribute ha\nINNER JOIN superhero s ON s.id = ha.hero_id\nINNER JOIN race r ON r.id = s.race_id\nORDER BY ha.attribute_value DESC\nLIMIT 1;",
+    "result": {
+      "columns": [
+        "superhero_name",
+        "race",
+        "attribute_value"
+      ],
+      "rows": [
+        [
+          "Abraxas",
+          "Cosmic Entity",
+          100
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0004
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_35",
+    "kind": "agent",
+    "sql": "SELECT r.race, s.superhero_name, ha.attribute_value\nFROM hero_attribute ha\nJOIN superhero s ON s.id = ha.hero_id\nJOIN race r ON s.race_id = r.id\nORDER BY ha.attribute_value DESC\nLIMIT 5;",
+    "result": {
+      "columns": [
+        "race",
+        "superhero_name",
+        "attribute_value"
+      ],
+      "rows": [
+        [
+          "Cosmic Entity",
+          "Abraxas",
+          100
+        ],
+        [
+          "Human",
+          "Ant-Man",
+          100
+        ],
+        [
+          "Mutant",
+          "Apocalypse",
+          100
+        ],
+        [
+          "Human",
+          "Batman",
+          100
+        ],
+        [
+          "Mutant",
+          "Beast",
+          100
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0004
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_35",
+    "kind": "agent",
+    "sql": "SELECT r.race, s.superhero_name, ha.attribute_value\nFROM superhero s\nJOIN hero_attribute ha ON s.id = ha.hero_id\nJOIN race r ON s.race_id = r.id\nORDER BY ha.attribute_value DESC\nLIMIT 5;",
+    "result": {
+      "columns": [
+        "race",
+        "superhero_name",
+        "attribute_value"
+      ],
+      "rows": [
+        [
+          "Cosmic Entity",
+          "Abraxas",
+          100
+        ],
+        [
+          "Human",
+          "Ant-Man",
+          100
+        ],
+        [
+          "Mutant",
+          "Apocalypse",
+          100
+        ],
+        [
+          "Human",
+          "Batman",
+          100
+        ],
+        [
+          "Mutant",
+          "Beast",
+          100
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0004
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_35",
+    "kind": "reference",
+    "sql": "SELECT T3.race FROM superhero AS T1 INNER JOIN hero_attribute AS T2 ON T1.id = T2.hero_id INNER JOIN race AS T3 ON T1.race_id = T3.id ORDER BY T2.attribute_value DESC LIMIT 1",
+    "result": {
+      "columns": [
+        "race"
+      ],
+      "rows": [
+        [
+          "Cosmic Entity"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0004
+    }
+  },
+  {
+    "case_id": "dev_72",
+    "kind": "agent",
+    "sql": "SELECT s.superhero_name, s.publisher_id, p.publisher_name FROM superhero s JOIN publisher p ON s.publisher_id = p.id WHERE s.superhero_name LIKE '%Blue Beetle%'",
+    "result": {
+      "columns": [
+        "superhero_name",
+        "publisher_id",
+        "publisher_name"
+      ],
+      "rows": [
+        [
+          "Blue Beetle",
+          4,
+          "DC Comics"
+        ],
+        [
+          "Blue Beetle II",
+          4,
+          "DC Comics"
+        ],
+        [
+          "Blue Beetle III",
+          4,
+          "DC Comics"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0002
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_72",
+    "kind": "reference",
+    "sql": "SELECT T2.publisher_name FROM superhero AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.id WHERE T1.superhero_name = 'Blue Beetle II'",
+    "result": {
+      "columns": [
+        "publisher_name"
+      ],
+      "rows": [
+        [
+          "DC Comics"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0002
+    }
+  },
+  {
+    "case_id": "dev_10",
+    "kind": "agent",
+    "sql": "SELECT id, superhero_name, full_name, weight_kg FROM superhero WHERE full_name LIKE '%Charles Chandler%' OR superhero_name LIKE '%Charles Chandler%'",
+    "result": {
+      "columns": [
+        "id",
+        "superhero_name",
+        "full_name",
+        "weight_kg"
+      ],
+      "rows": [
+        [
+          1,
+          "3-D Man",
+          "Charles Chandler",
+          90
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0002
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_10",
+    "kind": "agent",
+    "sql": "SELECT id, superhero_name, full_name, weight_kg, alignment_id FROM superhero WHERE superhero_name LIKE '%Abomination%' OR full_name LIKE '%Abomination%'",
+    "result": {
+      "columns": [
+        "id",
+        "superhero_name",
+        "full_name",
+        "weight_kg",
+        "alignment_id"
+      ],
+      "rows": [
+        [
+          5,
+          "Abomination",
+          "Emil Blonsky",
+          441,
+          2
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0002
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_10",
+    "kind": "reference",
+    "sql": "SELECT ( SELECT weight_kg FROM superhero WHERE full_name LIKE 'Emil Blonsky' ) - ( SELECT weight_kg FROM superhero WHERE full_name LIKE 'Charles Chandler' ) AS CALCULATE",
+    "result": {
+      "columns": [
+        "CALCULATE"
+      ],
+      "rows": [
+        [
+          351
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0001
+    }
+  },
+  {
+    "case_id": "dev_68",
+    "kind": "agent",
+    "sql": "SELECT id, superhero_name, full_name FROM superhero WHERE superhero_name LIKE '%Elasti%' OR full_name LIKE '%Parr%' OR superhero_name LIKE '%Parr%'",
+    "result": {
+      "columns": [
+        "id",
+        "superhero_name",
+        "full_name"
+      ],
+      "rows": [
+        [
+          215,
+          "Dash",
+          "Dashiell Robert Parr"
+        ],
+        [
+          242,
+          "Elastigirl",
+          "Helen Parr"
+        ],
+        [
+          361,
+          "Jack-Jack",
+          "Jac-jack Parr"
+        ],
+        [
+          492,
+          "Mr Incredible",
+          "Robert Parr"
+        ],
+        [
+          721,
+          "Violet Parr",
+          "Violet Parr"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0002
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_68",
+    "kind": "agent",
+    "sql": "SELECT sp.power_name FROM hero_power hp JOIN superpower sp ON sp.id = hp.power_id WHERE hp.hero_id = 242 ORDER BY sp.power_name",
+    "result": {
+      "columns": [
+        "power_name"
+      ],
+      "rows": [
+        [
+          "Agility"
+        ],
+        [
+          "Durability"
+        ],
+        [
+          "Elasticity"
+        ],
+        [
+          "Invulnerability"
+        ],
+        [
+          "Shapeshifting"
+        ],
+        [
+          "Size Changing"
+        ],
+        [
+          "Super Strength"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0002
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_68",
+    "kind": "reference",
+    "sql": "SELECT T3.power_name FROM superhero AS T1 INNER JOIN hero_power AS T2 ON T1.id = T2.hero_id INNER JOIN superpower AS T3 ON T2.power_id = T3.id WHERE T1.full_name = 'Helen Parr'",
+    "result": {
+      "columns": [
+        "power_name"
+      ],
+      "rows": [
+        [
+          "Agility"
+        ],
+        [
+          "Durability"
+        ],
+        [
+          "Super Strength"
+        ],
+        [
+          "Size Changing"
+        ],
+        [
+          "Shapeshifting"
+        ],
+        [
+          "Invulnerability"
+        ],
+        [
+          "Elasticity"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0003
+    }
+  },
+  {
+    "case_id": "dev_26",
+    "kind": "agent",
+    "sql": "SELECT p.Id, p.Title, p.ViewCount, p.PostTypeId, substr(p.Body, 1, 800) AS BodyPreview\nFROM posts p JOIN users u ON p.OwnerUserId = u.Id\nWHERE u.DisplayName LIKE '%Harvey Motulsky%'\nORDER BY p.ViewCount DESC LIMIT 5;",
+    "result": {
+      "columns": [
+        "Id",
+        "Title",
+        "ViewCount",
+        "PostTypeId",
+        "BodyPreview"
+      ],
+      "rows": [
+        [
+          109,
+          "Power of Holm's multiple comparison testing compared to others",
+          3980,
+          1,
+          "<p>Following one-way ANOVA, there are many possible follow-up multiple comparison tests. Holm's test (or better, the Holm-Sidak) test has lots of power, but because it works in a stepwise manner, it cannot compute confidence intervals. Its advantage over the tests than can compute confidence intervals (Tukey, Dunnett) is that is has more power. But is it fair to say that the Holm method <em>always</em> has more power than the methods of Tukey and Dunnet? Or does it depend...?</p>\n"
+        ],
+        [
+          12002,
+          "How to calculate the confidence interval of the mean of means?",
+          3883,
+          1,
+          "<p>Imagine that you repeat an experiment three times. In each experiment, you collect triplicate measurements. The triplicates tend to be fairly close together, compared to the differences among the three experimental means. Computing the grand mean is pretty easy. But how can one compute a confidence interval for the grand mean?</p>\n\n<p>Sample data:</p>\n\n<p>Experiment 1:   34, 41, 39</p>\n\n<p>Experiment 2:   45, 51, 52</p>\n\n<p>Experiment 3:   29, 31, 35</p>\n\n<p>Assume that the replicate values within an experiment follow a Gaussian distribution, as does the mean values of each experiment. The SD of variation within an experiment is smaller than the SD among experimental means. Assume also that there is no ordering of the three values in each experiment. The left-to-right order of the three"
+        ],
+        [
+          114763,
+          "When teaching statistics, use \"normal\" or \"Gaussian\"?",
+          3494,
+          1,
+          "<p>I use mostly \"Gaussian distribution\" in my book, but someone just suggested I switch to \"normal distribution\". Any consensus on which term to use for beginners? </p>\n\n<p>Of course the <a href=\"http://stats.stackexchange.com/questions/55962/what-is-the-difference-between-a-normal-and-a-gaussian-distribution\">two terms are synonyms</a>, so this is not a question about substance, but purely a matter of which term is more commonly used. And of course I use both terms. But which should be used mostly?</p>\n"
+        ],
+        [
+          1844,
+          "What are the pros and cons of using the logrank vs. the Mantel-Haenszel method for computing the Hazard Ratio in survival analysis?",
+          3142,
+          1,
+          "<p>One way to summarize the comparison of two survival curves is to compute the hazard ratio (HR). There are (at least) two methods to compute this value. </p>\n\n<ul>\n<li>Logrank method. As part of the Kaplan-Meier calculations, compute the number of observed events (deaths, usually) in each group ($Oa$, and $Ob$), and the number of expected events assuming a null hypothesis of no difference in survival ($Ea$ and $Eb$). The hazard ratio then is:\n$$\n    HR= \\\\frac{(Oa/Ea)}{(Ob/Eb)}\n$$</li>\n<li>Mantel-Haenszel method. First compute V, which is the sum of the hypergeometric variances at each time point. Then compute the hazard ratio as:\n$$\n HR= \\\\exp\\\\left(\\\\frac{(Oa-Ea)}{V}\\\\right)\n$$\nI got both these equations from chapter 3 of  Machin, Cheung and Parmar, <a href=\"http://rads.stackoverflow.c"
+        ],
+        [
+          17378,
+          "Is a \"split plot\" ANOVA with two factors the same as two-way ANOVA with repeated measures in one factor?",
+          3028,
+          1,
+          "<p>Is a \"split plot\" ANOVA with two factors identical to two-way ANOVA with repeated measures in one factor? if not, what is the distinction?</p>\n"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0395
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_26",
+    "kind": "agent",
+    "sql": "SELECT p.Id, p.Score, substr(p.Body, 1, 2500) AS Body\nFROM posts p\nWHERE p.ParentId = 109\nORDER BY p.Score DESC;",
+    "result": {
+      "columns": [
+        "Id",
+        "Score",
+        "Body"
+      ],
+      "rows": [
+        [
+          1237,
+          1,
+          "<p>I usually like to run simulations to answer questions like this, but without confirmed details of the algorithm the question asker wants evaluated and no obvious implementation of the Holm-Sidak procedure available in R, that is not possible.  For my answer I eyeballed the code provided <a href=\"http://www.mathworks.com/matlabcentral/fileexchange/12786\" rel=\"nofollow\">here</a>.  Assuming that is the right procedure, and assuming the null hypothesis is that all group means are equal:</p>\n\n<p>Feel free to correct me. I usually like to run simulations on such things. But, without the ability to readily do that, I can't check my answer. So, I might be entirely wrong here.  My answer is that usually the Holm-Sidak will demonstrate greater power, but that the answer in a strict sense is \"it depends\".  Both methods use the pooled error term and assume homogeneity of variance, so there is no difference in the procedures there.  However, since Holm-Sidak adjusts in a stepwise manner early comparisons are more likely to pass a threshold of significance than later comparisons, especially since the freedom to assess later comparisons is dependent on the outcome of previous comparisons.  Thus, it seems likely that in situations where the differences in means between groups to be compared is roughly equal (and meets the Tukey HSD threshold for significance) and the number of groups is sufficiently large (purposely vague without a simulation), that Holm-Sidak will fail to reach significance for the later comparisons.  Thus, in these situations Tukey's HSD will have more power than Holm-Sidak.</p>\n"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0191
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_26",
+    "kind": "agent",
+    "sql": "SELECT c.Id, c.Score, c.Text\nFROM comments c\nWHERE c.PostId = 109;",
+    "result": {
+      "columns": [
+        "Id",
+        "Score",
+        "Text"
+      ],
+      "rows": [
+        [
+          496,
+          3,
+          "Can you give a definition or a link to the definition of the different test. Can you state the hypothesis you want to test (otherwise it is difficult to discuss the power ...)."
+        ],
+        [
+          1153,
+          0,
+          "I've been watching this question for a while waiting for clarification from the question asker, but none has been forthcoming.  I've nominated this question to be closed: http://meta.stats.stackexchange.com/questions/213/list-of-candidate-questions-to-be-closed"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0089
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_26",
+    "kind": "agent",
+    "sql": "SELECT Id, Title, ViewCount, Body FROM posts WHERE Id = 109;",
+    "result": {
+      "columns": [
+        "Id",
+        "Title",
+        "ViewCount",
+        "Body"
+      ],
+      "rows": [
+        [
+          109,
+          "Power of Holm's multiple comparison testing compared to others",
+          3980,
+          "<p>Following one-way ANOVA, there are many possible follow-up multiple comparison tests. Holm's test (or better, the Holm-Sidak) test has lots of power, but because it works in a stepwise manner, it cannot compute confidence intervals. Its advantage over the tests than can compute confidence intervals (Tukey, Dunnett) is that is has more power. But is it fair to say that the Holm method <em>always</em> has more power than the methods of Tukey and Dunnet? Or does it depend...?</p>\n"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0002
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_26",
+    "kind": "agent",
+    "sql": "SELECT p.Id, p.Title, p.ViewCount\nFROM posts p JOIN users u ON p.OwnerUserId = u.Id\nWHERE u.DisplayName LIKE '%Harvey Motulsky%' AND (p.Body LIKE '%Bonferroni%' OR p.Title LIKE '%Bonferroni%')\nORDER BY p.ViewCount DESC LIMIT 10;",
+    "result": {
+      "columns": [
+        "Id",
+        "Title",
+        "ViewCount"
+      ],
+      "rows": [
+        [
+          86885,
+          null,
+          null
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0693
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_26",
+    "kind": "agent",
+    "sql": "SELECT Id, Title, ViewCount, ParentId, PostTypeId, substr(Body, 1, 2500) AS Body FROM posts WHERE Id = 86885;",
+    "result": {
+      "columns": [
+        "Id",
+        "Title",
+        "ViewCount",
+        "ParentId",
+        "PostTypeId",
+        "Body"
+      ],
+      "rows": [
+        [
+          86885,
+          null,
+          null,
+          86868,
+          2,
+          "<p>One big distinction: The Bonferroni (or Šidák) method allows you to compute a confidence interval. The Holm method does not.</p>\n"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0003
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_26",
+    "kind": "agent",
+    "sql": "SELECT u.Id, u.DisplayName, u.Reputation, COUNT(p.Id) AS nPosts, MAX(p.ViewCount) AS maxViews\nFROM users u LEFT JOIN posts p ON p.OwnerUserId = u.Id\nWHERE u.DisplayName LIKE '%Harvey%'\nGROUP BY u.Id;",
+    "result": {
+      "columns": [
+        "Id",
+        "DisplayName",
+        "Reputation",
+        "nPosts",
+        "maxViews"
+      ],
+      "rows": [
+        [
+          25,
+          "Harvey Motulsky",
+          4968,
+          137,
+          3980
+        ],
+        [
+          2227,
+          "Robert Harvey",
+          101,
+          0,
+          null
+        ],
+        [
+          9625,
+          "chharvey",
+          134,
+          2,
+          366
+        ],
+        [
+          28801,
+          "Harvey",
+          8,
+          1,
+          119
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0438
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_26",
+    "kind": "reference",
+    "sql": "SELECT T2.Id, T2.Title FROM users AS T1 INNER JOIN posts AS T2 ON T1.Id = T2.OwnerUserId WHERE T1.DisplayName = 'Harvey Motulsky' ORDER BY T2.ViewCount DESC LIMIT 1",
+    "result": {
+      "columns": [
+        "Id",
+        "Title"
+      ],
+      "rows": [
+        [
+          109,
+          "Power of Holm's multiple comparison testing compared to others"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0388
+    }
+  },
+  {
+    "case_id": "dev_31",
+    "kind": "agent",
+    "sql": "SELECT p.Id, p.Title, p.OwnerUserId, u.DisplayName, u.Location FROM posts p LEFT JOIN users u ON p.OwnerUserId = u.Id WHERE p.Title LIKE '%Eliciting priors from experts%'",
+    "result": {
+      "columns": [
+        "Id",
+        "Title",
+        "OwnerUserId",
+        "DisplayName",
+        "Location"
+      ],
+      "rows": [
+        [
+          1,
+          "Eliciting priors from experts",
+          8,
+          "csgillespie",
+          "Newcastle, United Kingdom"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0227
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_31",
+    "kind": "reference",
+    "sql": "SELECT T2.Location FROM posts AS T1 INNER JOIN users AS T2 ON T1.OwnerUserId = T2.Id WHERE T1.Title = 'Eliciting priors from experts'",
+    "result": {
+      "columns": [
+        "Location"
+      ],
+      "rows": [
+        [
+          "Newcastle, United Kingdom"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0192
+    }
+  },
+  {
+    "case_id": "dev_6",
+    "kind": "agent",
+    "sql": "SELECT Location, COUNT(*) AS n FROM users WHERE Location LIKE '%India%' GROUP BY Location ORDER BY n DESC LIMIT 50",
+    "result": {
+      "columns": [
+        "Location",
+        "n"
+      ],
+      "rows": [
+        [
+          "India",
+          206
+        ],
+        [
+          "Bangalore, India",
+          130
+        ],
+        [
+          "Mumbai, India",
+          52
+        ],
+        [
+          "Pune, India",
+          39
+        ],
+        [
+          "Chennai, India",
+          37
+        ],
+        [
+          "Hyderabad, India",
+          25
+        ],
+        [
+          "New Delhi, India",
+          18
+        ],
+        [
+          "Kolkata, India",
+          16
+        ],
+        [
+          "Indiana",
+          12
+        ],
+        [
+          "Delhi, India",
+          11
+        ],
+        [
+          "Ahmadabad, India",
+          11
+        ],
+        [
+          "Indianapolis, IN",
+          9
+        ],
+        [
+          "Gurgaon, India",
+          7
+        ],
+        [
+          "Kochi, India",
+          6
+        ],
+        [
+          "Ahmedabad, India",
+          5
+        ],
+        [
+          "Madurai, India",
+          4
+        ],
+        [
+          "Kanpur, India",
+          4
+        ],
+        [
+          "Visakhapatnam, India",
+          3
+        ],
+        [
+          "Vadodara, India",
+          3
+        ],
+        [
+          "Thiruvananthapuram, India",
+          3
+        ],
+        [
+          "Noida, India",
+          3
+        ],
+        [
+          "Navi Mumbai, India",
+          3
+        ],
+        [
+          "Mysore, India",
+          3
+        ],
+        [
+          "Kerala, India",
+          3
+        ],
+        [
+          "Kota, India",
+          2
+        ],
+        [
+          "Kharagpur, India",
+          2
+        ],
+        [
+          "Indianapolis",
+          2
+        ],
+        [
+          "INDIA",
+          2
+        ],
+        [
+          "Guwahati, India",
+          2
+        ],
+        [
+          "Gandhinagar, India",
+          2
+        ],
+        [
+          "Coimbatore, India",
+          2
+        ],
+        [
+          "Chandigarh, India",
+          2
+        ],
+        [
+          "Bhubaneswar, India",
+          2
+        ],
+        [
+          "india",
+          1
+        ],
+        [
+          "Vizianagaram, India",
+          1
+        ],
+        [
+          "Vellore, India",
+          1
+        ],
+        [
+          "Udhagamandalam, India",
+          1
+        ],
+        [
+          "Trivandrum, India",
+          1
+        ],
+        [
+          "Tamilnadu , INDIA",
+          1
+        ],
+        [
+          "Sambalpur, India",
+          1
+        ],
+        [
+          "Ramanthali,Kerala, India,670308",
+          1
+        ],
+        [
+          "Rajkot, India",
+          1
+        ],
+        [
+          "Rajastan, India",
+          1
+        ],
+        [
+          "Punjab, India",
+          1
+        ],
+        [
+          "Pondicherry, India",
+          1
+        ],
+        [
+          "Pilani, India",
+          1
+        ],
+        [
+          "Ottappalam, India",
+          1
+        ],
+        [
+          "Northwest Indiana, USA",
+          1
+        ],
+        [
+          "Nellore, India",
+          1
+        ],
+        [
+          "Navelim, India",
+          1
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0025
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_6",
+    "kind": "agent",
+    "sql": "SELECT Name, COUNT(*) AS n FROM badges WHERE LOWER(Name) LIKE '%teacher%' GROUP BY Name",
+    "result": {
+      "columns": [
+        "Name",
+        "n"
+      ],
+      "rows": [
+        [
+          "Teacher",
+          4679
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0077
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_6",
+    "kind": "agent",
+    "sql": "SELECT COUNT(DISTINCT u.Id) AS user_count\nFROM users u\nJOIN badges b ON b.UserId = u.Id\nWHERE b.Name = 'Teacher'\n  AND (LOWER(u.Location) = 'india'\n       OR LOWER(u.Location) LIKE '%, india'\n       OR LOWER(u.Location) LIKE '%, india,%'\n       OR LOWER(u.Location) LIKE '% ,india'\n       OR LOWER(u.Location) LIKE '%,india')",
+    "result": {
+      "columns": [
+        "user_count"
+      ],
+      "rows": [
+        [
+          45
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0056
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_6",
+    "kind": "agent",
+    "sql": "SELECT COUNT(DISTINCT u.Id) AS user_count_loose\nFROM users u\nJOIN badges b ON b.UserId = u.Id\nWHERE b.Name = 'Teacher' AND u.Location LIKE '%India%'",
+    "result": {
+      "columns": [
+        "user_count_loose"
+      ],
+      "rows": [
+        [
+          46
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.005
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_6",
+    "kind": "agent",
+    "sql": "SELECT u.Id, u.Location\nFROM users u\nJOIN badges b ON b.UserId = u.Id\nWHERE b.Name = 'Teacher' AND u.Location LIKE '%India%'\n  AND NOT (LOWER(u.Location) = 'india'\n       OR LOWER(u.Location) LIKE '%, india'\n       OR LOWER(u.Location) LIKE '%, india,%'\n       OR LOWER(u.Location) LIKE '% ,india'\n       OR LOWER(u.Location) LIKE '%,india')",
+    "result": {
+      "columns": [
+        "Id",
+        "Location"
+      ],
+      "rows": [
+        [
+          14891,
+          "Indianapolis"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0073
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_6",
+    "kind": "reference",
+    "sql": "SELECT COUNT(T1.Id) FROM badges AS T1 INNER JOIN users AS T2 ON T1.UserId = T2.Id WHERE T2.Location = 'India' AND T1.Name = 'Teacher'",
+    "result": {
+      "columns": [
+        "COUNT(T1.Id)"
+      ],
+      "rows": [
+        [
+          18
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0046
+    }
+  },
+  {
+    "case_id": "dev_20",
+    "kind": "agent",
+    "sql": "SELECT Location, COUNT(*) AS cnt FROM users WHERE Location LIKE '%New York%' GROUP BY Location ORDER BY cnt DESC LIMIT 50",
+    "result": {
+      "columns": [
+        "Location",
+        "cnt"
+      ],
+      "rows": [
+        [
+          "New York, United States",
+          148
+        ],
+        [
+          "New York, NY",
+          116
+        ],
+        [
+          "New York",
+          15
+        ],
+        [
+          "New York City",
+          8
+        ],
+        [
+          "New York, NY, United States",
+          2
+        ],
+        [
+          "New York, New York",
+          1
+        ],
+        [
+          "New York, NYC",
+          1
+        ],
+        [
+          "New York, NY, USA",
+          1
+        ],
+        [
+          "New York City, New York, United States",
+          1
+        ],
+        [
+          "New York City, New York",
+          1
+        ],
+        [
+          "Hudson Valley, New York, USA",
+          1
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0024
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_20",
+    "kind": "agent",
+    "sql": "SELECT COUNT(Id) AS total FROM users WHERE Location LIKE '%New York%'",
+    "result": {
+      "columns": [
+        "total"
+      ],
+      "rows": [
+        [
+          295
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0023
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_20",
+    "kind": "reference",
+    "sql": "SELECT COUNT(Id) FROM users WHERE Location = 'New York'",
+    "result": {
+      "columns": [
+        "COUNT(Id)"
+      ],
+      "rows": [
+        [
+          15
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.002
+    }
+  },
+  {
+    "case_id": "dev_32",
+    "kind": "agent",
+    "sql": "SELECT T1.card_id, T1.type, T1.issued FROM card AS T1 INNER JOIN disp AS T2 ON T1.disp_id = T2.disp_id WHERE T2.client_id = 13539",
+    "result": {
+      "columns": [
+        "card_id",
+        "type",
+        "issued"
+      ],
+      "rows": [
+        [
+          1223,
+          "junior",
+          "1995-05-02"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0003
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_32",
+    "kind": "reference",
+    "sql": "SELECT T3.type FROM disp AS T1 INNER JOIN client AS T2 ON T1.client_id = T2.client_id INNER JOIN card AS T3 ON T1.disp_id = T3.disp_id WHERE T2.client_id = 13539",
+    "result": {
+      "columns": [
+        "type"
+      ],
+      "rows": [
+        [
+          "junior"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0002
+    }
+  },
+  {
+    "case_id": "dev_46",
+    "kind": "agent",
+    "sql": "SELECT l.loan_id, l.amount, l.status, d.district_id, d.A2 AS district_name, d.A3 AS region\nFROM loan l\nJOIN account a ON l.account_id = a.account_id\nJOIN district d ON a.district_id = d.district_id\nWHERE l.status IN ('C','D')\nORDER BY l.amount DESC\nLIMIT 5;",
+    "result": {
+      "columns": [
+        "loan_id",
+        "amount",
+        "status",
+        "district_id",
+        "district_name",
+        "region"
+      ],
+      "rows": [
+        [
+          6534,
+          590820,
+          "C",
+          54,
+          "Brno - mesto",
+          "south Moravia"
+        ],
+        [
+          6791,
+          566640,
+          "C",
+          1,
+          "Hl.m. Praha",
+          "Prague"
+        ],
+        [
+          5447,
+          541200,
+          "D",
+          70,
+          "Karvina",
+          "north Moravia"
+        ],
+        [
+          5132,
+          538500,
+          "C",
+          5,
+          "Kolin",
+          "central Bohemia"
+        ],
+        [
+          5569,
+          504000,
+          "C",
+          3,
+          "Beroun",
+          "central Bohemia"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0003
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_46",
+    "kind": "agent",
+    "sql": "SELECT l.loan_id, l.amount, l.status, d.district_id, d.A2 AS district_name, d.A3 AS region\nFROM loan l\nJOIN account a ON l.account_id = a.account_id\nJOIN district d ON a.district_id = d.district_id\nWHERE l.status = 'C'\nORDER BY l.amount DESC\nLIMIT 5;",
+    "result": {
+      "columns": [
+        "loan_id",
+        "amount",
+        "status",
+        "district_id",
+        "district_name",
+        "region"
+      ],
+      "rows": [
+        [
+          6534,
+          590820,
+          "C",
+          54,
+          "Brno - mesto",
+          "south Moravia"
+        ],
+        [
+          6791,
+          566640,
+          "C",
+          1,
+          "Hl.m. Praha",
+          "Prague"
+        ],
+        [
+          5132,
+          538500,
+          "C",
+          5,
+          "Kolin",
+          "central Bohemia"
+        ],
+        [
+          5569,
+          504000,
+          "C",
+          3,
+          "Beroun",
+          "central Bohemia"
+        ],
+        [
+          6436,
+          495180,
+          "C",
+          69,
+          "Jesenik",
+          "north Moravia"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0003
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_46",
+    "kind": "reference",
+    "sql": "SELECT T2.A3 FROM account AS T1 INNER JOIN district AS T2 ON T1.district_id = T2.district_id INNER JOIN loan AS T3 ON T1.account_id = T3.account_id WHERE T3.status IN ('C', 'D') GROUP BY T2.A3 ORDER BY SUM(T3.amount) DESC LIMIT 1",
+    "result": {
+      "columns": [
+        "A3"
+      ],
+      "rows": [
+        [
+          "south Moravia"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0003
+    }
+  },
+  {
+    "case_id": "dev_42",
+    "kind": "agent",
+    "sql": "SELECT district_id, A2 FROM district WHERE A2 LIKE '%okolov%'",
+    "result": {
+      "columns": [
+        "district_id",
+        "A2"
+      ],
+      "rows": [
+        [
+          30,
+          "Sokolov"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0002
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_42",
+    "kind": "agent",
+    "sql": "SELECT MIN(birth_date), MAX(birth_date) FROM client WHERE gender='F'",
+    "result": {
+      "columns": [
+        "MIN(birth_date)",
+        "MAX(birth_date)"
+      ],
+      "rows": [
+        [
+          "1914-03-01",
+          "1987-09-27"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0003
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_42",
+    "kind": "agent",
+    "sql": "SELECT COUNT(DISTINCT c.client_id) AS cnt\nFROM client c\nJOIN disp d ON c.client_id = d.client_id\nJOIN district dt ON c.district_id = dt.district_id\nWHERE c.gender = 'F'\n  AND c.birth_date < '1950-01-01'\n  AND dt.A2 = 'Sokolov'",
+    "result": {
+      "columns": [
+        "cnt"
+      ],
+      "rows": [
+        [
+          8
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0005
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_42",
+    "kind": "reference",
+    "sql": "SELECT COUNT(T2.client_id) FROM district AS T1 INNER JOIN client AS T2 ON T1.district_id = T2.district_id WHERE T2.gender = 'F' AND STRFTIME('%Y', T2.birth_date) < '1950' AND T1.A2 = 'Sokolov'",
+    "result": {
+      "columns": [
+        "COUNT(T2.client_id)"
+      ],
+      "rows": [
+        [
+          8
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0007
+    }
+  },
+  {
+    "case_id": "dev_60",
+    "kind": "agent",
+    "sql": "SELECT district_id, A2, A3 FROM district WHERE A2 LIKE '%rag%' OR A3 LIKE '%rag%'",
+    "result": {
+      "columns": [
+        "district_id",
+        "A2",
+        "A3"
+      ],
+      "rows": [
+        [
+          1,
+          "Hl.m. Praha",
+          "Prague"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0001
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_60",
+    "kind": "agent",
+    "sql": "SELECT account_id, district_id, date FROM account WHERE district_id = 1 ORDER BY date ASC LIMIT 5",
+    "result": {
+      "columns": [
+        "account_id",
+        "district_id",
+        "date"
+      ],
+      "rows": [
+        [
+          1539,
+          1,
+          "1993-01-03"
+        ],
+        [
+          764,
+          1,
+          "1993-01-08"
+        ],
+        [
+          1637,
+          1,
+          "1993-01-08"
+        ],
+        [
+          1730,
+          1,
+          "1993-01-09"
+        ],
+        [
+          2925,
+          1,
+          "1993-01-10"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0002
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_60",
+    "kind": "reference",
+    "sql": "SELECT T1.account_id FROM account AS T1 INNER JOIN district AS T2 ON T1.district_id = T2.district_id WHERE T2.A3 = 'Prague' ORDER BY T1.date ASC LIMIT 1",
+    "result": {
+      "columns": [
+        "account_id"
+      ],
+      "rows": [
+        [
+          1539
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0005
+    }
+  },
+  {
+    "case_id": "dev_55",
+    "kind": "agent",
+    "sql": "SELECT m.member_id, m.first_name, m.last_name, m.position, mj.major_name, mj.department FROM member m JOIN major mj ON m.link_to_major = mj.major_id WHERE mj.department LIKE '%Art%Design%'",
+    "result": {
+      "columns": [
+        "member_id",
+        "first_name",
+        "last_name",
+        "position",
+        "major_name",
+        "department"
+      ],
+      "rows": [
+        [
+          "recUdRhbhcEO1Hk5r",
+          "Amy",
+          "Firth",
+          "Member",
+          "Interior Design",
+          "Art and Design Department"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0002
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_55",
+    "kind": "agent",
+    "sql": "SELECT member_id, first_name, last_name, position, link_to_major FROM member WHERE first_name = 'Peter' AND last_name = 'Firth'",
+    "result": {
+      "columns": [
+        "member_id",
+        "first_name",
+        "last_name",
+        "position",
+        "link_to_major"
+      ],
+      "rows": [],
+      "truncated": false,
+      "elapsed_seconds": 0.0001
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_55",
+    "kind": "agent",
+    "sql": "SELECT member_id, first_name, last_name, position, link_to_major FROM member WHERE last_name = 'Firth' OR first_name LIKE '%Peter%'",
+    "result": {
+      "columns": [
+        "member_id",
+        "first_name",
+        "last_name",
+        "position",
+        "link_to_major"
+      ],
+      "rows": [
+        [
+          "recUdRhbhcEO1Hk5r",
+          "Amy",
+          "Firth",
+          "Member",
+          "recIzqYuV3wMONTgB"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0001
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_55",
+    "kind": "agent",
+    "sql": "SELECT member_id, first_name, last_name, email, phone, zip FROM member WHERE first_name LIKE '%Peter%' OR last_name LIKE '%Peter%' OR email LIKE '%Peter%'",
+    "result": {
+      "columns": [
+        "member_id",
+        "first_name",
+        "last_name",
+        "email",
+        "phone",
+        "zip"
+      ],
+      "rows": [],
+      "truncated": false,
+      "elapsed_seconds": 0.0001
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_55",
+    "kind": "agent",
+    "sql": "SELECT member_id, first_name, last_name, zip FROM member WHERE last_name = 'Firth'",
+    "result": {
+      "columns": [
+        "member_id",
+        "first_name",
+        "last_name",
+        "zip"
+      ],
+      "rows": [
+        [
+          "recUdRhbhcEO1Hk5r",
+          "Amy",
+          "Firth",
+          21042
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0001
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_55",
+    "kind": "agent",
+    "sql": "SELECT zip_code, type, city, county, state, short_state FROM zip_code WHERE zip_code = 21042",
+    "result": {
+      "columns": [
+        "zip_code",
+        "type",
+        "city",
+        "county",
+        "state",
+        "short_state"
+      ],
+      "rows": [
+        [
+          21042,
+          "Standard",
+          "Ellicott City",
+          "Howard County",
+          "Maryland",
+          "MD"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0001
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_55",
+    "kind": "reference",
+    "sql": "SELECT T1.first_name, T1.last_name FROM member AS T1 INNER JOIN major AS T2 ON T1.link_to_major = T2.major_id WHERE T2.department = 'Art and Design Department'",
+    "result": {
+      "columns": [
+        "first_name",
+        "last_name"
+      ],
+      "rows": [
+        [
+          "Amy",
+          "Firth"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0001
+    }
+  },
+  {
+    "case_id": "dev_66",
+    "kind": "agent",
+    "sql": "SELECT m.member_id, m.first_name, m.last_name, m.zip, z.city, z.state, z.short_state FROM member m JOIN zip_code z ON m.zip = z.zip_code WHERE m.first_name = 'Sacha' AND m.last_name = 'Harrison';",
+    "result": {
+      "columns": [
+        "member_id",
+        "first_name",
+        "last_name",
+        "zip",
+        "city",
+        "state",
+        "short_state"
+      ],
+      "rows": [
+        [
+          "rec4BLdZHS2Blfp4v",
+          "Sacha",
+          "Harrison",
+          7080,
+          "South Plainfield",
+          "New Jersey",
+          "NJ"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0001
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_66",
+    "kind": "reference",
+    "sql": "SELECT T2.state FROM member AS T1 INNER JOIN zip_code AS T2 ON T1.zip = T2.zip_code WHERE T1.first_name = 'Sacha' AND T1.last_name = 'Harrison'",
+    "result": {
+      "columns": [
+        "state"
+      ],
+      "rows": [
+        [
+          "New Jersey"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0001
+    }
+  },
+  {
+    "case_id": "dev_0",
+    "kind": "agent",
+    "sql": "SELECT member_id, first_name, last_name, position FROM member WHERE position LIKE '%resident%'",
+    "result": {
+      "columns": [
+        "member_id",
+        "first_name",
+        "last_name",
+        "position"
+      ],
+      "rows": [
+        [
+          "rec4BLdZHS2Blfp4v",
+          "Sacha",
+          "Harrison",
+          "President"
+        ],
+        [
+          "recD078PnS3x2doBe",
+          "Phillip",
+          "Cullen",
+          "Vice President"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0001
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_0",
+    "kind": "agent",
+    "sql": "SELECT e.event_id, e.event_name, e.type, e.event_date FROM event e JOIN attendance a ON a.link_to_event = e.event_id WHERE a.link_to_member = 'recD078PnS3x2doBe'",
+    "result": {
+      "columns": [
+        "event_id",
+        "event_name",
+        "type",
+        "event_date"
+      ],
+      "rows": [
+        [
+          "rec2N69DMcrqN9PJC",
+          "Women's Soccer",
+          "Game",
+          "2019-10-05T12:00:00"
+        ],
+        [
+          "rec5XDvJLyxDsGZWc",
+          "Laugh Out Loud",
+          "Social",
+          "2019-10-24T13:00:00"
+        ],
+        [
+          "recEVTik3MlqbvLFi",
+          "October Speaker",
+          "Guest Speaker",
+          "2019-10-22T12:00:00"
+        ],
+        [
+          "recGxVCwaLW3mDIa3",
+          "Football game",
+          "Game",
+          "2019-09-12T06:00:00"
+        ],
+        [
+          "recI43CzsZ0Q625ma",
+          "September Speaker",
+          "Guest Speaker",
+          "2019-09-24T12:00:00"
+        ],
+        [
+          "recIuIXdbLe5j5vCA",
+          "Football game",
+          "Game",
+          "2019-10-10T06:00:00"
+        ],
+        [
+          "recLKj8BbTNqxFbTb",
+          "Registration",
+          "Registration",
+          "2019-09-01T07:00:00"
+        ],
+        [
+          "recLrY8kyOR1PcZeF",
+          "Officers meeting - April",
+          "Meeting",
+          "2020-04-07T09:30:00"
+        ],
+        [
+          "recggMW2eyCYceNcy",
+          "October Meeting",
+          "Meeting",
+          "2019-10-08T12:00:00"
+        ],
+        [
+          "reciRZdAqNIKuMC96",
+          "November Speaker",
+          "Guest Speaker",
+          "2019-11-19T12:00:00"
+        ],
+        [
+          "reckYL4xtQWpkTJ8k",
+          "Fall Budget Review",
+          "Budget",
+          "2019-09-07T03:00:00"
+        ],
+        [
+          "recmbOVHSyzXQZpQr",
+          "November Meeting",
+          "Meeting",
+          "2019-11-05T12:00:00"
+        ],
+        [
+          "recoVo6dFSzG1ypX7",
+          "Kid's Care",
+          "Community Service",
+          "2019-09-19T02:00:00"
+        ],
+        [
+          "recvCUOytx5jPw7kh",
+          "Community Theater",
+          "Social",
+          "2019-10-12T06:00:00"
+        ],
+        [
+          "recykdvf4LgsyA3wZ",
+          "Yearly Kickoff",
+          "Meeting",
+          "2019-09-03T12:00:00"
+        ],
+        [
+          "reczhS8wix6Kzbp9P",
+          "September Meeting",
+          "Meeting",
+          "2019-09-10T12:00:00"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0001
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_0",
+    "kind": "agent",
+    "sql": "SELECT e.event_id, e.event_name, e.type, e.location, e.status FROM event e JOIN attendance a ON a.link_to_event = e.event_id WHERE a.link_to_member = 'recD078PnS3x2doBe' AND lower(e.type) = 'social'",
+    "result": {
+      "columns": [
+        "event_id",
+        "event_name",
+        "type",
+        "location",
+        "status"
+      ],
+      "rows": [
+        [
+          "rec5XDvJLyxDsGZWc",
+          "Laugh Out Loud",
+          "Social",
+          "900 E. Washington St.",
+          "Closed"
+        ],
+        [
+          "recvCUOytx5jPw7kh",
+          "Community Theater",
+          "Social",
+          "100 W. Main Street",
+          "Closed"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0002
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_0",
+    "kind": "agent",
+    "sql": "SELECT event_id, event_name, type, location, status FROM event WHERE location LIKE '%900 E. Washington%'",
+    "result": {
+      "columns": [
+        "event_id",
+        "event_name",
+        "type",
+        "location",
+        "status"
+      ],
+      "rows": [
+        [
+          "rec5XDvJLyxDsGZWc",
+          "Laugh Out Loud",
+          "Social",
+          "900 E. Washington St.",
+          "Closed"
+        ],
+        [
+          "recJcyZUsdhK2ukaY",
+          "Laugh Out Loud",
+          "Social",
+          "900 E. Washington St.",
+          "Planning"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0001
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_0",
+    "kind": "reference",
+    "sql": "SELECT T2.event_name FROM attendance AS T1 INNER JOIN event AS T2 ON T2.event_id = T1.link_to_event INNER JOIN member AS T3 ON T1.link_to_member = T3.member_id WHERE T3.position = 'Vice President' AND T2.location = '900 E. Washington St.' AND T2.type = 'Social'",
+    "result": {
+      "columns": [
+        "event_name"
+      ],
+      "rows": [
+        [
+          "Laugh Out Loud"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0002
+    }
+  },
+  {
+    "case_id": "dev_11",
+    "kind": "agent",
+    "sql": "SELECT DISTINCT position FROM member;",
+    "result": {
+      "columns": [
+        "position"
+      ],
+      "rows": [
+        [
+          "Member"
+        ],
+        [
+          "Inactive"
+        ],
+        [
+          "President"
+        ],
+        [
+          "Vice President"
+        ],
+        [
+          "Treasurer"
+        ],
+        [
+          "Secretary"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0002
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_11",
+    "kind": "agent",
+    "sql": "SELECT member_id, first_name, last_name, position, link_to_major FROM member WHERE position LIKE '%Vice%' OR position LIKE '%vice%';",
+    "result": {
+      "columns": [
+        "member_id",
+        "first_name",
+        "last_name",
+        "position",
+        "link_to_major"
+      ],
+      "rows": [
+        [
+          "recD078PnS3x2doBe",
+          "Phillip",
+          "Cullen",
+          "Vice President",
+          "rec9CqGCGV8Y8rOSY"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0002
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_11",
+    "kind": "agent",
+    "sql": "SELECT major_id, major_name FROM major WHERE major_id = 'rec9CqGCGV8Y8rOSY';",
+    "result": {
+      "columns": [
+        "major_id",
+        "major_name"
+      ],
+      "rows": [
+        [
+          "rec9CqGCGV8Y8rOSY",
+          "Communication Studies"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0001
+    },
+    "identical_to_saved_result": true
+  },
+  {
+    "case_id": "dev_11",
+    "kind": "reference",
+    "sql": "SELECT T1.major_name FROM major AS T1 INNER JOIN member AS T2 ON T1.major_id = T2.link_to_major WHERE T2.position = 'Vice President'",
+    "result": {
+      "columns": [
+        "major_name"
+      ],
+      "rows": [
+        [
+          "Communication Studies"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0001
+    }
+  }
+]

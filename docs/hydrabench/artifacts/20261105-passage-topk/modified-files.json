@@ -1,0 +1,11 @@
+[
+  "src/contexthub/models/search.py",
+  "src/contexthub/services/retrieval_service.py",
+  "src/contexthub/retrieval/long_doc/coordinator.py",
+  "sdk/src/contexthub_sdk/models.py",
+  "plugins/deepagents/src/contexthub_deepagents/tools.py",
+  "tests/test_long_doc_retrieval.py",
+  "tests/test_document_chunk_vectors.py",
+  "plugins/deepagents/tests/test_tools.py",
+  "docs/setup/document-section-generation.md"
+]

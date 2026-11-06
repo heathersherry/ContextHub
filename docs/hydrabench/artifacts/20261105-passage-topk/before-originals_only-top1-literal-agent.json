@@ -1,0 +1,25 @@
+{
+  "results": [
+    {
+      "uri": "ctx://resources/hydra-layer-validation/microarchitecture",
+      "context_type": "resource",
+      "scope": "team",
+      "owner_space": "",
+      "score": 0.01639344262295082,
+      "status": "active",
+      "version": 1,
+      "validity_status": "fresh",
+      "tags": [
+        "kilt-2019",
+        "source-sha256:17571bc69825350c0f464fb9e4ff1478f3dc0fc4f7d6c6cb9f7836783bae808c"
+      ],
+      "section_id": 10,
+      "retrieval_strategy": "keyword",
+      "content": "### Instruction pipelining.\n\nOne of the first, and most powerful, techniques to improve performance is the use of instruction pipelining. Early processor designs would carry out all of the steps above for one instruction before moving onto the next. Large portions of the circuitry were left idle at any one step; for instance, the instruction decoding circuitry would be idle during execution and so on.\n\nPipelining improves performance by allowing a number of instructions to work their way through the processor at the same time. In the same basic example, the processor would start to decode (step 1) a new instruction while the last one was waiting for results. This would allow up to four instructions to be \"in flight\" at one time, making the processor look four times as fast. Although any one instruction takes just as long to complete (there are still four steps) the CPU as a whole \"retires\" instructions much faster.\n\nRISC makes pipelines smaller and much easier to construct by cleanly separating each stage of the instruction process and making them take the same amount of time—one cycle. The processor as a whole operates in an assembly line fashion, with instructions coming in one side and results out the other. Due to the reduced complexity of the classic RISC pipeline, the pipelined core and an instruction cache could be placed on the same size die that would otherwise fit the core alone on a CISC design. This was the real reason that RISC was faster. Early designs like the SPARC and MIPS often ran over 10 times as fast as Intel and Motorola CISC solutions at the same clock speed and price.\n\nPipelines are by no means limited to RISC designs. By 1986 the top-of-the-line VAX implementation (VAX 8800) was a heavily pipelined design, slightly predating the first commercial MIPS and SPARC designs. Most modern CPUs (even embedded CPUs) are now pipelined, and microcoded CPUs with no pipelining are seen only in the most area-constrained embedded processors. Large CISC machines, from the VAX 8800 to the modern Pentium 4 and Athlon, are implemented with both microcode and pipelines. Improvements in pipelining and caching are the two major microarchitectural advances that have enabled processor performance to keep pace with the circuit technology on which they are based.\n\n",
+      "content_level": "snippet"
+    }
+  ],
+  "total": 1,
+  "retrieval_id": "3fbc7f1c-4044-4312-8dca-9dc4bad09df5",
+  "stale_notices": []
+}

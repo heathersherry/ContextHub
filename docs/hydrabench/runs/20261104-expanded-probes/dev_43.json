@@ -1,0 +1,144 @@
+{
+  "case_id": "dev_43",
+  "type": "a2s",
+  "db_id": "formula_1",
+  "reference_tables": [
+    "races"
+  ],
+  "top_k": 3,
+  "table_schema": {
+    "query": "Database: formula_1. What was the significance of the Joint Declaration on the Doctrine of Justification signed on the same date as the last round of the race in 1999?",
+    "response": {
+      "results": [
+        {
+          "uri": "ctx://datalake/hydra/formula_1/qualifying",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 15.749451238509174,
+          "l0_content": "Database: formula_1\nTable: qualifying\nCREATE TABLE qualifying\n(\n    qualifyId     INTEGER\n        primary key autoincrement,\n    raceId        INTEGER default 0 not null,\n    driverId      INTEGER default 0 not null,\n    constructorId INTEGER default 0 not null,\n    number        INTEGER default 0 not null,\n    position      INTEGER,\n    q1            TEXT,\n    q2            TEXT,\n    q3            TEXT,\n    foreign key (raceId) references races(raceId),\n    foreign key (driverId) references drivers(driverId),\n    foreign key (constructorId) references constructors(constructorId)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nqualifyId ,qualify Id ,the unique identification number identifying qualifying ,integer ,\"How does F1 Sprint qualifying work? Sprint qualifying is essentially a short-form Grand Prix – a race that is one-third the number of laps of the main event on Sunday. However, the drivers are battling for positions on the grid for the start of Sunday's race. \"\r\nraceId ,race Id ,the identification number identifying each race ,integer ,\r\ndriverId ,driver Id,the identification number identifying each driver ,integer ,\r\nconstructorId ,constructor id ,constructor Id ,integer ,\r\nnumber ,,number ,integer ,\r\nposition ,,position or track of circuit ,integer ,\r\nq1 ,qualifying 1 ,time in qualifying 1 ,text,\"in minutes / seconds / ... \ncommonsense evidence: \nQ1 lap times determine pole position and the order of the front 10 positions on the grid. The slowest driver in Q1 starts 10th, the next starts ninth and so on. \nAll 20 F1 drivers participate in the first period, called Q1, with each trying to set the fastest time possible. Those in the top 15 move on to the next period of qualifying, called Q2. The five slowest drivers are eliminated and will start the race in the last five positions on the grid. \"\r\nq2 ,qualifying 2 ,time in qualifying 2 ,text,\"in minutes / seconds / ... \ncommonsense evidence: \nonly top 15 in the q1 has the record of q2 \nQ2 is slightly shorter but follows the same format. Drivers try to put down their best times to move on to Q1 as one of the 10 fastest cars. The five outside of the top 10 are eliminated and start the race from 11th to 15th based on their best lap time. \"\r\nq3 ,qualifying 3 ,time in qualifying 3 ,text,\"in minutes / seconds / ... \ncommonsense evidence: \nonly top 10 in the q2 has the record of q3 \"",
+          "l1_content": "Database: formula_1\nTable: qualifying\nCREATE TABLE qualifying\n(\n    qualifyId     INTEGER\n        primary key autoincrement,\n    raceId        INTEGER default 0 not null,\n    driverId      INTEGER default 0 not null,\n    constructorId INTEGER default 0 not null,\n    number        INTEGER default 0 not null,\n    position      INTEGER,\n    q1            TEXT,\n    q2            TEXT,\n    q3            TEXT,\n    foreign key (raceId) references races(raceId),\n    foreign key (driverId) references drivers(driverId),\n    foreign key (constructorId) references constructors(constructorId)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nqualifyId ,qualify Id ,the unique identification number identifying qualifying ,integer ,\"How does F1 Sprint qualifying work? Sprint qualifying is essentially a short-form Grand Prix – a race that is one-third the number of laps of the main event on Sunday. However, the drivers are battling for positions on the grid for the start of Sunday's race. \"\r\nraceId ,race Id ,the identification number identifying each race ,integer ,\r\ndriverId ,driver Id,the identification number identifying each driver ,integer ,\r\nconstructorId ,constructor id ,constructor Id ,integer ,\r\nnumber ,,number ,integer ,\r\nposition ,,position or track of circuit ,integer ,\r\nq1 ,qualifying 1 ,time in qualifying 1 ,text,\"in minutes / seconds / ... \ncommonsense evidence: \nQ1 lap times determine pole position and the order of the front 10 positions on the grid. The slowest driver in Q1 starts 10th, the next starts ninth and so on. \nAll 20 F1 drivers participate in the first period, called Q1, with each trying to set the fastest time possible. Those in the top 15 move on to the next period of qualifying, called Q2. The five slowest drivers are eliminated and will start the race in the last five positions on the grid. \"\r\nq2 ,qualifying 2 ,time in qualifying 2 ,text,\"in minutes / seconds / ... \ncommonsense evidence: \nonly top 15 in the q1 has the record of q2 \nQ2 is slightly shorter but follows the same format. Drivers try to put down their best times to move on to Q1 as one of the 10 fastest cars. The five outside of the top 10 are eliminated and start the race from 11th to 15th based on their best lap time. \"\r\nq3 ,qualifying 3 ,time in qualifying 3 ,text,\"in minutes / seconds / ... \ncommonsense evidence: \nonly top 10 in the q2 has the record of q3 \"",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://datalake/hydra/formula_1/races",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 11.157999662969653,
+          "l0_content": "Database: formula_1\nTable: races\nCREATE TABLE races\n(\n    raceId    INTEGER\n        primary key autoincrement,\n    year      INTEGER default 0            not null,\n    round     INTEGER default 0            not null,\n    circuitId INTEGER default 0            not null,\n    name      TEXT    default ''           not null,\n    date      DATE    default '0000-00-00' not null,\n    time      TEXT,\n    url       TEXT unique,\n    foreign key (year) references seasons(year),\n    foreign key (circuitId) references circuits(circuitId)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nraceId ,race ID ,the unique identification number identifying the race ,integer ,\r\nyear ,,year ,integer ,\r\nround ,,round ,integer ,\r\ncircuitId ,Circuit Id ,circuit Id ,integer ,\r\nname ,,name of the race ,text,\r\ndate ,,duration time ,date,\r\ntime ,,time of the location ,text,\r\nurl ,,introduction of races ,text,",
+          "l1_content": "Database: formula_1\nTable: races\nCREATE TABLE races\n(\n    raceId    INTEGER\n        primary key autoincrement,\n    year      INTEGER default 0            not null,\n    round     INTEGER default 0            not null,\n    circuitId INTEGER default 0            not null,\n    name      TEXT    default ''           not null,\n    date      DATE    default '0000-00-00' not null,\n    time      TEXT,\n    url       TEXT unique,\n    foreign key (year) references seasons(year),\n    foreign key (circuitId) references circuits(circuitId)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nraceId ,race ID ,the unique identification number identifying the race ,integer ,\r\nyear ,,year ,integer ,\r\nround ,,round ,integer ,\r\ncircuitId ,Circuit Id ,circuit Id ,integer ,\r\nname ,,name of the race ,text,\r\ndate ,,duration time ,date,\r\ntime ,,time of the location ,text,\r\nurl ,,introduction of races ,text,",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://datalake/hydra/formula_1/results",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 6.572132016142023,
+          "l0_content": "Database: formula_1\nTable: results\nCREATE TABLE results\n(\n    resultId        INTEGER\n        primary key autoincrement,\n    raceId          INTEGER default 0  not null,\n    driverId        INTEGER default 0  not null,\n    constructorId   INTEGER default 0  not null,\n    number          INTEGER,\n    grid            INTEGER default 0  not null,\n    position        INTEGER,\n    positionText    TEXT    default '' not null,\n    positionOrder   INTEGER default 0  not null,\n    points          REAL   default 0  not null,\n    laps            INTEGER default 0  not null,\n    time            TEXT,\n    milliseconds    INTEGER,\n    fastestLap      INTEGER,\n    rank            INTEGER default 0,\n    fastestLapTime  TEXT,\n    fastestLapSpeed TEXT,\n    statusId        INTEGER default 0  not null,\n    foreign key (raceId) references races(raceId),\n    foreign key (driverId) references drivers(driverId),\n    foreign key (constructorId) references constructors(constructorId),\n    foreign key (statusId) references status(statusId)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nresultId,Result ID ,the unique identification number identifying race result ,integer,\r\nraceId,race ID ,the identification number identifying the race ,integer ,\r\ndriverId ,driver ID,the identification number identifying the driver ,integer ,\r\nconstructorId ,constructor Id ,the identification number identifying which constructors ,integer ,\r\nnumber ,,number  ,integer ,\r\ngrid ,,the number identifying the area where cars are set into a grid formation in order to start the race. ,integer ,\r\nposition ,,The finishing position or track of circuits ,integer ,\r\npositionText ,position text ,,text,not quite useful \r\npositionOrder ,position order ,the finishing order of positions ,integer ,\r\npoints ,,points ,real,\r\nlaps ,,lap number ,integer ,\r\ntime  ,,finish time ,text,\"commonsense evidence: \n1. if the value exists, it means the driver finished the race. \n2. Only the time of the champion shows in the format of \"\"minutes: seconds.millionsecond\"\", the time of the other drivers shows as \"\"seconds.millionsecond\"\" , which means their actual time is the time of the champion adding the value in this cell.\"\r\nmilliseconds ,,the actual finishing time of drivers in milliseconds  ,integer ,the actual finishing time of drivers  \r\nfastestLap ,fastest lap ,fastest lap number ,integer ,\r\nrank ,,starting rank positioned by fastest lap speed,integer ,\r\nfastestLapTime ,fastest Lap Time,fastest Lap Time,text,\"faster (smaller in the value) \"\"fastestLapTime\"\" leads to higher rank (smaller is higher rank) \"\r\nfastestLapSpeed ,fastest Lap Speed ,fastest Lap Speed ,text, (km / h) \r\nstatusId ,status Id ,status ID ,integer,its category description appear in the table status ",
+          "l1_content": "Database: formula_1\nTable: results\nCREATE TABLE results\n(\n    resultId        INTEGER\n        primary key autoincrement,\n    raceId          INTEGER default 0  not null,\n    driverId        INTEGER default 0  not null,\n    constructorId   INTEGER default 0  not null,\n    number          INTEGER,\n    grid            INTEGER default 0  not null,\n    position        INTEGER,\n    positionText    TEXT    default '' not null,\n    positionOrder   INTEGER default 0  not null,\n    points          REAL   default 0  not null,\n    laps            INTEGER default 0  not null,\n    time            TEXT,\n    milliseconds    INTEGER,\n    fastestLap      INTEGER,\n    rank            INTEGER default 0,\n    fastestLapTime  TEXT,\n    fastestLapSpeed TEXT,\n    statusId        INTEGER default 0  not null,\n    foreign key (raceId) references races(raceId),\n    foreign key (driverId) references drivers(driverId),\n    foreign key (constructorId) references constructors(constructorId),\n    foreign key (statusId) references status(statusId)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nresultId,Result ID ,the unique identification number identifying race result ,integer,\r\nraceId,race ID ,the identification number identifying the race ,integer ,\r\ndriverId ,driver ID,the identification number identifying the driver ,integer ,\r\nconstructorId ,constructor Id ,the identification number identifying which constructors ,integer ,\r\nnumber ,,number  ,integer ,\r\ngrid ,,the number identifying the area where cars are set into a grid formation in order to start the race. ,integer ,\r\nposition ,,The finishing position or track of circuits ,integer ,\r\npositionText ,position text ,,text,not quite useful \r\npositionOrder ,position order ,the finishing order of positions ,integer ,\r\npoints ,,points ,real,\r\nlaps ,,lap number ,integer ,\r\ntime  ,,finish time ,text,\"commonsense evidence: \n1. if the value exists, it means the driver finished the race. \n2. Only the time of the champion shows in the format of \"\"minutes: seconds.millionsecond\"\", the time of the other drivers shows as \"\"seconds.millionsecond\"\" , which means their actual time is the time of the champion adding the value in this cell.\"\r\nmilliseconds ,,the actual finishing time of drivers in milliseconds  ,integer ,the actual finishing time of drivers  \r\nfastestLap ,fastest lap ,fastest lap number ,integer ,\r\nrank ,,starting rank positioned by fastest lap speed,integer ,\r\nfastestLapTime ,fastest Lap Time,fastest Lap Time,text,\"faster (smaller in the value) \"\"fastestLapTime\"\" leads to higher rank (smaller is higher rank) \"\r\nfastestLapSpeed ,fastest Lap Speed ,fastest Lap Speed ,text, (km / h) \r\nstatusId ,status Id ,status ID ,integer,its category description appear in the table status ",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        }
+      ],
+      "total": 3,
+      "retrieval_id": "5fbecb7f-3226-48a1-9a5d-2b3689238d38",
+      "stale_notices": []
+    }
+  },
+  "resource": {
+    "query": "What was the significance of the Joint Declaration on the Doctrine of Justification signed on 1999-10-31?",
+    "response": {
+      "results": [
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/2325040/0001",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 13.580528992365887,
+          "l0_content": "Joint Declaration on the Doctrine of Justification — External links.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 2325040\nBULLET::::- Joint Declaration on the Doctrine of Justification\nBULLET::::- Response of the Catholic Church to the Joint Declaration of the Catholic Church and the Lutheran World Federation on the Doctrine of Justification\nBULLET::::- Official Common Statement by the Lutheran World Federation and the Catholic Church\nBULLET::::- LCMS - The Joint Declaration on the Doctrine of Justification in Confessional Lutheran Perspective\nBULLET::::- Methodist Statement on Adoption of the Declaration",
+          "l1_content": "Joint Declaration on the Doctrine of Justification — External links.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 2325040\nBULLET::::- Joint Declaration on the Doctrine of Justification\nBULLET::::- Response of the Catholic Church to the Joint Declaration of the Catholic Church and the Lutheran World Federation on the Doctrine of Justification\nBULLET::::- Official Common Statement by the Lutheran World Federation and the Catholic Church\nBULLET::::- LCMS - The Joint Declaration on the Doctrine of Justification in Confessional Lutheran Perspective\nBULLET::::- Methodist Statement on Adoption of the Declaration",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/2325040/0000",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 12.06200576965272,
+          "l0_content": "Joint Declaration on the Doctrine of Justification — Abstract\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 2325040\nThe Joint Declaration on the Doctrine of Justification (JDDJ) is a document created and agreed to by the Catholic Church's Pontifical Council for Promoting Christian Unity (PCPCU) and the Lutheran World Federation in 1999 as a result of extensive ecumenical dialogue. It states that the churches now share \"a common understanding of our justification by God's grace through faith in Christ.\" To the parties involved, this essentially resolves the 500-year-old conflict over the nature of justification which was at the root of the Protestant Reformation. The World Methodist Council adopted the \"Declaration\" on 18 July 2006. The World Communion of Reformed Churches (representing the \"80 million members of Congregational, Presbyterian, Reformed, United, Uniting, and Waldensian churches\"), adopted the \"Declaration\" in 2017.\nIn substance, the PCPCU and the Lutheran World Federation acknowledge in the declaration that the excommunications relating to the doctrine of justification set forth by the Council of Trent do not apply to the teachings of the Lutheran churches set forth in the text; likewise, the churches acknowledged that the condemnations set forth in the Lutheran Confessions do not apply to the Catholic teachings on justification set forth in the document.\nSupport for the joint declaration was not universal among Lutherans. Of the 124 members of the Lutheran World Federation, 35 cast votes against JDDJ; these included many churches who are also members of the International Lutheran Council. Member churches of the Confessional Evangelical Lutheran Conference even stated that \"JDDJ...should be repudiated by all Lutherans.\"\nSome Catholics have raised other objections. Some contend that the Lutheran signers do not have the required authority to represent their communities (since, from a Catholic perspective, they are not full churches) and, therefore, that no Lutheran can make the agreement binding on the constituents of the Lutheran World Federation. The final paragraph of the \"Annex to the Official Common Statement, \"however, settles this matter.\nOther Catholics object to the statement itself, arguing that it is out of line with the Council of Trent but the document is clear that it is not negating or contradicting any statements from Trent, rather it is arguing for the non-applicability of its canons to concrete Christian bodies in the modern world. The document was approved by the Vatican under the auspices of the PCPCU, which was established by Pope John XXIII at the Second Vatican Council and is headed by a Catholic bishop; thus, the declaration is (at least) an exercise of the ordinary magisterium of the episcopally consecrated individuals who authorized the statement. A clarification was issued jointly by the PCPCU and the Congregation for the Doctrine of the Faith, which is also an exercise of the ordinary magisterium",
+          "l1_content": "Joint Declaration on the Doctrine of Justification — Abstract\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 2325040\nThe Joint Declaration on the Doctrine of Justification (JDDJ) is a document created and agreed to by the Catholic Church's Pontifical Council for Promoting Christian Unity (PCPCU) and the Lutheran World Federation in 1999 as a result of extensive ecumenical dialogue. It states that the churches now share \"a common understanding of our justification by God's grace through faith in Christ.\" To the parties involved, this essentially resolves the 500-year-old conflict over the nature of justification which was at the root of the Protestant Reformation. The World Methodist Council adopted the \"Declaration\" on 18 July 2006. The World Communion of Reformed Churches (representing the \"80 million members of Congregational, Presbyterian, Reformed, United, Uniting, and Waldensian churches\"), adopted the \"Declaration\" in 2017.\nIn substance, the PCPCU and the Lutheran World Federation acknowledge in the declaration that the excommunications relating to the doctrine of justification set forth by the Council of Trent do not apply to the teachings of the Lutheran churches set forth in the text; likewise, the churches acknowledged that the condemnations set forth in the Lutheran Confessions do not apply to the Catholic teachings on justification set forth in the document.\nSupport for the joint declaration was not universal among Lutherans. Of the 124 members of the Lutheran World Federation, 35 cast votes against JDDJ; these included many churches who are also members of the International Lutheran Council. Member churches of the Confessional Evangelical Lutheran Conference even stated that \"JDDJ...should be repudiated by all Lutherans.\"\nSome Catholics have raised other objections. Some contend that the Lutheran signers do not have the required authority to represent their communities (since, from a Catholic perspective, they are not full churches) and, therefore, that no Lutheran can make the agreement binding on the constituents of the Lutheran World Federation. The final paragraph of the \"Annex to the Official Common Statement, \"however, settles this matter.\nOther Catholics object to the statement itself, arguing that it is out of line with the Council of Trent but the document is clear that it is not negating or contradicting any statements from Trent, rather it is arguing for the non-applicability of its canons to concrete Christian bodies in the modern world. The document was approved by the Vatican under the auspices of the PCPCU, which was established by Pope John XXIII at the Second Vatican Council and is headed by a Catholic bishop; thus, the declaration is (at least) an exercise of the ordinary magisterium of the episcopally consecrated individuals who authorized the statement. A clarification was issued jointly by the PCPCU and the Congregation for the Doctrine of the Faith, which is also an exercise of the ordinary magisterium",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/41613095/0065",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 3.361316425523598,
+          "l0_content": "September 1965 — September 21, 1965 (Tuesday).\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 41613095\nBULLET::::- Ismail Nasiruddin of Terengganu, the Sultan of Terengganu, became the new Head of State for Malaysia, under the unique system where one of the sultans of the constituent states of Malaysia serves a five-year term as the nation's monarch, the Yang di-Pertuan Agong. BULLET::::- Singapore, which had separated from Malaysia only six weeks earlier, became one of the three new members of the United Nations, bringing the number of member nations to 117. The other two nations were the Gambia and the Maldives. BULLET::::- The bishops assembled at the Second Vatican Council voted 1,997 to 224 to approve the proposed Declaration on Religious Freedom.",
+          "l1_content": "September 1965 — September 21, 1965 (Tuesday).\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 41613095\nBULLET::::- Ismail Nasiruddin of Terengganu, the Sultan of Terengganu, became the new Head of State for Malaysia, under the unique system where one of the sultans of the constituent states of Malaysia serves a five-year term as the nation's monarch, the Yang di-Pertuan Agong. BULLET::::- Singapore, which had separated from Malaysia only six weeks earlier, became one of the three new members of the United Nations, bringing the number of member nations to 117. The other two nations were the Gambia and the Maldives. BULLET::::- The bishops assembled at the Second Vatican Council voted 1,997 to 224 to approve the proposed Declaration on Religious Freedom.",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        }
+      ],
+      "total": 3,
+      "retrieval_id": "eab7541f-f45a-4d8e-a955-32741002c204",
+      "stale_notices": []
+    }
+  },
+  "table_metrics": {
+    "required": 1,
+    "hits_at_3": 1,
+    "recall_at_3": 1.0,
+    "all_required_at_3": true,
+    "first_hit_rank": 2
+  }
+}

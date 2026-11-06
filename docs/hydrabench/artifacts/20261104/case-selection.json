@@ -1,0 +1,9 @@
+{
+  "selection_rule": "First toxicology dev question of each type in release order; selected before model runs",
+  "case_ids": [
+    "dev_19",
+    "dev_39"
+  ],
+  "dev_sha256": "8122c0f2487aa1eb558fdb68f3bd3c1dbba155fd936f499d5e73d63b2d9d87e3",
+  "annotations_exposed_to_agent": false
+}

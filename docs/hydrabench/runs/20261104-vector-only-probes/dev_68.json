@@ -1,0 +1,146 @@
+{
+  "case_id": "dev_68",
+  "type": "s2a",
+  "db_id": "superhero",
+  "reference_tables": [
+    "hero_power",
+    "superhero",
+    "superpower"
+  ],
+  "top_k": 3,
+  "table_schema": {
+    "query": "Database: superhero. What are the superpowers of the fictional character in \"The Incredibles\" who is married to Bob Parr and also known as Elastigirl?",
+    "response": {
+      "results": [
+        {
+          "uri": "ctx://datalake/hydra/superhero/superpower",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 0.28771047069367994,
+          "l0_content": "Database: superhero\nTable: superpower\nCREATE TABLE superpower\n(\n    id         INTEGER not null\n            primary key,\n    power_name TEXT default NULL\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\nid,,the unique identifier of the superpower,integer,\npower_name,power name,the superpower name,text,\n",
+          "l1_content": "Database: superhero\nTable: superpower\nCREATE TABLE superpower\n(\n    id         INTEGER not null\n            primary key,\n    power_name TEXT default NULL\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\nid,,the unique identifier of the superpower,integer,\npower_name,power name,the superpower name,text,\n",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://datalake/hydra/superhero/hero_power",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 0.2851994803666764,
+          "l0_content": "Database: superhero\nTable: hero_power\nCREATE TABLE hero_power\n(\n    hero_id  INTEGER default NULL,\n    power_id INTEGER default NULL,\n    foreign key (hero_id) references superhero(id),\n    foreign key (power_id) references superpower(id)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\nhero_id,hero id,\"the id of the hero\nMaps to superhero(id)\",integer,\npower_id,power id,\"the id of the power\nMaps to superpower(id)\",integer,\"commonsense evidence:\nIn general, a superhero's attributes provide the foundation for their abilities and help to define who they are, while their powers are the specific abilities that they use to fight crime and protect others.\"\n",
+          "l1_content": "Database: superhero\nTable: hero_power\nCREATE TABLE hero_power\n(\n    hero_id  INTEGER default NULL,\n    power_id INTEGER default NULL,\n    foreign key (hero_id) references superhero(id),\n    foreign key (power_id) references superpower(id)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\nhero_id,hero id,\"the id of the hero\nMaps to superhero(id)\",integer,\npower_id,power id,\"the id of the power\nMaps to superpower(id)\",integer,\"commonsense evidence:\nIn general, a superhero's attributes provide the foundation for their abilities and help to define who they are, while their powers are the specific abilities that they use to fight crime and protect others.\"\n",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://datalake/hydra/superhero/attribute",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 0.27638127381467203,
+          "l0_content": "Database: superhero\nTable: attribute\nCREATE TABLE attribute\n(\n    id             INTEGER not null\n            primary key,\n    attribute_name TEXT default NULL\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\nid,,the unique identifier of the attribute,integer,\nattribute_name,attribute name,the attribute,text,\"commonsense evidence:\nA superhero's attribute is a characteristic or quality that defines who they are and what they are capable of. This could be a physical trait, such as superhuman strength or the ability to fly, or a personal trait, such as extraordinary intelligence or exceptional bravery. \"\n",
+          "l1_content": "Database: superhero\nTable: attribute\nCREATE TABLE attribute\n(\n    id             INTEGER not null\n            primary key,\n    attribute_name TEXT default NULL\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\nid,,the unique identifier of the attribute,integer,\nattribute_name,attribute name,the attribute,text,\"commonsense evidence:\nA superhero's attribute is a characteristic or quality that defines who they are and what they are capable of. This could be a physical trait, such as superhuman strength or the ability to fly, or a personal trait, such as extraordinary intelligence or exceptional bravery. \"\n",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        }
+      ],
+      "total": 3,
+      "retrieval_id": "f90c657f-e2b1-45d3-b641-0e998f6f65a9",
+      "stale_notices": []
+    }
+  },
+  "resource": {
+    "query": "Who is the fictional character in \"The Incredibles\" who is married to Bob Parr and also known as Elastigirl?",
+    "response": {
+      "results": [
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/565879/0013",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 0.6032026646612583,
+          "l0_content": "The Incredibles — Voice cast.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 565879\nBULLET::::- Craig T. Nelson as Bob Parr / Mr. Incredible, Helen's husband, possessing super-strength. BULLET::::- Holly Hunter as Helen Parr / Elastigirl, Bob's wife, who has the ability to stretch her body like rubber.",
+          "l1_content": "The Incredibles — Voice cast.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 565879\nBULLET::::- Craig T. Nelson as Bob Parr / Mr. Incredible, Helen's husband, possessing super-strength. BULLET::::- Holly Hunter as Helen Parr / Elastigirl, Bob's wife, who has the ability to stretch her body like rubber.",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/565879/0014",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 0.5039492695346802,
+          "l0_content": "The Incredibles — Voice cast.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 565879\nBULLET::::- Sarah Vowell as Violet Parr, the Parrs' eldest child, who can become invisible and generate an impact-resistant force shield. BULLET::::- Spencer Fox as Dashiell \"Dash\" Parr, the Parrs' second child, possessing super-speed. BULLET::::- Eli Fucile and Maeve Andrews as Jack-Jack Parr, the Parrs' infant son. BULLET::::- Jason Lee as Buddy Pine / IncrediBoy / Syndrome, Mr.",
+          "l1_content": "The Incredibles — Voice cast.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 565879\nBULLET::::- Sarah Vowell as Violet Parr, the Parrs' eldest child, who can become invisible and generate an impact-resistant force shield. BULLET::::- Spencer Fox as Dashiell \"Dash\" Parr, the Parrs' second child, possessing super-speed. BULLET::::- Eli Fucile and Maeve Andrews as Jack-Jack Parr, the Parrs' infant son. BULLET::::- Jason Lee as Buddy Pine / IncrediBoy / Syndrome, Mr.",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/565879/0001",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 0.4880797579193439,
+          "l0_content": "The Incredibles — Plot.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 565879\nPublic opinion turns against Superheroes due to the collateral damage caused by their crime-fighting. After several lawsuits, the government initiates the Superhero Relocation Program, which forces Supers to permanently adhere to their secret identities and criminalizes their exploits. Fifteen years later, Bob and Helen Parr—formerly known as Mr. Incredible and Elastigirl—and their children Violet, Dash, and baby Jack-Jack are a suburban family living in Metroville.",
+          "l1_content": "The Incredibles — Plot.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 565879\nPublic opinion turns against Superheroes due to the collateral damage caused by their crime-fighting. After several lawsuits, the government initiates the Superhero Relocation Program, which forces Supers to permanently adhere to their secret identities and criminalizes their exploits. Fifteen years later, Bob and Helen Parr—formerly known as Mr. Incredible and Elastigirl—and their children Violet, Dash, and baby Jack-Jack are a suburban family living in Metroville.",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        }
+      ],
+      "total": 3,
+      "retrieval_id": "29a01c31-b52c-4ea6-97a5-34e82c3639c1",
+      "stale_notices": []
+    }
+  },
+  "table_metrics": {
+    "required": 3,
+    "hits_at_3": 2,
+    "recall_at_3": 0.6666666666666666,
+    "all_required_at_3": false,
+    "first_hit_rank": 1
+  }
+}

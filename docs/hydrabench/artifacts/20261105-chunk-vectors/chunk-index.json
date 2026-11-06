@@ -1,0 +1,146 @@
+[
+  {
+    "context_id": "0d25628e-53fd-424a-9eee-0c4c4bc41947",
+    "context_version": 1,
+    "section_id": 2,
+    "start_offset": 0,
+    "end_offset": 573,
+    "source_sha256": "17571bc69825350c0f464fb9e4ff1478f3dc0fc4f7d6c6cb9f7836783bae808c",
+    "dimensions": 1536
+  },
+  {
+    "context_id": "0d25628e-53fd-424a-9eee-0c4c4bc41947",
+    "context_version": 1,
+    "section_id": 3,
+    "start_offset": 573,
+    "end_offset": 3111,
+    "source_sha256": "17571bc69825350c0f464fb9e4ff1478f3dc0fc4f7d6c6cb9f7836783bae808c",
+    "dimensions": 1536
+  },
+  {
+    "context_id": "0d25628e-53fd-424a-9eee-0c4c4bc41947",
+    "context_version": 1,
+    "section_id": 4,
+    "start_offset": 3111,
+    "end_offset": 4924,
+    "source_sha256": "17571bc69825350c0f464fb9e4ff1478f3dc0fc4f7d6c6cb9f7836783bae808c",
+    "dimensions": 1536
+  },
+  {
+    "context_id": "0d25628e-53fd-424a-9eee-0c4c4bc41947",
+    "context_version": 1,
+    "section_id": 5,
+    "start_offset": 4924,
+    "end_offset": 4957,
+    "source_sha256": "17571bc69825350c0f464fb9e4ff1478f3dc0fc4f7d6c6cb9f7836783bae808c",
+    "dimensions": 1536
+  },
+  {
+    "context_id": "0d25628e-53fd-424a-9eee-0c4c4bc41947",
+    "context_version": 1,
+    "section_id": 6,
+    "start_offset": 4957,
+    "end_offset": 5393,
+    "source_sha256": "17571bc69825350c0f464fb9e4ff1478f3dc0fc4f7d6c6cb9f7836783bae808c",
+    "dimensions": 1536
+  },
+  {
+    "context_id": "0d25628e-53fd-424a-9eee-0c4c4bc41947",
+    "context_version": 1,
+    "section_id": 7,
+    "start_offset": 5393,
+    "end_offset": 7303,
+    "source_sha256": "17571bc69825350c0f464fb9e4ff1478f3dc0fc4f7d6c6cb9f7836783bae808c",
+    "dimensions": 1536
+  },
+  {
+    "context_id": "0d25628e-53fd-424a-9eee-0c4c4bc41947",
+    "context_version": 1,
+    "section_id": 8,
+    "start_offset": 7303,
+    "end_offset": 8317,
+    "source_sha256": "17571bc69825350c0f464fb9e4ff1478f3dc0fc4f7d6c6cb9f7836783bae808c",
+    "dimensions": 1536
+  },
+  {
+    "context_id": "0d25628e-53fd-424a-9eee-0c4c4bc41947",
+    "context_version": 1,
+    "section_id": 9,
+    "start_offset": 8317,
+    "end_offset": 9617,
+    "source_sha256": "17571bc69825350c0f464fb9e4ff1478f3dc0fc4f7d6c6cb9f7836783bae808c",
+    "dimensions": 1536
+  },
+  {
+    "context_id": "0d25628e-53fd-424a-9eee-0c4c4bc41947",
+    "context_version": 1,
+    "section_id": 10,
+    "start_offset": 9617,
+    "end_offset": 11920,
+    "source_sha256": "17571bc69825350c0f464fb9e4ff1478f3dc0fc4f7d6c6cb9f7836783bae808c",
+    "dimensions": 1536
+  },
+  {
+    "context_id": "0d25628e-53fd-424a-9eee-0c4c4bc41947",
+    "context_version": 1,
+    "section_id": 11,
+    "start_offset": 11920,
+    "end_offset": 13335,
+    "source_sha256": "17571bc69825350c0f464fb9e4ff1478f3dc0fc4f7d6c6cb9f7836783bae808c",
+    "dimensions": 1536
+  },
+  {
+    "context_id": "0d25628e-53fd-424a-9eee-0c4c4bc41947",
+    "context_version": 1,
+    "section_id": 12,
+    "start_offset": 13335,
+    "end_offset": 15121,
+    "source_sha256": "17571bc69825350c0f464fb9e4ff1478f3dc0fc4f7d6c6cb9f7836783bae808c",
+    "dimensions": 1536
+  },
+  {
+    "context_id": "0d25628e-53fd-424a-9eee-0c4c4bc41947",
+    "context_version": 1,
+    "section_id": 13,
+    "start_offset": 15121,
+    "end_offset": 16310,
+    "source_sha256": "17571bc69825350c0f464fb9e4ff1478f3dc0fc4f7d6c6cb9f7836783bae808c",
+    "dimensions": 1536
+  },
+  {
+    "context_id": "0d25628e-53fd-424a-9eee-0c4c4bc41947",
+    "context_version": 1,
+    "section_id": 14,
+    "start_offset": 16310,
+    "end_offset": 17132,
+    "source_sha256": "17571bc69825350c0f464fb9e4ff1478f3dc0fc4f7d6c6cb9f7836783bae808c",
+    "dimensions": 1536
+  },
+  {
+    "context_id": "0d25628e-53fd-424a-9eee-0c4c4bc41947",
+    "context_version": 1,
+    "section_id": 15,
+    "start_offset": 17132,
+    "end_offset": 17627,
+    "source_sha256": "17571bc69825350c0f464fb9e4ff1478f3dc0fc4f7d6c6cb9f7836783bae808c",
+    "dimensions": 1536
+  },
+  {
+    "context_id": "0d25628e-53fd-424a-9eee-0c4c4bc41947",
+    "context_version": 1,
+    "section_id": 16,
+    "start_offset": 17627,
+    "end_offset": 20817,
+    "source_sha256": "17571bc69825350c0f464fb9e4ff1478f3dc0fc4f7d6c6cb9f7836783bae808c",
+    "dimensions": 1536
+  },
+  {
+    "context_id": "0d25628e-53fd-424a-9eee-0c4c4bc41947",
+    "context_version": 1,
+    "section_id": 17,
+    "start_offset": 20817,
+    "end_offset": 21522,
+    "source_sha256": "17571bc69825350c0f464fb9e4ff1478f3dc0fc4f7d6c6cb9f7836783bae808c",
+    "dimensions": 1536
+  }
+]

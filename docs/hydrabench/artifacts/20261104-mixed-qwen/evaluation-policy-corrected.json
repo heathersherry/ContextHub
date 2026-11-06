@@ -1,0 +1,59 @@
+{
+  "frozen_before_run": "Corrected before any successful model/tool execution; initial provider rejections preserved separately.",
+  "cases": [
+    "dev_43",
+    "dev_62",
+    "dev_5",
+    "dev_13",
+    "dev_35",
+    "dev_72",
+    "dev_10",
+    "dev_68",
+    "dev_26",
+    "dev_31",
+    "dev_6",
+    "dev_20",
+    "dev_32",
+    "dev_46",
+    "dev_42",
+    "dev_60",
+    "dev_55",
+    "dev_66",
+    "dev_0",
+    "dev_11"
+  ],
+  "answer_evaluation": "Coding-assistant inspection against released references and read-only SQL replay. Not the official o4-mini judge or a blinded human study.",
+  "correctness_rule": "Count a case correct when its core final answer matches the reference semantically; compare numeric answers allowing reference rounding, entity lists as sets, and require the facts requested in the question. Report incomplete answers, refusals and unsupported incompatible alternatives separately and do not count them correct.",
+  "ambiguity_rule": "Keep the reference-based count, but flag underspecified SQL aggregation, arbitrary tie-breaks, or suspect references; distinguish defensible alternative interpretations from demonstrated agent errors.",
+  "grounding_rule": "Answer correctness and evidence support are separate. Correct answers based on prior knowledge remain answer matches but are flagged as ungrounded where required source evidence was not retrieved.",
+  "failure_attribution": [
+    "corpus coverage",
+    "table/text retrieval",
+    "query formulation or premature stopping",
+    "SQL or result interpretation",
+    "reference ambiguity",
+    "infrastructure"
+  ],
+  "retry_rule": "Preserve all attempts. Do not rerun completed wrong answers. Only retry infrastructure failures without changing the prompt, index, model or retrieval policy.",
+  "fixed_runtime": {
+    "temperature": 0,
+    "thinking": true,
+    "max_output_tokens_per_call": 4096,
+    "model_request_timeout_seconds": 120,
+    "max_retries": 0,
+    "episode_timeout_seconds": 600,
+    "graph_recursion_limit": 80,
+    "concurrency": 2,
+    "top_k": 3,
+    "search_budget_per_type": 10,
+    "schema_enumeration": false,
+    "sql_only_retrieved_tables": true
+  },
+  "retrieval": {
+    "table_schema": "vector",
+    "resource": "keyword rerank",
+    "over_retrieve_factor": 3
+  },
+  "prompt_changes": "None; only run metadata logging was added.",
+  "configuration_correction": "The new model rejected enable_thinking=False with HTTP 400 before tool calls in all 20 initial attempts. The provider requires True. Enable thinking without changing model, prompts, corpus, retrieval, output-token cap, or episode limits; preserve initial rejected traces."
+}

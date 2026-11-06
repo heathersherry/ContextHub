@@ -1,0 +1,1054 @@
+{
+  "purpose": "Read-only inspection of whether original wording and actually retrieved schema descriptions determine the published reference semantics. No model rerun, query tuning, or corpus edits.",
+  "all_retrieved_descriptions_verified_against_index_snapshot": true,
+  "cases": [
+    {
+      "case_id": "dev_62",
+      "original_question": "Which constructor has the highest points, and what is the origin of the name of that constructor as it relates to the automotive brand?",
+      "agent_input": "Database: formula_1\nQuestion: Which constructor has the highest points, and what is the origin of the name of that constructor as it relates to the automotive brand?",
+      "annotations_not_given_to_agent": {
+        "sql_question": "Which constructor has the highest point?",
+        "evidence": "",
+        "sql_query": "SELECT T2.name FROM constructorStandings AS T1 INNER JOIN constructors AS T2 on T1.constructorId = T2.constructorId ORDER BY T1.points DESC LIMIT 1",
+        "sql_output": {
+          "name": "Mercedes"
+        },
+        "search_answer": "The name \"Mercedes\" as it relates to the automotive brand originates from Emil Jellinek, an Austrian diplomat and racing enthusiast, who named the cars after his daughter, Mercédès Jellinek. Jellinek raced Daimler-Motoren-Gesellschaft (DMG) automobiles under the pseudonym \"Mercédès\" and later contracted with DMG to produce a series of sports cars bearing her name. The first model, the \"Mercedes 35 hp,\" was released in 1901 and became highly successful, leading DMG to adopt the name for other models. The name \"Mercedes\" was later incorporated into the \"Mercedes-Benz\" brand in 1926 after the merger of DMG and Benz & Cie.",
+        "final_answer": "The constructor with the highest points is Mercedes. The name \"Mercedes\" originates from Emil Jellinek, who named the cars after his daughter, Mercédès Jellinek. Jellinek raced Daimler-Motoren-Gesellschaft automobiles under the pseudonym \"Mercédès,\" and the name was later adopted for the brand, eventually becoming part of \"Mercedes-Benz\" after the merger of DMG and Benz & Cie in 1926."
+      },
+      "actually_retrieved_schemas": [
+        {
+          "query": "formula_1 constructors points",
+          "uri": "ctx://datalake/hydra/formula_1/constructorStandings",
+          "version": 1,
+          "full_description_seen_by_agent": "Database: formula_1\nTable: constructorStandings\nCREATE TABLE constructorStandings\n(\n    constructorStandingsId INTEGER\n        primary key autoincrement,\n    raceId                 INTEGER default 0 not null,\n    constructorId          INTEGER default 0 not null,\n    points                 REAL   default 0 not null,\n    position               INTEGER,\n    positionText           TEXT,\n    wins                   INTEGER default 0 not null,\n    foreign key (raceId) references races(raceId),\n    foreign key (constructorId) references constructors(constructorId)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nconstructorStandingsId ,constructor Standings Id ,unique identification of the constructor standing records ,integer ,\r\nraceId ,race id ,id number identifying which races ,integer ,\r\nconstructorId ,constructor id ,id number identifying which id ,integer ,\r\npoints,,how many points acquired in each race ,,\r\nposition ,,position or track of circuits ,integer ,\r\npositionText ,position text ,,text,\"same with position, not quite useful \"\r\nwins ,,wins ,integer ,\r\n"
+        },
+        {
+          "query": "formula_1 constructors points",
+          "uri": "ctx://datalake/hydra/formula_1/constructors",
+          "version": 1,
+          "full_description_seen_by_agent": "Database: formula_1\nTable: constructors\nCREATE TABLE constructors\n(\n    constructorId  INTEGER\n        primary key autoincrement,\n    constructorRef TEXT default '' not null,\n    name           TEXT default '' not null\n        unique,\n    nationality    TEXT,\n    url            TEXT default '' not null\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nconstructorId ,constructor Id ,the unique identification number identifying constructors ,integer ,\r\nconstructorRef ,Constructor Reference name ,Constructor Reference name ,text,\r\nname ,,full name of the constructor ,text,\r\nnationality ,,nationality of the constructor ,text,\r\nurl ,,the introduction website of the constructor ,text,commonsense evidence: How to find out the detailed introduction of the constructor: through its url"
+        },
+        {
+          "query": "formula_1 constructors points",
+          "uri": "ctx://datalake/hydra/formula_1/constructorResults",
+          "version": 1,
+          "full_description_seen_by_agent": "Database: formula_1\nTable: constructorResults\nCREATE TABLE constructorResults\n(\n    constructorResultsId INTEGER\n        primary key autoincrement,\n    raceId               INTEGER default 0 not null,\n    constructorId        INTEGER default 0 not null,\n    points               REAL,\n    status               TEXT,\n    foreign key (raceId) references races(raceId),\n    foreign key (constructorId) references constructors(constructorId)\n\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nconstructorResultsId,constructor Results Id,constructor Results Id,integer,\r\nraceId,race Id,race id,integer,\r\nconstructorId,constructor Id,constructor id,integer,\r\npoints,,points,real,\r\nstatus,,status,text,"
+        }
+      ],
+      "agent_sql_calls": [
+        {
+          "sql": "SELECT c.name, SUM(cr.points) AS total_points FROM constructorResults cr JOIN constructors c ON cr.constructorId = c.constructorId GROUP BY c.constructorId ORDER BY total_points DESC LIMIT 5;",
+          "result": {
+            "columns": [
+              "name",
+              "total_points"
+            ],
+            "rows": [
+              [
+                "Ferrari",
+                7081.5
+              ],
+              [
+                "McLaren",
+                5232.5
+              ],
+              [
+                "Red Bull",
+                3750.5
+              ],
+              [
+                "Williams",
+                3541.0
+              ],
+              [
+                "Mercedes",
+                3525.0
+              ]
+            ],
+            "truncated": false,
+            "elapsed_seconds": 0.0042
+          }
+        },
+        {
+          "sql": "SELECT c.name, MAX(cs.points) AS max_points FROM constructorStandings cs JOIN constructors c ON cs.constructorId = c.constructorId GROUP BY c.constructorId ORDER BY max_points DESC LIMIT 5;",
+          "result": {
+            "columns": [
+              "name",
+              "max_points"
+            ],
+            "rows": [
+              [
+                "Mercedes",
+                765.0
+              ],
+              [
+                "Red Bull",
+                650.0
+              ],
+              [
+                "McLaren",
+                497.0
+              ],
+              [
+                "Ferrari",
+                428.0
+              ],
+              [
+                "Williams",
+                320.0
+              ]
+            ],
+            "truncated": false,
+            "elapsed_seconds": 0.0053
+          }
+        },
+        {
+          "sql": "SELECT name, nationality, url FROM constructors WHERE name = 'Ferrari';",
+          "result": {
+            "columns": [
+              "name",
+              "nationality",
+              "url"
+            ],
+            "rows": [
+              [
+                "Ferrari",
+                "Italian",
+                "http://en.wikipedia.org/wiki/Scuderia_Ferrari"
+              ]
+            ],
+            "truncated": false,
+            "elapsed_seconds": 0.0012
+          }
+        }
+      ],
+      "agent_final_answer": "**Answer:**\n\nThe constructor with the highest points is **Ferrari**. Summing points from `constructorResults` (joined to `constructors`), Ferrari leads with **7,081.5 points**, ahead of McLaren (5,232.5), Red Bull (3,750.5), Williams (3,541.0), and Mercedes (3,525.0).\n\n**Origin of the name:** The Ferrari automotive brand is named after its founder, **Enzo Ferrari**. According to the retrieved source (ctx://team/engineering/hydra/kilt/11225/0000, v1), \"Ferrari is an Italian luxury sports car manufacturer based in Maranello. Founded by Enzo Ferrari in 1939 out of Alfa Romeo's race division as 'Auto Avio Costruzioni', the company built its first car in 1940,\" with the company's inception as an auto manufacturer usually recognized in 1947 \"when the first Ferrari-badged car was completed.\" A related passage (ctx://team/engineering/hydra/kilt/11225/0002, v1) notes that when Enzo Ferrari left Alfa Romeo in September 1939, he was barred from using the Ferrari name on racing cars for four years, and his racing team name \"Scuderia Ferrari\" was later resurrected to denote the factory racing cars (ctx://team/engineering/hydra/kilt/11225/0004, v1).\n\nSo the constructor's name comes directly from founder Enzo Ferrari's surname, with \"Scuderia Ferrari\" (Italian for \"Ferrari stable/team\") denoting the racing division."
+    },
+    {
+      "case_id": "dev_13",
+      "original_question": "What was the average points scored in the year 2000 by the person nicknamed \"Irv the Swerve\" and \"Fast Eddie\"?",
+      "agent_input": "Database: formula_1\nQuestion: What was the average points scored in the year 2000 by the person nicknamed \"Irv the Swerve\" and \"Fast Eddie\"?",
+      "annotations_not_given_to_agent": {
+        "sql_question": "What is Eddie Irvine's average points scored in year 2000?",
+        "evidence": "average points = AVG(points where year = 2000)",
+        "sql_query": "SELECT AVG(T2.points) FROM drivers AS T1 INNER JOIN driverStandings AS T2 ON T2.driverId = T1.driverId INNER JOIN races AS T3 ON T3.raceId = T2.raceId WHERE T1.forename = 'Eddie' AND T1.surname = 'Irvine' AND T3.year = 2000",
+        "sql_output": {
+          "AVG(T2.points)": 2.2666666666666666
+        },
+        "search_answer": "Eddie Irvine",
+        "final_answer": "The person nicknamed \"Irv the Swerve\" and \"Fast Eddie\" is Eddie Irvine, who had an average points score of 2.27 in the year 2000."
+      },
+      "actually_retrieved_schemas": [
+        {
+          "query": "formula_1 drivers results points",
+          "uri": "ctx://datalake/hydra/formula_1/driverStandings",
+          "version": 1,
+          "full_description_seen_by_agent": "Database: formula_1\nTable: driverStandings\nCREATE TABLE driverStandings\n(\n    driverStandingsId INTEGER\n        primary key autoincrement,\n    raceId            INTEGER default 0 not null,\n    driverId          INTEGER default 0 not null,\n    points            REAL   default 0 not null,\n    position          INTEGER,\n    positionText      TEXT,\n    wins              INTEGER default 0 not null,\n    foreign key (raceId) references races(raceId),\n    foreign key (driverId) references drivers(driverId)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\ndriverStandingsId ,driver Standings Id ,the unique identification number identifying driver standing records ,integer,\r\nraceId ,constructor Reference name ,id number identifying which races ,integer,\r\ndriverId ,,id number identifying which drivers ,integer,\r\npoints ,,how many points acquired in each race ,real,\r\nposition ,,position or track of circuits ,integer,\r\nwins,,wins ,integer,\r\npositionText ,position text ,,text,\"same with position, not quite useful \"\r\n\r\n"
+        },
+        {
+          "query": "formula_1 drivers results points",
+          "uri": "ctx://datalake/hydra/formula_1/results",
+          "version": 1,
+          "full_description_seen_by_agent": "Database: formula_1\nTable: results\nCREATE TABLE results\n(\n    resultId        INTEGER\n        primary key autoincrement,\n    raceId          INTEGER default 0  not null,\n    driverId        INTEGER default 0  not null,\n    constructorId   INTEGER default 0  not null,\n    number          INTEGER,\n    grid            INTEGER default 0  not null,\n    position        INTEGER,\n    positionText    TEXT    default '' not null,\n    positionOrder   INTEGER default 0  not null,\n    points          REAL   default 0  not null,\n    laps            INTEGER default 0  not null,\n    time            TEXT,\n    milliseconds    INTEGER,\n    fastestLap      INTEGER,\n    rank            INTEGER default 0,\n    fastestLapTime  TEXT,\n    fastestLapSpeed TEXT,\n    statusId        INTEGER default 0  not null,\n    foreign key (raceId) references races(raceId),\n    foreign key (driverId) references drivers(driverId),\n    foreign key (constructorId) references constructors(constructorId),\n    foreign key (statusId) references status(statusId)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nresultId,Result ID ,the unique identification number identifying race result ,integer,\r\nraceId,race ID ,the identification number identifying the race ,integer ,\r\ndriverId ,driver ID,the identification number identifying the driver ,integer ,\r\nconstructorId ,constructor Id ,the identification number identifying which constructors ,integer ,\r\nnumber ,,number  ,integer ,\r\ngrid ,,the number identifying the area where cars are set into a grid formation in order to start the race. ,integer ,\r\nposition ,,The finishing position or track of circuits ,integer ,\r\npositionText ,position text ,,text,not quite useful \r\npositionOrder ,position order ,the finishing order of positions ,integer ,\r\npoints ,,points ,real,\r\nlaps ,,lap number ,integer ,\r\ntime  ,,finish time ,text,\"commonsense evidence: \n1. if the value exists, it means the driver finished the race. \n2. Only the time of the champion shows in the format of \"\"minutes: seconds.millionsecond\"\", the time of the other drivers shows as \"\"seconds.millionsecond\"\" , which means their actual time is the time of the champion adding the value in this cell.\"\r\nmilliseconds ,,the actual finishing time of drivers in milliseconds  ,integer ,the actual finishing time of drivers  \r\nfastestLap ,fastest lap ,fastest lap number ,integer ,\r\nrank ,,starting rank positioned by fastest lap speed,integer ,\r\nfastestLapTime ,fastest Lap Time,fastest Lap Time,text,\"faster (smaller in the value) \"\"fastestLapTime\"\" leads to higher rank (smaller is higher rank) \"\r\nfastestLapSpeed ,fastest Lap Speed ,fastest Lap Speed ,text, (km / h) \r\nstatusId ,status Id ,status ID ,integer,its category description appear in the table status "
+        },
+        {
+          "query": "formula_1 drivers results points",
+          "uri": "ctx://datalake/hydra/formula_1/qualifying",
+          "version": 1,
+          "full_description_seen_by_agent": "Database: formula_1\nTable: qualifying\nCREATE TABLE qualifying\n(\n    qualifyId     INTEGER\n        primary key autoincrement,\n    raceId        INTEGER default 0 not null,\n    driverId      INTEGER default 0 not null,\n    constructorId INTEGER default 0 not null,\n    number        INTEGER default 0 not null,\n    position      INTEGER,\n    q1            TEXT,\n    q2            TEXT,\n    q3            TEXT,\n    foreign key (raceId) references races(raceId),\n    foreign key (driverId) references drivers(driverId),\n    foreign key (constructorId) references constructors(constructorId)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nqualifyId ,qualify Id ,the unique identification number identifying qualifying ,integer ,\"How does F1 Sprint qualifying work? Sprint qualifying is essentially a short-form Grand Prix – a race that is one-third the number of laps of the main event on Sunday. However, the drivers are battling for positions on the grid for the start of Sunday's race. \"\r\nraceId ,race Id ,the identification number identifying each race ,integer ,\r\ndriverId ,driver Id,the identification number identifying each driver ,integer ,\r\nconstructorId ,constructor id ,constructor Id ,integer ,\r\nnumber ,,number ,integer ,\r\nposition ,,position or track of circuit ,integer ,\r\nq1 ,qualifying 1 ,time in qualifying 1 ,text,\"in minutes / seconds / ... \ncommonsense evidence: \nQ1 lap times determine pole position and the order of the front 10 positions on the grid. The slowest driver in Q1 starts 10th, the next starts ninth and so on. \nAll 20 F1 drivers participate in the first period, called Q1, with each trying to set the fastest time possible. Those in the top 15 move on to the next period of qualifying, called Q2. The five slowest drivers are eliminated and will start the race in the last five positions on the grid. \"\r\nq2 ,qualifying 2 ,time in qualifying 2 ,text,\"in minutes / seconds / ... \ncommonsense evidence: \nonly top 15 in the q1 has the record of q2 \nQ2 is slightly shorter but follows the same format. Drivers try to put down their best times to move on to Q1 as one of the 10 fastest cars. The five outside of the top 10 are eliminated and start the race from 11th to 15th based on their best lap time. \"\r\nq3 ,qualifying 3 ,time in qualifying 3 ,text,\"in minutes / seconds / ... \ncommonsense evidence: \nonly top 10 in the q2 has the record of q3 \""
+        },
+        {
+          "query": "formula_1 drivers table forename surname",
+          "uri": "ctx://datalake/hydra/formula_1/drivers",
+          "version": 1,
+          "full_description_seen_by_agent": "Database: formula_1\nTable: drivers\nCREATE TABLE drivers\n(\n    driverId    INTEGER\n        primary key autoincrement,\n    driverRef   TEXT default '' not null,\n    number      INTEGER,\n    code        TEXT,\n    forename    TEXT default '' not null,\n    surname     TEXT default '' not null,\n    dob         DATE,\n    nationality TEXT,\n    url         TEXT default '' not null\n        unique\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\ndriverId ,driver ID ,the unique identification number identifying each driver,integer,\r\ndriverRef ,driver reference name ,driver reference name ,text,\r\nnumber ,,number ,integer,\r\ncode ,,abbreviated code for drivers ,text,\"if \"\"null\"\" or empty, it means it doesn't have code \"\r\nforename ,,forename ,text,\r\nsurname ,,surname ,text,\r\ndob ,date of birth ,date of birth ,date,\r\nnationality ,,nationality of drivers ,text,\r\nurl ,,the introduction website of the drivers ,text,"
+        },
+        {
+          "query": "formula_1 races table year date",
+          "uri": "ctx://datalake/hydra/formula_1/races",
+          "version": 1,
+          "full_description_seen_by_agent": "Database: formula_1\nTable: races\nCREATE TABLE races\n(\n    raceId    INTEGER\n        primary key autoincrement,\n    year      INTEGER default 0            not null,\n    round     INTEGER default 0            not null,\n    circuitId INTEGER default 0            not null,\n    name      TEXT    default ''           not null,\n    date      DATE    default '0000-00-00' not null,\n    time      TEXT,\n    url       TEXT unique,\n    foreign key (year) references seasons(year),\n    foreign key (circuitId) references circuits(circuitId)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nraceId ,race ID ,the unique identification number identifying the race ,integer ,\r\nyear ,,year ,integer ,\r\nround ,,round ,integer ,\r\ncircuitId ,Circuit Id ,circuit Id ,integer ,\r\nname ,,name of the race ,text,\r\ndate ,,duration time ,date,\r\ntime ,,time of the location ,text,\r\nurl ,,introduction of races ,text,"
+        }
+      ],
+      "agent_sql_calls": [
+        {
+          "sql": "SELECT AVG(r.points) AS avg_points, COUNT(*) AS races\nFROM results r\nJOIN races ra ON r.raceId = ra.raceId\nJOIN drivers d ON r.driverId = d.driverId\nWHERE d.forename = 'Eddie' AND d.surname = 'Irvine' AND ra.year = 2000;",
+          "result": {
+            "columns": [
+              "avg_points",
+              "races"
+            ],
+            "rows": [
+              [
+                0.25,
+                16
+              ]
+            ],
+            "truncated": false,
+            "elapsed_seconds": 0.0046
+          }
+        },
+        {
+          "sql": "SELECT SUM(r.points) AS total_points, COUNT(*) AS races\nFROM results r\nJOIN races ra ON r.raceId = ra.raceId\nJOIN drivers d ON r.driverId = d.driverId\nWHERE d.forename = 'Eddie' AND d.surname = 'Irvine' AND ra.year = 2000;",
+          "result": {
+            "columns": [
+              "total_points",
+              "races"
+            ],
+            "rows": [
+              [
+                4.0,
+                16
+              ]
+            ],
+            "truncated": false,
+            "elapsed_seconds": 0.006
+          }
+        }
+      ],
+      "agent_final_answer": "The person nicknamed \"Irv the Swerve\" and \"Fast Eddie\" is **Eddie Irvine**, per retrieved text: \"He was nicknamed 'Irv the Swerve' and later 'Fast Eddie'\" (ctx://team/engineering/hydra/kilt/424417/0052, version 1).\n\nQuerying the `formula_1` database (results joined with races and drivers) for his 2000 season:\n- Total points in 2000: **4.0** across **16** races\n- Average points per race: **4.0 ÷ 16 = 0.25**\n\n**Answer: 0.25 points** (average points scored by Eddie Irvine in the year 2000)."
+    },
+    {
+      "case_id": "dev_6",
+      "original_question": "How many users from the country where the Indian Half-bred horse type is primarily found have the teacher badges?",
+      "agent_input": "Database: codebase_community\nQuestion: How many users from the country where the Indian Half-bred horse type is primarily found have the teacher badges?",
+      "annotations_not_given_to_agent": {
+        "sql_question": "How many users from India have the teacher badges?",
+        "evidence": "\"India\" is the Location; \"Teacher\" is the Name of badge",
+        "sql_query": "SELECT COUNT(T1.Id) FROM badges AS T1 INNER JOIN users AS T2 ON T1.UserId = T2.Id WHERE T2.Location = 'India' AND T1.Name = 'Teacher'",
+        "sql_output": {
+          "COUNT(T1.Id)": 18
+        },
+        "search_answer": "India",
+        "final_answer": "The Indian Half-bred horse type is primarily found in India, and there are 18 users from India who have the teacher badges."
+      },
+      "actually_retrieved_schemas": [
+        {
+          "query": "codebase_community users badges",
+          "uri": "ctx://datalake/hydra/codebase_community/badges",
+          "version": 1,
+          "full_description_seen_by_agent": "Database: codebase_community\nTable: badges\nCREATE TABLE badges\n(\n    Id     INTEGER          not null\n        primary key,\n    UserId INTEGER          null,\n    Name   TEXT null,\n    Date   DATETIME     null,\n        foreign key (UserId) references users (Id)\n            on update cascade on delete cascade\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nId,,the badge id,integer,\r\nUserId,User Id,the unique id of the user,integer,\r\nName,,the badge name the user obtained,text,\r\nDate,,the date that the user obtained the badge,datetime,"
+        },
+        {
+          "query": "codebase_community users badges",
+          "uri": "ctx://datalake/hydra/codebase_community/users",
+          "version": 1,
+          "full_description_seen_by_agent": "Database: codebase_community\nTable: users\nCREATE TABLE users\n(\n    Id              INTEGER          not null UNIQUE\n        primary key,\n    Reputation      INTEGER          null,\n    CreationDate    DATETIME     null,\n    DisplayName     TEXT null,\n    LastAccessDate  DATETIME     null,\n    WebsiteUrl      TEXT null,\n    Location        TEXT null,\n    AboutMe         TEXT     null,\n    Views           INTEGER          null,\n    UpVotes         INTEGER          null,\n    DownVotes       INTEGER          null,\n    AccountId       INTEGER          null,\n    Age             INTEGER          null,\n    ProfileImageUrl TEXT null\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nId,,the user id,integer,\r\nReputation,,the user's reputation,integer,\"commonsense evidence:\nThe user with higher reputation has more influence. \"\r\nCreationDate,Creation Date,the creation date of the user account,datetime,\r\nDisplayName,Display Name,the user's display name,text,\r\nLastAccessDate,Last Access Date,the last access date of the user account,datetime,\r\nWebsiteUrl,Website Url,the website url of the user account,text,\r\nLocation,,user's location,text,\r\nAboutMe,About Me,the self introduction of the user,text,\r\nViews,,the number of views ,integer,\r\nUpVotes,,the number of upvotes,integer,\r\nDownVotes,,the number of downvotes,integer,\r\nAccountId,Account Id,the unique id of the account,integer,\r\nAge,,user's age,integer,\" teenager: 13-18\n adult: 19-65\n elder: > 65\"\r\nProfileImageUrl,Profile Image Url,the profile image url,text,"
+        },
+        {
+          "query": "codebase_community users badges",
+          "uri": "ctx://datalake/hydra/codebase_community/posts",
+          "version": 1,
+          "full_description_seen_by_agent": "Database: codebase_community\nTable: posts\nCREATE TABLE posts\n(\n    Id                    INTEGER          not null UNIQUE\n        primary key,\n    PostTypeId            INTEGER          null,\n    AcceptedAnswerId      INTEGER          null,\n    CreaionDate           DATETIME     null,\n    Score                 INTEGER          null,\n    ViewCount             INTEGER          null,\n    Body                  TEXT     null,\n    OwnerUserId           INTEGER          null,\n    LasActivityDate       DATETIME     null,\n    Title                 TEXT null,\n    Tags                  TEXT null,\n    AnswerCount           INTEGER          null,\n    CommentCount          INTEGER          null,\n    FavoriteCount         INTEGER          null,\n    LastEditorUserId      INTEGER          null,\n    LastEditDate          DATETIME     null,\n    CommunityOwnedDate    DATETIME    null,\n    ParentId              INTEGER          null,\n    ClosedDate            DATETIME     null,\n    OwnerDisplayName      TEXT null,\n    LastEditorDisplayName TEXT null,\n        foreign key (LastEditorUserId) references users (Id)\n            on update cascade on delete cascade,\n        foreign key (OwnerUserId) references users (Id)\n            on update cascade on delete cascade,\n        foreign key (ParentId) references posts (Id)\n            on update cascade on delete cascade\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nId,,the post id,integer,\r\nPostTypeId,Post Type Id,the id of the post type,integer,\r\nAcceptedAnswerId,Accepted Answer Id,the accepted answer id of the post ,integer,\r\nCreaionDate,Creation Date,the creation date of the post,datetime,\r\nScore,,the score of the post,integer,\r\nViewCount,View Count,the view count of the post,integer,\"commonsense evidence:\nHigher view count means the post has higher popularity\"\r\nBody,,the body of the post,text,\r\nOwnerUserId,Owner User Id,the id of the owner user,integer,\r\nLasActivityDate,Last Activity Date,the last activity date,datetime,\r\nTitle,,the title of the post,text,\r\nTags,,the tag of the post,text,\r\nAnswerCount,Answer Count,the total number of answers of the post,integer,\r\nCommentCount,Comment Count,the total number of comments of the post,integer,\r\nFavoriteCount,Favorite Count,the total number of favorites of the post,integer,\"commonsense evidence:\nmore favorite count refers to more valuable posts. \"\r\nLastEditorUserId,Last Editor User Id,the id of the last editor,integer,\r\nLastEditDate,Last Edit Date,the last edit date,datetime,\r\nCommunityOwnedDate,Community Owned Date,the community owned date,datetime,\r\nParentId,ParentId,the id of the parent post,integer,\"commonsense evidence:\nIf the parent id is null, the post is the root post. Otherwise, the post is the child post of other post. \"\r\nClosedDate,Closed Date,the closed date of the post,data_format,\"commonsense evidence:\nif ClosedDate is null or empty, it means this post is not well-finished\nif CloseDate is not null or empty, it means this post has well-finished.\"\r\nOwnerDisplayName,Owner Display Name,the display name of the post owner,text,\r\nLastEditorDisplayName,Last Editor Display Name,the display name of the last editor,text,"
+        }
+      ],
+      "agent_sql_calls": [
+        {
+          "sql": "SELECT Location, COUNT(*) AS n FROM users WHERE Location LIKE '%India%' GROUP BY Location ORDER BY n DESC LIMIT 50",
+          "result": {
+            "columns": [
+              "Location",
+              "n"
+            ],
+            "rows": [
+              [
+                "India",
+                206
+              ],
+              [
+                "Bangalore, India",
+                130
+              ],
+              [
+                "Mumbai, India",
+                52
+              ],
+              [
+                "Pune, India",
+                39
+              ],
+              [
+                "Chennai, India",
+                37
+              ],
+              [
+                "Hyderabad, India",
+                25
+              ],
+              [
+                "New Delhi, India",
+                18
+              ],
+              [
+                "Kolkata, India",
+                16
+              ],
+              [
+                "Indiana",
+                12
+              ],
+              [
+                "Delhi, India",
+                11
+              ],
+              [
+                "Ahmadabad, India",
+                11
+              ],
+              [
+                "Indianapolis, IN",
+                9
+              ],
+              [
+                "Gurgaon, India",
+                7
+              ],
+              [
+                "Kochi, India",
+                6
+              ],
+              [
+                "Ahmedabad, India",
+                5
+              ],
+              [
+                "Madurai, India",
+                4
+              ],
+              [
+                "Kanpur, India",
+                4
+              ],
+              [
+                "Visakhapatnam, India",
+                3
+              ],
+              [
+                "Vadodara, India",
+                3
+              ],
+              [
+                "Thiruvananthapuram, India",
+                3
+              ],
+              [
+                "Noida, India",
+                3
+              ],
+              [
+                "Navi Mumbai, India",
+                3
+              ],
+              [
+                "Mysore, India",
+                3
+              ],
+              [
+                "Kerala, India",
+                3
+              ],
+              [
+                "Kota, India",
+                2
+              ],
+              [
+                "Kharagpur, India",
+                2
+              ],
+              [
+                "Indianapolis",
+                2
+              ],
+              [
+                "INDIA",
+                2
+              ],
+              [
+                "Guwahati, India",
+                2
+              ],
+              [
+                "Gandhinagar, India",
+                2
+              ],
+              [
+                "Coimbatore, India",
+                2
+              ],
+              [
+                "Chandigarh, India",
+                2
+              ],
+              [
+                "Bhubaneswar, India",
+                2
+              ],
+              [
+                "india",
+                1
+              ],
+              [
+                "Vizianagaram, India",
+                1
+              ],
+              [
+                "Vellore, India",
+                1
+              ],
+              [
+                "Udhagamandalam, India",
+                1
+              ],
+              [
+                "Trivandrum, India",
+                1
+              ],
+              [
+                "Tamilnadu , INDIA",
+                1
+              ],
+              [
+                "Sambalpur, India",
+                1
+              ],
+              [
+                "Ramanthali,Kerala, India,670308",
+                1
+              ],
+              [
+                "Rajkot, India",
+                1
+              ],
+              [
+                "Rajastan, India",
+                1
+              ],
+              [
+                "Punjab, India",
+                1
+              ],
+              [
+                "Pondicherry, India",
+                1
+              ],
+              [
+                "Pilani, India",
+                1
+              ],
+              [
+                "Ottappalam, India",
+                1
+              ],
+              [
+                "Northwest Indiana, USA",
+                1
+              ],
+              [
+                "Nellore, India",
+                1
+              ],
+              [
+                "Navelim, India",
+                1
+              ]
+            ],
+            "truncated": false,
+            "elapsed_seconds": 0.0086
+          }
+        },
+        {
+          "sql": "SELECT Name, COUNT(*) AS n FROM badges WHERE LOWER(Name) LIKE '%teacher%' GROUP BY Name",
+          "result": {
+            "columns": [
+              "Name",
+              "n"
+            ],
+            "rows": [
+              [
+                "Teacher",
+                4679
+              ]
+            ],
+            "truncated": false,
+            "elapsed_seconds": 0.0207
+          }
+        },
+        {
+          "sql": "SELECT COUNT(DISTINCT u.Id) AS user_count_loose\nFROM users u\nJOIN badges b ON b.UserId = u.Id\nWHERE b.Name = 'Teacher' AND u.Location LIKE '%India%'",
+          "result": {
+            "columns": [
+              "user_count_loose"
+            ],
+            "rows": [
+              [
+                46
+              ]
+            ],
+            "truncated": false,
+            "elapsed_seconds": 0.0133
+          }
+        },
+        {
+          "sql": "SELECT COUNT(DISTINCT u.Id) AS user_count\nFROM users u\nJOIN badges b ON b.UserId = u.Id\nWHERE b.Name = 'Teacher'\n  AND (LOWER(u.Location) = 'india'\n       OR LOWER(u.Location) LIKE '%, india'\n       OR LOWER(u.Location) LIKE '%, india,%'\n       OR LOWER(u.Location) LIKE '% ,india'\n       OR LOWER(u.Location) LIKE '%,india')",
+          "result": {
+            "columns": [
+              "user_count"
+            ],
+            "rows": [
+              [
+                45
+              ]
+            ],
+            "truncated": false,
+            "elapsed_seconds": 0.0171
+          }
+        },
+        {
+          "sql": "SELECT u.Id, u.Location\nFROM users u\nJOIN badges b ON b.UserId = u.Id\nWHERE b.Name = 'Teacher' AND u.Location LIKE '%India%'\n  AND NOT (LOWER(u.Location) = 'india'\n       OR LOWER(u.Location) LIKE '%, india'\n       OR LOWER(u.Location) LIKE '%, india,%'\n       OR LOWER(u.Location) LIKE '% ,india'\n       OR LOWER(u.Location) LIKE '%,india')",
+          "result": {
+            "columns": [
+              "Id",
+              "Location"
+            ],
+            "rows": [
+              [
+                14891,
+                "Indianapolis"
+              ]
+            ],
+            "truncated": false,
+            "elapsed_seconds": 0.0121
+          }
+        }
+      ],
+      "agent_final_answer": "**Answer: 45 users**\n\n**Reasoning:**\n\n1. **Country identification:** The \"Indian Half-bred\" is a horse type associated with India (as its name indicates). Note: I used all my ContextHub resource searches but could not retrieve a specific source passage confirming the country where it is primarily found — the retrieved results were about unrelated topics (Kerry Bog Pony, Indian Fantail pigeon, etc.). I proceeded with India based on the horse type's name, but flag this as unverified against retrieved text.\n\n2. **Database facts (codebase_community):**\n   - The `users` table has no country column; country is inferred from `Location` (ctx://datalake/hydra/codebase_community/users, v1).\n   - The `badges` table (ctx://datalake/hydra/codebase_community/badges, v1) contains exactly one teacher-related badge name: **'Teacher'** (4,679 total awards).\n   - Counting distinct users whose `Location` indicates India (matching 'India' as a word/country suffix, explicitly excluding false matches like \"Indiana\", \"Indianapolis\") and who hold the 'Teacher' badge:\n\n```sql\nSELECT COUNT(DISTINCT u.Id)\nFROM users u JOIN badges b ON b.UserId = u.Id\nWHERE b.Name = 'Teacher'\n  AND (LOWER(u.Location) = 'india' OR LOWER(u.Location) LIKE '%, india' ...)\n```\n\n**Result: 45** (a loose `%India%` match gives 46, but the extra match is a user from \"Indianapolis\", not India)."
+    },
+    {
+      "case_id": "dev_20",
+      "original_question": "How many users were from the city where Leonard Rosenfeld had the majority of his art showings?",
+      "agent_input": "Database: codebase_community\nQuestion: How many users were from the city where Leonard Rosenfeld had the majority of his art showings?",
+      "annotations_not_given_to_agent": {
+        "sql_question": "How many users were from New York?",
+        "evidence": "New York refers to Location;",
+        "sql_query": "SELECT COUNT(Id) FROM users WHERE Location = 'New York'",
+        "sql_output": {
+          "COUNT(Id)": 15
+        },
+        "search_answer": "New York, NY",
+        "final_answer": "Leonard Rosenfeld had the majority of his art showings in New York, NY, and there are 15 users from that city."
+      },
+      "actually_retrieved_schemas": [
+        {
+          "query": "codebase_community users table",
+          "uri": "ctx://datalake/hydra/codebase_community/users",
+          "version": 1,
+          "full_description_seen_by_agent": "Database: codebase_community\nTable: users\nCREATE TABLE users\n(\n    Id              INTEGER          not null UNIQUE\n        primary key,\n    Reputation      INTEGER          null,\n    CreationDate    DATETIME     null,\n    DisplayName     TEXT null,\n    LastAccessDate  DATETIME     null,\n    WebsiteUrl      TEXT null,\n    Location        TEXT null,\n    AboutMe         TEXT     null,\n    Views           INTEGER          null,\n    UpVotes         INTEGER          null,\n    DownVotes       INTEGER          null,\n    AccountId       INTEGER          null,\n    Age             INTEGER          null,\n    ProfileImageUrl TEXT null\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nId,,the user id,integer,\r\nReputation,,the user's reputation,integer,\"commonsense evidence:\nThe user with higher reputation has more influence. \"\r\nCreationDate,Creation Date,the creation date of the user account,datetime,\r\nDisplayName,Display Name,the user's display name,text,\r\nLastAccessDate,Last Access Date,the last access date of the user account,datetime,\r\nWebsiteUrl,Website Url,the website url of the user account,text,\r\nLocation,,user's location,text,\r\nAboutMe,About Me,the self introduction of the user,text,\r\nViews,,the number of views ,integer,\r\nUpVotes,,the number of upvotes,integer,\r\nDownVotes,,the number of downvotes,integer,\r\nAccountId,Account Id,the unique id of the account,integer,\r\nAge,,user's age,integer,\" teenager: 13-18\n adult: 19-65\n elder: > 65\"\r\nProfileImageUrl,Profile Image Url,the profile image url,text,"
+        },
+        {
+          "query": "codebase_community users table",
+          "uri": "ctx://datalake/hydra/codebase_community/badges",
+          "version": 1,
+          "full_description_seen_by_agent": "Database: codebase_community\nTable: badges\nCREATE TABLE badges\n(\n    Id     INTEGER          not null\n        primary key,\n    UserId INTEGER          null,\n    Name   TEXT null,\n    Date   DATETIME     null,\n        foreign key (UserId) references users (Id)\n            on update cascade on delete cascade\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nId,,the badge id,integer,\r\nUserId,User Id,the unique id of the user,integer,\r\nName,,the badge name the user obtained,text,\r\nDate,,the date that the user obtained the badge,datetime,"
+        },
+        {
+          "query": "codebase_community users table",
+          "uri": "ctx://datalake/hydra/codebase_community/comments",
+          "version": 1,
+          "full_description_seen_by_agent": "Database: codebase_community\nTable: comments\nCREATE TABLE comments\n(\n    Id              INTEGER          not null\n        primary key,\n    PostId          INTEGER          null,\n    Score           INTEGER          null,\n    Text            TEXT     null,\n    CreationDate    DATETIME     null,\n    UserId          INTEGER          null,\n    UserDisplayName TEXT null,\n        foreign key (PostId) references posts (Id)\n            on update cascade on delete cascade,\n        foreign key (UserId) references users (Id)\n            on update cascade on delete cascade\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nId,,the comment Id,integer,\r\nPostId,Post Id,the unique id of the post,integer,\r\nScore,,rating score,integer,\"commonsense evidence:\nThe score is from 0 to 100. The score more than 60 refers that the comment is a positive comment. The score less than 60 refers that the comment is a negative comment. \"\r\nText,,the detailed content of the comment,text,\r\nCreationDate,Creation Date,the creation date of the comment,datetime,\r\nUserId,User Id,the id of the user who post the comment,integer,\r\nUserDisplayName,User Display Name,user's display name,text,"
+        }
+      ],
+      "agent_sql_calls": [
+        {
+          "sql": "SELECT Location, COUNT(*) AS cnt FROM users WHERE Location LIKE '%New York%' GROUP BY Location ORDER BY cnt DESC LIMIT 50",
+          "result": {
+            "columns": [
+              "Location",
+              "cnt"
+            ],
+            "rows": [
+              [
+                "New York, United States",
+                148
+              ],
+              [
+                "New York, NY",
+                116
+              ],
+              [
+                "New York",
+                15
+              ],
+              [
+                "New York City",
+                8
+              ],
+              [
+                "New York, NY, United States",
+                2
+              ],
+              [
+                "New York, New York",
+                1
+              ],
+              [
+                "New York, NYC",
+                1
+              ],
+              [
+                "New York, NY, USA",
+                1
+              ],
+              [
+                "New York City, New York, United States",
+                1
+              ],
+              [
+                "New York City, New York",
+                1
+              ],
+              [
+                "Hudson Valley, New York, USA",
+                1
+              ]
+            ],
+            "truncated": false,
+            "elapsed_seconds": 0.0067
+          }
+        },
+        {
+          "sql": "SELECT COUNT(Id) AS total FROM users WHERE Location LIKE '%New York%'",
+          "result": {
+            "columns": [
+              "total"
+            ],
+            "rows": [
+              [
+                295
+              ]
+            ],
+            "truncated": false,
+            "elapsed_seconds": 0.0064
+          }
+        }
+      ],
+      "agent_final_answer": "**Answer: 295 users**\n\n**Reasoning:**\n1. According to Leonard Rosenfeld's \"Selected Showings\" list (ctx://team/engineering/hydra/kilt/27307590/0011, v1), the overwhelming majority of his art showings were in **New York, NY** (e.g., Denise Bibro Fine Arts, LaMama Galeria, Viridian Artists, Gallery 311, OK Harris, The Knitting Factory, etc.), with only a handful elsewhere (Newton Centre MA, Sag Harbor, Brooklyn, Detroit, Kansas City, Phoenix, Mexico, Puerto Vallarta).\n2. Querying the `codebase_community.users` table (schema: ctx://datalake/hydra/codebase_community/users) for users whose `Location` references that city:\n\n```sql\nSELECT COUNT(Id) FROM users WHERE Location LIKE '%New York%'\n```\n\nreturns **295** users (across variants such as \"New York, United States\" – 148, \"New York, NY\" – 116, \"New York\" – 15, \"New York City\" – 8, etc.).\n\nNote: this standard match includes one user listing \"Hudson Valley, New York, USA\" (a state-level reference); excluding that would give 294, but the conventional match for New York City yields **295**."
+    }
+  ],
+  "additional_readonly_data_audit": {
+    "constructor_standings_max": {
+      "db_id": "formula_1",
+      "sql": "SELECT c.name, r.year, r.round, r.name AS race, cs.points FROM constructorStandings cs JOIN constructors c ON c.constructorId=cs.constructorId JOIN races r ON r.raceId=cs.raceId ORDER BY cs.points DESC LIMIT 5",
+      "result": {
+        "columns": [
+          "name",
+          "year",
+          "round",
+          "race",
+          "points"
+        ],
+        "rows": [
+          [
+            "Mercedes",
+            2016,
+            21,
+            "Abu Dhabi Grand Prix",
+            765.0
+          ],
+          [
+            "Mercedes",
+            2016,
+            20,
+            "Brazilian Grand Prix",
+            722.0
+          ],
+          [
+            "Mercedes",
+            2015,
+            19,
+            "Abu Dhabi Grand Prix",
+            703.0
+          ],
+          [
+            "Mercedes",
+            2014,
+            19,
+            "Abu Dhabi Grand Prix",
+            701.0
+          ],
+          [
+            "Mercedes",
+            2016,
+            19,
+            "Mexican Grand Prix",
+            679.0
+          ]
+        ],
+        "truncated": false,
+        "elapsed_seconds": 0.0096
+      }
+    },
+    "mercedes_race_and_standing_samples": {
+      "db_id": "formula_1",
+      "sql": "SELECT r.year,r.round,cr.points AS race_points,cs.points AS standing_points FROM constructorStandings cs JOIN constructors c ON c.constructorId=cs.constructorId JOIN races r ON r.raceId=cs.raceId LEFT JOIN constructorResults cr ON cr.raceId=cs.raceId AND cr.constructorId=cs.constructorId WHERE c.name='Mercedes' AND r.year=2016 AND r.round IN (1,2,20,21) ORDER BY r.round",
+      "result": {
+        "columns": [
+          "year",
+          "round",
+          "race_points",
+          "standing_points"
+        ],
+        "rows": [
+          [
+            2016,
+            1,
+            43.0,
+            43.0
+          ],
+          [
+            2016,
+            2,
+            40.0,
+            83.0
+          ],
+          [
+            2016,
+            20,
+            43.0,
+            722.0
+          ],
+          [
+            2016,
+            21,
+            43.0,
+            765.0
+          ]
+        ],
+        "truncated": false,
+        "elapsed_seconds": 0.0044
+      }
+    },
+    "mercedes_2016_sum": {
+      "db_id": "formula_1",
+      "sql": "SELECT COUNT(*) AS races,SUM(cr.points) AS points FROM constructorResults cr JOIN constructors c ON c.constructorId=cr.constructorId JOIN races r ON r.raceId=cr.raceId WHERE c.name='Mercedes' AND r.year=2016",
+      "result": {
+        "columns": [
+          "races",
+          "points"
+        ],
+        "rows": [
+          [
+            21,
+            765.0
+          ]
+        ],
+        "truncated": false,
+        "elapsed_seconds": 0.0005
+      }
+    },
+    "irvine_2000_rounds": {
+      "db_id": "formula_1",
+      "sql": "SELECT r.round,r.name,rr.points AS race_points,ds.points AS standing_points FROM races r LEFT JOIN results rr ON rr.raceId=r.raceId AND rr.driverId=(SELECT driverId FROM drivers WHERE forename='Eddie' AND surname='Irvine') LEFT JOIN driverStandings ds ON ds.raceId=r.raceId AND ds.driverId=(SELECT driverId FROM drivers WHERE forename='Eddie' AND surname='Irvine') WHERE r.year=2000 ORDER BY r.round",
+      "result": {
+        "columns": [
+          "round",
+          "name",
+          "race_points",
+          "standing_points"
+        ],
+        "rows": [
+          [
+            1,
+            "Australian Grand Prix",
+            0.0,
+            null
+          ],
+          [
+            2,
+            "Brazilian Grand Prix",
+            0.0,
+            null
+          ],
+          [
+            3,
+            "San Marino Grand Prix",
+            0.0,
+            0.0
+          ],
+          [
+            4,
+            "British Grand Prix",
+            0.0,
+            0.0
+          ],
+          [
+            5,
+            "Spanish Grand Prix",
+            0.0,
+            0.0
+          ],
+          [
+            6,
+            "European Grand Prix",
+            0.0,
+            0.0
+          ],
+          [
+            7,
+            "Monaco Grand Prix",
+            3.0,
+            3.0
+          ],
+          [
+            8,
+            "Canadian Grand Prix",
+            0.0,
+            3.0
+          ],
+          [
+            9,
+            "French Grand Prix",
+            0.0,
+            3.0
+          ],
+          [
+            10,
+            "Austrian Grand Prix",
+            null,
+            3.0
+          ],
+          [
+            11,
+            "German Grand Prix",
+            0.0,
+            3.0
+          ],
+          [
+            12,
+            "Hungarian Grand Prix",
+            0.0,
+            3.0
+          ],
+          [
+            13,
+            "Belgian Grand Prix",
+            0.0,
+            3.0
+          ],
+          [
+            14,
+            "Italian Grand Prix",
+            0.0,
+            3.0
+          ],
+          [
+            15,
+            "United States Grand Prix",
+            0.0,
+            3.0
+          ],
+          [
+            16,
+            "Japanese Grand Prix",
+            0.0,
+            3.0
+          ],
+          [
+            17,
+            "Malaysian Grand Prix",
+            1.0,
+            4.0
+          ]
+        ],
+        "truncated": false,
+        "elapsed_seconds": 0.0236
+      }
+    },
+    "irvine_2000_standing_aggregate": {
+      "db_id": "formula_1",
+      "sql": "SELECT COUNT(*) AS standing_rows,SUM(ds.points) AS sum_standing_points,AVG(ds.points) AS average FROM driverStandings ds JOIN drivers d ON d.driverId=ds.driverId JOIN races r ON r.raceId=ds.raceId WHERE d.forename='Eddie' AND d.surname='Irvine' AND r.year=2000",
+      "result": {
+        "columns": [
+          "standing_rows",
+          "sum_standing_points",
+          "average"
+        ],
+        "rows": [
+          [
+            15,
+            34.0,
+            2.2666666666666666
+          ]
+        ],
+        "truncated": false,
+        "elapsed_seconds": 0.0034
+      }
+    },
+    "india_teacher_exact_count": {
+      "db_id": "codebase_community",
+      "sql": "SELECT COUNT(b.Id) AS badge_rows,COUNT(DISTINCT u.Id) AS distinct_users FROM badges b JOIN users u ON u.Id=b.UserId WHERE b.Name='Teacher' AND u.Location='India'",
+      "result": {
+        "columns": [
+          "badge_rows",
+          "distinct_users"
+        ],
+        "rows": [
+          [
+            18,
+            18
+          ]
+        ],
+        "truncated": false,
+        "elapsed_seconds": 0.0422
+      }
+    },
+    "india_teacher_location_breakdown": {
+      "db_id": "codebase_community",
+      "sql": "SELECT u.Location,COUNT(b.Id) AS badge_rows,COUNT(DISTINCT u.Id) AS users FROM badges b JOIN users u ON u.Id=b.UserId WHERE b.Name='Teacher' AND (LOWER(u.Location)='india' OR LOWER(u.Location) LIKE '%, india' OR LOWER(u.Location) LIKE '%, india,%' OR LOWER(u.Location) LIKE '% ,india' OR LOWER(u.Location) LIKE '%,india') GROUP BY u.Location ORDER BY users DESC,u.Location",
+      "result": {
+        "columns": [
+          "Location",
+          "badge_rows",
+          "users"
+        ],
+        "rows": [
+          [
+            "India",
+            18,
+            18
+          ],
+          [
+            "Bangalore, India",
+            10,
+            10
+          ],
+          [
+            "Chennai, India",
+            3,
+            3
+          ],
+          [
+            "Gurgaon, India",
+            2,
+            2
+          ],
+          [
+            "Mumbai, India",
+            2,
+            2
+          ],
+          [
+            "Ahmedabad, India",
+            1,
+            1
+          ],
+          [
+            "Amritsar, India",
+            1,
+            1
+          ],
+          [
+            "Chennai,India",
+            1,
+            1
+          ],
+          [
+            "Delhi, India",
+            1,
+            1
+          ],
+          [
+            "Gandhinagar, Gujarat, India",
+            1,
+            1
+          ],
+          [
+            "Kerala, India",
+            1,
+            1
+          ],
+          [
+            "Kolkata, India",
+            1,
+            1
+          ],
+          [
+            "New Delhi, India",
+            1,
+            1
+          ],
+          [
+            "Pune, India",
+            1,
+            1
+          ],
+          [
+            "Thiruvananthapuram, India",
+            1,
+            1
+          ]
+        ],
+        "truncated": false,
+        "elapsed_seconds": 0.0059
+      }
+    },
+    "new_york_locations": {
+      "db_id": "codebase_community",
+      "sql": "SELECT Location,COUNT(*) AS users FROM users WHERE Location LIKE '%New York%' GROUP BY Location ORDER BY users DESC,Location",
+      "result": {
+        "columns": [
+          "Location",
+          "users"
+        ],
+        "rows": [
+          [
+            "New York, United States",
+            148
+          ],
+          [
+            "New York, NY",
+            116
+          ],
+          [
+            "New York",
+            15
+          ],
+          [
+            "New York City",
+            8
+          ],
+          [
+            "New York, NY, United States",
+            2
+          ],
+          [
+            "Hudson Valley, New York, USA",
+            1
+          ],
+          [
+            "New York City, New York",
+            1
+          ],
+          [
+            "New York City, New York, United States",
+            1
+          ],
+          [
+            "New York, NY, USA",
+            1
+          ],
+          [
+            "New York, NYC",
+            1
+          ],
+          [
+            "New York, New York",
+            1
+          ]
+        ],
+        "truncated": false,
+        "elapsed_seconds": 0.0024
+      }
+    }
+  }
+}

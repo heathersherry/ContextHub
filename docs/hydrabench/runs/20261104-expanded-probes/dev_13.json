@@ -1,0 +1,146 @@
+{
+  "case_id": "dev_13",
+  "type": "s2a",
+  "db_id": "formula_1",
+  "reference_tables": [
+    "driverStandings",
+    "drivers",
+    "races"
+  ],
+  "top_k": 3,
+  "table_schema": {
+    "query": "Database: formula_1. What was the average points scored in the year 2000 by the person nicknamed \"Irv the Swerve\" and \"Fast Eddie\"?",
+    "response": {
+      "results": [
+        {
+          "uri": "ctx://datalake/hydra/formula_1/results",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 4.4757676463541625,
+          "l0_content": "Database: formula_1\nTable: results\nCREATE TABLE results\n(\n    resultId        INTEGER\n        primary key autoincrement,\n    raceId          INTEGER default 0  not null,\n    driverId        INTEGER default 0  not null,\n    constructorId   INTEGER default 0  not null,\n    number          INTEGER,\n    grid            INTEGER default 0  not null,\n    position        INTEGER,\n    positionText    TEXT    default '' not null,\n    positionOrder   INTEGER default 0  not null,\n    points          REAL   default 0  not null,\n    laps            INTEGER default 0  not null,\n    time            TEXT,\n    milliseconds    INTEGER,\n    fastestLap      INTEGER,\n    rank            INTEGER default 0,\n    fastestLapTime  TEXT,\n    fastestLapSpeed TEXT,\n    statusId        INTEGER default 0  not null,\n    foreign key (raceId) references races(raceId),\n    foreign key (driverId) references drivers(driverId),\n    foreign key (constructorId) references constructors(constructorId),\n    foreign key (statusId) references status(statusId)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nresultId,Result ID ,the unique identification number identifying race result ,integer,\r\nraceId,race ID ,the identification number identifying the race ,integer ,\r\ndriverId ,driver ID,the identification number identifying the driver ,integer ,\r\nconstructorId ,constructor Id ,the identification number identifying which constructors ,integer ,\r\nnumber ,,number  ,integer ,\r\ngrid ,,the number identifying the area where cars are set into a grid formation in order to start the race. ,integer ,\r\nposition ,,The finishing position or track of circuits ,integer ,\r\npositionText ,position text ,,text,not quite useful \r\npositionOrder ,position order ,the finishing order of positions ,integer ,\r\npoints ,,points ,real,\r\nlaps ,,lap number ,integer ,\r\ntime  ,,finish time ,text,\"commonsense evidence: \n1. if the value exists, it means the driver finished the race. \n2. Only the time of the champion shows in the format of \"\"minutes: seconds.millionsecond\"\", the time of the other drivers shows as \"\"seconds.millionsecond\"\" , which means their actual time is the time of the champion adding the value in this cell.\"\r\nmilliseconds ,,the actual finishing time of drivers in milliseconds  ,integer ,the actual finishing time of drivers  \r\nfastestLap ,fastest lap ,fastest lap number ,integer ,\r\nrank ,,starting rank positioned by fastest lap speed,integer ,\r\nfastestLapTime ,fastest Lap Time,fastest Lap Time,text,\"faster (smaller in the value) \"\"fastestLapTime\"\" leads to higher rank (smaller is higher rank) \"\r\nfastestLapSpeed ,fastest Lap Speed ,fastest Lap Speed ,text, (km / h) \r\nstatusId ,status Id ,status ID ,integer,its category description appear in the table status ",
+          "l1_content": "Database: formula_1\nTable: results\nCREATE TABLE results\n(\n    resultId        INTEGER\n        primary key autoincrement,\n    raceId          INTEGER default 0  not null,\n    driverId        INTEGER default 0  not null,\n    constructorId   INTEGER default 0  not null,\n    number          INTEGER,\n    grid            INTEGER default 0  not null,\n    position        INTEGER,\n    positionText    TEXT    default '' not null,\n    positionOrder   INTEGER default 0  not null,\n    points          REAL   default 0  not null,\n    laps            INTEGER default 0  not null,\n    time            TEXT,\n    milliseconds    INTEGER,\n    fastestLap      INTEGER,\n    rank            INTEGER default 0,\n    fastestLapTime  TEXT,\n    fastestLapSpeed TEXT,\n    statusId        INTEGER default 0  not null,\n    foreign key (raceId) references races(raceId),\n    foreign key (driverId) references drivers(driverId),\n    foreign key (constructorId) references constructors(constructorId),\n    foreign key (statusId) references status(statusId)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nresultId,Result ID ,the unique identification number identifying race result ,integer,\r\nraceId,race ID ,the identification number identifying the race ,integer ,\r\ndriverId ,driver ID,the identification number identifying the driver ,integer ,\r\nconstructorId ,constructor Id ,the identification number identifying which constructors ,integer ,\r\nnumber ,,number  ,integer ,\r\ngrid ,,the number identifying the area where cars are set into a grid formation in order to start the race. ,integer ,\r\nposition ,,The finishing position or track of circuits ,integer ,\r\npositionText ,position text ,,text,not quite useful \r\npositionOrder ,position order ,the finishing order of positions ,integer ,\r\npoints ,,points ,real,\r\nlaps ,,lap number ,integer ,\r\ntime  ,,finish time ,text,\"commonsense evidence: \n1. if the value exists, it means the driver finished the race. \n2. Only the time of the champion shows in the format of \"\"minutes: seconds.millionsecond\"\", the time of the other drivers shows as \"\"seconds.millionsecond\"\" , which means their actual time is the time of the champion adding the value in this cell.\"\r\nmilliseconds ,,the actual finishing time of drivers in milliseconds  ,integer ,the actual finishing time of drivers  \r\nfastestLap ,fastest lap ,fastest lap number ,integer ,\r\nrank ,,starting rank positioned by fastest lap speed,integer ,\r\nfastestLapTime ,fastest Lap Time,fastest Lap Time,text,\"faster (smaller in the value) \"\"fastestLapTime\"\" leads to higher rank (smaller is higher rank) \"\r\nfastestLapSpeed ,fastest Lap Speed ,fastest Lap Speed ,text, (km / h) \r\nstatusId ,status Id ,status ID ,integer,its category description appear in the table status ",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://datalake/hydra/formula_1/races",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 3.3160367359776792,
+          "l0_content": "Database: formula_1\nTable: races\nCREATE TABLE races\n(\n    raceId    INTEGER\n        primary key autoincrement,\n    year      INTEGER default 0            not null,\n    round     INTEGER default 0            not null,\n    circuitId INTEGER default 0            not null,\n    name      TEXT    default ''           not null,\n    date      DATE    default '0000-00-00' not null,\n    time      TEXT,\n    url       TEXT unique,\n    foreign key (year) references seasons(year),\n    foreign key (circuitId) references circuits(circuitId)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nraceId ,race ID ,the unique identification number identifying the race ,integer ,\r\nyear ,,year ,integer ,\r\nround ,,round ,integer ,\r\ncircuitId ,Circuit Id ,circuit Id ,integer ,\r\nname ,,name of the race ,text,\r\ndate ,,duration time ,date,\r\ntime ,,time of the location ,text,\r\nurl ,,introduction of races ,text,",
+          "l1_content": "Database: formula_1\nTable: races\nCREATE TABLE races\n(\n    raceId    INTEGER\n        primary key autoincrement,\n    year      INTEGER default 0            not null,\n    round     INTEGER default 0            not null,\n    circuitId INTEGER default 0            not null,\n    name      TEXT    default ''           not null,\n    date      DATE    default '0000-00-00' not null,\n    time      TEXT,\n    url       TEXT unique,\n    foreign key (year) references seasons(year),\n    foreign key (circuitId) references circuits(circuitId)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nraceId ,race ID ,the unique identification number identifying the race ,integer ,\r\nyear ,,year ,integer ,\r\nround ,,round ,integer ,\r\ncircuitId ,Circuit Id ,circuit Id ,integer ,\r\nname ,,name of the race ,text,\r\ndate ,,duration time ,date,\r\ntime ,,time of the location ,text,\r\nurl ,,introduction of races ,text,",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://datalake/hydra/formula_1/constructorStandings",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 3.274113989355634,
+          "l0_content": "Database: formula_1\nTable: constructorStandings\nCREATE TABLE constructorStandings\n(\n    constructorStandingsId INTEGER\n        primary key autoincrement,\n    raceId                 INTEGER default 0 not null,\n    constructorId          INTEGER default 0 not null,\n    points                 REAL   default 0 not null,\n    position               INTEGER,\n    positionText           TEXT,\n    wins                   INTEGER default 0 not null,\n    foreign key (raceId) references races(raceId),\n    foreign key (constructorId) references constructors(constructorId)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nconstructorStandingsId ,constructor Standings Id ,unique identification of the constructor standing records ,integer ,\r\nraceId ,race id ,id number identifying which races ,integer ,\r\nconstructorId ,constructor id ,id number identifying which id ,integer ,\r\npoints,,how many points acquired in each race ,,\r\nposition ,,position or track of circuits ,integer ,\r\npositionText ,position text ,,text,\"same with position, not quite useful \"\r\nwins ,,wins ,integer ,\r\n",
+          "l1_content": "Database: formula_1\nTable: constructorStandings\nCREATE TABLE constructorStandings\n(\n    constructorStandingsId INTEGER\n        primary key autoincrement,\n    raceId                 INTEGER default 0 not null,\n    constructorId          INTEGER default 0 not null,\n    points                 REAL   default 0 not null,\n    position               INTEGER,\n    positionText           TEXT,\n    wins                   INTEGER default 0 not null,\n    foreign key (raceId) references races(raceId),\n    foreign key (constructorId) references constructors(constructorId)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nconstructorStandingsId ,constructor Standings Id ,unique identification of the constructor standing records ,integer ,\r\nraceId ,race id ,id number identifying which races ,integer ,\r\nconstructorId ,constructor id ,id number identifying which id ,integer ,\r\npoints,,how many points acquired in each race ,,\r\nposition ,,position or track of circuits ,integer ,\r\npositionText ,position text ,,text,\"same with position, not quite useful \"\r\nwins ,,wins ,integer ,\r\n",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        }
+      ],
+      "total": 3,
+      "retrieval_id": "d44ade82-54a6-4d95-a8f0-3e7bc067edc0",
+      "stale_notices": []
+    }
+  },
+  "resource": {
+    "query": "Who was nicknamed \"Irv the Swerve\" and \"Fast Eddie\"?",
+    "response": {
+      "results": [
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/424417/0052",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 9.576414891195107,
+          "l0_content": "Eddie Irvine — Personal life.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 424417\nIrvine is seen by many as a playboy in the mould of James Hunt, in contrast to the sport's modern stars, most of whom are seen as staid and less flamboyant. Irvine is also remembered for his tendency to speak his mind, often to the irritation of some. Despite this, Irvine does not consider himself to be a playboy stating his life is \"90% work\". He was nicknamed \"Irv the Swerve\" and later \"Fast Eddie\".",
+          "l1_content": "Eddie Irvine — Personal life.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 424417\nIrvine is seen by many as a playboy in the mould of James Hunt, in contrast to the sport's modern stars, most of whom are seen as staid and less flamboyant. Irvine is also remembered for his tendency to speak his mind, often to the irritation of some. Despite this, Irvine does not consider himself to be a playboy stating his life is \"90% work\". He was nicknamed \"Irv the Swerve\" and later \"Fast Eddie\".",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/424417/0003",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 0.9804662737293557,
+          "l0_content": "Eddie Irvine — Early life and career.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 424417\nHe was initially interested in motorcycle racing, but his parents thought the sport too dangerous and was encouraged by his father to race in Formula Ford. Irvine worked unpaid in his father's scrapyard, in return for which, his father funded his racing hobby. He won his first race at Brands Hatch in 1984, and an award for best driver. In 1987 he joined the Van Diemen team and won the Esso Formula Ford series, the RAC Formula Ford series, and the Formula Ford Festival.",
+          "l1_content": "Eddie Irvine — Early life and career.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 424417\nHe was initially interested in motorcycle racing, but his parents thought the sport too dangerous and was encouraged by his father to race in Formula Ford. Irvine worked unpaid in his father's scrapyard, in return for which, his father funded his racing hobby. He won his first race at Brands Hatch in 1984, and an award for best driver. In 1987 he joined the Van Diemen team and won the Esso Formula Ford series, the RAC Formula Ford series, and the Formula Ford Festival.",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/424417/0044",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 0.9032555922428765,
+          "l0_content": "Eddie Irvine — Post-Formula One (2003–present).\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 424417\nAn arrest warrant with bail was issued. Irvine played himself in the 2004 comedy \"The Prince and Me\", which starred Julia Stiles. He was executive producer of a film produced about Paddy Mayne. In late 2006 he launched a new television programme on the Sky One channel, with two teams of celebrity racing drivers competing against each other.",
+          "l1_content": "Eddie Irvine — Post-Formula One (2003–present).\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 424417\nAn arrest warrant with bail was issued. Irvine played himself in the 2004 comedy \"The Prince and Me\", which starred Julia Stiles. He was executive producer of a film produced about Paddy Mayne. In late 2006 he launched a new television programme on the Sky One channel, with two teams of celebrity racing drivers competing against each other.",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        }
+      ],
+      "total": 3,
+      "retrieval_id": "11aa04ce-c354-40d7-acef-98e21fd57026",
+      "stale_notices": []
+    }
+  },
+  "table_metrics": {
+    "required": 3,
+    "hits_at_3": 1,
+    "recall_at_3": 0.3333333333333333,
+    "all_required_at_3": false,
+    "first_hit_rank": 2
+  }
+}

@@ -1,0 +1,566 @@
+{
+  "mixed": [
+    {
+      "label": "literal",
+      "query": "1986 VAX 8800",
+      "section_id": 10,
+      "section_title": "Instruction pipelining.",
+      "strategy": "keyword",
+      "source_range": [
+        9617,
+        11920
+      ],
+      "content_characters": 2303,
+      "estimated_content_tokens_chars_div_4": 575.75,
+      "tool_message_characters": 2843,
+      "body_sha256": "a8692f681599c386f6a4d30da21759d6a2a19cb23059f7e4177034733f9b4a7a",
+      "final_score": 0.03278688524590164,
+      "l0_route": {
+        "disabled": false,
+        "candidates": [
+          {
+            "id": "0d25628e-53fd-424a-9eee-0c4c4bc41947",
+            "cosine": 0.31009619711683056
+          }
+        ]
+      },
+      "keyword_candidates": [
+        {
+          "section_id": 10,
+          "source_range": [
+            9617,
+            11920
+          ],
+          "score": 3.0025985275010827,
+          "strategy": "keyword"
+        }
+      ],
+      "vector_candidates": [
+        {
+          "section_id": 17,
+          "source_range": [
+            20817,
+            21522
+          ],
+          "score": 0.4232275325249084,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 13,
+          "source_range": [
+            15121,
+            16310
+          ],
+          "score": 0.41605841373875485,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 8,
+          "source_range": [
+            7303,
+            8317
+          ],
+          "score": 0.3956873361151856,
+          "strategy": "vector"
+        }
+      ],
+      "tree_candidates": [
+        {
+          "section_id": 10,
+          "source_range": [
+            10303,
+            11920
+          ],
+          "score": 0.0,
+          "strategy": "tree"
+        }
+      ],
+      "section_read_verified": true
+    },
+    {
+      "label": "semantic",
+      "query": "How can a CPU make progress on several instructions at once by handling different stages simultaneously?",
+      "section_id": 8,
+      "section_title": "Increasing execution speed.",
+      "strategy": "hybrid",
+      "source_range": [
+        7303,
+        8317
+      ],
+      "content_characters": 1014,
+      "estimated_content_tokens_chars_div_4": 253.5,
+      "tool_message_characters": 1542,
+      "body_sha256": "fb9bbd00734f765845bd9ef063838d8d3a068f1d13c97741c79417d252d0b682",
+      "final_score": 0.03278688524590164,
+      "l0_route": {
+        "disabled": false,
+        "candidates": [
+          {
+            "id": "0d25628e-53fd-424a-9eee-0c4c4bc41947",
+            "cosine": 0.6302229353851958
+          }
+        ]
+      },
+      "keyword_candidates": [
+        {
+          "section_id": 16,
+          "source_range": [
+            17627,
+            20817
+          ],
+          "score": 7.00592084761608,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 12,
+          "source_range": [
+            13335,
+            15121
+          ],
+          "score": 5.003904071388734,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 4,
+          "source_range": [
+            3111,
+            4924
+          ],
+          "score": 5.003846153846154,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 13,
+          "source_range": [
+            15121,
+            16310
+          ],
+          "score": 4.005020920502092,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 9,
+          "source_range": [
+            8317,
+            9617
+          ],
+          "score": 4.003831417624521,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 7,
+          "source_range": [
+            5393,
+            7303
+          ],
+          "score": 4.0036515388628064,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 3,
+          "source_range": [
+            573,
+            3111
+          ],
+          "score": 4.001966181675186,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 15,
+          "source_range": [
+            17132,
+            17627
+          ],
+          "score": 3.0119760479041915,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 8,
+          "source_range": [
+            7303,
+            8317
+          ],
+          "score": 3.0039292730844793,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 10,
+          "source_range": [
+            9617,
+            11920
+          ],
+          "score": 3.003892733564014,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 11,
+          "source_range": [
+            11920,
+            13335
+          ],
+          "score": 3.0035211267605635,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 5,
+          "source_range": [
+            4924,
+            4957
+          ],
+          "score": 1.0294117647058822,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 17,
+          "source_range": [
+            20817,
+            21522
+          ],
+          "score": 1.0042372881355932,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 2,
+          "source_range": [
+            0,
+            573
+          ],
+          "score": 1.0034782608695652,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 6,
+          "source_range": [
+            4957,
+            5393
+          ],
+          "score": 1.002288329519451,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 14,
+          "source_range": [
+            16310,
+            17132
+          ],
+          "score": 1.0012150668286757,
+          "strategy": "keyword"
+        }
+      ],
+      "vector_candidates": [
+        {
+          "section_id": 8,
+          "source_range": [
+            7303,
+            8317
+          ],
+          "score": 0.6981527029366912,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 10,
+          "source_range": [
+            9617,
+            11920
+          ],
+          "score": 0.6974353402088687,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 6,
+          "source_range": [
+            4957,
+            5393
+          ],
+          "score": 0.6863367762069936,
+          "strategy": "vector"
+        }
+      ],
+      "tree_candidates": [
+        {
+          "section_id": 7,
+          "source_range": [
+            5492,
+            7303
+          ],
+          "score": 0.0,
+          "strategy": "tree"
+        }
+      ],
+      "section_read_verified": true
+    }
+  ],
+  "originals_only": [
+    {
+      "label": "literal",
+      "query": "1986 VAX 8800",
+      "section_id": 10,
+      "section_title": "Instruction pipelining.",
+      "strategy": "keyword",
+      "source_range": [
+        9617,
+        11920
+      ],
+      "content_characters": 2303,
+      "estimated_content_tokens_chars_div_4": 575.75,
+      "tool_message_characters": 2843,
+      "body_sha256": "a8692f681599c386f6a4d30da21759d6a2a19cb23059f7e4177034733f9b4a7a",
+      "final_score": 0.01639344262295082,
+      "l0_route": {
+        "disabled": true
+      },
+      "keyword_candidates": [
+        {
+          "section_id": 10,
+          "source_range": [
+            9617,
+            11920
+          ],
+          "score": 3.0025985275010827,
+          "strategy": "keyword"
+        }
+      ],
+      "vector_candidates": [
+        {
+          "section_id": 17,
+          "source_range": [
+            20817,
+            21522
+          ],
+          "score": 0.4232275325249084,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 13,
+          "source_range": [
+            15121,
+            16310
+          ],
+          "score": 0.41605841373875485,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 8,
+          "source_range": [
+            7303,
+            8317
+          ],
+          "score": 0.3956873361151856,
+          "strategy": "vector"
+        }
+      ],
+      "tree_candidates": [],
+      "section_read_verified": true
+    },
+    {
+      "label": "semantic",
+      "query": "How can a CPU make progress on several instructions at once by handling different stages simultaneously?",
+      "section_id": 8,
+      "section_title": "Increasing execution speed.",
+      "strategy": "hybrid",
+      "source_range": [
+        7303,
+        8317
+      ],
+      "content_characters": 1014,
+      "estimated_content_tokens_chars_div_4": 253.5,
+      "tool_message_characters": 1542,
+      "body_sha256": "fb9bbd00734f765845bd9ef063838d8d3a068f1d13c97741c79417d252d0b682",
+      "final_score": 0.01639344262295082,
+      "l0_route": {
+        "disabled": true
+      },
+      "keyword_candidates": [
+        {
+          "section_id": 16,
+          "source_range": [
+            17627,
+            20817
+          ],
+          "score": 7.00592084761608,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 12,
+          "source_range": [
+            13335,
+            15121
+          ],
+          "score": 5.003904071388734,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 4,
+          "source_range": [
+            3111,
+            4924
+          ],
+          "score": 5.003846153846154,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 13,
+          "source_range": [
+            15121,
+            16310
+          ],
+          "score": 4.005020920502092,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 9,
+          "source_range": [
+            8317,
+            9617
+          ],
+          "score": 4.003831417624521,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 7,
+          "source_range": [
+            5393,
+            7303
+          ],
+          "score": 4.0036515388628064,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 3,
+          "source_range": [
+            573,
+            3111
+          ],
+          "score": 4.001966181675186,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 15,
+          "source_range": [
+            17132,
+            17627
+          ],
+          "score": 3.0119760479041915,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 8,
+          "source_range": [
+            7303,
+            8317
+          ],
+          "score": 3.0039292730844793,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 10,
+          "source_range": [
+            9617,
+            11920
+          ],
+          "score": 3.003892733564014,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 11,
+          "source_range": [
+            11920,
+            13335
+          ],
+          "score": 3.0035211267605635,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 5,
+          "source_range": [
+            4924,
+            4957
+          ],
+          "score": 1.0294117647058822,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 17,
+          "source_range": [
+            20817,
+            21522
+          ],
+          "score": 1.0042372881355932,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 2,
+          "source_range": [
+            0,
+            573
+          ],
+          "score": 1.0034782608695652,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 6,
+          "source_range": [
+            4957,
+            5393
+          ],
+          "score": 1.002288329519451,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 14,
+          "source_range": [
+            16310,
+            17132
+          ],
+          "score": 1.0012150668286757,
+          "strategy": "keyword"
+        }
+      ],
+      "vector_candidates": [
+        {
+          "section_id": 8,
+          "source_range": [
+            7303,
+            8317
+          ],
+          "score": 0.6981527029366912,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 10,
+          "source_range": [
+            9617,
+            11920
+          ],
+          "score": 0.6974353402088687,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 6,
+          "source_range": [
+            4957,
+            5393
+          ],
+          "score": 0.6863367762069936,
+          "strategy": "vector"
+        }
+      ],
+      "tree_candidates": [],
+      "section_read_verified": true
+    }
+  ],
+  "checks": {
+    "completed_at": "2026-11-05T16:42:16.188091+08:00",
+    "body_equal_by_query": {
+      "literal": true,
+      "semantic": true
+    },
+    "same_query_vectors_both_modes": true,
+    "search_provider_calls": 0,
+    "chat_calls": 0,
+    "answering_model_calls": 0,
+    "sample_data_unchanged_by_search": true,
+    "other_account_sees_no_contexts_or_chunks": true,
+    "scope": "One source, two queries. No live tree-selection or answering model. No corpus-wide noise conclusion."
+  }
+}

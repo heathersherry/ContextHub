@@ -1,0 +1,145 @@
+{
+  "case_id": "dev_11",
+  "type": "s2a",
+  "db_id": "student_club",
+  "reference_tables": [
+    "major",
+    "member"
+  ],
+  "top_k": 3,
+  "table_schema": {
+    "query": "Database: student_club. What is the name of the major that the person holding the second highest political position in Afghanistan has joined?",
+    "response": {
+      "results": [
+        {
+          "uri": "ctx://datalake/hydra/student_club/member",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 0.3641560971736908,
+          "l0_content": "Database: student_club\nTable: member\nCREATE TABLE \"member\"\n(\n    member_id     TEXT\n        constraint member_pk\n            primary key,\n    first_name    TEXT,\n    last_name     TEXT,\n    email         TEXT,\n    position      TEXT,\n    t_shirt_size  TEXT,\n    phone         TEXT,\n    zip           INTEGER,\n    link_to_major TEXT,\n    foreign key (link_to_major) references major(major_id),\n    foreign key (zip) references zip_code(zip_code)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nmember_id,member id,unique id of member,text,\r\nfirst_name,first name,member's first name,text,\r\nlast_name,last name,member's last name,text,\"commonsense evidence: \nfull name is first_name + last_name. e.g. A member's first name is Angela and last name is Sanders. Thus, his/her full name is Angela Sanders.\"\r\nemail,,member's email,text,\r\nposition,,The position the member holds in the club,text,\r\nt_shirt_size,,The size of tee shirt that member wants when shirts are ordered,text,commonsense evidence: usually the student ordered t-shirt with lager size has bigger body shape \r\nphone,,The best telephone at which to contact the member,text,\r\nzip,,the zip code of the member's hometown,integer,\r\nlink_to_major,link to major,The unique identifier of the major of the member. References the Major table,text,",
+          "l1_content": "Database: student_club\nTable: member\nCREATE TABLE \"member\"\n(\n    member_id     TEXT\n        constraint member_pk\n            primary key,\n    first_name    TEXT,\n    last_name     TEXT,\n    email         TEXT,\n    position      TEXT,\n    t_shirt_size  TEXT,\n    phone         TEXT,\n    zip           INTEGER,\n    link_to_major TEXT,\n    foreign key (link_to_major) references major(major_id),\n    foreign key (zip) references zip_code(zip_code)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nmember_id,member id,unique id of member,text,\r\nfirst_name,first name,member's first name,text,\r\nlast_name,last name,member's last name,text,\"commonsense evidence: \nfull name is first_name + last_name. e.g. A member's first name is Angela and last name is Sanders. Thus, his/her full name is Angela Sanders.\"\r\nemail,,member's email,text,\r\nposition,,The position the member holds in the club,text,\r\nt_shirt_size,,The size of tee shirt that member wants when shirts are ordered,text,commonsense evidence: usually the student ordered t-shirt with lager size has bigger body shape \r\nphone,,The best telephone at which to contact the member,text,\r\nzip,,the zip code of the member's hometown,integer,\r\nlink_to_major,link to major,The unique identifier of the major of the member. References the Major table,text,",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://datalake/hydra/student_club/major",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 0.35881637913233133,
+          "l0_content": "Database: student_club\nTable: major\nCREATE TABLE major\n(\n    major_id   TEXT\n        constraint major_pk\n            primary key,\n    major_name TEXT,\n    department TEXT,\n    college    TEXT\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nmajor_id,major id,A unique identifier for each major,text,\r\nmajor_name,major name,major name,text,\r\ndepartment,,The name of the department that offers the major,text,\r\ncollege,,The name college that houses the department that offers the major,text,",
+          "l1_content": "Database: student_club\nTable: major\nCREATE TABLE major\n(\n    major_id   TEXT\n        constraint major_pk\n            primary key,\n    major_name TEXT,\n    department TEXT,\n    college    TEXT\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nmajor_id,major id,A unique identifier for each major,text,\r\nmajor_name,major name,major name,text,\r\ndepartment,,The name of the department that offers the major,text,\r\ncollege,,The name college that houses the department that offers the major,text,",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://datalake/hydra/student_club/income",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 0.32890957593917847,
+          "l0_content": "Database: student_club\nTable: income\nCREATE TABLE \"income\"\n(\n    income_id      TEXT\n        constraint income_pk\n            primary key,\n    date_received  TEXT,\n    amount         INTEGER,\n    source         TEXT,\n    notes          TEXT,\n    link_to_member TEXT,\n    foreign key (link_to_member) references member(member_id)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nincome_id,income id,A unique identifier for each record of income,text,\r\ndate_received,date received,the date that the fund received,text,\r\namount,,amount of funds,integer,the unit is dollar\r\nsource,,\"A value indicating where the funds come from such as dues, or the annual university allocation\",text,\r\nnotes,,A free-text value giving any needed details about the receipt of funds,text,\r\nlink_to_member,link to member,link to member,text,",
+          "l1_content": "Database: student_club\nTable: income\nCREATE TABLE \"income\"\n(\n    income_id      TEXT\n        constraint income_pk\n            primary key,\n    date_received  TEXT,\n    amount         INTEGER,\n    source         TEXT,\n    notes          TEXT,\n    link_to_member TEXT,\n    foreign key (link_to_member) references member(member_id)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nincome_id,income id,A unique identifier for each record of income,text,\r\ndate_received,date received,the date that the fund received,text,\r\namount,,amount of funds,integer,the unit is dollar\r\nsource,,\"A value indicating where the funds come from such as dues, or the annual university allocation\",text,\r\nnotes,,A free-text value giving any needed details about the receipt of funds,text,\r\nlink_to_member,link to member,link to member,text,",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        }
+      ],
+      "total": 3,
+      "retrieval_id": "aa653680-042b-4d5a-ba0f-a4d5cfe75d01",
+      "stale_notices": []
+    }
+  },
+  "resource": {
+    "query": "What is the second highest political position in Afghanistan?",
+    "response": {
+      "results": [
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/10158450/0000",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 0.6013900279170269,
+          "l0_content": "Vice President of Afghanistan — Abstract\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 10158450\nThe Vice President of Afghanistan is the second highest political position obtainable in Afghanistan. Vice Presidents are currently elected on the same ticket as the President. A Presidential candidate nominates two candidates for Vice President before the election. The current Vice Presidents are Abdul Rashid Dostum (First Vice President) and Sarwar Danish (Second Vice President).",
+          "l1_content": "Vice President of Afghanistan — Abstract\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 10158450\nThe Vice President of Afghanistan is the second highest political position obtainable in Afghanistan. Vice Presidents are currently elected on the same ticket as the President. A Presidential candidate nominates two candidates for Vice President before the election. The current Vice Presidents are Abdul Rashid Dostum (First Vice President) and Sarwar Danish (Second Vice President).",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/66463/0000",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 0.5319472830326994,
+          "l0_content": "Politics of Afghanistan — Abstract\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 66463\nThe politics of Afghanistan consists of the council of ministers, provincial governors and the national assembly, with a president serving as the head of state and commander-in-chief of the Afghan Armed Forces. The nation is currently led by President Ashraf Ghani who is backed by two vice presidents, Abdul Rashid Dostum and Sarwar Danish. In the last decade the politics of Afghanistan have been influenced by NATO countries, particularly the United States, in an effort to stabilise and democratise the country. In 2004, the nation's new constitution was adopted and an executive president was elected. The following year a general election to choose parliamentarians took place.\nHamid Karzai was declared the first ever democratically elected head of state in Afghanistan in 2004, winning a second five-year term in 2009. The National Assembly is Afghanistan's national legislature. It is a bicameral body, composed of the House of the People and the House of Elders. The first legislature was elected in 2005 and the current one in 2010. Members of the Supreme Court were appointed by the president to form the judiciary. Together, this new system is to provide a new set of checks and balances that was unheard of in the country.",
+          "l1_content": "Politics of Afghanistan — Abstract\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 66463\nThe politics of Afghanistan consists of the council of ministers, provincial governors and the national assembly, with a president serving as the head of state and commander-in-chief of the Afghan Armed Forces. The nation is currently led by President Ashraf Ghani who is backed by two vice presidents, Abdul Rashid Dostum and Sarwar Danish. In the last decade the politics of Afghanistan have been influenced by NATO countries, particularly the United States, in an effort to stabilise and democratise the country. In 2004, the nation's new constitution was adopted and an executive president was elected. The following year a general election to choose parliamentarians took place.\nHamid Karzai was declared the first ever democratically elected head of state in Afghanistan in 2004, winning a second five-year term in 2009. The National Assembly is Afghanistan's national legislature. It is a bicameral body, composed of the House of the People and the House of Elders. The first legislature was elected in 2005 and the current one in 2010. Members of the Supreme Court were appointed by the president to form the judiciary. Together, this new system is to provide a new set of checks and balances that was unheard of in the country.",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/66463/0018",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 0.5235865996130357,
+          "l0_content": "Politics of Afghanistan — Executive branch.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 66463\nThe Constitution of Afghanistan creates a strong presidency, serving as the head of state and Commander-in-Chief of the Afghan Armed Forces. A president is elected with two vice-presidents. The president appoints cabinet ministers and provincial governors, which are to be approved by the National Assembly.",
+          "l1_content": "Politics of Afghanistan — Executive branch.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 66463\nThe Constitution of Afghanistan creates a strong presidency, serving as the head of state and Commander-in-Chief of the Afghan Armed Forces. A president is elected with two vice-presidents. The president appoints cabinet ministers and provincial governors, which are to be approved by the National Assembly.",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        }
+      ],
+      "total": 3,
+      "retrieval_id": "b9d52747-b2bc-4077-a732-22be3373d8d1",
+      "stale_notices": []
+    }
+  },
+  "table_metrics": {
+    "required": 2,
+    "hits_at_3": 2,
+    "recall_at_3": 1.0,
+    "all_required_at_3": true,
+    "first_hit_rank": 1
+  }
+}

@@ -1,0 +1,380 @@
+{
+  "over_retrieve_factor": 3,
+  "cases": [
+    {
+      "case_id": "dev_68_agent",
+      "retrieval_id": "d072985b-0cef-4ae6-9727-e7d2dadf5c03",
+      "query": "superhero character superpowers table",
+      "candidates": [
+        {
+          "vector_candidate_rank": 1,
+          "uri": "ctx://datalake/hydra/superhero/superpower",
+          "keyword_rank": 7,
+          "keyword_score": 0.1641784867790525,
+          "adopted_count": 0,
+          "ignored_count": 0,
+          "version": 1,
+          "keyword_contributions": {
+            "superhero": 0.07197698401551544,
+            "character": 0.0,
+            "superpowers": 0.0,
+            "table": 0.09220150276353704
+          }
+        },
+        {
+          "vector_candidate_rank": 2,
+          "uri": "ctx://datalake/hydra/superhero/hero_power",
+          "keyword_rank": 5,
+          "keyword_score": 0.17215738553620807,
+          "adopted_count": 0,
+          "ignored_count": 0,
+          "version": 1,
+          "keyword_contributions": {
+            "superhero": 0.09575436041447921,
+            "character": 0.0,
+            "superpowers": 0.0,
+            "table": 0.07640302512172885
+          }
+        },
+        {
+          "vector_candidate_rank": 3,
+          "uri": "ctx://datalake/hydra/superhero/alignment",
+          "keyword_rank": 1,
+          "keyword_score": 1.6886764092085078,
+          "adopted_count": 0,
+          "ignored_count": 0,
+          "version": 1,
+          "keyword_contributions": {
+            "superhero": 0.07601488289380803,
+            "character": 1.5495056234298505,
+            "superpowers": 0.0,
+            "table": 0.06315590288484915
+          }
+        },
+        {
+          "vector_candidate_rank": 4,
+          "uri": "ctx://datalake/hydra/superhero/attribute",
+          "keyword_rank": 8,
+          "keyword_score": 0.1579385639376908,
+          "adopted_count": 0,
+          "ignored_count": 0,
+          "version": 1,
+          "keyword_contributions": {
+            "superhero": 0.0789692819688454,
+            "character": 0.0,
+            "superpowers": 0.0,
+            "table": 0.0789692819688454
+          }
+        },
+        {
+          "vector_candidate_rank": 5,
+          "uri": "ctx://datalake/hydra/superhero/superhero",
+          "keyword_rank": 9,
+          "keyword_score": 0.14995892037838054,
+          "adopted_count": 0,
+          "ignored_count": 0,
+          "version": 1,
+          "keyword_contributions": {
+            "superhero": 0.10517584017256228,
+            "character": 0.0,
+            "superpowers": 0.0,
+            "table": 0.044783080205818275
+          }
+        },
+        {
+          "vector_candidate_rank": 6,
+          "uri": "ctx://datalake/hydra/superhero/race",
+          "keyword_rank": 2,
+          "keyword_score": 0.18474881780838853,
+          "adopted_count": 0,
+          "ignored_count": 0,
+          "version": 1,
+          "keyword_contributions": {
+            "superhero": 0.10118672347724002,
+            "character": 0.0,
+            "superpowers": 0.0,
+            "table": 0.0835620943311485
+          }
+        },
+        {
+          "vector_candidate_rank": 7,
+          "uri": "ctx://datalake/hydra/superhero/hero_attribute",
+          "keyword_rank": 6,
+          "keyword_score": 0.16687188579949477,
+          "adopted_count": 0,
+          "ignored_count": 0,
+          "version": 1,
+          "keyword_contributions": {
+            "superhero": 0.09649804420351393,
+            "character": 0.0,
+            "superpowers": 0.0,
+            "table": 0.07037384159598084
+          }
+        },
+        {
+          "vector_candidate_rank": 8,
+          "uri": "ctx://datalake/hydra/superhero/gender",
+          "keyword_rank": 3,
+          "keyword_score": 0.1844030055270741,
+          "adopted_count": 0,
+          "ignored_count": 0,
+          "version": 1,
+          "keyword_contributions": {
+            "superhero": 0.09220150276353704,
+            "character": 0.0,
+            "superpowers": 0.0,
+            "table": 0.09220150276353704
+          }
+        },
+        {
+          "vector_candidate_rank": 9,
+          "uri": "ctx://datalake/hydra/superhero/colour",
+          "keyword_rank": 4,
+          "keyword_score": 0.18117346099784318,
+          "adopted_count": 0,
+          "ignored_count": 0,
+          "version": 1,
+          "keyword_contributions": {
+            "superhero": 0.09058673049892159,
+            "character": 0.0,
+            "superpowers": 0.0,
+            "table": 0.09058673049892159
+          }
+        }
+      ],
+      "actual_final_uris": [
+        "ctx://datalake/hydra/superhero/alignment",
+        "ctx://datalake/hydra/superhero/race",
+        "ctx://datalake/hydra/superhero/gender"
+      ]
+    },
+    {
+      "case_id": "dev_62_probe",
+      "retrieval_id": "ac3c1323-5139-47a2-bc76-3555ef96f8bc",
+      "query": "What is the origin of the name \"Mercedes\" as it relates to the automotive brand?",
+      "candidates": [
+        {
+          "vector_candidate_rank": 1,
+          "uri": "ctx://team/engineering/hydra/kilt/18564164/0003",
+          "keyword_rank": 4,
+          "keyword_score": 3.213549122028867,
+          "adopted_count": 0,
+          "ignored_count": 0,
+          "version": 1,
+          "keyword_contributions": {
+            "what": 0.0,
+            "is": 0.0,
+            "the": 0.10432718262238715,
+            "origin": 0.0,
+            "of": 0.24077805440551261,
+            "name": 0.8857185457619943,
+            "mercedes": 0.08793397344885247,
+            "as": 0.8857185457619943,
+            "it": 0.0,
+            "relates": 0.0,
+            "to": 0.1710819173571806,
+            "automotive": 0.0,
+            "brand": 0.6293365374261716
+          }
+        },
+        {
+          "vector_candidate_rank": 2,
+          "uri": "ctx://team/engineering/hydra/kilt/18564164/0000",
+          "keyword_rank": 1,
+          "keyword_score": 5.504178619501772,
+          "adopted_count": 0,
+          "ignored_count": 0,
+          "version": 1,
+          "keyword_contributions": {
+            "what": 0.0,
+            "is": 2.6313908079898476,
+            "the": 0.10902776475969118,
+            "origin": 0.0,
+            "of": 0.15715254578766594,
+            "name": 0.5780963911412845,
+            "mercedes": 0.09736222489852916,
+            "as": 0.5780963911412845,
+            "it": 0.0,
+            "relates": 0.0,
+            "to": 0.15715254578766594,
+            "automotive": 0.0,
+            "brand": 0.9778444184764209
+          }
+        },
+        {
+          "vector_candidate_rank": 3,
+          "uri": "ctx://team/engineering/hydra/kilt/18564164/0001",
+          "keyword_rank": 9,
+          "keyword_score": 0.8367341374119748,
+          "adopted_count": 0,
+          "ignored_count": 0,
+          "version": 1,
+          "keyword_contributions": {
+            "what": 0.0,
+            "is": 0.0,
+            "the": 0.103501099529782,
+            "origin": 0.0,
+            "of": 0.2939224134773265,
+            "name": 0.0,
+            "mercedes": 0.09276610994289286,
+            "as": 0.0,
+            "it": 0.0,
+            "relates": 0.0,
+            "to": 0.13954231540240938,
+            "automotive": 0.0,
+            "brand": 0.0
+          }
+        },
+        {
+          "vector_candidate_rank": 4,
+          "uri": "ctx://team/engineering/hydra/kilt/19442/0002",
+          "keyword_rank": 6,
+          "keyword_score": 2.732058051342973,
+          "adopted_count": 0,
+          "ignored_count": 0,
+          "version": 1,
+          "keyword_contributions": {
+            "what": 0.0,
+            "is": 0.0,
+            "the": 0.08294528357845615,
+            "origin": 0.0,
+            "of": 0.2628058668294831,
+            "name": 0.5665640771617643,
+            "mercedes": 0.11161309477680065,
+            "as": 0.5665640771617643,
+            "it": 0.0,
+            "relates": 0.0,
+            "to": 0.15401754524367992,
+            "automotive": 0.0,
+            "brand": 0.8216575394341123
+          }
+        },
+        {
+          "vector_candidate_rank": 5,
+          "uri": "ctx://team/engineering/hydra/kilt/738698/0019",
+          "keyword_rank": 3,
+          "keyword_score": 4.1151636979011705,
+          "adopted_count": 0,
+          "ignored_count": 0,
+          "version": 1,
+          "keyword_contributions": {
+            "what": 0.0,
+            "is": 0.0,
+            "the": 0.10693281872537343,
+            "origin": 0.0,
+            "of": 0.20355863573577174,
+            "name": 0.7488043678496282,
+            "mercedes": 0.08560376319698758,
+            "as": 0.7488043678496282,
+            "it": 1.7363650483657767,
+            "relates": 0.0,
+            "to": 0.27122905872725767,
+            "automotive": 0.0,
+            "brand": 0.0
+          }
+        },
+        {
+          "vector_candidate_rank": 6,
+          "uri": "ctx://team/engineering/hydra/kilt/18564164/0002",
+          "keyword_rank": 5,
+          "keyword_score": 3.084300675126747,
+          "adopted_count": 0,
+          "ignored_count": 0,
+          "version": 1,
+          "keyword_contributions": {
+            "what": 0.0,
+            "is": 0.0,
+            "the": 0.10664558235354057,
+            "origin": 0.0,
+            "of": 0.27595659725859933,
+            "name": 0.6183744903251512,
+            "mercedes": 0.08709584185124625,
+            "as": 1.1645625083059774,
+            "it": 0.0,
+            "relates": 0.0,
+            "to": 0.0,
+            "automotive": 0.0,
+            "brand": 0.6183744903251512
+          }
+        },
+        {
+          "vector_candidate_rank": 7,
+          "uri": "ctx://team/engineering/hydra/kilt/18564164/0045",
+          "keyword_rank": 8,
+          "keyword_score": 1.2923982568106276,
+          "adopted_count": 0,
+          "ignored_count": 0,
+          "version": 1,
+          "keyword_contributions": {
+            "what": 0.0,
+            "is": 0.0,
+            "the": 0.10659018404555783,
+            "origin": 0.0,
+            "of": 0.21230745542756582,
+            "name": 0.0,
+            "mercedes": 0.08802024473925002,
+            "as": 0.0,
+            "it": 0.0,
+            "relates": 0.0,
+            "to": 0.1436978034713782,
+            "automotive": 0.0,
+            "brand": 0.52860220103576
+          }
+        },
+        {
+          "vector_candidate_rank": 8,
+          "uri": "ctx://team/engineering/hydra/kilt/18564164/0006",
+          "keyword_rank": 2,
+          "keyword_score": 4.597568740221316,
+          "adopted_count": 0,
+          "ignored_count": 0,
+          "version": 1,
+          "keyword_contributions": {
+            "what": 0.0,
+            "is": 1.5782428111211064,
+            "the": 0.1095215436634425,
+            "origin": 0.0,
+            "of": 0.18502155050515917,
+            "name": 0.0,
+            "mercedes": 0.09168366629658782,
+            "as": 0.0,
+            "it": 0.0,
+            "relates": 0.0,
+            "to": 0.2542579446688234,
+            "automotive": 2.1597981366393113,
+            "brand": 0.0
+          }
+        },
+        {
+          "vector_candidate_rank": 9,
+          "uri": "ctx://team/engineering/hydra/kilt/738698/0008",
+          "keyword_rank": 7,
+          "keyword_score": 2.528336767775873,
+          "adopted_count": 0,
+          "ignored_count": 0,
+          "version": 1,
+          "keyword_contributions": {
+            "what": 0.0,
+            "is": 0.0,
+            "the": 0.0923572115499014,
+            "origin": 0.0,
+            "of": 0.0,
+            "name": 0.0,
+            "mercedes": 0.07216694581473282,
+            "as": 0.0,
+            "it": 1.950442669685316,
+            "relates": 0.0,
+            "to": 0.22865551762611994,
+            "automotive": 0.0,
+            "brand": 0.0
+          }
+        }
+      ],
+      "actual_final_uris": [
+        "ctx://team/engineering/hydra/kilt/18564164/0000",
+        "ctx://team/engineering/hydra/kilt/18564164/0006",
+        "ctx://team/engineering/hydra/kilt/738698/0019"
+      ]
+    }
+  ]
+}

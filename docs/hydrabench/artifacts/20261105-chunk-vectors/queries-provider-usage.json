@@ -1,0 +1,20 @@
+[
+  {
+    "route": "/compatible-mode/v1/embeddings",
+    "status_code": 200,
+    "model": "text-embedding-v4",
+    "input_count": 2,
+    "input_characters": [
+      13,
+      104
+    ],
+    "input_sha256": [
+      "4accbaf44ec1f3c268ba2b9b8002005abb83d1e4b985d4a61006a70fa2b4a63f",
+      "4af65fc050adc78ca0c4a3d5c0c4ff93f60e556dd2966905b6f67bdcb1be6c37"
+    ],
+    "usage": {
+      "prompt_tokens": 30,
+      "total_tokens": 30
+    }
+  }
+]

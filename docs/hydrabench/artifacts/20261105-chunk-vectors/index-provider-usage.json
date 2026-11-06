@@ -1,0 +1,62 @@
+[
+  {
+    "route": "/compatible-mode/v1/embeddings",
+    "status_code": 200,
+    "model": "text-embedding-v4",
+    "input_count": 10,
+    "input_characters": [
+      592,
+      2601,
+      1864,
+      83,
+      508,
+      1992,
+      1094,
+      1376,
+      2379,
+      1474
+    ],
+    "input_sha256": [
+      "ba251de19a808d6f0fed7120b3077f43f42ecc51d38c6e8e491597d6adb5e911",
+      "db4addb38bee880e4b903b4e5cdd85d22e1da68f853105ef5d8475497740c216",
+      "d09af843969f9396b08ca41385b25723703811d4bc0248e7b1084db5627cf277",
+      "dadf06e37facbfb371cf592618c8527618bbbf4678e9b11b67c06230ae34d18a",
+      "9ff7421c2bc8f74c02808b084f44800a46d3e5fdba7888aacdac8bf0f8e938d9",
+      "409739f90934910924df33413fe1b76e3d8bb35acc4ecb90142ba7ed255dabf0",
+      "0673115e1f2f2c4045bdccaa0132cdc10ae983d95768787b6508191d5d82bf39",
+      "fa5445f1ca9ac2ad3ef8794f4637081f71a9ff692898ef35a5c6ce919fb4ad6a",
+      "55350ae9327d608404feee1453724d2bdf3105e090540aa07c1687901d98656b",
+      "ffb41680d8085935e4a3ae88e3cbb96b6499bbe746652030c74df5b45062c0e3"
+    ],
+    "usage": {
+      "prompt_tokens": 2702,
+      "total_tokens": 2702
+    }
+  },
+  {
+    "route": "/compatible-mode/v1/embeddings",
+    "status_code": 200,
+    "model": "text-embedding-v4",
+    "input_count": 6,
+    "input_characters": [
+      1857,
+      1254,
+      898,
+      566,
+      3278,
+      736
+    ],
+    "input_sha256": [
+      "49a2a1d892526ff4645f433f7eda2aadeec6fa775bbb398f9cd594949b142eb7",
+      "0c3282fea6baba7e259976341c3535bb9c7e478abdc48b7fb000e5454f98201c",
+      "b866c8d4045cf2bdae6b9732aac8e76c4a44f0d8882db2ece2a979c70852c020",
+      "c54c1b4ab4503628e0adf6904c63cd449c30f970648e2ebb8f808b7d755ab72c",
+      "b5bfe873a8ca31ebbab299581accf896678367f0f4fb21c682c5be0d103f1b43",
+      "e4363fb63d5581b8f4a5f83a5aef2baf5999c28f9af822fdde068b7070afcf5c"
+    ],
+    "usage": {
+      "prompt_tokens": 1649,
+      "total_tokens": 1649
+    }
+  }
+]

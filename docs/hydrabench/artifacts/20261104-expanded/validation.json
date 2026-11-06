@@ -1,0 +1,30 @@
+{
+  "runtime_code_matches_pre_run_hashes": true,
+  "corpus_and_passage_hashes_match_frozen_manifest": true,
+  "attempted_sqlite_files_unchanged": 20,
+  "agent_attempts": 20,
+  "completed": 9,
+  "provider_quota_errors": 11,
+  "agent_searches_observed": 34,
+  "sql_calls_observed": 26,
+  "all_searches_at_most_three_hits": true,
+  "all_episode_budgets_respected": true,
+  "tool_errors_in_completed_episodes": 0,
+  "sql_access_denials_in_incomplete_episodes": [
+    {
+      "case_id": "dev_26",
+      "reason": "users schema search had not completed before parallel SQL; later SQL succeeded after retrieval"
+    }
+  ],
+  "focused_tests_before_live_run": {
+    "passed": 44,
+    "suites": [
+      "tests/test_hydrabench_sqlite_tool.py",
+      "tests/test_hydrabench_public_input.py",
+      "tests/test_hydrabench_retrieval_limits.py",
+      "plugins/deepagents/tests"
+    ]
+  },
+  "missing_report_links": [],
+  "configured_secret_matches_in_saved_code_and_reports": []
+}

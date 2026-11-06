@@ -1,0 +1,40 @@
+ M .env.example
+ M .gitignore
+ M docs/setup/document-section-generation.md
+ M plugins/deepagents/src/contexthub_deepagents/tools.py
+ M plugins/deepagents/tests/test_tools.py
+ M scripts/task6_manual_verification.md
+ M sdk/src/contexthub_sdk/models.py
+ M src/contexthub/config.py
+ M src/contexthub/llm/factory.py
+ M src/contexthub/llm/openai_client.py
+ M src/contexthub/main.py
+ M src/contexthub/models/search.py
+ M src/contexthub/retrieval/keyword_strategy.py
+ M src/contexthub/retrieval/long_doc/coordinator.py
+ M src/contexthub/retrieval/long_doc/keyword_retriever.py
+ M src/contexthub/retrieval/long_doc/result.py
+ M src/contexthub/retrieval/rerank.py
+ M src/contexthub/retrieval/router.py
+ M src/contexthub/retrieval/vector_strategy.py
+ M src/contexthub/services/context_service.py
+ M src/contexthub/services/document_ingester.py
+ M src/contexthub/services/indexer_service.py
+ M src/contexthub/services/lifecycle_service.py
+ M src/contexthub/services/retrieval_service.py
+ M tests/test_document_ingester.py
+ M tests/test_long_doc_retrieval.py
+ M tests/test_openai_embedding_client.py
+ M tests/test_retrieval.py
+?? alembic/versions/011_document_chunk_embeddings.py
+?? docs/hydrabench/
+?? integrations/hydrabench/
+?? src/contexthub/retrieval/content.py
+?? src/contexthub/retrieval/long_doc/ranges.py
+?? src/contexthub/retrieval/long_doc/vector_retriever.py
+?? src/contexthub/services/document_chunk_indexer.py
+?? tests/test_document_chunk_vectors.py
+?? tests/test_hydrabench_public_input.py
+?? tests/test_hydrabench_retrieval_limits.py
+?? tests/test_hydrabench_sqlite_tool.py
+?? tests/test_raw_context_retrieval.py

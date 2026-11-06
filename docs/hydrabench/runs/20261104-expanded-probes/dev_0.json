@@ -1,0 +1,146 @@
+{
+  "case_id": "dev_0",
+  "type": "s2a",
+  "db_id": "student_club",
+  "reference_tables": [
+    "attendance",
+    "event",
+    "member"
+  ],
+  "top_k": 3,
+  "table_schema": {
+    "query": "Database: student_club. What is the name of the social event attended by the vice president of an organization established at the American University of Science and Technology to promote student interests, located at 900 E. Washington St.?",
+    "response": {
+      "results": [
+        {
+          "uri": "ctx://datalake/hydra/student_club/member",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 10.08420009222575,
+          "l0_content": "Database: student_club\nTable: member\nCREATE TABLE \"member\"\n(\n    member_id     TEXT\n        constraint member_pk\n            primary key,\n    first_name    TEXT,\n    last_name     TEXT,\n    email         TEXT,\n    position      TEXT,\n    t_shirt_size  TEXT,\n    phone         TEXT,\n    zip           INTEGER,\n    link_to_major TEXT,\n    foreign key (link_to_major) references major(major_id),\n    foreign key (zip) references zip_code(zip_code)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nmember_id,member id,unique id of member,text,\r\nfirst_name,first name,member's first name,text,\r\nlast_name,last name,member's last name,text,\"commonsense evidence: \nfull name is first_name + last_name. e.g. A member's first name is Angela and last name is Sanders. Thus, his/her full name is Angela Sanders.\"\r\nemail,,member's email,text,\r\nposition,,The position the member holds in the club,text,\r\nt_shirt_size,,The size of tee shirt that member wants when shirts are ordered,text,commonsense evidence: usually the student ordered t-shirt with lager size has bigger body shape \r\nphone,,The best telephone at which to contact the member,text,\r\nzip,,the zip code of the member's hometown,integer,\r\nlink_to_major,link to major,The unique identifier of the major of the member. References the Major table,text,",
+          "l1_content": "Database: student_club\nTable: member\nCREATE TABLE \"member\"\n(\n    member_id     TEXT\n        constraint member_pk\n            primary key,\n    first_name    TEXT,\n    last_name     TEXT,\n    email         TEXT,\n    position      TEXT,\n    t_shirt_size  TEXT,\n    phone         TEXT,\n    zip           INTEGER,\n    link_to_major TEXT,\n    foreign key (link_to_major) references major(major_id),\n    foreign key (zip) references zip_code(zip_code)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nmember_id,member id,unique id of member,text,\r\nfirst_name,first name,member's first name,text,\r\nlast_name,last name,member's last name,text,\"commonsense evidence: \nfull name is first_name + last_name. e.g. A member's first name is Angela and last name is Sanders. Thus, his/her full name is Angela Sanders.\"\r\nemail,,member's email,text,\r\nposition,,The position the member holds in the club,text,\r\nt_shirt_size,,The size of tee shirt that member wants when shirts are ordered,text,commonsense evidence: usually the student ordered t-shirt with lager size has bigger body shape \r\nphone,,The best telephone at which to contact the member,text,\r\nzip,,the zip code of the member's hometown,integer,\r\nlink_to_major,link to major,The unique identifier of the major of the member. References the Major table,text,",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://datalake/hydra/student_club/budget",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 10.059448556354376,
+          "l0_content": "Database: student_club\nTable: budget\nCREATE TABLE \"budget\"\n(\n    budget_id     TEXT\n            primary key,\n    category      TEXT,\n    spent         REAL,\n    remaining     REAL,\n    amount        INTEGER,\n    event_status  TEXT,\n    link_to_event TEXT,\n    foreign key (link_to_event) references event(event_id)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nbudget_id,budget id,A unique identifier for the budget entry,text,\r\ncategory,,\"The area for which the amount is budgeted, such as, advertisement, food, parking\",text,\r\nspent,,The total amount spent in the budgeted category for an event.,real,the unit is dollar. This is summarized from the Expense table\r\nremaining,,A value calculated as the amount budgeted minus the amount spent,real,\"the unit is dollar \ncommonsense evidence: If the remaining < 0, it means that the cost has exceeded the budget.\"\r\namount,,The amount budgeted for the specified category and event,integer,\"the unit is dollar \ncommonsense evidence:\nsome computation like: amount = spent + remaining \"\r\nevent_status,event status,the status of the event,text,\"Closed / Open/ Planning \ncommonsense evidence: \n• Closed: It means that the event is closed. The spent and the remaining won't change anymore.\n• Open: It means that the event is already opened. The spent and the remaining will change with new expenses.\n• Planning: The event is not started yet but is planning. The spent and the remaining won't change at this stage. \"\r\nlink_to_event,link to event,The unique identifier of the event to which the budget line applies.,text,References the Event table",
+          "l1_content": "Database: student_club\nTable: budget\nCREATE TABLE \"budget\"\n(\n    budget_id     TEXT\n            primary key,\n    category      TEXT,\n    spent         REAL,\n    remaining     REAL,\n    amount        INTEGER,\n    event_status  TEXT,\n    link_to_event TEXT,\n    foreign key (link_to_event) references event(event_id)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nbudget_id,budget id,A unique identifier for the budget entry,text,\r\ncategory,,\"The area for which the amount is budgeted, such as, advertisement, food, parking\",text,\r\nspent,,The total amount spent in the budgeted category for an event.,real,the unit is dollar. This is summarized from the Expense table\r\nremaining,,A value calculated as the amount budgeted minus the amount spent,real,\"the unit is dollar \ncommonsense evidence: If the remaining < 0, it means that the cost has exceeded the budget.\"\r\namount,,The amount budgeted for the specified category and event,integer,\"the unit is dollar \ncommonsense evidence:\nsome computation like: amount = spent + remaining \"\r\nevent_status,event status,the status of the event,text,\"Closed / Open/ Planning \ncommonsense evidence: \n• Closed: It means that the event is closed. The spent and the remaining won't change anymore.\n• Open: It means that the event is already opened. The spent and the remaining will change with new expenses.\n• Planning: The event is not started yet but is planning. The spent and the remaining won't change at this stage. \"\r\nlink_to_event,link to event,The unique identifier of the event to which the budget line applies.,text,References the Event table",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://datalake/hydra/student_club/event",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 9.250953006693823,
+          "l0_content": "Database: student_club\nTable: event\nCREATE TABLE event\n(\n    event_id   TEXT\n        constraint event_pk\n            primary key,\n    event_name TEXT,\n    event_date TEXT,\n    type       TEXT,\n    notes      TEXT,\n    location   TEXT,\n    status     TEXT\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nevent_id,event id,A unique identifier for the event,text,\r\nevent_name,event name,event name,text,\r\nevent_date,event date,The date the event took place or is scheduled to take place,text,e.g. 2020-03-10T12:00:00\r\ntype,,\"The kind of event, such as game, social, election\",text,\r\nnotes,,A free text field for any notes about the event,text,\r\nlocation,,Address where the event was held or is to be held or the name of such a location,text,\r\nstatus,,\"One of three values indicating if the event is in planning, is opened, or is closed\",text,Open/ Closed/ Planning",
+          "l1_content": "Database: student_club\nTable: event\nCREATE TABLE event\n(\n    event_id   TEXT\n        constraint event_pk\n            primary key,\n    event_name TEXT,\n    event_date TEXT,\n    type       TEXT,\n    notes      TEXT,\n    location   TEXT,\n    status     TEXT\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nevent_id,event id,A unique identifier for the event,text,\r\nevent_name,event name,event name,text,\r\nevent_date,event date,The date the event took place or is scheduled to take place,text,e.g. 2020-03-10T12:00:00\r\ntype,,\"The kind of event, such as game, social, election\",text,\r\nnotes,,A free text field for any notes about the event,text,\r\nlocation,,Address where the event was held or is to be held or the name of such a location,text,\r\nstatus,,\"One of three values indicating if the event is in planning, is opened, or is closed\",text,Open/ Closed/ Planning",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        }
+      ],
+      "total": 3,
+      "retrieval_id": "145cb0cc-327e-4477-856e-dc175ecfa23c",
+      "stale_notices": []
+    }
+  },
+  "resource": {
+    "query": "What is established at the American University of Science and Technology to promote the interests of students?",
+    "response": {
+      "results": [
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/30861034/0015",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 7.736442171582944,
+          "l0_content": "American University of Science and Technology — Student life.:Student Clubs.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 30861034\nStudent clubs are established to promote the various interests of AUST students. These clubs are supported by the University. Each student club has a full-time faculty advisor who accompanies the members to all of their organized activities. The activities of these clubs are run according to sound business practices.",
+          "l1_content": "American University of Science and Technology — Student life.:Student Clubs.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 30861034\nStudent clubs are established to promote the various interests of AUST students. These clubs are supported by the University. Each student club has a full-time faculty advisor who accompanies the members to all of their organized activities. The activities of these clubs are run according to sound business practices.",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/30861034/0010",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 3.405223743838614,
+          "l0_content": "American University of Science and Technology — Affiliations.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 30861034\nThe university’s commitment to international human understanding has led it to establish an extensive network of affiliations, exchange and cooperation agreements with universities in the United States of America, Europe, Canada and the Middle East. Consequently, offering to the Lebanese and foreign students unique cross-cultural study opportunities; and, the faculty substantial research possibilities. The university strives to provide top-level education at moderate costs. The institution adopts the ideas and thinking of its founders who believe that each individual should be given a chance to realize his/her potentials through a university-level training that is not prohibitively expensive or exclusive.",
+          "l1_content": "American University of Science and Technology — Affiliations.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 30861034\nThe university’s commitment to international human understanding has led it to establish an extensive network of affiliations, exchange and cooperation agreements with universities in the United States of America, Europe, Canada and the Middle East. Consequently, offering to the Lebanese and foreign students unique cross-cultural study opportunities; and, the faculty substantial research possibilities. The university strives to provide top-level education at moderate costs. The institution adopts the ideas and thinking of its founders who believe that each individual should be given a chance to realize his/her potentials through a university-level training that is not prohibitively expensive or exclusive.",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/30861034/0008",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 3.1654260150483906,
+          "l0_content": "American University of Science and Technology — Faculties.:School of Arts and Sciences.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 30861034\nThe Faculty ensures that the students receive the best education by maintaining innovative learning experiences and excellent teaching methods. The Faculty is dedicated to both superior teaching and research supported by excellence in scholarship and creative activity.",
+          "l1_content": "American University of Science and Technology — Faculties.:School of Arts and Sciences.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 30861034\nThe Faculty ensures that the students receive the best education by maintaining innovative learning experiences and excellent teaching methods. The Faculty is dedicated to both superior teaching and research supported by excellence in scholarship and creative activity.",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        }
+      ],
+      "total": 3,
+      "retrieval_id": "430234da-7bb0-4013-9474-bcbc691e75b6",
+      "stale_notices": []
+    }
+  },
+  "table_metrics": {
+    "required": 3,
+    "hits_at_3": 2,
+    "recall_at_3": 0.6666666666666666,
+    "all_required_at_3": false,
+    "first_hit_rank": 1
+  }
+}

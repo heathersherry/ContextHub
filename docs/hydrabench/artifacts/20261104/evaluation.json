@@ -1,0 +1,104 @@
+{
+  "evaluation_method": "Assistant review of final answers, retrieved evidence and executed SQL; deterministic S2A bond-set comparison. No official judge and no independent human annotation.",
+  "official_score": null,
+  "attempts": [
+    {
+      "case_id": "dev_19",
+      "type": "a2s",
+      "trace": "runs/20261104-110158-smoke/dev_19.json",
+      "started_at_hkt": "2026-11-04T11:01:58.395792+08:00",
+      "status": "completed",
+      "elapsed_seconds": 37.008,
+      "sql_calls": 8,
+      "schema_search_calls": 1,
+      "resource_search_calls": 2,
+      "read_calls": 0,
+      "tool_errors": [],
+      "database_unchanged": true,
+      "token_usage": null,
+      "hybrid_flow_verified": true,
+      "assessment": "Core calcium/second-messenger claim matches reference. Generated COUNT(*) differs from reference COUNT(DISTINCT molecule_id); both definitions have ties. No clean SQL-equivalence pass is claimed."
+    },
+    {
+      "case_id": "dev_39",
+      "type": "s2a",
+      "trace": "runs/20261104-110158-smoke/dev_39.json",
+      "started_at_hkt": "2026-11-04T11:02:35.409667+08:00",
+      "status": "completed",
+      "elapsed_seconds": 16.056,
+      "sql_calls": 4,
+      "schema_search_calls": 1,
+      "resource_search_calls": 0,
+      "read_calls": 0,
+      "tool_errors": [],
+      "database_unchanged": true,
+      "token_usage": null,
+      "expected_bonds": [
+        "TR032_2_3",
+        "TR032_3_5",
+        "TR058_1_3",
+        "TR058_1_4",
+        "TR058_1_5",
+        "TR298_1_5"
+      ],
+      "actual_answer_bonds": [
+        "TR032_2_3",
+        "TR032_3_5",
+        "TR058_1_3",
+        "TR058_1_4",
+        "TR058_1_5",
+        "TR298_1_5"
+      ],
+      "bond_set_matches": true,
+      "hybrid_flow_verified": false
+    },
+    {
+      "case_id": "dev_39",
+      "type": "s2a",
+      "trace": "runs/20261104-110341-s2a-evidence/dev_39.json",
+      "started_at_hkt": "2026-11-04T11:03:41.241384+08:00",
+      "status": "completed",
+      "elapsed_seconds": 22.35,
+      "sql_calls": 4,
+      "schema_search_calls": 1,
+      "resource_search_calls": 1,
+      "read_calls": 0,
+      "tool_errors": [],
+      "database_unchanged": true,
+      "token_usage": null,
+      "expected_bonds": [
+        "TR032_2_3",
+        "TR032_3_5",
+        "TR058_1_3",
+        "TR058_1_4",
+        "TR058_1_5",
+        "TR298_1_5"
+      ],
+      "actual_answer_bonds": [
+        "TR032_2_3",
+        "TR032_3_5",
+        "TR058_1_3",
+        "TR058_1_4",
+        "TR058_1_5",
+        "TR298_1_5"
+      ],
+      "bond_set_matches": true,
+      "hybrid_flow_verified": true
+    }
+  ],
+  "token_usage_note": "Streaming provider responses did not contain usage_metadata; missing usage is not zero tokens.",
+  "model": "deepseek-v4-pro-0813",
+  "embedding_model": "text-embedding-v4",
+  "embedding_dimensions": 1536,
+  "rerank_strategy": "keyword",
+  "contexts": {
+    "resource": 1494,
+    "table_schema": 4,
+    "with_embeddings": 1498
+  },
+  "base_git_commit": "865be345c18432f7ae6e744c3800f047b1cccf82",
+  "tests": {
+    "passed": 37,
+    "scope": "SQL read-only/timeout/truncation, label isolation, existing Deep Agents adapter tests"
+  }
+}

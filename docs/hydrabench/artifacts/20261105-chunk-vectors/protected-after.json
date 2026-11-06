@@ -1,0 +1,21 @@
+{
+  "files": {
+    "docs/hydrabench/artifacts/20261104-paper-metrics/token-usage.json": "3bdfcbdabd5c704ac1a1db1a0ce9e9458bfefe75435eb02fb4356e7622ace971",
+    "docs/hydrabench/artifacts/20261105-document-layers-qwen38-27b/validation.json": "3094cbf298f7ff5029495be020d678913776126e41026bcb7b07048e3c992daf",
+    "docs/hydrabench/artifacts/20261105-document-layers-qwen38-27b/provider-usage.json": "b9f3e1ad08871af98835f07d7e7a2bf73cc6d7ef81fd264cbf5ebe79f6ea789f",
+    "docs/hydrabench/artifacts/20261105-section-snippets/comparison.json": "52b9a8a2f14f1472021412d5d3e7c0a9ae1e7604bea380f1c766bc91d15ed431"
+  },
+  "hydra_retrieval_20261104": {
+    "contexts": 18340,
+    "embedded": 18340,
+    "content_fingerprint": "266a21457a387b68246f596c9ce494e7"
+  },
+  "hydra_layers_sample_20261105_qwen38_27b": {
+    "contexts": 4,
+    "embedded": 3,
+    "content_fingerprint": "abe0e77168814c8d0aa27faa7bad5fd5",
+    "contexts_sha256": "3550cc04cbc2d5f1a3ff99b7b65ab45fff84cfb7549e80ab6d03e7c8703f9cec",
+    "document_sections_sha256": "91f4241dae19d99ac2757de66ec84d78afd47c2014584c3b3a66145fd14f37df",
+    "retrieval_trace_sha256": "df2f120f9f14e0814979a06c471f76384dff81b666b12bb4446a5f1da820b185"
+  }
+}

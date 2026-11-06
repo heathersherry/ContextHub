@@ -1,0 +1,978 @@
+"""Unit tests for ContextHub SDK.
+
+Uses respx to mock HTTP without starting the server or database.
+"""
+
+from __future__ import annotations
+
+import json
+from uuid import uuid4
+
+import httpx
+import pytest
+import respx
+
+from contexthub_sdk import (
+    AccessPolicyRecord,
+    AuditAction,
+    AuditEntryRecord,
+    AuditResult,
+    AuthenticationError,
+    BadRequestError,
+    ConflictError,
+    ContextHubClient,
+    ContextFeedbackRecord,
+    ContextLevel,
+    ContextReadResult,
+    ContextRecord,
+    ContextStat,
+    ContextStatus,
+    ContextType,
+    DependencyRecord,
+    DocumentIngestResponse,
+    DocumentSectionReadResult,
+    DocumentSectionSummary,
+    FeedbackOutcome,
+    ForbiddenError,
+    LifecyclePolicyRecord,
+    LifecycleTransitionResult,
+    MemoryRecord,
+    NotFoundError,
+    OkResult,
+    PolicyAction,
+    PolicyEffect,
+    PreconditionRequiredError,
+    QualityReport,
+    ResolvedSkillReadResult,
+    Scope,
+    SearchResponse,
+    ServerError,
+    SkillVersionStatus,
+)
+
+BASE = "https://hub.test"
+API_KEY = "test-key"
+ACCOUNT = "acct-1"
+AGENT = "agent-1"
+TS = "2026-03-25T00:00:00Z"
+
+CTX_ID = str(uuid4())
+SKILL_ID = str(uuid4())
+CTX_URI = "ctx://team/team-a/schema/orders"
+SKILL_URI = "ctx://team/team-a/skills/retrieval"
+MEMORY_URI = f"ctx://agent/{AGENT}/memories/mem-1234abcd"
+PROMOTED_MEMORY_URI = "ctx://team/team-a/memories/shared_knowledge/mem-1234abcd"
+
+CTX_RECORD = {
+    "id": CTX_ID,
+    "uri": CTX_URI,
+    "context_type": "table_schema",
+    "scope": "team",
+    "owner_space": "team-a",
+    "account_id": ACCOUNT,
+    "l0_content": "orders schema",
+    "l1_content": "orders table summary",
+    "l2_content": "CREATE TABLE orders (...);",
+    "file_path": None,
+    "status": "active",
+    "version": 1,
+    "tags": ["orders"],
+    "created_at": TS,
+    "updated_at": TS,
+    "last_accessed_at": TS,
+    "stale_at": None,
+    "archived_at": None,
+    "deleted_at": None,
+    "active_count": 0,
+    "adopted_count": 0,
+    "ignored_count": 0,
+}
+
+CTX_STAT = {
+    "id": CTX_ID,
+    "uri": CTX_URI,
+    "context_type": "table_schema",
+    "scope": "team",
+    "owner_space": "team-a",
+    "status": "active",
+    "version": 1,
+    "tags": ["orders"],
+    "active_count": 3,
+    "adopted_count": 1,
+    "ignored_count": 0,
+    "created_at": TS,
+    "updated_at": TS,
+    "last_accessed_at": TS,
+}
+
+DEPENDENCY = {
+    "dep_type": "derived_from",
+    "pinned_version": None,
+    "dependent_uri": CTX_URI,
+    "dependency_uri": "ctx://datalake/raw/orders",
+}
+
+MEMORY_CONTEXT_RECORD = {
+    "id": str(uuid4()),
+    "uri": MEMORY_URI,
+    "context_type": "memory",
+    "scope": "agent",
+    "owner_space": AGENT,
+    "account_id": ACCOUNT,
+    "l0_content": "remember this",
+    "l1_content": "remember this",
+    "l2_content": "remember this",
+    "file_path": None,
+    "status": "active",
+    "version": 1,
+    "tags": [],
+    "created_at": TS,
+    "updated_at": TS,
+    "last_accessed_at": TS,
+    "stale_at": None,
+    "archived_at": None,
+    "deleted_at": None,
+    "active_count": 0,
+    "adopted_count": 0,
+    "ignored_count": 0,
+}
+
+PROMOTED_MEMORY_RECORD = {
+    **MEMORY_CONTEXT_RECORD,
+    "id": str(uuid4()),
+    "uri": PROMOTED_MEMORY_URI,
+    "scope": "team",
+    "owner_space": "team-a",
+}
+
+MEMORY_LIST_RECORD = {
+    "uri": MEMORY_URI,
+    "l0_content": "remember this",
+    "status": "active",
+    "version": 1,
+    "tags": [],
+    "created_at": TS,
+    "updated_at": TS,
+}
+
+SKILL_VERSION = {
+    "skill_id": SKILL_ID,
+    "version": 1,
+    "content": "skill content",
+    "changelog": None,
+    "is_breaking": False,
+    "status": "published",
+    "published_by": AGENT,
+    "published_at": TS,
+}
+
+SKILL_SUB = {
+    "id": 1,
+    "agent_id": AGENT,
+    "skill_id": SKILL_ID,
+    "pinned_version": None,
+    "account_id": ACCOUNT,
+    "created_at": TS,
+}
+
+
+@pytest.fixture
+def client():
+    return ContextHubClient(
+        url=BASE,
+        api_key=API_KEY,
+        account_id=ACCOUNT,
+        agent_id=AGENT,
+    )
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_headers_injected(client: ContextHubClient):
+    route = respx.post(f"{BASE}/api/v1/search").mock(
+        return_value=httpx.Response(
+            200,
+            json={
+                "results": [],
+                "total": 0,
+                "retrieval_id": "550e8400-e29b-41d4-a716-446655440020",
+            },
+        )
+    )
+    await client.search("test")
+    req = route.calls.last.request
+    assert req.headers["x-api-key"] == API_KEY
+    assert req.headers["x-account-id"] == ACCOUNT
+    assert req.headers["x-agent-id"] == AGENT
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_search_returns_typed_and_uses_server_enum_values(client: ContextHubClient):
+    route = respx.post(f"{BASE}/api/v1/search").mock(
+        return_value=httpx.Response(
+            200,
+            json={
+                "results": [
+                    {
+                        "uri": CTX_URI,
+                        "context_type": "table_schema",
+                        "scope": "team",
+                        "owner_space": "team-a",
+                        "score": 0.9,
+                        "l0_content": "orders schema",
+                        "l1_content": "orders table summary",
+                        "l2_content": None,
+                        "status": "active",
+                        "version": 1,
+                        "tags": ["orders"],
+                    }
+                ],
+                "total": 1,
+                "retrieval_id": "550e8400-e29b-41d4-a716-446655440000",
+            },
+        )
+    )
+    resp = await client.search(
+        "orders",
+        scope=[Scope.TEAM],
+        context_type=[ContextType.TABLE_SCHEMA],
+    )
+    body = json.loads(route.calls.last.request.content)
+    assert body["scope"] == ["team"]
+    assert body["context_type"] == ["table_schema"]
+    assert isinstance(resp, SearchResponse)
+    assert resp.total == 1
+    assert resp.retrieval_id == "550e8400-e29b-41d4-a716-446655440000"
+    assert resp.results[0].context_type == ContextType.TABLE_SCHEMA
+    assert resp.results[0].status == ContextStatus.ACTIVE
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_context_create(client: ContextHubClient):
+    route = respx.post(f"{BASE}/api/v1/contexts").mock(
+        return_value=httpx.Response(201, json=CTX_RECORD)
+    )
+    rec = await client.context.create(
+        uri=CTX_URI,
+        context_type=ContextType.TABLE_SCHEMA,
+        scope=Scope.TEAM,
+        owner_space="team-a",
+        l1_content="orders table summary",
+    )
+    body = json.loads(route.calls.last.request.content)
+    assert body["context_type"] == "table_schema"
+    assert body["scope"] == "team"
+    assert body["owner_space"] == "team-a"
+    assert isinstance(rec, ContextRecord)
+    assert rec.uri == CTX_URI
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_context_read_non_skill(client: ContextHubClient):
+    respx.get(f"{BASE}/api/v1/contexts/{CTX_URI}").mock(
+        return_value=httpx.Response(
+            200,
+            json={"uri": CTX_URI, "level": "L1", "content": "orders table summary"},
+        )
+    )
+    result = await client.context.read(CTX_URI)
+    assert isinstance(result, ContextReadResult)
+    assert result.level == ContextLevel.L1
+    assert result.content == "orders table summary"
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_context_read_skill(client: ContextHubClient):
+    respx.get(f"{BASE}/api/v1/contexts/{SKILL_URI}").mock(
+        return_value=httpx.Response(
+            200,
+            json={
+                "uri": SKILL_URI,
+                "version": 3,
+                "content": "skill body",
+                "status": "published",
+                "advisory": None,
+            },
+        )
+    )
+    result = await client.context.read(SKILL_URI)
+    assert isinstance(result, ResolvedSkillReadResult)
+    assert result.version == 3
+    assert result.status == SkillVersionStatus.PUBLISHED
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_context_stat_returns_typed(client: ContextHubClient):
+    respx.get(f"{BASE}/api/v1/contexts/{CTX_URI}/stat").mock(
+        return_value=httpx.Response(200, json=CTX_STAT)
+    )
+    result = await client.context.stat(CTX_URI)
+    assert isinstance(result, ContextStat)
+    assert result.context_type == ContextType.TABLE_SCHEMA
+    assert result.tags == ["orders"]
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_context_children_returns_strings(client: ContextHubClient):
+    respx.get(f"{BASE}/api/v1/contexts/{CTX_URI}/children").mock(
+        return_value=httpx.Response(200, json=["columns", "indexes"])
+    )
+    result = await client.context.children(CTX_URI)
+    assert result == ["columns", "indexes"]
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_context_deps_returns_typed(client: ContextHubClient):
+    respx.get(f"{BASE}/api/v1/contexts/{CTX_URI}/deps").mock(
+        return_value=httpx.Response(200, json=[DEPENDENCY])
+    )
+    result = await client.context.deps(CTX_URI)
+    assert isinstance(result[0], DependencyRecord)
+    assert result[0].dependency_uri == "ctx://datalake/raw/orders"
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_context_update_sends_if_match(client: ContextHubClient):
+    route = respx.patch(f"{BASE}/api/v1/contexts/{CTX_URI}").mock(
+        return_value=httpx.Response(200, json={**CTX_RECORD, "version": 2, "status": "stale"})
+    )
+    rec = await client.context.update(
+        CTX_URI,
+        expected_version=1,
+        status=ContextStatus.STALE,
+    )
+    body = json.loads(route.calls.last.request.content)
+    assert route.calls.last.request.headers["if-match"] == "1"
+    assert body["status"] == "stale"
+    assert rec.status == ContextStatus.STALE
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_context_delete_sends_if_match(client: ContextHubClient):
+    route = respx.delete(f"{BASE}/api/v1/contexts/{CTX_URI}").mock(
+        return_value=httpx.Response(204)
+    )
+    await client.context.delete(CTX_URI, expected_version=1)
+    assert route.calls.last.request.headers["if-match"] == "1"
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_memory_add_returns_context_record(client: ContextHubClient):
+    route = respx.post(f"{BASE}/api/v1/memories").mock(
+        return_value=httpx.Response(201, json=MEMORY_CONTEXT_RECORD)
+    )
+    rec = await client.memory.add(content="remember this")
+    body = json.loads(route.calls.last.request.content)
+    assert body["content"] == "remember this"
+    assert isinstance(rec, ContextRecord)
+    assert rec.context_type == ContextType.MEMORY
+    assert rec.l2_content == "remember this"
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_memory_list_returns_typed_summary(client: ContextHubClient):
+    respx.get(f"{BASE}/api/v1/memories").mock(
+        return_value=httpx.Response(200, json=[MEMORY_LIST_RECORD])
+    )
+    mems = await client.memory.list()
+    assert isinstance(mems[0], MemoryRecord)
+    assert mems[0].l0_content == "remember this"
+    assert mems[0].status == ContextStatus.ACTIVE
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_memory_promote_returns_context_record(client: ContextHubClient):
+    route = respx.post(f"{BASE}/api/v1/memories/promote").mock(
+        return_value=httpx.Response(201, json=PROMOTED_MEMORY_RECORD)
+    )
+    rec = await client.memory.promote(uri=MEMORY_URI, target_team="team-a")
+    body = json.loads(route.calls.last.request.content)
+    assert body["target_team"] == "team-a"
+    assert isinstance(rec, ContextRecord)
+    assert rec.scope == Scope.TEAM
+    assert rec.uri == PROMOTED_MEMORY_URI
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_skill_publish(client: ContextHubClient):
+    route = respx.post(f"{BASE}/api/v1/skills/versions").mock(
+        return_value=httpx.Response(201, json=SKILL_VERSION)
+    )
+    rec = await client.skill.publish(skill_uri=SKILL_URI, content="skill content")
+    body = json.loads(route.calls.last.request.content)
+    assert body["skill_uri"] == SKILL_URI
+    assert body["is_breaking"] is False
+    assert rec.version == 1
+    assert rec.status == SkillVersionStatus.PUBLISHED
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_skill_versions(client: ContextHubClient):
+    respx.get(f"{BASE}/api/v1/skills/{SKILL_URI}/versions").mock(
+        return_value=httpx.Response(200, json=[SKILL_VERSION])
+    )
+    versions = await client.skill.versions(SKILL_URI)
+    assert versions[0].status == SkillVersionStatus.PUBLISHED
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_skill_subscribe(client: ContextHubClient):
+    route = respx.post(f"{BASE}/api/v1/skills/subscribe").mock(
+        return_value=httpx.Response(200, json=SKILL_SUB)
+    )
+    sub = await client.skill.subscribe(skill_uri=SKILL_URI)
+    body = json.loads(route.calls.last.request.content)
+    assert body["skill_uri"] == SKILL_URI
+    assert sub.agent_id == AGENT
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_tools_ls(client: ContextHubClient):
+    route = respx.post(f"{BASE}/api/v1/tools/ls").mock(
+        return_value=httpx.Response(200, json=["schema", "skills"])
+    )
+    result = await client.ls("ctx://team/team-a")
+    body = json.loads(route.calls.last.request.content)
+    assert body["path"] == "ctx://team/team-a"
+    assert result == ["schema", "skills"]
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_tools_read(client: ContextHubClient):
+    respx.post(f"{BASE}/api/v1/tools/read").mock(
+        return_value=httpx.Response(
+            200,
+            json={"uri": CTX_URI, "level": "L1", "content": "orders table summary"},
+        )
+    )
+    result = await client.read(CTX_URI)
+    assert isinstance(result, ContextReadResult)
+    assert result.level == ContextLevel.L1
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_tools_grep(client: ContextHubClient):
+    respx.post(f"{BASE}/api/v1/tools/grep").mock(
+        return_value=httpx.Response(
+            200,
+            json={
+                "results": [
+                    {
+                        "uri": CTX_URI,
+                        "context_type": "table_schema",
+                        "scope": "team",
+                        "owner_space": "team-a",
+                        "score": 0.8,
+                        "l0_content": "orders schema",
+                        "l1_content": "orders table summary",
+                        "l2_content": None,
+                        "status": "active",
+                        "version": 1,
+                        "tags": ["orders"],
+                    }
+                ],
+                "total": 1,
+                "retrieval_id": "550e8400-e29b-41d4-a716-446655440001",
+            },
+        )
+    )
+    resp = await client.grep("orders")
+    assert isinstance(resp, SearchResponse)
+    assert resp.retrieval_id == "550e8400-e29b-41d4-a716-446655440001"
+    assert resp.results[0].context_type == ContextType.TABLE_SCHEMA
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_report_feedback_posts_minimal_payload(client: ContextHubClient):
+    route = respx.post(f"{BASE}/api/v1/feedback").mock(
+        return_value=httpx.Response(200, json=FEEDBACK_RECORD)
+    )
+    result = await client.report_feedback(
+        context_uri=CTX_URI,
+        outcome=FeedbackOutcome.ADOPTED,
+        retrieval_id="rid-1",
+        metadata={"source": "explicit-search"},
+    )
+    body = json.loads(route.calls.last.request.content)
+    assert body == {
+        "context_uri": CTX_URI,
+        "outcome": "adopted",
+        "retrieval_id": "rid-1",
+        "metadata": {"source": "explicit-search"},
+    }
+    assert isinstance(result, ContextFeedbackRecord)
+    assert result.outcome == FeedbackOutcome.ADOPTED
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_list_feedback_returns_typed_records(client: ContextHubClient):
+    route = respx.get(f"{BASE}/api/v1/feedback").mock(
+        return_value=httpx.Response(200, json=[FEEDBACK_RECORD])
+    )
+    result = await client.list_feedback(context_id=CTX_ID, limit=5, offset=2)
+    req = route.calls.last.request
+    assert req.url.params["context_id"] == CTX_ID
+    assert req.url.params["limit"] == "5"
+    assert req.url.params["offset"] == "2"
+    assert isinstance(result[0], ContextFeedbackRecord)
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_tools_stat(client: ContextHubClient):
+    respx.post(f"{BASE}/api/v1/tools/stat").mock(
+        return_value=httpx.Response(200, json=CTX_STAT)
+    )
+    result = await client.stat(CTX_URI)
+    assert isinstance(result, ContextStat)
+    assert result.version == 1
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_tools_read_skill_polymorphic(client: ContextHubClient):
+    respx.post(f"{BASE}/api/v1/tools/read").mock(
+        return_value=httpx.Response(
+            200,
+            json={
+                "uri": SKILL_URI,
+                "version": 2,
+                "content": "skill body",
+                "status": "published",
+                "advisory": "v3 available, currently pinned to v2",
+            },
+        )
+    )
+    result = await client.read(SKILL_URI)
+    assert isinstance(result, ResolvedSkillReadResult)
+    assert result.advisory == "v3 available, currently pinned to v2"
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_401_maps_to_authentication_error(client: ContextHubClient):
+    respx.post(f"{BASE}/api/v1/search").mock(
+        return_value=httpx.Response(401, json={"detail": "Invalid API key"})
+    )
+    with pytest.raises(AuthenticationError):
+        await client.search("q")
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_428_maps_to_precondition_required(client: ContextHubClient):
+    respx.patch(f"{BASE}/api/v1/contexts/{CTX_URI}").mock(
+        return_value=httpx.Response(428, json={"detail": "If-Match header required"})
+    )
+    with pytest.raises(PreconditionRequiredError):
+        await client.context.update(CTX_URI, expected_version=1, l1_content="x")
+
+
+@respx.mock
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "status,exc_cls",
+    [
+        (400, BadRequestError),
+        (403, ForbiddenError),
+        (404, NotFoundError),
+        (409, ConflictError),
+        (500, ServerError),
+        (502, ServerError),
+    ],
+)
+async def test_error_code_mapping(client: ContextHubClient, status, exc_cls):
+    respx.post(f"{BASE}/api/v1/search").mock(
+        return_value=httpx.Response(status, json={"detail": "err"})
+    )
+    with pytest.raises(exc_cls):
+        await client.search("q")
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_async_with_closes_client():
+    respx.post(f"{BASE}/api/v1/search").mock(
+        return_value=httpx.Response(
+            200,
+            json={
+                "results": [],
+                "total": 0,
+                "retrieval_id": "550e8400-e29b-41d4-a716-446655440021",
+            },
+        )
+    )
+    async with ContextHubClient(
+        url=BASE,
+        api_key=API_KEY,
+        account_id=ACCOUNT,
+        agent_id=AGENT,
+    ) as sdk_client:
+        await sdk_client.search("q")
+    assert sdk_client._http.is_closed
+
+
+# ── Phase 2: Admin/Share SDK behavior tests ─────────────────────────────
+
+POLICY_RECORD = {
+    "id": str(uuid4()),
+    "resource_uri_pattern": "ctx://datalake/prod/*",
+    "principal": "query-agent",
+    "effect": "deny",
+    "actions": ["read"],
+    "conditions": None,
+    "field_masks": None,
+    "priority": 0,
+    "account_id": ACCOUNT,
+    "created_at": TS,
+    "updated_at": TS,
+    "created_by": AGENT,
+}
+
+AUDIT_ENTRY = {
+    "id": str(uuid4()),
+    "timestamp": TS,
+    "actor": AGENT,
+    "action": "policy_change",
+    "resource_uri": "ctx://datalake/prod/*",
+    "context_used": None,
+    "result": "success",
+    "metadata": {"operation": "create_policy"},
+    "account_id": ACCOUNT,
+    "ip_address": None,
+    "request_id": None,
+}
+
+FEEDBACK_RECORD = {
+    "id": 1,
+    "context_id": CTX_ID,
+    "retrieval_id": "rid-1",
+    "actor": AGENT,
+    "retrieved_at": TS,
+    "outcome": "adopted",
+    "metadata": {"source": "explicit-search"},
+    "account_id": ACCOUNT,
+    "created_at": TS,
+}
+
+QUALITY_REPORT = {
+    "items": [
+        {
+            "context_id": CTX_ID,
+            "uri": CTX_URI,
+            "context_type": "table_schema",
+            "scope": "team",
+            "active_count": 20,
+            "adopted_count": 2,
+            "ignored_count": 18,
+            "adoption_rate": 0.1,
+            "quality_score": 2 / 21,
+        }
+    ],
+    "total": 1,
+    "min_active_count": 10,
+    "max_adoption_rate": 0.2,
+}
+
+LIFECYCLE_POLICY = {
+    "context_type": "resource",
+    "scope": "team",
+    "stale_after_days": 10,
+    "archive_after_days": 30,
+    "delete_after_days": 60,
+    "account_id": ACCOUNT,
+    "updated_at": TS,
+}
+
+LIFECYCLE_TRANSITION = {
+    "ok": True,
+    "context_uri": CTX_URI,
+    "target_status": "stale",
+}
+
+DOCUMENT_INGEST = {
+    "context_id": CTX_ID,
+    "uri": "ctx://resources/manuals/sdk",
+    "section_count": 3,
+    "file_path": "/tmp/sdk-doc",
+}
+
+DOCUMENT_SECTION = {
+    "section_id": 7,
+    "parent_id": None,
+    "title": "Overview",
+    "depth": 0,
+    "summary": "Short summary",
+    "start_offset": 0,
+    "end_offset": 42,
+    "token_count": 10,
+}
+
+DOCUMENT_SECTION_READ = {
+    "context_id": CTX_ID,
+    "section_id": 7,
+    "title": "Overview",
+    "content": "masked content",
+    "start_offset": 0,
+    "end_offset": 42,
+}
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_admin_create_policy(client: ContextHubClient):
+    """POST /api/v1/admin/policies with correct body, returns AccessPolicyRecord."""
+    route = respx.post(f"{BASE}/api/v1/admin/policies").mock(
+        return_value=httpx.Response(201, json=POLICY_RECORD)
+    )
+    rec = await client.admin.create_policy(
+        resource_uri_pattern="ctx://datalake/prod/*",
+        principal="query-agent",
+        effect=PolicyEffect.DENY,
+        actions=[PolicyAction.READ],
+    )
+    body = json.loads(route.calls.last.request.content)
+    assert body["resource_uri_pattern"] == "ctx://datalake/prod/*"
+    assert body["principal"] == "query-agent"
+    assert body["effect"] == "deny"
+    assert body["actions"] == ["read"]
+    assert isinstance(rec, AccessPolicyRecord)
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_admin_list_policies_with_filters(client: ContextHubClient):
+    """GET /api/v1/admin/policies with filter params serialized correctly."""
+    route = respx.get(f"{BASE}/api/v1/admin/policies").mock(
+        return_value=httpx.Response(200, json=[POLICY_RECORD])
+    )
+    policies = await client.admin.list_policies(
+        principal="query-agent",
+        resource_uri_pattern="ctx://datalake/prod/*",
+        effect=PolicyEffect.DENY,
+    )
+    req = route.calls.last.request
+    assert req.url.params["principal"] == "query-agent"
+    assert req.url.params["resource_uri_pattern"] == "ctx://datalake/prod/*"
+    assert req.url.params["effect"] == "deny"
+    assert len(policies) == 1
+    assert isinstance(policies[0], AccessPolicyRecord)
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_admin_get_policy(client: ContextHubClient):
+    """GET /api/v1/admin/policies/{id}, returns AccessPolicyRecord."""
+    pid = POLICY_RECORD["id"]
+    respx.get(f"{BASE}/api/v1/admin/policies/{pid}").mock(
+        return_value=httpx.Response(200, json=POLICY_RECORD)
+    )
+    rec = await client.admin.get_policy(pid)
+    assert isinstance(rec, AccessPolicyRecord)
+    assert str(rec.id) == pid
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_admin_update_policy_no_if_match(client: ContextHubClient):
+    """PATCH /api/v1/admin/policies/{id} without If-Match header."""
+    pid = POLICY_RECORD["id"]
+    route = respx.patch(f"{BASE}/api/v1/admin/policies/{pid}").mock(
+        return_value=httpx.Response(200, json={**POLICY_RECORD, "priority": 10})
+    )
+    rec = await client.admin.update_policy(pid, priority=10)
+    req = route.calls.last.request
+    assert "if-match" not in req.headers
+    body = json.loads(req.content)
+    assert body["priority"] == 10
+    assert isinstance(rec, AccessPolicyRecord)
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_admin_delete_policy_no_if_match(client: ContextHubClient):
+    """DELETE /api/v1/admin/policies/{id} without If-Match header."""
+    pid = POLICY_RECORD["id"]
+    route = respx.delete(f"{BASE}/api/v1/admin/policies/{pid}").mock(
+        return_value=httpx.Response(204)
+    )
+    await client.admin.delete_policy(pid)
+    req = route.calls.last.request
+    assert "if-match" not in req.headers
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_admin_query_audit_enum_params(client: ContextHubClient):
+    """GET /api/v1/admin/audit with enum params serialized as strings."""
+    route = respx.get(f"{BASE}/api/v1/admin/audit").mock(
+        return_value=httpx.Response(200, json=[AUDIT_ENTRY])
+    )
+    entries = await client.admin.query_audit(
+        actor="query-agent",
+        action=AuditAction.POLICY_CHANGE,
+        result=AuditResult.SUCCESS,
+        limit=10,
+    )
+    req = route.calls.last.request
+    assert req.url.params["action"] == "policy_change"
+    assert req.url.params["result"] == "success"
+    assert req.url.params["actor"] == "query-agent"
+    assert req.url.params["limit"] == "10"
+    assert len(entries) == 1
+    assert isinstance(entries[0], AuditEntryRecord)
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_share_grant_lifecycle(client: ContextHubClient):
+    """POST /api/v1/shares → GET /api/v1/shares → DELETE /api/v1/shares/{id}."""
+    grant_response = {**POLICY_RECORD, "effect": "allow", "conditions": {"kind": "share_grant"}}
+
+    # grant
+    grant_route = respx.post(f"{BASE}/api/v1/shares").mock(
+        return_value=httpx.Response(201, json=grant_response)
+    )
+    rec = await client.share.grant(
+        source_uri="ctx://team/eng/configs/db",
+        target_principal="data/analytics",
+    )
+    body = json.loads(grant_route.calls.last.request.content)
+    assert body["source_uri"] == "ctx://team/eng/configs/db"
+    assert body["target_principal"] == "data/analytics"
+    assert isinstance(rec, AccessPolicyRecord)
+
+    # list_grants
+    list_route = respx.get(f"{BASE}/api/v1/shares").mock(
+        return_value=httpx.Response(200, json=[grant_response])
+    )
+    grants = await client.share.list_grants("ctx://team/eng/configs/db")
+    req = list_route.calls.last.request
+    assert req.url.params["source_uri"] == "ctx://team/eng/configs/db"
+    assert len(grants) == 1
+
+    # revoke
+    pid = grant_response["id"]
+    revoke_route = respx.delete(f"{BASE}/api/v1/shares/{pid}").mock(
+        return_value=httpx.Response(204)
+    )
+    await client.share.revoke(pid)
+    assert revoke_route.calls.last.request.method == "DELETE"
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_admin_quality_report_returns_typed_model(client: ContextHubClient):
+    route = respx.get(f"{BASE}/api/v1/admin/quality-report").mock(
+        return_value=httpx.Response(200, json=QUALITY_REPORT)
+    )
+    result = await client.admin.quality_report(min_active_count=12, max_adoption_rate=0.4, limit=3)
+    req = route.calls.last.request
+    assert req.url.params["min_active_count"] == "12"
+    assert req.url.params["max_adoption_rate"] == "0.4"
+    assert req.url.params["limit"] == "3"
+    assert isinstance(result, QualityReport)
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_admin_lifecycle_methods_return_typed_models(client: ContextHubClient):
+    respx.get(f"{BASE}/api/v1/admin/lifecycle/policies").mock(
+        return_value=httpx.Response(200, json=[LIFECYCLE_POLICY])
+    )
+    upsert_route = respx.put(f"{BASE}/api/v1/admin/lifecycle/policies").mock(
+        return_value=httpx.Response(200, json=LIFECYCLE_POLICY)
+    )
+    transition_route = respx.post(f"{BASE}/api/v1/admin/lifecycle/transition").mock(
+        return_value=httpx.Response(200, json=LIFECYCLE_TRANSITION)
+    )
+    respx.post(f"{BASE}/api/v1/admin/lifecycle/sweep").mock(
+        return_value=httpx.Response(200, json={"ok": True})
+    )
+
+    policies = await client.admin.lifecycle_policies()
+    upserted = await client.admin.upsert_lifecycle_policy(
+        context_type=ContextType.RESOURCE,
+        scope=Scope.TEAM,
+        stale_after_days=10,
+        archive_after_days=30,
+        delete_after_days=60,
+    )
+    transitioned = await client.admin.lifecycle_transition(
+        CTX_URI,
+        ContextStatus.STALE,
+        reason="manual",
+    )
+    swept = await client.admin.lifecycle_sweep()
+
+    upsert_body = json.loads(upsert_route.calls.last.request.content)
+    transition_body = json.loads(transition_route.calls.last.request.content)
+    assert upsert_body["context_type"] == "resource"
+    assert upsert_body["scope"] == "team"
+    assert transition_body["context_uri"] == CTX_URI
+    assert transition_body["target_status"] == "stale"
+    assert isinstance(policies[0], LifecyclePolicyRecord)
+    assert isinstance(upserted, LifecyclePolicyRecord)
+    assert isinstance(transitioned, LifecycleTransitionResult)
+    assert isinstance(swept, OkResult)
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_document_namespace_uses_multipart_and_repeated_tags(client: ContextHubClient, tmp_path):
+    route = respx.post(f"{BASE}/api/v1/documents/ingest").mock(
+        return_value=httpx.Response(201, json=DOCUMENT_INGEST)
+    )
+    source = tmp_path / "manual.txt"
+    source.write_text("hello world", encoding="utf-8")
+
+    result = await client.document.ingest(
+        uri="ctx://resources/manuals/sdk",
+        file_path=str(source),
+        tags=["alpha", "beta"],
+    )
+
+    req = route.calls.last.request
+    payload = req.content.decode("utf-8", errors="ignore")
+    assert "multipart/form-data" in req.headers["content-type"]
+    assert payload.count('name="tags"') == 2
+    assert "alpha" in payload
+    assert "beta" in payload
+    assert isinstance(result, DocumentIngestResponse)
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_document_namespace_sections_and_read_are_typed(client: ContextHubClient):
+    respx.get(f"{BASE}/api/v1/documents/{CTX_ID}/sections").mock(
+        return_value=httpx.Response(200, json=[DOCUMENT_SECTION])
+    )
+    respx.get(f"{BASE}/api/v1/documents/{CTX_ID}/section/7").mock(
+        return_value=httpx.Response(200, json=DOCUMENT_SECTION_READ)
+    )
+
+    sections = await client.document.sections(CTX_ID)
+    section = await client.document.read_section(CTX_ID, 7)
+
+    assert isinstance(sections[0], DocumentSectionSummary)
+    assert isinstance(section, DocumentSectionReadResult)

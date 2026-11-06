@@ -1,0 +1,46 @@
+{
+  "method": "Post-run coding-assistant semantic inspection plus read-only reference SQL replay. Not official o4-mini judging or an independent human annotation study. Incomplete quota episodes excluded, not scored wrong.",
+  "reviews": {
+    "dev_43": {
+      "assessment": "core_match",
+      "reason": "Date and core declaration significance match; not every extra prose claim audited."
+    },
+    "dev_62": {
+      "assessment": "reference_mismatch_sql_aggregation",
+      "reason": "All reference tables retrieved. SUM by constructor chooses Ferrari; reference highest individual standing chooses Mercedes. Query wording underspecified. Actual Ferrari evidence search is not the separate Mercedes probe failure."
+    },
+    "dev_5": {
+      "assessment": "core_match",
+      "reason": "Both coordinates exactly match; text supports RAF/triangle premise."
+    },
+    "dev_13": {
+      "assessment": "reference_mismatch_sql_measure",
+      "reason": "Nickname and all reference schemas retrieved, including driverStandings in first search. Agent uses results.points (0.25), reference driverStandings.points (2.2666667)."
+    },
+    "dev_35": {
+      "assessment": "ambiguous_reference_and_agent_errors",
+      "reason": "All schemas retrieved; initial SQL contains Cosmic Entity. 279 maximal rows/117 heroes, reference has no tie-break. Agent selects most-common Human race, speculates Human/Aryan mapping, and misreads all 3738 rows as maximal rows."
+    },
+    "dev_72": {
+      "assessment": "core_match",
+      "reason": "Publisher and core sequel/aftermath description match, with relevant sources."
+    },
+    "dev_10": {
+      "assessment": "core_match",
+      "reason": "Retrieved alter-ego evidence and calculated 351, equal to reference."
+    },
+    "dev_68": {
+      "assessment": "core_match",
+      "reason": "Seven powers equal the reference set. Non-anchor passage 565879/0013 supplies the required Helen Parr/Bob spouse link."
+    },
+    "dev_31": {
+      "assessment": "core_match",
+      "reason": "SQL location matches and retrieved passage supports UK government form."
+    }
+  },
+  "alternative_support": {
+    "dev_68": [
+      "ctx://team/engineering/hydra/kilt/565879/0013"
+    ]
+  }
+}

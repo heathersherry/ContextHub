@@ -1,0 +1,145 @@
+{
+  "case_id": "dev_55",
+  "type": "a2s",
+  "db_id": "student_club",
+  "reference_tables": [
+    "major",
+    "member"
+  ],
+  "top_k": 3,
+  "table_schema": {
+    "query": "Database: student_club. What is the relationship between the student from the Art and Design Department in the Student_Club and Peter Firth?",
+    "response": {
+      "results": [
+        {
+          "uri": "ctx://datalake/hydra/student_club/member",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 0.45678378512811046,
+          "l0_content": "Database: student_club\nTable: member\nCREATE TABLE \"member\"\n(\n    member_id     TEXT\n        constraint member_pk\n            primary key,\n    first_name    TEXT,\n    last_name     TEXT,\n    email         TEXT,\n    position      TEXT,\n    t_shirt_size  TEXT,\n    phone         TEXT,\n    zip           INTEGER,\n    link_to_major TEXT,\n    foreign key (link_to_major) references major(major_id),\n    foreign key (zip) references zip_code(zip_code)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nmember_id,member id,unique id of member,text,\r\nfirst_name,first name,member's first name,text,\r\nlast_name,last name,member's last name,text,\"commonsense evidence: \nfull name is first_name + last_name. e.g. A member's first name is Angela and last name is Sanders. Thus, his/her full name is Angela Sanders.\"\r\nemail,,member's email,text,\r\nposition,,The position the member holds in the club,text,\r\nt_shirt_size,,The size of tee shirt that member wants when shirts are ordered,text,commonsense evidence: usually the student ordered t-shirt with lager size has bigger body shape \r\nphone,,The best telephone at which to contact the member,text,\r\nzip,,the zip code of the member's hometown,integer,\r\nlink_to_major,link to major,The unique identifier of the major of the member. References the Major table,text,",
+          "l1_content": "Database: student_club\nTable: member\nCREATE TABLE \"member\"\n(\n    member_id     TEXT\n        constraint member_pk\n            primary key,\n    first_name    TEXT,\n    last_name     TEXT,\n    email         TEXT,\n    position      TEXT,\n    t_shirt_size  TEXT,\n    phone         TEXT,\n    zip           INTEGER,\n    link_to_major TEXT,\n    foreign key (link_to_major) references major(major_id),\n    foreign key (zip) references zip_code(zip_code)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nmember_id,member id,unique id of member,text,\r\nfirst_name,first name,member's first name,text,\r\nlast_name,last name,member's last name,text,\"commonsense evidence: \nfull name is first_name + last_name. e.g. A member's first name is Angela and last name is Sanders. Thus, his/her full name is Angela Sanders.\"\r\nemail,,member's email,text,\r\nposition,,The position the member holds in the club,text,\r\nt_shirt_size,,The size of tee shirt that member wants when shirts are ordered,text,commonsense evidence: usually the student ordered t-shirt with lager size has bigger body shape \r\nphone,,The best telephone at which to contact the member,text,\r\nzip,,the zip code of the member's hometown,integer,\r\nlink_to_major,link to major,The unique identifier of the major of the member. References the Major table,text,",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://datalake/hydra/student_club/income",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 0.4316092858198074,
+          "l0_content": "Database: student_club\nTable: income\nCREATE TABLE \"income\"\n(\n    income_id      TEXT\n        constraint income_pk\n            primary key,\n    date_received  TEXT,\n    amount         INTEGER,\n    source         TEXT,\n    notes          TEXT,\n    link_to_member TEXT,\n    foreign key (link_to_member) references member(member_id)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nincome_id,income id,A unique identifier for each record of income,text,\r\ndate_received,date received,the date that the fund received,text,\r\namount,,amount of funds,integer,the unit is dollar\r\nsource,,\"A value indicating where the funds come from such as dues, or the annual university allocation\",text,\r\nnotes,,A free-text value giving any needed details about the receipt of funds,text,\r\nlink_to_member,link to member,link to member,text,",
+          "l1_content": "Database: student_club\nTable: income\nCREATE TABLE \"income\"\n(\n    income_id      TEXT\n        constraint income_pk\n            primary key,\n    date_received  TEXT,\n    amount         INTEGER,\n    source         TEXT,\n    notes          TEXT,\n    link_to_member TEXT,\n    foreign key (link_to_member) references member(member_id)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nincome_id,income id,A unique identifier for each record of income,text,\r\ndate_received,date received,the date that the fund received,text,\r\namount,,amount of funds,integer,the unit is dollar\r\nsource,,\"A value indicating where the funds come from such as dues, or the annual university allocation\",text,\r\nnotes,,A free-text value giving any needed details about the receipt of funds,text,\r\nlink_to_member,link to member,link to member,text,",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://datalake/hydra/student_club/major",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 0.415114149173647,
+          "l0_content": "Database: student_club\nTable: major\nCREATE TABLE major\n(\n    major_id   TEXT\n        constraint major_pk\n            primary key,\n    major_name TEXT,\n    department TEXT,\n    college    TEXT\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nmajor_id,major id,A unique identifier for each major,text,\r\nmajor_name,major name,major name,text,\r\ndepartment,,The name of the department that offers the major,text,\r\ncollege,,The name college that houses the department that offers the major,text,",
+          "l1_content": "Database: student_club\nTable: major\nCREATE TABLE major\n(\n    major_id   TEXT\n        constraint major_pk\n            primary key,\n    major_name TEXT,\n    department TEXT,\n    college    TEXT\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nmajor_id,major id,A unique identifier for each major,text,\r\nmajor_name,major name,major name,text,\r\ndepartment,,The name of the department that offers the major,text,\r\ncollege,,The name college that houses the department that offers the major,text,",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        }
+      ],
+      "total": 3,
+      "retrieval_id": "48a74322-6748-43ee-b692-32a4a4aefd0c",
+      "stale_notices": []
+    }
+  },
+  "resource": {
+    "query": "What is the relationship between Amy Firth and Peter Firth?",
+    "response": {
+      "results": [
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/937587/0010",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 0.5521543355080177,
+          "l0_content": "Peter Firth — Personal life.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 937587\nFirth lived with Peter Shaffer throughout the Broadway run of \"Equus\". He has been married three times and has four children; Rory Firth, from his first marriage, Amy, Alex, and James Firth from his second. He married Alexandra Pigg on Christmas Eve 2017. The couple had briefly dated after they played a couple in \"Letter to Brezhnev\".",
+          "l1_content": "Peter Firth — Personal life.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 937587\nFirth lived with Peter Shaffer throughout the Broadway run of \"Equus\". He has been married three times and has four children; Rory Firth, from his first marriage, Amy, Alex, and James Firth from his second. He married Alexandra Pigg on Christmas Eve 2017. The couple had briefly dated after they played a couple in \"Letter to Brezhnev\".",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/937587/0000",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 0.4556896143329603,
+          "l0_content": "Peter Firth — Abstract\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 937587\nPeter Macintosh Firth (born 27 October 1953) is an English actor. He is best known for his role as Sir Harry Pearce in the BBC One show \"Spooks\"; he is the only actor to have appeared in every episode of the show's ten-series lifespan. He has given myriad additional television and film performances, most notably as Alan Strang in \"Equus\" (1977), earning a Golden Globe Award and an Academy Award nomination for the role.",
+          "l1_content": "Peter Firth — Abstract\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 937587\nPeter Macintosh Firth (born 27 October 1953) is an English actor. He is best known for his role as Sir Harry Pearce in the BBC One show \"Spooks\"; he is the only actor to have appeared in every episode of the show's ten-series lifespan. He has given myriad additional television and film performances, most notably as Alan Strang in \"Equus\" (1977), earning a Golden Globe Award and an Academy Award nomination for the role.",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/937587/0002",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 0.4420283769352219,
+          "l0_content": "Peter Firth — Early career.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 937587\nIn July 1973, Firth appeared at Laurence Olivier's National Theatre, starring in the stage version of Peter Shaffer's play \"Equus\" as a teenager being treated by a psychiatrist, and in October 1974 repeated the role in the Broadway production, receiving a Tony Award nomination for his performance as Alan Strang. His first major role as an adult was the title part in a BBC Television \"Play of the Month\" adaptation of Oscar Wilde's novel \"The Picture of Dorian Gray\" (1976). The script was based on a stage adaptation by John Osborne, and also starred Jeremy Brett and John Gielgud. That same year saw the release of the World War I film \"Aces High\" which featured Firth as the inexperienced RFC pilot Lt.",
+          "l1_content": "Peter Firth — Early career.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 937587\nIn July 1973, Firth appeared at Laurence Olivier's National Theatre, starring in the stage version of Peter Shaffer's play \"Equus\" as a teenager being treated by a psychiatrist, and in October 1974 repeated the role in the Broadway production, receiving a Tony Award nomination for his performance as Alan Strang. His first major role as an adult was the title part in a BBC Television \"Play of the Month\" adaptation of Oscar Wilde's novel \"The Picture of Dorian Gray\" (1976). The script was based on a stage adaptation by John Osborne, and also starred Jeremy Brett and John Gielgud. That same year saw the release of the World War I film \"Aces High\" which featured Firth as the inexperienced RFC pilot Lt.",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        }
+      ],
+      "total": 3,
+      "retrieval_id": "6822b55c-bdff-4e96-a3e1-d2759b1174bd",
+      "stale_notices": []
+    }
+  },
+  "table_metrics": {
+    "required": 2,
+    "hits_at_3": 2,
+    "recall_at_3": 1.0,
+    "all_required_at_3": true,
+    "first_hit_rank": 1
+  }
+}

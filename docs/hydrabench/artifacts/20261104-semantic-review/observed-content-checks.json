@@ -1,0 +1,1478 @@
+[
+  {
+    "case_id": "dev_43",
+    "uri": "ctx://datalake/hydra/formula_1/races",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_43",
+    "uri": "ctx://datalake/hydra/formula_1/qualifying",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_43",
+    "uri": "ctx://datalake/hydra/formula_1/results",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_43",
+    "uri": "ctx://team/engineering/hydra/kilt/2325040/0001",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_43",
+    "uri": "ctx://team/engineering/hydra/kilt/2325040/0000",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_43",
+    "uri": "ctx://team/engineering/hydra/kilt/157972/0008",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_43",
+    "uri": "ctx://team/engineering/hydra/kilt/2325040/0001",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_43",
+    "uri": "ctx://team/engineering/hydra/kilt/2325040/0000",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_43",
+    "uri": "ctx://team/engineering/hydra/kilt/512920/0005",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_62",
+    "uri": "ctx://datalake/hydra/formula_1/constructorStandings",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_62",
+    "uri": "ctx://datalake/hydra/formula_1/constructors",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_62",
+    "uri": "ctx://datalake/hydra/formula_1/constructorResults",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_62",
+    "uri": "ctx://datalake/hydra/formula_1/constructorStandings",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_62",
+    "uri": "ctx://datalake/hydra/formula_1/constructors",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_62",
+    "uri": "ctx://datalake/hydra/formula_1/constructorResults",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_62",
+    "uri": "ctx://team/engineering/hydra/kilt/11225/0004",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_62",
+    "uri": "ctx://team/engineering/hydra/kilt/11225/0000",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_62",
+    "uri": "ctx://team/engineering/hydra/kilt/11225/0002",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_5",
+    "uri": "ctx://datalake/hydra/formula_1/circuits",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_5",
+    "uri": "ctx://datalake/hydra/formula_1/races",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_5",
+    "uri": "ctx://datalake/hydra/formula_1/constructorStandings",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_5",
+    "uri": "ctx://team/engineering/hydra/kilt/522676/0001",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_5",
+    "uri": "ctx://team/engineering/hydra/kilt/812294/0002",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_5",
+    "uri": "ctx://team/engineering/hydra/kilt/812294/0000",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_13",
+    "uri": "ctx://datalake/hydra/formula_1/driverStandings",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_13",
+    "uri": "ctx://datalake/hydra/formula_1/results",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_13",
+    "uri": "ctx://datalake/hydra/formula_1/qualifying",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_13",
+    "uri": "ctx://team/engineering/hydra/kilt/424417/0052",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_13",
+    "uri": "ctx://team/engineering/hydra/kilt/424417/0054",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_13",
+    "uri": "ctx://team/engineering/hydra/kilt/424417/0004",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_13",
+    "uri": "ctx://datalake/hydra/formula_1/drivers",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_13",
+    "uri": "ctx://datalake/hydra/formula_1/qualifying",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_13",
+    "uri": "ctx://datalake/hydra/formula_1/driverStandings",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_13",
+    "uri": "ctx://datalake/hydra/formula_1/races",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_13",
+    "uri": "ctx://datalake/hydra/formula_1/results",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_13",
+    "uri": "ctx://datalake/hydra/formula_1/qualifying",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_35",
+    "uri": "ctx://datalake/hydra/superhero/hero_attribute",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_35",
+    "uri": "ctx://datalake/hydra/superhero/attribute",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_35",
+    "uri": "ctx://datalake/hydra/superhero/hero_power",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_35",
+    "uri": "ctx://datalake/hydra/superhero/race",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_35",
+    "uri": "ctx://datalake/hydra/superhero/superhero",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_35",
+    "uri": "ctx://datalake/hydra/superhero/alignment",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_35",
+    "uri": "ctx://team/engineering/hydra/kilt/51429008/0022",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_35",
+    "uri": "ctx://team/engineering/hydra/kilt/51429008/0023",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_35",
+    "uri": "ctx://team/engineering/hydra/kilt/51429008/0025",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_35",
+    "uri": "ctx://team/engineering/hydra/kilt/51429008/0024",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_35",
+    "uri": "ctx://team/engineering/hydra/kilt/51429008/0025",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_35",
+    "uri": "ctx://team/engineering/hydra/kilt/200264/0016",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_35",
+    "uri": "ctx://team/engineering/hydra/kilt/200264/0010",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_35",
+    "uri": "ctx://team/engineering/hydra/kilt/51429008/0028",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_35",
+    "uri": "ctx://team/engineering/hydra/kilt/200264/0003",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_72",
+    "uri": "ctx://datalake/hydra/superhero/publisher",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_72",
+    "uri": "ctx://datalake/hydra/superhero/superhero",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_72",
+    "uri": "ctx://datalake/hydra/superhero/alignment",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_72",
+    "uri": "ctx://datalake/hydra/superhero/publisher",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_72",
+    "uri": "ctx://datalake/hydra/superhero/superhero",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_72",
+    "uri": "ctx://datalake/hydra/superhero/alignment",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_72",
+    "uri": "ctx://team/engineering/hydra/kilt/25769371/0000",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_72",
+    "uri": "ctx://team/engineering/hydra/kilt/25769371/0007",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_72",
+    "uri": "ctx://team/engineering/hydra/kilt/25769371/0008",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_10",
+    "uri": "ctx://datalake/hydra/superhero/superhero",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_10",
+    "uri": "ctx://datalake/hydra/superhero/alignment",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_10",
+    "uri": "ctx://datalake/hydra/superhero/attribute",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_10",
+    "uri": "ctx://datalake/hydra/superhero/superhero",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_10",
+    "uri": "ctx://datalake/hydra/superhero/alignment",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_10",
+    "uri": "ctx://datalake/hydra/superhero/race",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_68",
+    "uri": "ctx://datalake/hydra/superhero/superhero",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_68",
+    "uri": "ctx://datalake/hydra/superhero/hero_power",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_68",
+    "uri": "ctx://datalake/hydra/superhero/race",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_68",
+    "uri": "ctx://datalake/hydra/superhero/superpower",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_68",
+    "uri": "ctx://datalake/hydra/superhero/hero_power",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_68",
+    "uri": "ctx://datalake/hydra/superhero/alignment",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_68",
+    "uri": "ctx://team/engineering/hydra/kilt/565879/0013",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_68",
+    "uri": "ctx://team/engineering/hydra/kilt/5016516/0000",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_68",
+    "uri": "ctx://team/engineering/hydra/kilt/565879/0001",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_26",
+    "uri": "ctx://datalake/hydra/codebase_community/posts",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_26",
+    "uri": "ctx://datalake/hydra/codebase_community/comments",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_26",
+    "uri": "ctx://datalake/hydra/codebase_community/users",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_26",
+    "uri": "ctx://team/engineering/hydra/kilt/7838811/0007",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_26",
+    "uri": "ctx://team/engineering/hydra/kilt/9444220/0008",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_26",
+    "uri": "ctx://team/engineering/hydra/kilt/10726541/0000",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_31",
+    "uri": "ctx://datalake/hydra/codebase_community/posts",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_31",
+    "uri": "ctx://datalake/hydra/codebase_community/comments",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_31",
+    "uri": "ctx://datalake/hydra/codebase_community/users",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_31",
+    "uri": "ctx://datalake/hydra/codebase_community/posts",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_31",
+    "uri": "ctx://datalake/hydra/codebase_community/comments",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_31",
+    "uri": "ctx://datalake/hydra/codebase_community/users",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_31",
+    "uri": "ctx://team/engineering/hydra/kilt/31726/0005",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_31",
+    "uri": "ctx://team/engineering/hydra/kilt/31726/0021",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_31",
+    "uri": "ctx://team/engineering/hydra/kilt/31726/0022",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_31",
+    "uri": "ctx://team/engineering/hydra/kilt/31717/0054",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_31",
+    "uri": "ctx://team/engineering/hydra/kilt/31726/0000",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_31",
+    "uri": "ctx://team/engineering/hydra/kilt/31717/0000",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_6",
+    "uri": "ctx://datalake/hydra/codebase_community/badges",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_6",
+    "uri": "ctx://datalake/hydra/codebase_community/users",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_6",
+    "uri": "ctx://datalake/hydra/codebase_community/posts",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_6",
+    "uri": "ctx://team/engineering/hydra/kilt/9572685/0012",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_6",
+    "uri": "ctx://team/engineering/hydra/kilt/9572685/0004",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_6",
+    "uri": "ctx://team/engineering/hydra/kilt/9572685/0000",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_6",
+    "uri": "ctx://team/engineering/hydra/kilt/9572685/0004",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_6",
+    "uri": "ctx://team/engineering/hydra/kilt/9572685/0000",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_6",
+    "uri": "ctx://team/engineering/hydra/kilt/9572685/0005",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_6",
+    "uri": "ctx://team/engineering/hydra/kilt/12955849/0001",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_6",
+    "uri": "ctx://team/engineering/hydra/kilt/7390791/0000",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_6",
+    "uri": "ctx://team/engineering/hydra/kilt/14533/0035",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_6",
+    "uri": "ctx://team/engineering/hydra/kilt/12955849/0001",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_6",
+    "uri": "ctx://team/engineering/hydra/kilt/9572685/0005",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_6",
+    "uri": "ctx://team/engineering/hydra/kilt/9572685/0008",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_6",
+    "uri": "ctx://team/engineering/hydra/kilt/12950069/0007",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_6",
+    "uri": "ctx://team/engineering/hydra/kilt/12955849/0000",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_6",
+    "uri": "ctx://team/engineering/hydra/kilt/9572685/0005",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_6",
+    "uri": "ctx://team/engineering/hydra/kilt/12955849/0000",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_6",
+    "uri": "ctx://team/engineering/hydra/kilt/12955849/0001",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_6",
+    "uri": "ctx://team/engineering/hydra/kilt/3808008/0001",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_6",
+    "uri": "ctx://team/engineering/hydra/kilt/6127302/0002",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_6",
+    "uri": "ctx://team/engineering/hydra/kilt/14533/0098",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_6",
+    "uri": "ctx://team/engineering/hydra/kilt/14533/0089",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_6",
+    "uri": "ctx://team/engineering/hydra/kilt/9572685/0012",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_6",
+    "uri": "ctx://team/engineering/hydra/kilt/9572685/0005",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_6",
+    "uri": "ctx://team/engineering/hydra/kilt/9572685/0000",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_6",
+    "uri": "ctx://team/engineering/hydra/kilt/9572685/0012",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_6",
+    "uri": "ctx://team/engineering/hydra/kilt/12955849/0001",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_6",
+    "uri": "ctx://team/engineering/hydra/kilt/6127302/0000",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_6",
+    "uri": "ctx://team/engineering/hydra/kilt/9572685/0004",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_6",
+    "uri": "ctx://team/engineering/hydra/kilt/9572685/0005",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_6",
+    "uri": "ctx://team/engineering/hydra/kilt/9572685/0011",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_20",
+    "uri": "ctx://datalake/hydra/codebase_community/users",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_20",
+    "uri": "ctx://datalake/hydra/codebase_community/badges",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_20",
+    "uri": "ctx://datalake/hydra/codebase_community/comments",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_20",
+    "uri": "ctx://team/engineering/hydra/kilt/27307590/0011",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_20",
+    "uri": "ctx://team/engineering/hydra/kilt/27307590/0001",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_20",
+    "uri": "ctx://team/engineering/hydra/kilt/27307590/0002",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_32",
+    "uri": "ctx://datalake/hydra/financial/disp",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_32",
+    "uri": "ctx://datalake/hydra/financial/card",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_32",
+    "uri": "ctx://datalake/hydra/financial/order",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_32",
+    "uri": "ctx://datalake/hydra/financial/card",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_32",
+    "uri": "ctx://datalake/hydra/debit_card_specializing/customers",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_32",
+    "uri": "ctx://datalake/hydra/financial/disp",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_32",
+    "uri": "ctx://team/engineering/hydra/kilt/17182301/0064",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_32",
+    "uri": "ctx://team/engineering/hydra/kilt/17182301/0121",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_32",
+    "uri": "ctx://team/engineering/hydra/kilt/17182301/0052",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_32",
+    "uri": "ctx://team/engineering/hydra/kilt/17182301/0062",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_32",
+    "uri": "ctx://team/engineering/hydra/kilt/17182301/0000",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_32",
+    "uri": "ctx://team/engineering/hydra/kilt/17182301/0063",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_32",
+    "uri": "ctx://team/engineering/hydra/kilt/17182301/0121",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_32",
+    "uri": "ctx://team/engineering/hydra/kilt/17182301/0052",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_32",
+    "uri": "ctx://team/engineering/hydra/kilt/17182301/0089",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_32",
+    "uri": "ctx://team/engineering/hydra/kilt/17182301/0121",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_32",
+    "uri": "ctx://team/engineering/hydra/kilt/17182301/0064",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_32",
+    "uri": "ctx://team/engineering/hydra/kilt/17182301/0057",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_32",
+    "uri": "ctx://team/engineering/hydra/kilt/17182301/0064",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_32",
+    "uri": "ctx://team/engineering/hydra/kilt/17182301/0063",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_32",
+    "uri": "ctx://team/engineering/hydra/kilt/17182301/0060",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_32",
+    "uri": "ctx://team/engineering/hydra/kilt/13886387/0000",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_32",
+    "uri": "ctx://team/engineering/hydra/kilt/13886387/0004",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_32",
+    "uri": "ctx://team/engineering/hydra/kilt/40516677/0000",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_32",
+    "uri": "ctx://team/engineering/hydra/kilt/17182301/0057",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_32",
+    "uri": "ctx://team/engineering/hydra/kilt/17182301/0062",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_32",
+    "uri": "ctx://team/engineering/hydra/kilt/17182301/0000",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_32",
+    "uri": "ctx://team/engineering/hydra/kilt/9008/0084",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_32",
+    "uri": "ctx://team/engineering/hydra/kilt/17182301/0056",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_32",
+    "uri": "ctx://team/engineering/hydra/kilt/17182301/0000",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_32",
+    "uri": "ctx://datalake/hydra/financial/client",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_32",
+    "uri": "ctx://datalake/hydra/financial/disp",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_32",
+    "uri": "ctx://datalake/hydra/financial/district",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_46",
+    "uri": "ctx://datalake/hydra/financial/loan",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_46",
+    "uri": "ctx://datalake/hydra/financial/disp",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_46",
+    "uri": "ctx://datalake/hydra/financial/order",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_46",
+    "uri": "ctx://datalake/hydra/financial/district",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_46",
+    "uri": "ctx://datalake/hydra/financial/client",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_46",
+    "uri": "ctx://datalake/hydra/financial/account",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_46",
+    "uri": "ctx://team/engineering/hydra/kilt/20216/0027",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_46",
+    "uri": "ctx://team/engineering/hydra/kilt/23844/0000",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_46",
+    "uri": "ctx://team/engineering/hydra/kilt/682528/0016",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_46",
+    "uri": "ctx://team/engineering/hydra/kilt/20216/0029",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_46",
+    "uri": "ctx://team/engineering/hydra/kilt/20216/0027",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_46",
+    "uri": "ctx://team/engineering/hydra/kilt/23844/0000",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_42",
+    "uri": "ctx://datalake/hydra/financial/disp",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_42",
+    "uri": "ctx://datalake/hydra/financial/client",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_42",
+    "uri": "ctx://datalake/hydra/financial/account",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_42",
+    "uri": "ctx://team/engineering/hydra/kilt/20014218/0000",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_42",
+    "uri": "ctx://team/engineering/hydra/kilt/23861863/0000",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_42",
+    "uri": "ctx://team/engineering/hydra/kilt/29017260/0000",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_42",
+    "uri": "ctx://datalake/hydra/financial/district",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_42",
+    "uri": "ctx://datalake/hydra/financial/client",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_42",
+    "uri": "ctx://datalake/hydra/financial/account",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_60",
+    "uri": "ctx://datalake/hydra/financial/client",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_60",
+    "uri": "ctx://datalake/hydra/financial/disp",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_60",
+    "uri": "ctx://datalake/hydra/financial/account",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_60",
+    "uri": "ctx://team/engineering/hydra/kilt/23844/0001",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_60",
+    "uri": "ctx://team/engineering/hydra/kilt/23844/0042",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_60",
+    "uri": "ctx://team/engineering/hydra/kilt/23844/0000",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_60",
+    "uri": "ctx://datalake/hydra/financial/district",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_60",
+    "uri": "ctx://datalake/hydra/financial/client",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_60",
+    "uri": "ctx://datalake/hydra/financial/account",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_55",
+    "uri": "ctx://datalake/hydra/student_club/event",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_55",
+    "uri": "ctx://datalake/hydra/student_club/member",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_55",
+    "uri": "ctx://datalake/hydra/student_club/major",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_55",
+    "uri": "ctx://datalake/hydra/student_club/member",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_55",
+    "uri": "ctx://datalake/hydra/student_club/major",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_55",
+    "uri": "ctx://datalake/hydra/student_club/income",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_55",
+    "uri": "ctx://datalake/hydra/student_club/zip_code",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_55",
+    "uri": "ctx://datalake/hydra/student_club/member",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_55",
+    "uri": "ctx://datalake/hydra/student_club/event",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_55",
+    "uri": "ctx://datalake/hydra/student_club/member",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_55",
+    "uri": "ctx://datalake/hydra/student_club/income",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_55",
+    "uri": "ctx://datalake/hydra/student_club/event",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_55",
+    "uri": "ctx://datalake/hydra/student_club/attendance",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_55",
+    "uri": "ctx://datalake/hydra/student_club/event",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_55",
+    "uri": "ctx://datalake/hydra/student_club/budget",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_55",
+    "uri": "ctx://team/engineering/hydra/kilt/937587/0010",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_55",
+    "uri": "ctx://team/engineering/hydra/kilt/937587/0000",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_55",
+    "uri": "ctx://team/engineering/hydra/kilt/937587/0003",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_66",
+    "uri": "ctx://datalake/hydra/student_club/zip_code",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_66",
+    "uri": "ctx://datalake/hydra/student_club/member",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_66",
+    "uri": "ctx://datalake/hydra/student_club/event",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_66",
+    "uri": "ctx://datalake/hydra/student_club/member",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_66",
+    "uri": "ctx://datalake/hydra/student_club/income",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_66",
+    "uri": "ctx://datalake/hydra/student_club/zip_code",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_66",
+    "uri": "ctx://datalake/hydra/student_club/zip_code",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_66",
+    "uri": "ctx://datalake/hydra/student_club/event",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_66",
+    "uri": "ctx://datalake/hydra/student_club/member",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_66",
+    "uri": "ctx://team/engineering/hydra/kilt/21648/0063",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_66",
+    "uri": "ctx://team/engineering/hydra/kilt/67234/0025",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_66",
+    "uri": "ctx://team/engineering/hydra/kilt/67234/0021",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_0",
+    "uri": "ctx://datalake/hydra/student_club/attendance",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_0",
+    "uri": "ctx://datalake/hydra/student_club/event",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_0",
+    "uri": "ctx://datalake/hydra/student_club/budget",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_0",
+    "uri": "ctx://datalake/hydra/student_club/attendance",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_0",
+    "uri": "ctx://datalake/hydra/student_club/event",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_0",
+    "uri": "ctx://datalake/hydra/student_club/member",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_0",
+    "uri": "ctx://team/engineering/hydra/kilt/30861034/0015",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_0",
+    "uri": "ctx://team/engineering/hydra/kilt/30861034/0016",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_0",
+    "uri": "ctx://team/engineering/hydra/kilt/30861034/0009",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_0",
+    "uri": "ctx://team/engineering/hydra/kilt/30861034/0012",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_0",
+    "uri": "ctx://team/engineering/hydra/kilt/30861034/0001",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_0",
+    "uri": "ctx://team/engineering/hydra/kilt/30861034/0000",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_0",
+    "uri": "ctx://team/engineering/hydra/kilt/1600426/0014",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_0",
+    "uri": "ctx://team/engineering/hydra/kilt/30861034/0016",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_0",
+    "uri": "ctx://team/engineering/hydra/kilt/322977/0002",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_11",
+    "uri": "ctx://datalake/hydra/student_club/major",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_11",
+    "uri": "ctx://datalake/hydra/student_club/member",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_11",
+    "uri": "ctx://datalake/hydra/student_club/income",
+    "type": "table_schema",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_11",
+    "uri": "ctx://team/engineering/hydra/kilt/10158450/0000",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_11",
+    "uri": "ctx://team/engineering/hydra/kilt/66463/0022",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  },
+  {
+    "case_id": "dev_11",
+    "uri": "ctx://team/engineering/hydra/kilt/66463/0034",
+    "type": "resource",
+    "identical_to_frozen_index": true
+  }
+]

@@ -1,0 +1,126 @@
+[
+  {
+    "query": "1986 VAX 8800",
+    "L0_vector": [
+      {
+        "section_id": null,
+        "title": null,
+        "snippet_offset": null,
+        "cosine": 0.24884985387325287,
+        "rerank_score": null,
+        "strategy": null
+      }
+    ],
+    "L1_BM25": [
+      {
+        "section_id": null,
+        "title": null,
+        "snippet_offset": null,
+        "cosine": 0.24884985387325287,
+        "rerank_score": 0.0,
+        "strategy": null
+      }
+    ],
+    "tree_NoOp": [
+      {
+        "section_id": 10,
+        "title": "Instruction pipelining.",
+        "snippet_offset": [
+          10303,
+          11920
+        ],
+        "cosine": 0.24884985387325287,
+        "rerank_score": 0.0,
+        "strategy": "tree"
+      }
+    ],
+    "original_range_fusion": [
+      {
+        "section_id": 10,
+        "title": "Instruction pipelining.",
+        "snippet_offset": [
+          9617,
+          11920
+        ],
+        "cosine": null,
+        "rerank_score": 0.01639344262295082,
+        "strategy": "keyword"
+      }
+    ],
+    "final_document_fusion": [
+      {
+        "section_id": 10,
+        "title": "Instruction pipelining.",
+        "snippet_offset": [
+          9617,
+          11920
+        ],
+        "cosine": null,
+        "rerank_score": 0.03278688524590164,
+        "strategy": "keyword"
+      }
+    ]
+  },
+  {
+    "query": "How can a CPU make progress on several instructions at once by handling different stages simultaneously?",
+    "L0_vector": [
+      {
+        "section_id": null,
+        "title": null,
+        "snippet_offset": null,
+        "cosine": 0.514289379119873,
+        "rerank_score": null,
+        "strategy": null
+      }
+    ],
+    "L1_BM25": [
+      {
+        "section_id": null,
+        "title": null,
+        "snippet_offset": null,
+        "cosine": 0.514289379119873,
+        "rerank_score": 0.0,
+        "strategy": null
+      }
+    ],
+    "tree_NoOp": [
+      {
+        "section_id": 7,
+        "title": "Multicycle Microarchitecture.",
+        "snippet_offset": [
+          5492,
+          7303
+        ],
+        "cosine": 0.514289379119873,
+        "rerank_score": 0.0,
+        "strategy": "tree"
+      }
+    ],
+    "original_range_fusion": [
+      {
+        "section_id": 12,
+        "title": "Branch prediction.",
+        "snippet_offset": [
+          13335,
+          15121
+        ],
+        "cosine": null,
+        "rerank_score": 0.03225806451612903,
+        "strategy": "hybrid"
+      }
+    ],
+    "final_document_fusion": [
+      {
+        "section_id": 12,
+        "title": "Branch prediction.",
+        "snippet_offset": [
+          13335,
+          15121
+        ],
+        "cosine": null,
+        "rerank_score": 0.03278688524590164,
+        "strategy": "hybrid"
+      }
+    ]
+  }
+]

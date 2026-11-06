@@ -1,0 +1,481 @@
+{
+  "review_date": "2026-11-04",
+  "method": "Post-hoc coding-assistant review of original question meaning, actual returned evidence, and read-only SQLite replays. Not an official judge, independent human panel, new agent run, or pre-registered scoring rule.",
+  "rubric": {
+    "supported": "Requested core answer follows from actual evidence under an ordinary reading; incidental matching-reference prose is not required. Facts explicitly supplied by the question may be accepted, with limits recorded.",
+    "defensible_alternative": "Agent explicitly uses a reasonable aggregation/measure, correctly supported by data and text; question does not uniquely select the different reference measure. Not converted to an unconditional pass.",
+    "conditional": "A precise conditional/subpopulation answer is supported, but a country/evidence or geography-grain condition remains unverified.",
+    "unresolved_premise": "The central cross-source identity/product/organization premise is unestablished. Neither unconditional correctness nor factual falsity is asserted. Agent and reference can share this defect.",
+    "demonstrable_error": "A concrete contradiction or invalid inclusion is visible in the actual evidence even without treating reference SQL as uniquely correct.",
+    "no_final_answer": "No delivered answer. Still a delivery failure when the underlying question is ambiguous."
+  },
+  "counting": "Primary outcomes are disjoint and sum to 20. Question/reference, metadata, retrieval, SQL, reasoning, and delivery flags overlap and must not be summed as mutually exclusive failures. No single adjusted accuracy or filtered-subset accuracy is reported.",
+  "scope": "Historical frozen benchmark/corpus, same 20 nonrandom cases and case-informed 2060-article fixture. No corpus repairs, prompt/model changes, or selective reruns. Metadata absence is not automatically incorrect metadata. Unsupported identity is not automatically proven false identity.",
+  "summary": {
+    "cases": 20,
+    "mutually_exclusive_outcomes": {
+      "supported": 9,
+      "defensible_alternative": 3,
+      "no_final_answer": 1,
+      "conditional": 2,
+      "demonstrable_error": 1,
+      "unresolved_premise": 4
+    },
+    "by_type": {
+      "a2s": {
+        "supported": 5,
+        "defensible_alternative": 2,
+        "no_final_answer": 1,
+        "unresolved_premise": 2
+      },
+      "s2a": {
+        "supported": 4,
+        "defensible_alternative": 1,
+        "conditional": 2,
+        "demonstrable_error": 1,
+        "unresolved_premise": 2
+      }
+    },
+    "material_question_or_reference_issue_cases": [
+      "dev_62",
+      "dev_13",
+      "dev_35",
+      "dev_6",
+      "dev_20",
+      "dev_32",
+      "dev_46",
+      "dev_42",
+      "dev_55",
+      "dev_0",
+      "dev_11"
+    ],
+    "incorrect_standings_description_cases": [
+      "dev_62",
+      "dev_13"
+    ],
+    "insufficient_location_metadata_cases": [
+      "dev_6",
+      "dev_20",
+      "dev_42"
+    ],
+    "missing_required_reference_table_cases": [],
+    "missing_direct_text_evidence_cases": [
+      "dev_6"
+    ],
+    "confirmed_sql_filter_error_cases": [
+      "dev_20"
+    ],
+    "unsupported_bridge_cases": [
+      "dev_32",
+      "dev_42",
+      "dev_55",
+      "dev_0",
+      "dev_11"
+    ],
+    "generation_failure_cases": [
+      "dev_35"
+    ],
+    "supported_sql_only_cases": [
+      "dev_10"
+    ],
+    "previous_reference_agreement": {
+      "selected": 20,
+      "match": 13,
+      "partial": 1,
+      "reference_mismatch": 5,
+      "no_answer": 1,
+      "by_type": {
+        "a2s": {
+          "match": 6,
+          "total": 10
+        },
+        "s2a": {
+          "match": 7,
+          "total": 10
+        }
+      },
+      "first_query_all_reference_tables": 13,
+      "first_query_reference_table_hits": 33,
+      "all_reference_tables_eventually": 20,
+      "sql_calls": 56,
+      "sql_errors": 0,
+      "text_search_absent_cases": [
+        "dev_10"
+      ],
+      "frozen_text_anchor_hit_cases": 14,
+      "verified_alternative_support_cases": [
+        "dev_66"
+      ],
+      "correct_answer_without_text_retrieval": [
+        "dev_10"
+      ],
+      "hybrid_evidence_and_reference_match": 12,
+      "completed_final_answers": 19,
+      "final_finish_reasons": {
+        "length": 1,
+        "stop": 19
+      }
+    }
+  },
+  "records": [
+    {
+      "case_id": "dev_43",
+      "type": "a2s",
+      "db_id": "formula_1",
+      "question": "What was the significance of the Joint Declaration on the Doctrine of Justification signed on the same date as the last round of the race in 1999?",
+      "previous_reference_assessment": "match",
+      "semantic_outcome": "supported",
+      "finding": "The final 1999 race is uniquely round 16, 1999-10-31. The retrieved declaration article supports the requested reconciliation significance. The question itself supplies the same-date premise; the agent explicitly says the retrieved passage does not independently verify the signing day.",
+      "material_question_or_reference_issues": [],
+      "material_metadata_issue": null,
+      "agent_issue_flags": [],
+      "all_reference_tables_retrieved": true,
+      "agent_sql_calls": 1,
+      "text_search_calls": 2,
+      "evidence": "evidence-by-case.json#dev_43"
+    },
+    {
+      "case_id": "dev_62",
+      "type": "a2s",
+      "db_id": "formula_1",
+      "question": "Which constructor has the highest points, and what is the origin of the name of that constructor as it relates to the automotive brand?",
+      "previous_reference_assessment": "reference_mismatch",
+      "semantic_outcome": "defensible_alternative",
+      "finding": "Ferrari leads the sum of recorded constructor race points with 7081.5. Mercedes leads the maximum season-standing snapshot with 765. Both SQL queries were executed correctly. The latter is season-to-date cumulative points, not points earned in one race. The question specifies neither aggregation nor time scope; Ferrari name-origin evidence supports the selected branch.",
+      "material_question_or_reference_issues": [
+        "unspecified_points_measure"
+      ],
+      "material_metadata_issue": "incorrect_standings_points_description",
+      "agent_issue_flags": [],
+      "all_reference_tables_retrieved": true,
+      "agent_sql_calls": 3,
+      "text_search_calls": 1,
+      "evidence": "evidence-by-case.json#dev_62"
+    },
+    {
+      "case_id": "dev_5",
+      "type": "s2a",
+      "db_id": "formula_1",
+      "question": "What are the location coordinates of the racing circuit, Silverstone, which was built on the site of a World War II Royal Air Force bomber station and features runways in a classic WWII triangle format within its track outline?",
+      "previous_reference_assessment": "match",
+      "semantic_outcome": "supported",
+      "finding": "The passage identifies Silverstone and the airfield/runway premise; the unique database row gives latitude 52.0786 and longitude -1.01694. The question already names Silverstone, so the text step is verification, not indispensable discovery.",
+      "material_question_or_reference_issues": [],
+      "material_metadata_issue": null,
+      "agent_issue_flags": [],
+      "all_reference_tables_retrieved": true,
+      "agent_sql_calls": 1,
+      "text_search_calls": 1,
+      "evidence": "evidence-by-case.json#dev_5"
+    },
+    {
+      "case_id": "dev_13",
+      "type": "s2a",
+      "db_id": "formula_1",
+      "question": "What was the average points scored in the year 2000 by the person nicknamed \"Irv the Swerve\" and \"Fast Eddie\"?",
+      "previous_reference_assessment": "reference_mismatch",
+      "semantic_outcome": "defensible_alternative",
+      "finding": "The nickname passage identifies Eddie Irvine. In 2000 he has 4 points in 16 recorded race-result rows, giving 0.25 per race. The reference averages 15 cumulative standings snapshots, giving 34/15 = 2.2666667. Average points scored naturally permits the agent measure; the hidden reference does not establish that cumulative snapshots are the only intended measure.",
+      "material_question_or_reference_issues": [
+        "unspecified_points_measure"
+      ],
+      "material_metadata_issue": "incorrect_standings_points_description",
+      "agent_issue_flags": [],
+      "all_reference_tables_retrieved": true,
+      "agent_sql_calls": 2,
+      "text_search_calls": 1,
+      "evidence": "evidence-by-case.json#dev_13"
+    },
+    {
+      "case_id": "dev_35",
+      "type": "a2s",
+      "db_id": "superhero",
+      "question": "What is the role in Theosophical teachings of the race of the superhero with the maximum attribute value?",
+      "previous_reference_assessment": "no_answer",
+      "semantic_outcome": "no_final_answer",
+      "finding": "The maximum attribute value 100 occurs in 279 rows for 117 heroes and 25 non-null race labels. The reference selects one tied row without a tie-break. The agent explored several interpretations, including root races in Theosophy, but delivered no answer: the last call used all 4096 output tokens for reasoning and ended with length. A specific mandatory Cosmic Entity branch cannot be inferred from this tied question.",
+      "material_question_or_reference_issues": [
+        "nonunique_maximum_without_tiebreak"
+      ],
+      "material_metadata_issue": null,
+      "agent_issue_flags": [
+        "generation_budget_exhausted"
+      ],
+      "all_reference_tables_retrieved": true,
+      "agent_sql_calls": 7,
+      "text_search_calls": 3,
+      "evidence": "evidence-by-case.json#dev_35"
+    },
+    {
+      "case_id": "dev_72",
+      "type": "a2s",
+      "db_id": "superhero",
+      "question": "What is the significance of the \"Brightest Day\" storyline in the publisher of Blue Beetle II?",
+      "previous_reference_assessment": "match",
+      "semantic_outcome": "supported",
+      "finding": "Database publisher is DC Comics. Retrieved Brightest Day text directly supports its aftermath-of-Blackest-Night significance and the additional character context. Reference-specific incidental details are not required to answer the open significance question.",
+      "material_question_or_reference_issues": [],
+      "material_metadata_issue": null,
+      "agent_issue_flags": [],
+      "all_reference_tables_retrieved": true,
+      "agent_sql_calls": 1,
+      "text_search_calls": 1,
+      "evidence": "evidence-by-case.json#dev_72"
+    },
+    {
+      "case_id": "dev_10",
+      "type": "s2a",
+      "db_id": "superhero",
+      "question": "What is the difference in weight between the alter ego of the comic supervillain Abomination and Charles Chandler?",
+      "previous_reference_assessment": "match",
+      "semantic_outcome": "supported",
+      "finding": "Both character identity and weights are present in the same database: Abomination/Emil Blonsky 441 kg and Charles Chandler 90 kg, difference 351 kg. SQL alone suffices for this question; absence of a text call is a hybrid-workflow observation, not an answer error.",
+      "material_question_or_reference_issues": [],
+      "material_metadata_issue": null,
+      "agent_issue_flags": [],
+      "all_reference_tables_retrieved": true,
+      "agent_sql_calls": 2,
+      "text_search_calls": 0,
+      "evidence": "evidence-by-case.json#dev_10"
+    },
+    {
+      "case_id": "dev_68",
+      "type": "s2a",
+      "db_id": "superhero",
+      "question": "What are the superpowers of the fictional character in \"The Incredibles\" who is married to Bob Parr and also known as Elastigirl?",
+      "previous_reference_assessment": "match",
+      "semantic_outcome": "supported",
+      "finding": "Retrieved cast text identifies Helen Parr/Elastigirl as Bob Parr's wife. The database identity and all seven power associations match the final answer.",
+      "material_question_or_reference_issues": [],
+      "material_metadata_issue": null,
+      "agent_issue_flags": [],
+      "all_reference_tables_retrieved": true,
+      "agent_sql_calls": 2,
+      "text_search_calls": 1,
+      "evidence": "evidence-by-case.json#dev_68"
+    },
+    {
+      "case_id": "dev_26",
+      "type": "a2s",
+      "db_id": "codebase_community",
+      "question": "What is the main advantage of the Holm–Bonferroni method compared to the simple Bonferroni correction, as discussed in the most-viewed post by Harvey Motulsky?",
+      "previous_reference_assessment": "match",
+      "semantic_outcome": "supported",
+      "finding": "The highest-view post is ID 109 with 3980 views. Retrieved method passages support greater power than simple Bonferroni while controlling family-wise error. The agent correctly notes that the actual post frames its direct comparison against Tukey/Dunnett; it does not silently attribute the specific Bonferroni comparison to that post.",
+      "material_question_or_reference_issues": [],
+      "material_metadata_issue": null,
+      "agent_issue_flags": [],
+      "all_reference_tables_retrieved": true,
+      "agent_sql_calls": 7,
+      "text_search_calls": 1,
+      "evidence": "evidence-by-case.json#dev_26"
+    },
+    {
+      "case_id": "dev_31",
+      "type": "a2s",
+      "db_id": "codebase_community",
+      "question": "What is the form of government in the country where the owner of the post \"Eliciting priors from experts\" is located?",
+      "previous_reference_assessment": "match",
+      "semantic_outcome": "supported",
+      "finding": "The unique post owner has location Newcastle, United Kingdom. Retrieved historical corpus passages support parliamentary democracy under constitutional monarchy. Current officeholders are outside this frozen-corpus review.",
+      "material_question_or_reference_issues": [],
+      "material_metadata_issue": null,
+      "agent_issue_flags": [],
+      "all_reference_tables_retrieved": true,
+      "agent_sql_calls": 1,
+      "text_search_calls": 2,
+      "evidence": "evidence-by-case.json#dev_31"
+    },
+    {
+      "case_id": "dev_6",
+      "type": "s2a",
+      "db_id": "codebase_community",
+      "question": "How many users from the country where the Indian Half-bred horse type is primarily found have the teacher badges?",
+      "previous_reference_assessment": "reference_mismatch",
+      "semantic_outcome": "conditional",
+      "finding": "45 is reproducible for distinct Teacher badge holders with explicit India-country location variants. The reference exact string India yields 18 and excludes Bangalore, India and other explicit country variants. The broader SQL is defensible, but country-wide completeness is unproved for free-text locations. No direct Indian Half-bred country evidence was retrieved; the agent discloses inferring India from the name.",
+      "material_question_or_reference_issues": [
+        "unfixed_country_location_normalization"
+      ],
+      "material_metadata_issue": "free_text_location_without_country_normalization",
+      "agent_issue_flags": [
+        "missing_text_evidence_disclosed"
+      ],
+      "all_reference_tables_retrieved": true,
+      "agent_sql_calls": 5,
+      "text_search_calls": 10,
+      "evidence": "evidence-by-case.json#dev_6"
+    },
+    {
+      "case_id": "dev_20",
+      "type": "s2a",
+      "db_id": "codebase_community",
+      "question": "How many users were from the city where Leonard Rosenfeld had the majority of his art showings?",
+      "previous_reference_assessment": "reference_mismatch",
+      "semantic_outcome": "demonstrable_error",
+      "finding": "295 is not a valid New York City count: the agent knowingly includes Hudson Valley, New York, USA. The reference exact string New York count 15 also excludes explicit New York City variants. Removing that one row gives 294 substring matches, not a validated city count. This is an actual overly broad SQL filter and a reasoning error despite the flawed reference scope.",
+      "material_question_or_reference_issues": [
+        "unfixed_city_location_normalization"
+      ],
+      "material_metadata_issue": "free_text_location_without_city_normalization",
+      "agent_issue_flags": [
+        "overbroad_city_filter",
+        "retains_acknowledged_counterexample"
+      ],
+      "all_reference_tables_retrieved": true,
+      "agent_sql_calls": 2,
+      "text_search_calls": 1,
+      "evidence": "evidence-by-case.json#dev_20"
+    },
+    {
+      "case_id": "dev_32",
+      "type": "a2s",
+      "db_id": "financial",
+      "question": "What type of credit card does the client with ID 13539 own, and how does this type of credit card promote financial management for its users, and what features distinguish it from other types of credit cards?",
+      "previous_reference_assessment": "partial",
+      "semantic_outcome": "unresolved_premise",
+      "finding": "The database proves card type junior for client 13539. Its schema only defines junior/classic/gold class labels. The retrieved paragraph is about prepaid cards and teenagers; neither it nor the table proves this junior class is prepaid or aimed at young users. The reference assumes that mapping; the agent acknowledges missing product-specific support but still infers a young/entry-tier purpose. Exact management features cannot be settled from these sources.",
+      "material_question_or_reference_issues": [
+        "unsupported_product_category_bridge"
+      ],
+      "material_metadata_issue": null,
+      "agent_issue_flags": [
+        "unsupported_bridge"
+      ],
+      "all_reference_tables_retrieved": true,
+      "agent_sql_calls": 1,
+      "text_search_calls": 8,
+      "evidence": "evidence-by-case.json#dev_32"
+    },
+    {
+      "case_id": "dev_46",
+      "type": "a2s",
+      "db_id": "financial",
+      "question": "What is the historical significance of the district with the highest active loan in Czechoslovakia?",
+      "previous_reference_assessment": "reference_mismatch",
+      "semantic_outcome": "defensible_alternative",
+      "finding": "Largest individual active loan: 590820 in Brno-mesto. Highest active-loan total by actual district A2: Prague, 9291852. Reference groups region A3: south Moravia, 15776220. The question says district and highest active loan, without a total; the agent single-loan reading is defensible and Brno history is supported. The reference also changes geographic level despite correct A2/A3 descriptions.",
+      "material_question_or_reference_issues": [
+        "unspecified_loan_aggregation_and_reference_region_grain"
+      ],
+      "material_metadata_issue": null,
+      "agent_issue_flags": [],
+      "all_reference_tables_retrieved": true,
+      "agent_sql_calls": 2,
+      "text_search_calls": 2,
+      "evidence": "evidence-by-case.json#dev_46"
+    },
+    {
+      "case_id": "dev_42",
+      "type": "s2a",
+      "db_id": "financial",
+      "question": "Among the accounts opened, how many female customers who were born before 1950 stayed in the town associated with the Soviet football player Nikolai Yevgrafovich's last name?",
+      "previous_reference_assessment": "match",
+      "semantic_outcome": "conditional",
+      "finding": "The footballer text supplies Sokolov, and all eight qualifying clients linked to district Sokolov have actual accounts. But district.A2 is a district name, not a town address; this district contains 38 municipalities in the table. client.district_id is described as branch location. Eight is supported as a district-linked database count, not proven residence in the town requested by the question.",
+      "material_question_or_reference_issues": [
+        "town_question_district_proxy"
+      ],
+      "material_metadata_issue": "client_branch_label_and_district_grain_insufficient_for_residence",
+      "agent_issue_flags": [
+        "unsupported_bridge"
+      ],
+      "all_reference_tables_retrieved": true,
+      "agent_sql_calls": 3,
+      "text_search_calls": 1,
+      "evidence": "evidence-by-case.json#dev_42"
+    },
+    {
+      "case_id": "dev_60",
+      "type": "s2a",
+      "db_id": "financial",
+      "question": "For the first client who opened his/her account in the capital of Czechia, what is his/her account ID?",
+      "previous_reference_assessment": "match",
+      "semantic_outcome": "supported",
+      "finding": "The retrieved text establishes Prague as the capital in the frozen corpus. Account district 1 is Hl.m. Praha/Prague. Earliest account 1539 on 1993-01-03 is unique; the next opening is 1993-01-08.",
+      "material_question_or_reference_issues": [],
+      "material_metadata_issue": null,
+      "agent_issue_flags": [],
+      "all_reference_tables_retrieved": true,
+      "agent_sql_calls": 2,
+      "text_search_calls": 1,
+      "evidence": "evidence-by-case.json#dev_60"
+    },
+    {
+      "case_id": "dev_55",
+      "type": "a2s",
+      "db_id": "student_club",
+      "question": "What is the relationship between the student from the Art and Design Department in the Student_Club and Peter Firth?",
+      "previous_reference_assessment": "match",
+      "semantic_outcome": "unresolved_premise",
+      "finding": "The database identifies one Art and Design student, Amy Firth. The Peter Firth passage lists a child Amy. No retrieved record establishes that this student is that child. This is a same-name identity assumption in both reference and agent, not proof that the relationship is false; the unconditional daughter claim cannot be certified from the available evidence.",
+      "material_question_or_reference_issues": [
+        "unverified_same_name_person_identity"
+      ],
+      "material_metadata_issue": null,
+      "agent_issue_flags": [
+        "unsupported_bridge"
+      ],
+      "all_reference_tables_retrieved": true,
+      "agent_sql_calls": 6,
+      "text_search_calls": 1,
+      "evidence": "evidence-by-case.json#dev_55"
+    },
+    {
+      "case_id": "dev_66",
+      "type": "a2s",
+      "db_id": "student_club",
+      "question": "What is the most populous city in the hometown state of Sacha Harrison?",
+      "previous_reference_assessment": "match",
+      "semantic_outcome": "supported",
+      "finding": "The member hometown ZIP maps to New Jersey; an actually retrieved alternative passage identifies Newark as the state's largest city. Different cited population years do not change the requested city answer. Missing the frozen anchor does not imply retrieval failure.",
+      "material_question_or_reference_issues": [],
+      "material_metadata_issue": null,
+      "agent_issue_flags": [],
+      "all_reference_tables_retrieved": true,
+      "agent_sql_calls": 1,
+      "text_search_calls": 1,
+      "evidence": "evidence-by-case.json#dev_66"
+    },
+    {
+      "case_id": "dev_0",
+      "type": "s2a",
+      "db_id": "student_club",
+      "question": "What is the name of the social event attended by the vice president of an organization established at the American University of Science and Technology to promote student interests, located at 900 E. Washington St.?",
+      "previous_reference_assessment": "match",
+      "semantic_outcome": "unresolved_premise",
+      "finding": "The SQL correctly identifies Laugh Out Loud as the social event at the address attended by this database's club vice president. The retrieved AUST passage says that the university has student clubs, but does not identify this database's club as one of them. The address column describes the event venue, not the organization. The benchmark substitutes a general organization type for an identified organization; a conditional database answer is available, but the literal AUST-specific premise is unproved.",
+      "material_question_or_reference_issues": [
+        "unverified_organization_identity_and_address_scope"
+      ],
+      "material_metadata_issue": null,
+      "agent_issue_flags": [
+        "unsupported_bridge"
+      ],
+      "all_reference_tables_retrieved": true,
+      "agent_sql_calls": 4,
+      "text_search_calls": 3,
+      "evidence": "evidence-by-case.json#dev_0"
+    },
+    {
+      "case_id": "dev_11",
+      "type": "s2a",
+      "db_id": "student_club",
+      "question": "What is the name of the major that the person holding the second highest political position in Afghanistan has joined?",
+      "previous_reference_assessment": "match",
+      "semantic_outcome": "unresolved_premise",
+      "finding": "The historical text describes the Afghan political office Vice President and names its officeholders. The schema explicitly defines member.position as the position in the club; its Vice President is Phillip Cullen, major Communication Studies. Shared title does not establish shared person. Reference and agent both replace a national officeholder with a student club officer. The SQL is correct for the latter, not evidence of the former's major.",
+      "material_question_or_reference_issues": [
+        "political_office_to_club_role_identity_substitution"
+      ],
+      "material_metadata_issue": null,
+      "agent_issue_flags": [
+        "unsupported_bridge"
+      ],
+      "all_reference_tables_retrieved": true,
+      "agent_sql_calls": 3,
+      "text_search_calls": 1,
+      "evidence": "evidence-by-case.json#dev_11"
+    }
+  ]
+}

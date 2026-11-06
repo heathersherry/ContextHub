@@ -1,0 +1,321 @@
+{
+  "method": "Coding-assistant semantic review with read-only reference SQL replay; no official judge. The primary count excludes partial and absent answers. No completed answer was rerun or tuned after outcome inspection. All initial parameter rejections are retained separately.",
+  "summary": {
+    "selected": 20,
+    "match": 13,
+    "partial": 1,
+    "reference_mismatch": 5,
+    "no_answer": 1,
+    "by_type": {
+      "a2s": {
+        "match": 6,
+        "total": 10
+      },
+      "s2a": {
+        "match": 7,
+        "total": 10
+      }
+    },
+    "first_query_all_reference_tables": 13,
+    "first_query_reference_table_hits": 33,
+    "all_reference_tables_eventually": 20,
+    "sql_calls": 56,
+    "sql_errors": 0,
+    "text_search_absent_cases": [
+      "dev_10"
+    ],
+    "frozen_text_anchor_hit_cases": 14,
+    "verified_alternative_support_cases": [
+      "dev_66"
+    ],
+    "correct_answer_without_text_retrieval": [
+      "dev_10"
+    ],
+    "hybrid_evidence_and_reference_match": 12,
+    "completed_final_answers": 19,
+    "final_finish_reasons": {
+      "length": 1,
+      "stop": 19
+    }
+  },
+  "records": [
+    {
+      "case_id": "dev_43",
+      "type": "a2s",
+      "assessment": "match",
+      "reference_match": true,
+      "primary_attribution": null,
+      "secondary_factors": [],
+      "reason": "Core answer matches the released reference on local semantic inspection and SQL-result verification; extra prose is not exhaustively fact-checked.",
+      "grounding": "retrieved_reference_core_evidence",
+      "reference_tables_retrieved": true,
+      "final_answer": "**Answer**\n\n**Step 1 — Database fact:** In the `formula_1.races` table, the last round of the 1999 season was **round 16, the Japanese Grand Prix, held on 1999-10-31** (query: `SELECT raceId, round, name, date FROM races WHERE year = 1999 ORDER BY round DESC`).\n\n**Step 2 — Significance of the Joint Declaration on the Doctrine of Justification (JDDJ):** According to the retrieved source (ctx://team/engineering/hydra/kilt/2325040/0000, v1), the JDDJ is a document created and agreed to in 1999 by the Catholic Church's Pontifical Council for Promoting Christian Unity (PCPCU) and the Lutheran World Federation after extensive ecumenical dialogue. Its significance is that:\n\n- It states the churches now share **\"a common understanding of our justification by God's grace through faith in Christ.\"**\n- To the parties involved, this **essentially resolves the roughly 500-year-old conflict over the nature of justification that was at the root of the Protestant Reformation**.\n- In substance, the PCPCU and the Lutheran World Federation acknowledged that the **excommunications relating to justification issued by the Council of Trent no longer apply** to the Lutheran teachings in the text, and likewise that the **condemnations in the Lutheran Confessions no longer apply** to the Catholic teachings in the document.\n- It was later adopted by the World Methodist Council (18 July 2006) and the World Communion of Reformed Churches (2017).\n\nSo, signed on the same date as the 1999 Japanese Grand Prix (31 October 1999), the Declaration's significance was that it resolved the core theological dispute of the Reformation between Catholics and Lutherans.\n\n*Note: the retrieved text confirms the document was agreed in 1999 and its significance, but does not itself state the exact signing date; the date match (1999-10-31) comes from the database.*",
+      "reference_answer": "The Joint Declaration on the Doctrine of Justification, signed on the same date as the Japanese Grand Prix on October 31, 1999, was significant because it resolved a 500-year-old theological conflict between the Catholic Church and the Lutheran World Federation over the nature of justification. It established a shared understanding of justification by God's grace through faith in Christ and declared that the mutual condemnations from the 16th century no longer apply to the signatories, marking a major step in ecumenical reconciliation."
+    },
+    {
+      "case_id": "dev_62",
+      "type": "a2s",
+      "assessment": "reference_mismatch",
+      "reference_match": false,
+      "primary_attribution": "sql_aggregation",
+      "secondary_factors": [
+        "reference_ambiguity"
+      ],
+      "reason": "The agent computed both Ferrari as the highest sum of constructorResults.points (7081.5) and Mercedes as the highest single standing (765), then chose Ferrari and searched its name origin. All relevant schemas were retrieved. The reference chooses the highest individual constructorStandings record. A defensible alternative reading exists; this is not a table-discovery failure.",
+      "grounding": "not_established_for_reference_branch",
+      "reference_tables_retrieved": true,
+      "final_answer": "**Answer:**\n\nThe constructor with the highest points is **Ferrari**. Summing points from `constructorResults` (joined to `constructors`), Ferrari leads with **7,081.5 points**, ahead of McLaren (5,232.5), Red Bull (3,750.5), Williams (3,541.0), and Mercedes (3,525.0).\n\n**Origin of the name:** The Ferrari automotive brand is named after its founder, **Enzo Ferrari**. According to the retrieved source (ctx://team/engineering/hydra/kilt/11225/0000, v1), \"Ferrari is an Italian luxury sports car manufacturer based in Maranello. Founded by Enzo Ferrari in 1939 out of Alfa Romeo's race division as 'Auto Avio Costruzioni', the company built its first car in 1940,\" with the company's inception as an auto manufacturer usually recognized in 1947 \"when the first Ferrari-badged car was completed.\" A related passage (ctx://team/engineering/hydra/kilt/11225/0002, v1) notes that when Enzo Ferrari left Alfa Romeo in September 1939, he was barred from using the Ferrari name on racing cars for four years, and his racing team name \"Scuderia Ferrari\" was later resurrected to denote the factory racing cars (ctx://team/engineering/hydra/kilt/11225/0004, v1).\n\nSo the constructor's name comes directly from founder Enzo Ferrari's surname, with \"Scuderia Ferrari\" (Italian for \"Ferrari stable/team\") denoting the racing division.",
+      "reference_answer": "The constructor with the highest points is Mercedes. The name \"Mercedes\" originates from Emil Jellinek, who named the cars after his daughter, Mercédès Jellinek. Jellinek raced Daimler-Motoren-Gesellschaft automobiles under the pseudonym \"Mercédès,\" and the name was later adopted for the brand, eventually becoming part of \"Mercedes-Benz\" after the merger of DMG and Benz & Cie in 1926."
+    },
+    {
+      "case_id": "dev_5",
+      "type": "s2a",
+      "assessment": "match",
+      "reference_match": true,
+      "primary_attribution": null,
+      "secondary_factors": [],
+      "reason": "Core answer matches the released reference on local semantic inspection and SQL-result verification; extra prose is not exhaustively fact-checked.",
+      "grounding": "retrieved_reference_core_evidence",
+      "reference_tables_retrieved": true,
+      "final_answer": "**Answer:** The Silverstone Circuit's location coordinates are **latitude 52.0786, longitude −1.01694** (lat, lng), located in Silverstone, UK.\n\n**Evidence:**\n- The ContextHub resource confirms the premise: \"The Silverstone circuit is on the site of a World War II Royal Air Force bomber station, RAF Silverstone, which opened in 1943... The airfield's three runways, in classic WWII triangle format, lie within the outline of the present track.\" (ctx://team/engineering/hydra/kilt/522676/0001, v1)\n- The `formula_1.circuits` table (ctx://datalake/hydra/formula_1/circuits, v1) returns: Silverstone Circuit → lat = 52.0786, lng = −1.01694, with the column description noting \"Location coordinates: (lat, lng)\".",
+      "reference_answer": "The Silverstone Circuit, built on the site of a World War II Royal Air Force bomber station and featuring runways in a classic WWII triangle format within its track outline, is located at coordinates 52.0786 (latitude) and -1.01694 (longitude)."
+    },
+    {
+      "case_id": "dev_13",
+      "type": "s2a",
+      "assessment": "reference_mismatch",
+      "reference_match": false,
+      "primary_attribution": "sql_measure",
+      "secondary_factors": [
+        "reference_ambiguity"
+      ],
+      "reason": "Correctly retrieved Eddie Irvine and all reference schemas, but averaged results.points (0.25), while the reference averages driverStandings.points (2.2666667). Points-per-race is a plausible reading of the wording; the two measures are different.",
+      "grounding": "retrieved_reference_core_evidence",
+      "reference_tables_retrieved": true,
+      "final_answer": "The person nicknamed \"Irv the Swerve\" and \"Fast Eddie\" is **Eddie Irvine**, per retrieved text: \"He was nicknamed 'Irv the Swerve' and later 'Fast Eddie'\" (ctx://team/engineering/hydra/kilt/424417/0052, version 1).\n\nQuerying the `formula_1` database (results joined with races and drivers) for his 2000 season:\n- Total points in 2000: **4.0** across **16** races\n- Average points per race: **4.0 ÷ 16 = 0.25**\n\n**Answer: 0.25 points** (average points scored by Eddie Irvine in the year 2000).",
+      "reference_answer": "The person nicknamed \"Irv the Swerve\" and \"Fast Eddie\" is Eddie Irvine, who had an average points score of 2.27 in the year 2000."
+    },
+    {
+      "case_id": "dev_35",
+      "type": "a2s",
+      "assessment": "no_answer",
+      "reference_match": false,
+      "primary_attribution": "generation_budget",
+      "secondary_factors": [
+        "tie_ambiguity",
+        "query_formulation"
+      ],
+      "reason": "All three reference tables were retrieved and SQL repeatedly returned Cosmic Entity. Maximum value 100 is tied across 279 attribute rows and 117 heroes. Resource queries pursued human/root-race teachings rather than Cosmic Entity. Final model call finished with length: all 4096 output tokens were reasoning, with no visible final answer.",
+      "grounding": "not_established_for_reference_branch",
+      "reference_tables_retrieved": true,
+      "final_answer": "",
+      "reference_answer": "The race of the superhero with the maximum attribute value is Cosmic Entity, which in Theosophical teachings represents a transcendent concept that can replace or supplement the traditional concept of 'God'. Cosmic entities are also linked to advanced spiritual beings, such as the Maitreya, who serve as \"World Teachers\" to guide humanity's evolution and impart knowledge about existence."
+    },
+    {
+      "case_id": "dev_72",
+      "type": "a2s",
+      "assessment": "match",
+      "reference_match": true,
+      "primary_attribution": null,
+      "secondary_factors": [],
+      "reason": "Core answer matches the released reference on local semantic inspection and SQL-result verification; extra prose is not exhaustively fact-checked.",
+      "grounding": "retrieved_reference_core_evidence",
+      "reference_tables_retrieved": true,
+      "final_answer": "**Answer:**\n\n**Blue Beetle II** is published by **DC Comics** (from the `superhero` database: `superhero` joined with `publisher`, publisher_id = 4).\n\n**Significance of \"Brightest Day\" to DC Comics:** According to the retrieved source (ctx://team/engineering/hydra/kilt/25769371/0000, v1), **Brightest Day is a 2010–2011 crossover storyline published by DC Comics**, consisting of a year-long comic book maxi-series that began in April 2010, along with a number of tie-in books. Its significance is that **the story follows the ending of the series \"Blackest Night\" and explores how the aftermath of those events affects the entire DC Universe**.\n\nAdditional context from the same source (ctx://team/engineering/hydra/kilt/25769371/0008, v1): the event was also used to introduce Jackson Hyde (the new Aqualad from the *Young Justice* animated series) into the DC Universe, and its final issue reintroduced Swamp Thing and John Constantine into the mainstream DC Universe after years in DC's Vertigo imprint.",
+      "reference_answer": "The \"Brightest Day\" storyline, published by DC Comics, is significant as a follow-up to the \"Blackest Night\" series, exploring its aftermath and the impact on the DC Universe. It is a year-long crossover event featuring a 25-issue bi-weekly series and tie-ins, focusing on various characters and arcs, including Lex Luthor's quest involving the energy of the Black Lantern Corps."
+    },
+    {
+      "case_id": "dev_10",
+      "type": "s2a",
+      "assessment": "match",
+      "reference_match": true,
+      "primary_attribution": null,
+      "secondary_factors": [],
+      "reason": "Core answer matches the released reference on local semantic inspection and SQL-result verification; extra prose is not exhaustively fact-checked. Abomination identity and weights are available directly in SQLite; no resource search occurred, so this does not demonstrate S2A text retrieval.",
+      "grounding": "sql_only_no_text_search",
+      "reference_tables_retrieved": true,
+      "final_answer": "The difference in weight is **351 kg**.\n\n- **Abomination** (alter ego: Emil Blonsky) weighs **441 kg**.\n- **Charles Chandler** (superhero name: 3-D Man) weighs **90 kg**.\n\n441 − 90 = **351 kg**\n\nSource: `ctx://datalake/hydra/superhero/superhero` (version 1), queried directly from the `superhero` table.",
+      "reference_answer": "The alter ego of the comic supervillain Abomination is Emil Blonsky, and the difference in weight between Emil Blonsky and Charles Chandler is 351."
+    },
+    {
+      "case_id": "dev_68",
+      "type": "s2a",
+      "assessment": "match",
+      "reference_match": true,
+      "primary_attribution": null,
+      "secondary_factors": [],
+      "reason": "Core answer matches the released reference on local semantic inspection and SQL-result verification; extra prose is not exhaustively fact-checked.",
+      "grounding": "retrieved_reference_core_evidence",
+      "reference_tables_retrieved": true,
+      "final_answer": "The character in *The Incredibles* who is married to Bob Parr and also known as Elastigirl is **Helen Parr** (confirmed by ctx://team/engineering/hydra/kilt/565879/0013: \"Holly Hunter as Helen Parr / Elastigirl, Bob's wife\").\n\nIn the database, Elastigirl (id 242, full name Helen Parr) has the following superpowers:\n\n1. **Agility**\n2. **Durability**\n3. **Elasticity**\n4. **Invulnerability**\n5. **Shapeshifting**\n6. **Size Changing**\n7. **Super Strength**\n\nThese come from joining `hero_power` with `superpower` for hero_id 242 in the `superhero` database.",
+      "reference_answer": "The fictional character in \"The Incredibles\" who is married to Bob Parr and also known as Elastigirl is Helen Parr. Her superpowers include Agility, Durability, Super Strength, Size Changing, Shapeshifting, Invulnerability, and Elasticity."
+    },
+    {
+      "case_id": "dev_26",
+      "type": "a2s",
+      "assessment": "match",
+      "reference_match": true,
+      "primary_attribution": null,
+      "secondary_factors": [],
+      "reason": "Core answer matches the released reference on local semantic inspection and SQL-result verification; extra prose is not exhaustively fact-checked.",
+      "grounding": "retrieved_reference_core_evidence",
+      "reference_tables_retrieved": true,
+      "final_answer": "**Answer:**\n\nThe main advantage is **greater statistical power**. Harvey Motulsky's most-viewed post (post Id 109, *\"Power of Holm's multiple comparison testing compared to others\"*, 3,980 views — his highest ViewCount among 137 posts, user Id 25 in `codebase_community`) states that Holm's test \"has lots of power\" and that its advantage over competing multiple-comparison procedures \"is that it has more power.\" This matches the external evidence: the Holm–Bonferroni method \"offers a simple test uniformly more powerful than the Bonferroni correction\" (ctx://team/engineering/hydra/kilt/10726541/0000, v1), and \"uniformly delivers more power than the simple Bonferroni correction, by testing only the lowest p-value against the strictest criterion, and the higher p-values against progressively less strict criteria\" (ctx://team/engineering/hydra/kilt/9444220/0008, v1), while still controlling the family-wise error rate.\n\nIn short: Holm–Bonferroni is always at least as powerful as (and typically more powerful than) the simple Bonferroni correction — it is less conservative without losing family-wise error control.\n\n*Minor caveat:* the post's body frames the power advantage explicitly against Tukey/Dunnett (which can compute confidence intervals, unlike the stepwise Holm method); the \"more powerful than Bonferroni\" framing is supported by the retrieved Wikipedia passages cited above.",
+      "reference_answer": "The most-viewed post by Harvey Motulsky, titled \"Power of Holm's multiple comparison testing compared to others,\" discusses the main advantage of the Holm–Bonferroni method, which is its ability to control the family-wise error rate while minimizing the increase in type II errors, making it more powerful than the simple Bonferroni correction."
+    },
+    {
+      "case_id": "dev_31",
+      "type": "a2s",
+      "assessment": "match",
+      "reference_match": true,
+      "primary_attribution": null,
+      "secondary_factors": [],
+      "reason": "Core answer matches the released reference on local semantic inspection and SQL-result verification; extra prose is not exhaustively fact-checked.",
+      "grounding": "retrieved_reference_core_evidence",
+      "reference_tables_retrieved": true,
+      "final_answer": "The post \"Eliciting priors from experts\" (Id 1) is owned by user **csgillespie**, whose location in the `users` table is **Newcastle, United Kingdom**.\n\nAccording to retrieved sources, the United Kingdom is a **unitary parliamentary democracy and constitutional monarchy** — a unitary state with devolution, where the monarch (head of state) appoints the Prime Minister as head of government (ctx://team/engineering/hydra/kilt/31717/0000, v1; ctx://team/engineering/hydra/kilt/31726/0000, v1).\n\n**Answer: The United Kingdom's form of government is a unitary parliamentary democracy under a constitutional monarchy.**",
+      "reference_answer": "The owner of the post \"Eliciting priors from experts\" is located in Newcastle, United Kingdom, where the form of government is a parliamentary democracy under a constitutional monarchy."
+    },
+    {
+      "case_id": "dev_6",
+      "type": "s2a",
+      "assessment": "reference_mismatch",
+      "reference_match": false,
+      "primary_attribution": "sql_filter_scope",
+      "secondary_factors": [
+        "corpus_gap",
+        "unsupported_external_premise",
+        "reference_filter_ambiguity"
+      ],
+      "reason": "Used India despite no retrieved horse-country evidence after ten successful text searches; an eleventh request was blocked. Broader case-insensitive India location variants produce 45 distinct Teacher-badge users, versus the reference exact Location = India count of 18. The guessed country matches the reference, so the numerical mismatch is caused by the SQL filter scope, not by choosing the wrong country. The broader country interpretation is plausible but not reference-equivalent.",
+      "grounding": "not_established_for_reference_branch",
+      "reference_tables_retrieved": true,
+      "final_answer": "**Answer: 45 users**\n\n**Reasoning:**\n\n1. **Country identification:** The \"Indian Half-bred\" is a horse type associated with India (as its name indicates). Note: I used all my ContextHub resource searches but could not retrieve a specific source passage confirming the country where it is primarily found — the retrieved results were about unrelated topics (Kerry Bog Pony, Indian Fantail pigeon, etc.). I proceeded with India based on the horse type's name, but flag this as unverified against retrieved text.\n\n2. **Database facts (codebase_community):**\n   - The `users` table has no country column; country is inferred from `Location` (ctx://datalake/hydra/codebase_community/users, v1).\n   - The `badges` table (ctx://datalake/hydra/codebase_community/badges, v1) contains exactly one teacher-related badge name: **'Teacher'** (4,679 total awards).\n   - Counting distinct users whose `Location` indicates India (matching 'India' as a word/country suffix, explicitly excluding false matches like \"Indiana\", \"Indianapolis\") and who hold the 'Teacher' badge:\n\n```sql\nSELECT COUNT(DISTINCT u.Id)\nFROM users u JOIN badges b ON b.UserId = u.Id\nWHERE b.Name = 'Teacher'\n  AND (LOWER(u.Location) = 'india' OR LOWER(u.Location) LIKE '%, india' ...)\n```\n\n**Result: 45** (a loose `%India%` match gives 46, but the extra match is a user from \"Indianapolis\", not India).",
+      "reference_answer": "The Indian Half-bred horse type is primarily found in India, and there are 18 users from India who have the teacher badges."
+    },
+    {
+      "case_id": "dev_20",
+      "type": "s2a",
+      "assessment": "reference_mismatch",
+      "reference_match": false,
+      "primary_attribution": "sql_filter_scope",
+      "secondary_factors": [
+        "city_state_conflation"
+      ],
+      "reason": "The New York text evidence is correct. LIKE %New York% returns 295 instead of the reference exact Location = New York count of 15; the agent itself identified that its broad match also includes a Hudson Valley/state-level location, yet retained 295.",
+      "grounding": "retrieved_reference_core_evidence",
+      "reference_tables_retrieved": true,
+      "final_answer": "**Answer: 295 users**\n\n**Reasoning:**\n1. According to Leonard Rosenfeld's \"Selected Showings\" list (ctx://team/engineering/hydra/kilt/27307590/0011, v1), the overwhelming majority of his art showings were in **New York, NY** (e.g., Denise Bibro Fine Arts, LaMama Galeria, Viridian Artists, Gallery 311, OK Harris, The Knitting Factory, etc.), with only a handful elsewhere (Newton Centre MA, Sag Harbor, Brooklyn, Detroit, Kansas City, Phoenix, Mexico, Puerto Vallarta).\n2. Querying the `codebase_community.users` table (schema: ctx://datalake/hydra/codebase_community/users) for users whose `Location` references that city:\n\n```sql\nSELECT COUNT(Id) FROM users WHERE Location LIKE '%New York%'\n```\n\nreturns **295** users (across variants such as \"New York, United States\" – 148, \"New York, NY\" – 116, \"New York\" – 15, \"New York City\" – 8, etc.).\n\nNote: this standard match includes one user listing \"Hudson Valley, New York, USA\" (a state-level reference); excluding that would give 294, but the conventional match for New York City yields **295**.",
+      "reference_answer": "Leonard Rosenfeld had the majority of his art showings in New York, NY, and there are 15 users from that city."
+    },
+    {
+      "case_id": "dev_32",
+      "type": "a2s",
+      "assessment": "partial",
+      "reference_match": false,
+      "primary_attribution": "source_mapping_gap",
+      "secondary_factors": [
+        "reference_assumption",
+        "unsupported_inference"
+      ],
+      "reason": "Correct junior card and fund-limited financial-management explanation. The retrieved prepaid/teen-card passage exists and was read, but does not establish that the database junior tier is a prepaid card. The answer substitutes junior/classic/gold tier distinctions for the reference no-borrowing/no-interest/fees distinctions and explicitly lacks junior-specific evidence. It also infers an entry/young-user tier beyond the bare label. Do not count as a complete reference match; do not label this a ranker failure.",
+      "grounding": "related_text_with_unproven_category_mapping",
+      "reference_tables_retrieved": true,
+      "final_answer": "## Answer\n\n**Card type (database fact):** Client 13539 owns a **junior** credit card (card_id 1223, issued 1995-05-02). This comes from joining `card` to `disp` on `disp_id` where `client_id = 13539` in the `financial` database.\n\n**How it promotes financial management:** The retrieved evidence does not contain a passage describing the \"junior\" class specifically. The closest supporting text is about entry-level/teen-oriented cards: prepaid-style cards marketed to young users let the holder \"only use funds that are available on the card, which helps promote financial management to reduce the risk of debt problems later in life\" (ctx://team/engineering/hydra/kilt/17182301/0064, v1). In general, credit cards also \"offer consumers an easy way to track expenses, which is necessary for both monitoring personal expenditures…\" (ctx://team/engineering/hydra/kilt/17182301/0052, v1). A junior card, as the entry-level tier, serves the same purpose: giving young or new cardholders a controlled, low-commitment way to learn spending discipline and expense tracking.\n\n**What distinguishes it from other types:** In this database, the `card.type` column encodes a three-tier hierarchy (ctx://datalake/hydra/financial/card, v1):\n- **junior** – \"junior class of credit card\" (entry-level, the one client 13539 holds)\n- **classic** – \"standard class of credit card\"\n- **gold** – \"high-level credit card\"\n\nSo the junior card is distinguished by being the lowest/entry tier, aimed at younger or less-established customers, versus the standard classic and premium gold tiers. Note that the database stores only these tier labels — no further card attributes (limits, fees, perks) — and the retrieved external sources do not detail junior-card-specific features beyond the tier descriptions, so claims about specific benefits (e.g., exact limits or fees) would be unsupported.",
+      "reference_answer": "The client with ID 13539 owns a junior credit card. This type of credit card promotes financial management by allowing users to spend only the funds available on the card, helping them learn to manage their spending within a set limit and reducing the risk of debt problems later in life. Unlike traditional credit cards, junior credit cards, often prepaid, do not involve borrowing or accruing interest, and they typically include purchasing and monthly fees after a certain period."
+    },
+    {
+      "case_id": "dev_46",
+      "type": "a2s",
+      "assessment": "reference_mismatch",
+      "reference_match": false,
+      "primary_attribution": "sql_aggregation_grain",
+      "secondary_factors": [
+        "reference_ambiguity"
+      ],
+      "reason": "All reference schemas retrieved. Selected the district of the largest individual running loan (Brno-mesto, within south Moravia), then retrieved Brno history. The reference sums active loan amounts by A3 region and asks for south Moravia history. The question uses district and highest active loan without spelling out the regional sum, so its intended grain is underspecified.",
+      "grounding": "not_established_for_reference_branch",
+      "reference_tables_retrieved": true,
+      "final_answer": "**Answer**\n\n**District identified:** The district with the highest active loan in the `financial` database is **Brno - mesto** (Brno-City), in the **south Moravia** region (district_id 54). The loan is loan_id 6534, amount **590,820 USD**, with status **'C'** (running contract, OK so far) — the largest among all running loans (statuses 'C' and 'D'), joined via `loan → account → district` (schemas: ctx://datalake/hydra/financial/loan, ctx://datalake/hydra/financial/account, ctx://datalake/hydra/financial/district, v1).\n\n**Historical significance of Brno** (from retrieved sources):\n\n- Brno and Olomouc served as Moravia's capitals until 1641. As the **only city to successfully resist the Swedish invasion** during the Thirty Years' War, Brno became the **sole capital of Moravia** after Olomouc was captured (ctx://team/engineering/hydra/kilt/20216/0027, v1).\n- Brno's successful defense against the **Prussian siege of 1742** was the main reason the Prussians were repelled from Moravia. In 1777 a new Moravian bishopric was established in Brno, and in 1782 the Margraviate of Moravia was merged with Austrian Silesia into \"Moravia-Silesia,\" **with Brno as its capital** (ctx://team/engineering/hydra/kilt/20216/0029, v1).\n- Today the South Moravian Region highlights Brno's landmarks — the Cathedral of St. Peter and Paul, Villa Tugendhat, and the Capuchin Crypt — as places of interest (ctx://team/engineering/hydra/kilt/682528/0016, v1).\n\nNote: the dataset covers Czech districts (the successor state of Czechoslovakia); Brno's significance lies in its long role as the capital of Moravia and its military resilience in the 17th–18th centuries.",
+      "reference_answer": "The district with the highest active loan in Czechoslovakia is South Moravia, which holds significant historical importance as part of the historical region of Moravia. Moravia was a crown land of the Lands of the Bohemian Crown, an imperial state of the Holy Roman Empire, and later part of the Austrian and Austro-Hungarian Empires. It became one of the five lands of Czechoslovakia in the early 20th century before being merged with Czech Silesia and dissolved in 1949. South Moravia also experienced major demographic changes, including the expulsion of its German-speaking population after World War II, and was briefly annexed by Nazi Germany during the dismemberment of Czechoslovakia before being returned to Czechoslovakia after the war."
+    },
+    {
+      "case_id": "dev_42",
+      "type": "s2a",
+      "assessment": "match",
+      "reference_match": true,
+      "primary_attribution": null,
+      "secondary_factors": [],
+      "reason": "Core answer matches the released reference on local semantic inspection and SQL-result verification; extra prose is not exhaustively fact-checked.",
+      "grounding": "retrieved_reference_core_evidence",
+      "reference_tables_retrieved": true,
+      "final_answer": "**Answer: 8**\n\nReasoning:\n1. **External fact**: Nikolai Yevgrafovich was the patronymic of Soviet football player **Nikolai Sokolov** (ctx://team/engineering/hydra/kilt/20014218/0000, v1), so the target town is **Sokolov**.\n2. **Schema**: `district.A2` holds the district/town name (ctx://datalake/hydra/financial/district); `client` has `gender` ('F' = female) and `birth_date` (ctx://datalake/hydra/financial/client); `disp` links clients to accounts (ctx://datalake/hydra/financial/disp).\n3. **SQL**: Counting distinct female clients with `birth_date < '1950-01-01'`, linked to an opened account via `disp`, whose district is 'Sokolov' (district_id 30) returned **8**.",
+      "reference_answer": "There are 8 female customers who were born before 1950 and stayed in the town associated with the Soviet football player Nikolai Yevgrafovich's last name, Sokolov."
+    },
+    {
+      "case_id": "dev_60",
+      "type": "s2a",
+      "assessment": "match",
+      "reference_match": true,
+      "primary_attribution": null,
+      "secondary_factors": [],
+      "reason": "Core answer matches the released reference on local semantic inspection and SQL-result verification; extra prose is not exhaustively fact-checked.",
+      "grounding": "retrieved_reference_core_evidence",
+      "reference_tables_retrieved": true,
+      "final_answer": "The earliest account opened in Prague (capital district, `district_id = 1`) is unique at the minimum date.\n\n**Answer: 1539**\n\nReasoning:\n- ContextHub confirms Prague is the capital of Czechia (ctx://team/engineering/hydra/kilt/23844/0000, v1).\n- In the `district` table (ctx://datalake/hydra/financial/district, v1), Prague appears as `district_id = 1` (A2 = \"Hl.m. Praha\", A3 = \"Prague\").\n- Querying `account` (ctx://datalake/hydra/financial/account, v1) for `district_id = 1` ordered by the account creation `date`, the earliest is account_id **1539**, opened on 1993-01-03 (the next earliest was 1993-01-08, so no tie).",
+      "reference_answer": "The account ID for the first client who opened his/her account in the capital of Czechia, Prague, is 1539."
+    },
+    {
+      "case_id": "dev_55",
+      "type": "a2s",
+      "assessment": "match",
+      "reference_match": true,
+      "primary_attribution": null,
+      "secondary_factors": [],
+      "reason": "Core answer matches the released reference on local semantic inspection and SQL-result verification; extra prose is not exhaustively fact-checked.",
+      "grounding": "retrieved_reference_core_evidence",
+      "reference_tables_retrieved": true,
+      "final_answer": "I have all the evidence I need. Let me verify the connection.\n\nThe query found exactly one member from the Art and Design Department: **Amy Firth** (majoring in Interior Design). The ContextHub resource on Peter Firth confirms he has a daughter named **Amy** (Amy Firth) from his second marriage.\n\n## Answer\n\nThe student from the Art and Design Department in the Student_Club is **Amy Firth** (a member majoring in Interior Design, which belongs to the Art and Design Department). \n\n**Amy Firth is the daughter of Peter Firth.**\n\nPeter Firth (Peter Macintosh Firth, born 27 October 1953) is an English actor best known for playing Sir Harry Pearce in the BBC series *Spooks*. According to the retrieved text, he has four children: Rory Firth from his first marriage, and **Amy**, Alex, and James Firth from his second marriage.\n\n**Evidence:**\n- Database `student_club`: `member` joined to `major` shows the only member whose department is \"Art and Design Department\" is Amy Firth (member_id `recUdRhbhcEO1Hk5r`, major: Interior Design). Schema from `ctx://datalake/hydra/student_club/member` and `ctx://datalake/hydra/student_club/major` (v1).\n- Peter Firth's children: `ctx://team/engineering/hydra/kilt/937587/0010` (Wikipedia ID 937587, v1) — \"He has been married three times and has four children; Rory Firth, from his first marriage, Amy, Alex, and James Firth from his second.\"",
+      "reference_answer": "The student from the Art and Design Department in the Student_Club is Amy Firth, who is one of Peter Firth's children from his second marriage."
+    },
+    {
+      "case_id": "dev_66",
+      "type": "a2s",
+      "assessment": "match",
+      "reference_match": true,
+      "primary_attribution": null,
+      "secondary_factors": [],
+      "reason": "Core answer matches the released reference on local semantic inspection and SQL-result verification; extra prose is not exhaustively fact-checked. Alternative passage 67234/0021 explicitly identifies Newark as the largest city.",
+      "grounding": "alternative_retrieved_support",
+      "reference_tables_retrieved": true,
+      "final_answer": "**Newark** is the most populous city in Sacha Harrison's hometown state.\n\n**Reasoning:**\n1. From the `member` and `zip_code` tables in `student_club`: Sacha Harrison's hometown ZIP is 07080 → South Plainfield, **New Jersey**.\n2. Retrieved evidence confirms Newark is New Jersey's largest city: \"The city had a population of 277,140 as of the 2010 Census, retaining its position as the largest city in the state\" (ctx://team/engineering/hydra/kilt/67234/0021, v1).\n\nSources: ctx://datalake/hydra/student_club/member, ctx://datalake/hydra/student_club/zip_code, ctx://team/engineering/hydra/kilt/67234/0021.",
+      "reference_answer": "The most populous city in the hometown state of Sacha Harrison, New Jersey, is Newark, which had a population of 282,090 in 2018."
+    },
+    {
+      "case_id": "dev_0",
+      "type": "s2a",
+      "assessment": "match",
+      "reference_match": true,
+      "primary_attribution": null,
+      "secondary_factors": [],
+      "reason": "Core answer matches the released reference on local semantic inspection and SQL-result verification; extra prose is not exhaustively fact-checked.",
+      "grounding": "retrieved_reference_core_evidence",
+      "reference_tables_retrieved": true,
+      "final_answer": "**Answer: \"Laugh Out Loud\"**\n\nReasoning:\n- The Vice President in the `member` table is **Phillip Cullen** (`member_id = recD078PnS3x2doBe`, position = \"Vice President\").\n- Joining `attendance` → `event` for this member and filtering to events of type **Social** located at **900 E. Washington St.** yields exactly one event: **\"Laugh Out Loud\"** (event_id `rec5XDvJLyxDsGZWc`, date 2019-10-24, status Closed).\n- A second \"Laugh Out Loud\" event exists at the same location but is still in \"Planning\" and was not attended by the vice president, so the name is unambiguous either way.\n\nSources: table schemas `ctx://datalake/hydra/student_club/member`, `ctx://datalake/hydra/student_club/event`, `ctx://datalake/hydra/student_club/attendance` (v1); contextual background on student clubs promoting student interests from `ctx://team/engineering/hydra/kilt/30861034/0015` (v1).",
+      "reference_answer": "The social event attended by the vice president of a student club established at the American University of Science and Technology to promote student interests, located at 900 E. Washington St., is called \"Laugh Out Loud.\""
+    },
+    {
+      "case_id": "dev_11",
+      "type": "s2a",
+      "assessment": "match",
+      "reference_match": true,
+      "primary_attribution": null,
+      "secondary_factors": [],
+      "reason": "Core answer matches the released reference on local semantic inspection and SQL-result verification; extra prose is not exhaustively fact-checked.",
+      "grounding": "retrieved_reference_core_evidence",
+      "reference_tables_retrieved": true,
+      "final_answer": "The second highest political position in Afghanistan is the **Vice President of Afghanistan** (source: ctx://team/engineering/hydra/kilt/10158450/0000, Wikipedia ID 10158450).\n\nIn the `student_club` database, the member holding the \"Vice President\" position is **Phillip Cullen** (member_id `recD078PnS3x2doBe`), whose `link_to_major` points to major `rec9CqGCGV8Y8rOSY`.\n\n**Answer: Communication Studies**",
+      "reference_answer": "The person holding the second highest political position in Afghanistan, the Vice President, has joined the major \"Communication Studies.\""
+    }
+  ]
+}

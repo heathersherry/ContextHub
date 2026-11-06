@@ -1,0 +1,146 @@
+{
+  "case_id": "dev_46",
+  "type": "a2s",
+  "db_id": "financial",
+  "reference_tables": [
+    "account",
+    "district",
+    "loan"
+  ],
+  "top_k": 3,
+  "table_schema": {
+    "query": "Database: financial. What is the historical significance of the district with the highest active loan in Czechoslovakia?",
+    "response": {
+      "results": [
+        {
+          "uri": "ctx://datalake/hydra/financial/district",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 0.3570982430635842,
+          "l0_content": "Database: financial\nTable: district\nCREATE TABLE district\n(\n    district_id INTEGER default 0 not null\n        primary key,\n    A2          TEXT   not null,\n    A3          TEXT   not null,\n    A4          TEXT       not null,\n    A5          TEXT           not null,\n    A6          TEXT           not null,\n    A7          TEXT           not null,\n    A8          INTEGER        not null,\n    A9          INTEGER           not null,\n    A10         REAL not null,\n    A11         INTEGER           not null,\n    A12         REAL null,\n    A13         REAL not null,\n    A14         INTEGER           not null,\n    A15         INTEGER        null,\n    A16         INTEGER          not null\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\ndistrict_id,location of branch,location of branch,integer ,\r\nA2,district_name,district_name,text,\r\nA3,region,region,text,\r\nA4,number of inhabitants ,,text,\r\nA5,no. of municipalities with inhabitants < 499,municipality < district < region,text,\r\nA6,no. of municipalities with inhabitants 500-1999,municipality < district < region,text,\r\nA7,no. of municipalities with inhabitants 2000-9999,municipality < district < region,text,\r\nA8,no. of municipalities with inhabitants > 10000,municipality < district < region,integer,\r\nA9,,,integer,not useful\r\nA10,ratio of urban inhabitants,ratio of urban inhabitants,real,\r\nA11,average salary,average salary,integer,\r\nA12,unemployment rate 1995,unemployment rate 1995,real,\r\nA13,unemployment rate 1996,unemployment rate 1996,real,\r\nA14,no. of entrepreneurs per 1000 inhabitants,no. of entrepreneurs per 1000 inhabitants,integer,\r\nA15,no. of committed crimes 1995,no. of committed crimes 1995,integer,\r\nA16,no. of committed crimes 1996,no. of committed crimes 1996,integer,",
+          "l1_content": "Database: financial\nTable: district\nCREATE TABLE district\n(\n    district_id INTEGER default 0 not null\n        primary key,\n    A2          TEXT   not null,\n    A3          TEXT   not null,\n    A4          TEXT       not null,\n    A5          TEXT           not null,\n    A6          TEXT           not null,\n    A7          TEXT           not null,\n    A8          INTEGER        not null,\n    A9          INTEGER           not null,\n    A10         REAL not null,\n    A11         INTEGER           not null,\n    A12         REAL null,\n    A13         REAL not null,\n    A14         INTEGER           not null,\n    A15         INTEGER        null,\n    A16         INTEGER          not null\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\ndistrict_id,location of branch,location of branch,integer ,\r\nA2,district_name,district_name,text,\r\nA3,region,region,text,\r\nA4,number of inhabitants ,,text,\r\nA5,no. of municipalities with inhabitants < 499,municipality < district < region,text,\r\nA6,no. of municipalities with inhabitants 500-1999,municipality < district < region,text,\r\nA7,no. of municipalities with inhabitants 2000-9999,municipality < district < region,text,\r\nA8,no. of municipalities with inhabitants > 10000,municipality < district < region,integer,\r\nA9,,,integer,not useful\r\nA10,ratio of urban inhabitants,ratio of urban inhabitants,real,\r\nA11,average salary,average salary,integer,\r\nA12,unemployment rate 1995,unemployment rate 1995,real,\r\nA13,unemployment rate 1996,unemployment rate 1996,real,\r\nA14,no. of entrepreneurs per 1000 inhabitants,no. of entrepreneurs per 1000 inhabitants,integer,\r\nA15,no. of committed crimes 1995,no. of committed crimes 1995,integer,\r\nA16,no. of committed crimes 1996,no. of committed crimes 1996,integer,",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://datalake/hydra/financial/account",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 0.3313061594963074,
+          "l0_content": "Database: financial\nTable: account\nCREATE TABLE account\n(\n    account_id  INTEGER default 0 not null\n        primary key,\n    district_id INTEGER default 0 not null,\n    frequency   TEXT   not null,\n    date        DATE          not null,\n    foreign key (district_id) references district (district_id)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description,\r\naccount_id,account id,the id of the account,integer,,\r\ndistrict_id,location of branch,location of branch,integer ,,\r\nfrequency,frequency,frequency of the acount,text,,\"\"\"POPLATEK MESICNE\"\" stands for monthly issuance\n\"\"POPLATEK TYDNE\"\" stands for weekly issuance\n\"\"POPLATEK PO OBRATU\"\" stands for issuance after transaction\"\r\ndate,date,the creation date of the account,date,in the form YYMMDD,",
+          "l1_content": "Database: financial\nTable: account\nCREATE TABLE account\n(\n    account_id  INTEGER default 0 not null\n        primary key,\n    district_id INTEGER default 0 not null,\n    frequency   TEXT   not null,\n    date        DATE          not null,\n    foreign key (district_id) references district (district_id)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description,\r\naccount_id,account id,the id of the account,integer,,\r\ndistrict_id,location of branch,location of branch,integer ,,\r\nfrequency,frequency,frequency of the acount,text,,\"\"\"POPLATEK MESICNE\"\" stands for monthly issuance\n\"\"POPLATEK TYDNE\"\" stands for weekly issuance\n\"\"POPLATEK PO OBRATU\"\" stands for issuance after transaction\"\r\ndate,date,the creation date of the account,date,in the form YYMMDD,",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://datalake/hydra/financial/trans",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 0.3088909501498377,
+          "l0_content": "Database: financial\nTable: trans\nCREATE TABLE trans\n(\n    trans_id   INTEGER default 0    not null\n        primary key,\n    account_id INTEGER default 0    not null,\n    date       DATE             not null,\n    type       TEXT       not null,\n    operation  TEXT      null,\n    amount     INTEGER              not null,\n    balance    INTEGER             not null,\n    k_symbol   TEXT      null,\n    bank       TEXT       null,\n    account    INTEGER          null,\n    foreign key (account_id) references account (account_id)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\ntrans_id,transaction id,transaction id,integer,\r\naccount_id,,,integer,\r\ndate,date of transaction,date of transaction,date,\r\ntype,+/- transaction,+/- transaction,text,\"\"\"PRIJEM\"\" stands for credit\n\"\"VYDAJ\"\" stands for withdrawal\"\r\noperation,mode of transaction,mode of transaction,text,\"\"\"VYBER KARTOU\"\": credit card withdrawal\n\"\"VKLAD\"\": credit in cash\n\"\"PREVOD Z UCTU\"\" :collection from another bank\n\"\"VYBER\"\": withdrawal in cash\n\"\"PREVOD NA UCET\"\": remittance to another bank\"\r\namount,amount of money,amount of money,integer,Unit：USD\r\nbalance,balance after transaction,balance after transaction,integer,Unit：USD\r\nk_symbol,characterization of the transaction,,text,\"\"\"POJISTNE\"\": stands for insurrance payment\n\"\"SLUZBY\"\": stands for payment for statement\n\"\"UROK\"\": stands for interest credited\n\"\"SANKC. UROK\"\": sanction interest if negative balance\n\"\"SIPO\"\": stands for household\n\"\"DUCHOD\"\": stands for old-age pension\n\"\"UVER\"\": stands for loan payment\"\r\nbank,bank of the partner,,text,each bank has unique two-letter code\r\naccount,account of the partner,,integer,",
+          "l1_content": "Database: financial\nTable: trans\nCREATE TABLE trans\n(\n    trans_id   INTEGER default 0    not null\n        primary key,\n    account_id INTEGER default 0    not null,\n    date       DATE             not null,\n    type       TEXT       not null,\n    operation  TEXT      null,\n    amount     INTEGER              not null,\n    balance    INTEGER             not null,\n    k_symbol   TEXT      null,\n    bank       TEXT       null,\n    account    INTEGER          null,\n    foreign key (account_id) references account (account_id)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\ntrans_id,transaction id,transaction id,integer,\r\naccount_id,,,integer,\r\ndate,date of transaction,date of transaction,date,\r\ntype,+/- transaction,+/- transaction,text,\"\"\"PRIJEM\"\" stands for credit\n\"\"VYDAJ\"\" stands for withdrawal\"\r\noperation,mode of transaction,mode of transaction,text,\"\"\"VYBER KARTOU\"\": credit card withdrawal\n\"\"VKLAD\"\": credit in cash\n\"\"PREVOD Z UCTU\"\" :collection from another bank\n\"\"VYBER\"\": withdrawal in cash\n\"\"PREVOD NA UCET\"\": remittance to another bank\"\r\namount,amount of money,amount of money,integer,Unit：USD\r\nbalance,balance after transaction,balance after transaction,integer,Unit：USD\r\nk_symbol,characterization of the transaction,,text,\"\"\"POJISTNE\"\": stands for insurrance payment\n\"\"SLUZBY\"\": stands for payment for statement\n\"\"UROK\"\": stands for interest credited\n\"\"SANKC. UROK\"\": sanction interest if negative balance\n\"\"SIPO\"\": stands for household\n\"\"DUCHOD\"\": stands for old-age pension\n\"\"UVER\"\": stands for loan payment\"\r\nbank,bank of the partner,,text,each bank has unique two-letter code\r\naccount,account of the partner,,integer,",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        }
+      ],
+      "total": 3,
+      "retrieval_id": "433ff219-ca46-49c1-8b90-394fb15213c8",
+      "stale_notices": []
+    }
+  },
+  "resource": {
+    "query": "What is the historical significance of South Moravia in Czechoslovakia?",
+    "response": {
+      "results": [
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/682528/0000",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 0.5645935535430908,
+          "l0_content": "South Moravian Region — Abstract\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 682528\nThe South Moravian Region (; ; ) is an administrative unit () of the Czech Republic, located in the south-western part of its historical region of Moravia (an exception is Jobova Lhota which belongs to Bohemia). Its capital is Brno, the 2nd largest city in the Czech Republic. It is bordered by the South Bohemian Region (west), Vysočina Region (north-west), Pardubice Region (north), Olomouc Region (north east), Zlín Region (east), Trenčín and Trnava Regions, Slovakia (south east) and Lower Austria, Austria (south).",
+          "l1_content": "South Moravian Region — Abstract\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 682528\nThe South Moravian Region (; ; ) is an administrative unit () of the Czech Republic, located in the south-western part of its historical region of Moravia (an exception is Jobova Lhota which belongs to Bohemia). Its capital is Brno, the 2nd largest city in the Czech Republic. It is bordered by the South Bohemian Region (west), Vysočina Region (north-west), Pardubice Region (north), Olomouc Region (north east), Zlín Region (east), Trenčín and Trnava Regions, Slovakia (south east) and Lower Austria, Austria (south).",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/20216/0000",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 0.5532388852011828,
+          "l0_content": "Moravia — Abstract\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 20216\nMoravia ( ; ; ; ; ) is a historical region in the Czech Republic (forming its eastern part) and one of the historical Czech lands, together with Bohemia and Czech Silesia. The medieval and early modern Margraviate of Moravia was a crown land of the Lands of the Bohemian Crown (from 1348 to 1918), an imperial state of the Holy Roman Empire (1004 to 1806), later a crown land of the Austrian Empire (1804 to 1867) and briefly also one of 17 former crown lands of the Cisleithanian part of the Austro-Hungarian Empire from 1867 to 1918. During the early 20th century, Moravia was one of the five lands of Czechoslovakia from 1918 to 1928; it was then merged with Czech Silesia, and eventually dissolved by abolition of the land system in 1949.\nMoravia has an area of over 22,000 km and about 3 million inhabitants, which is roughly 2/7 or 30% of the whole Czech Republic. The statistics from 1921 states, that the whole area of Moravia including the enclaves in Silesia covers 22,623.41 km. The people are historically named Moravians, a subgroup of Czechs (as understood by Czechs). Moravia also had been home of a large German-speaking population until 1945. The land takes its name from the Morava river, which rises in the northern tip of the region and flows southward to the opposite end, being its major stream. Moravia's largest city and historical capital is Brno. Before being sacked by the Swedish army during the Thirty Years' War, Olomouc was another capital.\nThough officially abolished by an administrative reform in 1949, Moravia is still commonly acknowledged as a specific land in the Czech Republic. Moravian people are considerably aware of their Moravian identity and there is some rivalry between them and the Czechs from Bohemia.",
+          "l1_content": "Moravia — Abstract\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 20216\nMoravia ( ; ; ; ; ) is a historical region in the Czech Republic (forming its eastern part) and one of the historical Czech lands, together with Bohemia and Czech Silesia. The medieval and early modern Margraviate of Moravia was a crown land of the Lands of the Bohemian Crown (from 1348 to 1918), an imperial state of the Holy Roman Empire (1004 to 1806), later a crown land of the Austrian Empire (1804 to 1867) and briefly also one of 17 former crown lands of the Cisleithanian part of the Austro-Hungarian Empire from 1867 to 1918. During the early 20th century, Moravia was one of the five lands of Czechoslovakia from 1918 to 1928; it was then merged with Czech Silesia, and eventually dissolved by abolition of the land system in 1949.\nMoravia has an area of over 22,000 km and about 3 million inhabitants, which is roughly 2/7 or 30% of the whole Czech Republic. The statistics from 1921 states, that the whole area of Moravia including the enclaves in Silesia covers 22,623.41 km. The people are historically named Moravians, a subgroup of Czechs (as understood by Czechs). Moravia also had been home of a large German-speaking population until 1945. The land takes its name from the Morava river, which rises in the northern tip of the region and flows southward to the opposite end, being its major stream. Moravia's largest city and historical capital is Brno. Before being sacked by the Swedish army during the Thirty Years' War, Olomouc was another capital.\nThough officially abolished by an administrative reform in 1949, Moravia is still commonly acknowledged as a specific land in the Czech Republic. Moravian people are considerably aware of their Moravian identity and there is some rivalry between them and the Czechs from Bohemia.",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/20216/0031",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 0.5344372114203708,
+          "l0_content": "Moravia — History.:20th century.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 20216\nFollowing the break-up of the Austro-Hungarian Empire in 1918, Moravia became part of Czechoslovakia. As one of the five lands of Czechoslovakia, it had restricted autonomy. In 1928 Moravia ceased to exist as a territorial unity and was merged with Czech Silesia into the Moravian-Silesian Land (yet with the natural dominance of Moravia). By the Munich Agreement (1938), the southwestern and northern peripheries of Moravia, which had a German-speaking majority, were annexed by Nazi Germany, and during the German occupation of Czechoslovakia (1939–1945), the remnant of Moravia was an administrative unit within the Protectorate of Bohemia and Moravia.",
+          "l1_content": "Moravia — History.:20th century.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 20216\nFollowing the break-up of the Austro-Hungarian Empire in 1918, Moravia became part of Czechoslovakia. As one of the five lands of Czechoslovakia, it had restricted autonomy. In 1928 Moravia ceased to exist as a territorial unity and was merged with Czech Silesia into the Moravian-Silesian Land (yet with the natural dominance of Moravia). By the Munich Agreement (1938), the southwestern and northern peripheries of Moravia, which had a German-speaking majority, were annexed by Nazi Germany, and during the German occupation of Czechoslovakia (1939–1945), the remnant of Moravia was an administrative unit within the Protectorate of Bohemia and Moravia.",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        }
+      ],
+      "total": 3,
+      "retrieval_id": "22610a1d-b186-4c55-bdf6-b5c51dd6591b",
+      "stale_notices": []
+    }
+  },
+  "table_metrics": {
+    "required": 3,
+    "hits_at_3": 2,
+    "recall_at_3": 0.6666666666666666,
+    "all_required_at_3": false,
+    "first_hit_rank": 1
+  }
+}

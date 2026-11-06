@@ -1,0 +1,509 @@
+{
+  "request": {
+    "query": "How can a CPU make progress on several instructions at once by handling different stages simultaneously?",
+    "top_k": 5,
+    "level": "L1",
+    "include_stale": false,
+    "include_stale_notices": false,
+    "context_type": [
+      "resource"
+    ]
+  },
+  "response": {
+    "results": [
+      {
+        "uri": "ctx://resources/hydra-layer-validation/microarchitecture",
+        "context_type": "resource",
+        "scope": "team",
+        "owner_space": "",
+        "score": 0.031544957774465976,
+        "l0_content": null,
+        "l1_content": null,
+        "l2_content": null,
+        "status": "active",
+        "version": 1,
+        "validity_status": "fresh",
+        "tags": [
+          "kilt-2019",
+          "source-sha256:17571bc69825350c0f464fb9e4ff1478f3dc0fc4f7d6c6cb9f7836783bae808c"
+        ],
+        "snippet": "### Multiprocessing and multithreading.\n\nComputer architects have become stymied by the growing mismatch in CPU operating frequencies and DRAM access times. None of the techniques that exploited instruction-level parallelism (ILP) within one program could make up for the long stalls that occurred when data had to be fetched from main memory. Additionally, the large transistor counts and high operating frequencies needed for the more advanced ILP techniques required power dissipation levels that could no longer be cheaply cooled. For these reasons, newer generations of computers have started to exploit higher levels of parallelism that exist outside of a single program or program thread.\n\nThis trend is sometimes known as \"throughput computing\". This idea originated in the mainframe market where online transaction processing emphasized not just the execution speed of one transaction, but the capacity to deal with massive numbers of transactions. With transaction-based applications such as network routing and web-site serving greatly increasing in the last decade, the computer industry has re-emphasized capacity and throughput issues.\n\nOne technique of how this parallelism is achieved is through multiprocessing systems, computer systems with multiple CPUs. Once reserved for high-end mainframes and supercomputers, small-scale (2–8) multiprocessors servers have become commonplace for the small business market. For large corporations, large scale (16–256) multiprocessors are common. Even personal computers with multiple CPUs have appeared since the 1990s.\n\nWith further transistor size reductions made available with semiconductor technology advances, multi-core CPUs have appeared where multiple CPUs are implemented on the same silicon chip. Initially used in chips targeting embedded markets, where simpler and smaller CPUs would allow multiple instantiations to fit on one piece of silicon. By 2005, semiconductor technology allowed dual high-end desktop CPUs \"CMP\" chips to be manufactured in volume. Some designs, such as Sun Microsystems' UltraSPARC T1 have reverted to simpler (scalar, in-order) designs in order to fit more processors on one piece of silicon.\n\nAnother technique that has become more popular recently is multithreading. In multithreading, when the processor has to fetch data from slow system memory, instead of stalling for the data to arrive, the processor switches to another program or program thread which is ready to execute. Though this does not speed up a particular program/thread, it increases the overall system throughput by reducing the time the CPU is idle.\n\nConceptually, multithreading is equivalent to a context switch at the operating system level. The difference is that a multithreaded CPU can do a thread switch in one CPU cycle instead of the hundreds or thousands of CPU cycles a context switch normally requires. This is achieved by replicating the state hardware (such as the register file and program counter) for each active thread.\n\nA further enhancement is simultaneous multithreading. This technique allows superscalar CPUs to execute instructions from different programs/threads simultaneously in the same cycle.\n\n",
+        "section_id": 16,
+        "snippet_offset": [
+          17627,
+          20817
+        ],
+        "retrieval_strategy": "hybrid"
+      },
+      {
+        "uri": "ctx://resources/hydra-layer-validation/microarchitecture",
+        "context_type": "resource",
+        "scope": "team",
+        "owner_space": "",
+        "score": 0.03125,
+        "l0_content": null,
+        "l1_content": null,
+        "l2_content": null,
+        "status": "active",
+        "version": 1,
+        "validity_status": "fresh",
+        "tags": [
+          "kilt-2019",
+          "source-sha256:17571bc69825350c0f464fb9e4ff1478f3dc0fc4f7d6c6cb9f7836783bae808c"
+        ],
+        "snippet": "### Superscalar.\n\nEven with all of the added complexity and gates needed to support the concepts outlined above, improvements in semiconductor manufacturing soon allowed even more logic gates to be used.\n\nIn the outline above the processor processes parts of a single instruction at a time. Computer programs could be executed faster if multiple instructions were processed simultaneously. This is what superscalar processors achieve, by replicating functional units such as ALUs. The replication of functional units was only made possible when the die area of a single-issue processor no longer stretched the limits of what could be reliably manufactured. By the late 1980s, superscalar designs started to enter the market place.\n\nIn modern designs it is common to find two load units, one store (many instructions have no results to store), two or more integer math units, two or more floating point units, and often a SIMD unit of some sort. The instruction issue logic grows in complexity by reading in a huge list of instructions from memory and handing them off to the different execution units that are idle at that point. The results are then collected and re-ordered at the end.\n\n",
+        "section_id": 13,
+        "snippet_offset": [
+          15121,
+          16310
+        ],
+        "retrieval_strategy": "hybrid"
+      },
+      {
+        "uri": "ctx://resources/hydra-layer-validation/microarchitecture",
+        "context_type": "resource",
+        "scope": "team",
+        "owner_space": "",
+        "score": 0.030886196246139225,
+        "l0_content": null,
+        "l1_content": null,
+        "l2_content": null,
+        "status": "active",
+        "version": 1,
+        "validity_status": "fresh",
+        "tags": [
+          "kilt-2019",
+          "source-sha256:17571bc69825350c0f464fb9e4ff1478f3dc0fc4f7d6c6cb9f7836783bae808c"
+        ],
+        "snippet": "### Increasing execution speed.\n\nComplicating this simple-looking series of steps is the fact that the memory hierarchy, which includes caching, main memory and non-volatile storage like hard disks (where the program instructions and data reside), has always been slower than the processor itself. Step (2) often introduces a lengthy (in CPU terms) delay while the data arrives over the computer bus. A considerable amount of research has been put into designs that avoid these delays as much as possible. Over the years, a central goal was to execute more instructions in parallel, thus increasing the effective execution speed of a program. These efforts introduced complicated logic and circuit structures. Initially, these techniques could only be implemented on expensive mainframes or supercomputers due to the amount of circuitry needed for these techniques. As semiconductor manufacturing progressed, more and more of these techniques could be implemented on a single semiconductor chip. See Moore's law.\n\n",
+        "section_id": 8,
+        "snippet_offset": [
+          7303,
+          8317
+        ],
+        "retrieval_strategy": "hybrid"
+      },
+      {
+        "uri": "ctx://resources/hydra-layer-validation/microarchitecture",
+        "context_type": "resource",
+        "scope": "team",
+        "owner_space": "",
+        "score": 0.030834914611005692,
+        "l0_content": null,
+        "l1_content": null,
+        "l2_content": null,
+        "status": "active",
+        "version": 1,
+        "validity_status": "fresh",
+        "tags": [
+          "kilt-2019",
+          "source-sha256:17571bc69825350c0f464fb9e4ff1478f3dc0fc4f7d6c6cb9f7836783bae808c"
+        ],
+        "snippet": "### Branch prediction.\n\nOne barrier to achieving higher performance through instruction-level parallelism stems from pipeline stalls and flushes due to branches. Normally, whether a conditional branch will be taken isn't known until late in the pipeline as conditional branches depend on results coming from a register. From the time that the processor's instruction decoder has figured out that it has encountered a conditional branch instruction to the time that the deciding register value can be read out, the pipeline needs to be stalled for several cycles, or if it's not and the branch is taken, the pipeline needs to be flushed. As clock speeds increase the depth of the pipeline increases with it, and some modern processors may have 20 stages or more. On average, every fifth instruction executed is a branch, so without any intervention, that's a high amount of stalling.\n\nTechniques such as branch prediction and speculative execution are used to lessen these branch penalties. Branch prediction is where the hardware makes educated guesses on whether a particular branch will be taken. In reality one side or the other of the branch will be called much more often than the other. Modern designs have rather complex statistical prediction systems, which watch the results of past branches to predict the future with greater accuracy. The guess allows the hardware to prefetch instructions without waiting for the register read. Speculative execution is a further enhancement in which the code along the predicted path is not just prefetched but also executed before it is known whether the branch should be taken or not. This can yield better performance when the guess is good, with the risk of a huge penalty when the guess is bad because instructions need to be undone.\n\n",
+        "section_id": 12,
+        "snippet_offset": [
+          13335,
+          15121
+        ],
+        "retrieval_strategy": "hybrid"
+      },
+      {
+        "uri": "ctx://resources/hydra-layer-validation/microarchitecture",
+        "context_type": "resource",
+        "scope": "team",
+        "owner_space": "",
+        "score": 0.030798389007344232,
+        "l0_content": null,
+        "l1_content": null,
+        "l2_content": null,
+        "status": "active",
+        "version": 1,
+        "validity_status": "fresh",
+        "tags": [
+          "kilt-2019",
+          "source-sha256:17571bc69825350c0f464fb9e4ff1478f3dc0fc4f7d6c6cb9f7836783bae808c"
+        ],
+        "snippet": "## Aspects of microarchitecture.\n\nThe pipelined datapath is the most commonly used datapath design in microarchitecture today. This technique is used in most modern microprocessors, microcontrollers, and DSPs. The pipelined architecture allows multiple instructions to overlap in execution, much like an assembly line. The pipeline includes several different stages which are fundamental in microarchitecture designs. Some of these stages include instruction fetch, instruction decode, execute, and write back. Some architectures include other stages such as memory access. The design of pipelines is one of the central microarchitectural tasks.\n\nExecution units are also essential to microarchitecture. Execution units include arithmetic logic units (ALU), floating point units (FPU), load/store units, branch prediction, and SIMD. These units perform the operations or calculations of the processor. The choice of the number of execution units, their latency and throughput is a central microarchitectural design task. The size, latency, throughput and connectivity of memories within the system are also microarchitectural decisions.\n\nSystem-level design decisions such as whether or not to include peripherals, such as memory controllers, can be considered part of the microarchitectural design process. This includes decisions on the performance-level and connectivity of these peripherals.\n\nUnlike architectural design, where achieving a specific performance level is the main goal, microarchitectural design pays closer attention to other constraints. Since microarchitecture design decisions directly affect what goes into a system, attention must be paid to issues such as chip area/cost, power consumption, logic complexity, ease of connectivity, manufacturability, ease of debugging, and testability.\n\n",
+        "section_id": 4,
+        "snippet_offset": [
+          3111,
+          4924
+        ],
+        "retrieval_strategy": "hybrid"
+      }
+    ],
+    "total": 5,
+    "retrieval_id": "80291e51-fa8e-442d-8bd8-177906d8c87d",
+    "trace": {
+      "candidates": [
+        {
+          "node_id": "0d25628e-53fd-424a-9eee-0c4c4bc41947",
+          "version": 1,
+          "section_id": 16,
+          "snippet_offset": [
+            17627,
+            20817
+          ],
+          "status": "active",
+          "validity_status": "fresh",
+          "filtered": false,
+          "filter_reasons": [],
+          "route": "original"
+        },
+        {
+          "node_id": "0d25628e-53fd-424a-9eee-0c4c4bc41947",
+          "version": 1,
+          "section_id": 13,
+          "snippet_offset": [
+            15121,
+            16310
+          ],
+          "status": "active",
+          "validity_status": "fresh",
+          "filtered": false,
+          "filter_reasons": [],
+          "route": "original"
+        },
+        {
+          "node_id": "0d25628e-53fd-424a-9eee-0c4c4bc41947",
+          "version": 1,
+          "section_id": 8,
+          "snippet_offset": [
+            7303,
+            8317
+          ],
+          "status": "active",
+          "validity_status": "fresh",
+          "filtered": false,
+          "filter_reasons": [],
+          "route": "original"
+        },
+        {
+          "node_id": "0d25628e-53fd-424a-9eee-0c4c4bc41947",
+          "version": 1,
+          "section_id": 12,
+          "snippet_offset": [
+            13335,
+            15121
+          ],
+          "status": "active",
+          "validity_status": "fresh",
+          "filtered": false,
+          "filter_reasons": [],
+          "route": "original"
+        },
+        {
+          "node_id": "0d25628e-53fd-424a-9eee-0c4c4bc41947",
+          "version": 1,
+          "section_id": 4,
+          "snippet_offset": [
+            3111,
+            4924
+          ],
+          "status": "active",
+          "validity_status": "fresh",
+          "filtered": false,
+          "filter_reasons": [],
+          "route": "original"
+        },
+        {
+          "node_id": "0d25628e-53fd-424a-9eee-0c4c4bc41947",
+          "version": 1,
+          "section_id": 10,
+          "snippet_offset": [
+            9617,
+            11920
+          ],
+          "status": "active",
+          "validity_status": "fresh",
+          "filtered": false,
+          "filter_reasons": [],
+          "route": "original"
+        },
+        {
+          "node_id": "0d25628e-53fd-424a-9eee-0c4c4bc41947",
+          "version": 1,
+          "section_id": 9,
+          "snippet_offset": [
+            8317,
+            9617
+          ],
+          "status": "active",
+          "validity_status": "fresh",
+          "filtered": false,
+          "filter_reasons": [],
+          "route": "original"
+        },
+        {
+          "node_id": "0d25628e-53fd-424a-9eee-0c4c4bc41947",
+          "version": 1,
+          "section_id": 7,
+          "snippet_offset": [
+            5393,
+            7303
+          ],
+          "status": "active",
+          "validity_status": "fresh",
+          "filtered": false,
+          "filter_reasons": [],
+          "route": "original"
+        },
+        {
+          "node_id": "0d25628e-53fd-424a-9eee-0c4c4bc41947",
+          "version": 1,
+          "section_id": 6,
+          "snippet_offset": [
+            4957,
+            5393
+          ],
+          "status": "active",
+          "validity_status": "fresh",
+          "filtered": false,
+          "filter_reasons": [],
+          "route": "original"
+        },
+        {
+          "node_id": "0d25628e-53fd-424a-9eee-0c4c4bc41947",
+          "version": 1,
+          "section_id": 14,
+          "snippet_offset": [
+            16310,
+            17132
+          ],
+          "status": "active",
+          "validity_status": "fresh",
+          "filtered": false,
+          "filter_reasons": [],
+          "route": "original"
+        },
+        {
+          "node_id": "0d25628e-53fd-424a-9eee-0c4c4bc41947",
+          "version": 1,
+          "section_id": 3,
+          "snippet_offset": [
+            573,
+            3111
+          ],
+          "status": "active",
+          "validity_status": "fresh",
+          "filtered": false,
+          "filter_reasons": [],
+          "route": "original"
+        },
+        {
+          "node_id": "0d25628e-53fd-424a-9eee-0c4c4bc41947",
+          "version": 1,
+          "section_id": 15,
+          "snippet_offset": [
+            17132,
+            17627
+          ],
+          "status": "active",
+          "validity_status": "fresh",
+          "filtered": false,
+          "filter_reasons": [],
+          "route": "original"
+        },
+        {
+          "node_id": "0d25628e-53fd-424a-9eee-0c4c4bc41947",
+          "version": 1,
+          "section_id": 17,
+          "snippet_offset": [
+            20817,
+            21522
+          ],
+          "status": "active",
+          "validity_status": "fresh",
+          "filtered": false,
+          "filter_reasons": [],
+          "route": "original"
+        },
+        {
+          "node_id": "0d25628e-53fd-424a-9eee-0c4c4bc41947",
+          "version": 1,
+          "section_id": 5,
+          "snippet_offset": [
+            4924,
+            4957
+          ],
+          "status": "active",
+          "validity_status": "fresh",
+          "filtered": false,
+          "filter_reasons": [],
+          "route": "original"
+        },
+        {
+          "node_id": "0d25628e-53fd-424a-9eee-0c4c4bc41947",
+          "version": 1,
+          "section_id": 2,
+          "snippet_offset": [
+            0,
+            573
+          ],
+          "status": "active",
+          "validity_status": "fresh",
+          "filtered": false,
+          "filter_reasons": [],
+          "route": "original"
+        },
+        {
+          "node_id": "0d25628e-53fd-424a-9eee-0c4c4bc41947",
+          "version": 1,
+          "section_id": 11,
+          "snippet_offset": [
+            11920,
+            13335
+          ],
+          "status": "active",
+          "validity_status": "fresh",
+          "filtered": false,
+          "filter_reasons": [],
+          "route": "original"
+        }
+      ],
+      "final_versions": [
+        {
+          "node_id": "0d25628e-53fd-424a-9eee-0c4c4bc41947",
+          "version": 1,
+          "validity_status": "fresh",
+          "section_id": 16,
+          "snippet_offset": [
+            17627,
+            20817
+          ]
+        },
+        {
+          "node_id": "0d25628e-53fd-424a-9eee-0c4c4bc41947",
+          "version": 1,
+          "validity_status": "fresh",
+          "section_id": 13,
+          "snippet_offset": [
+            15121,
+            16310
+          ]
+        },
+        {
+          "node_id": "0d25628e-53fd-424a-9eee-0c4c4bc41947",
+          "version": 1,
+          "validity_status": "fresh",
+          "section_id": 8,
+          "snippet_offset": [
+            7303,
+            8317
+          ]
+        },
+        {
+          "node_id": "0d25628e-53fd-424a-9eee-0c4c4bc41947",
+          "version": 1,
+          "validity_status": "fresh",
+          "section_id": 12,
+          "snippet_offset": [
+            13335,
+            15121
+          ]
+        },
+        {
+          "node_id": "0d25628e-53fd-424a-9eee-0c4c4bc41947",
+          "version": 1,
+          "validity_status": "fresh",
+          "section_id": 4,
+          "snippet_offset": [
+            3111,
+            4924
+          ]
+        }
+      ],
+      "final_materialized": [
+        {
+          "node_id": "0d25628e-53fd-424a-9eee-0c4c4bc41947",
+          "uri": "ctx://resources/hydra-layer-validation/microarchitecture",
+          "version": 1,
+          "status": "active",
+          "validity_status": "fresh",
+          "l0_content": null,
+          "l1_content": null,
+          "l2_content": null,
+          "snippet": "### Multiprocessing and multithreading.\n\nComputer architects have become stymied by the growing mismatch in CPU operating frequencies and DRAM access times. None of the techniques that exploited instruction-level parallelism (ILP) within one program could make up for the long stalls that occurred when data had to be fetched from main memory. Additionally, the large transistor counts and high operating frequencies needed for the more advanced ILP techniques required power dissipation levels that could no longer be cheaply cooled. For these reasons, newer generations of computers have started to exploit higher levels of parallelism that exist outside of a single program or program thread.\n\nThis trend is sometimes known as \"throughput computing\". This idea originated in the mainframe market where online transaction processing emphasized not just the execution speed of one transaction, but the capacity to deal with massive numbers of transactions. With transaction-based applications such as network routing and web-site serving greatly increasing in the last decade, the computer industry has re-emphasized capacity and throughput issues.\n\nOne technique of how this parallelism is achieved is through multiprocessing systems, computer systems with multiple CPUs. Once reserved for high-end mainframes and supercomputers, small-scale (2–8) multiprocessors servers have become commonplace for the small business market. For large corporations, large scale (16–256) multiprocessors are common. Even personal computers with multiple CPUs have appeared since the 1990s.\n\nWith further transistor size reductions made available with semiconductor technology advances, multi-core CPUs have appeared where multiple CPUs are implemented on the same silicon chip. Initially used in chips targeting embedded markets, where simpler and smaller CPUs would allow multiple instantiations to fit on one piece of silicon. By 2005, semiconductor technology allowed dual high-end desktop CPUs \"CMP\" chips to be manufactured in volume. Some designs, such as Sun Microsystems' UltraSPARC T1 have reverted to simpler (scalar, in-order) designs in order to fit more processors on one piece of silicon.\n\nAnother technique that has become more popular recently is multithreading. In multithreading, when the processor has to fetch data from slow system memory, instead of stalling for the data to arrive, the processor switches to another program or program thread which is ready to execute. Though this does not speed up a particular program/thread, it increases the overall system throughput by reducing the time the CPU is idle.\n\nConceptually, multithreading is equivalent to a context switch at the operating system level. The difference is that a multithreaded CPU can do a thread switch in one CPU cycle instead of the hundreds or thousands of CPU cycles a context switch normally requires. This is achieved by replicating the state hardware (such as the register file and program counter) for each active thread.\n\nA further enhancement is simultaneous multithreading. This technique allows superscalar CPUs to execute instructions from different programs/threads simultaneously in the same cycle.\n\n",
+          "section_id": 16,
+          "snippet_offset": [
+            17627,
+            20817
+          ],
+          "service_content": "### Multiprocessing and multithreading.\n\nComputer architects have become stymied by the growing mismatch in CPU operating frequencies and DRAM access times. None of the techniques that exploited instruction-level parallelism (ILP) within one program could make up for the long stalls that occurred when data had to be fetched from main memory. Additionally, the large transistor counts and high operating frequencies needed for the more advanced ILP techniques required power dissipation levels that could no longer be cheaply cooled. For these reasons, newer generations of computers have started to exploit higher levels of parallelism that exist outside of a single program or program thread.\n\nThis trend is sometimes known as \"throughput computing\". This idea originated in the mainframe market where online transaction processing emphasized not just the execution speed of one transaction, but the capacity to deal with massive numbers of transactions. With transaction-based applications such as network routing and web-site serving greatly increasing in the last decade, the computer industry has re-emphasized capacity and throughput issues.\n\nOne technique of how this parallelism is achieved is through multiprocessing systems, computer systems with multiple CPUs. Once reserved for high-end mainframes and supercomputers, small-scale (2–8) multiprocessors servers have become commonplace for the small business market. For large corporations, large scale (16–256) multiprocessors are common. Even personal computers with multiple CPUs have appeared since the 1990s.\n\nWith further transistor size reductions made available with semiconductor technology advances, multi-core CPUs have appeared where multiple CPUs are implemented on the same silicon chip. Initially used in chips targeting embedded markets, where simpler and smaller CPUs would allow multiple instantiations to fit on one piece of silicon. By 2005, semiconductor technology allowed dual high-end desktop CPUs \"CMP\" chips to be manufactured in volume. Some designs, such as Sun Microsystems' UltraSPARC T1 have reverted to simpler (scalar, in-order) designs in order to fit more processors on one piece of silicon.\n\nAnother technique that has become more popular recently is multithreading. In multithreading, when the processor has to fetch data from slow system memory, instead of stalling for the data to arrive, the processor switches to another program or program thread which is ready to execute. Though this does not speed up a particular program/thread, it increases the overall system throughput by reducing the time the CPU is idle.\n\nConceptually, multithreading is equivalent to a context switch at the operating system level. The difference is that a multithreaded CPU can do a thread switch in one CPU cycle instead of the hundreds or thousands of CPU cycles a context switch normally requires. This is achieved by replicating the state hardware (such as the register file and program counter) for each active thread.\n\nA further enhancement is simultaneous multithreading. This technique allows superscalar CPUs to execute instructions from different programs/threads simultaneously in the same cycle.\n\n"
+        },
+        {
+          "node_id": "0d25628e-53fd-424a-9eee-0c4c4bc41947",
+          "uri": "ctx://resources/hydra-layer-validation/microarchitecture",
+          "version": 1,
+          "status": "active",
+          "validity_status": "fresh",
+          "l0_content": null,
+          "l1_content": null,
+          "l2_content": null,
+          "snippet": "### Superscalar.\n\nEven with all of the added complexity and gates needed to support the concepts outlined above, improvements in semiconductor manufacturing soon allowed even more logic gates to be used.\n\nIn the outline above the processor processes parts of a single instruction at a time. Computer programs could be executed faster if multiple instructions were processed simultaneously. This is what superscalar processors achieve, by replicating functional units such as ALUs. The replication of functional units was only made possible when the die area of a single-issue processor no longer stretched the limits of what could be reliably manufactured. By the late 1980s, superscalar designs started to enter the market place.\n\nIn modern designs it is common to find two load units, one store (many instructions have no results to store), two or more integer math units, two or more floating point units, and often a SIMD unit of some sort. The instruction issue logic grows in complexity by reading in a huge list of instructions from memory and handing them off to the different execution units that are idle at that point. The results are then collected and re-ordered at the end.\n\n",
+          "section_id": 13,
+          "snippet_offset": [
+            15121,
+            16310
+          ],
+          "service_content": "### Superscalar.\n\nEven with all of the added complexity and gates needed to support the concepts outlined above, improvements in semiconductor manufacturing soon allowed even more logic gates to be used.\n\nIn the outline above the processor processes parts of a single instruction at a time. Computer programs could be executed faster if multiple instructions were processed simultaneously. This is what superscalar processors achieve, by replicating functional units such as ALUs. The replication of functional units was only made possible when the die area of a single-issue processor no longer stretched the limits of what could be reliably manufactured. By the late 1980s, superscalar designs started to enter the market place.\n\nIn modern designs it is common to find two load units, one store (many instructions have no results to store), two or more integer math units, two or more floating point units, and often a SIMD unit of some sort. The instruction issue logic grows in complexity by reading in a huge list of instructions from memory and handing them off to the different execution units that are idle at that point. The results are then collected and re-ordered at the end.\n\n"
+        },
+        {
+          "node_id": "0d25628e-53fd-424a-9eee-0c4c4bc41947",
+          "uri": "ctx://resources/hydra-layer-validation/microarchitecture",
+          "version": 1,
+          "status": "active",
+          "validity_status": "fresh",
+          "l0_content": null,
+          "l1_content": null,
+          "l2_content": null,
+          "snippet": "### Increasing execution speed.\n\nComplicating this simple-looking series of steps is the fact that the memory hierarchy, which includes caching, main memory and non-volatile storage like hard disks (where the program instructions and data reside), has always been slower than the processor itself. Step (2) often introduces a lengthy (in CPU terms) delay while the data arrives over the computer bus. A considerable amount of research has been put into designs that avoid these delays as much as possible. Over the years, a central goal was to execute more instructions in parallel, thus increasing the effective execution speed of a program. These efforts introduced complicated logic and circuit structures. Initially, these techniques could only be implemented on expensive mainframes or supercomputers due to the amount of circuitry needed for these techniques. As semiconductor manufacturing progressed, more and more of these techniques could be implemented on a single semiconductor chip. See Moore's law.\n\n",
+          "section_id": 8,
+          "snippet_offset": [
+            7303,
+            8317
+          ],
+          "service_content": "### Increasing execution speed.\n\nComplicating this simple-looking series of steps is the fact that the memory hierarchy, which includes caching, main memory and non-volatile storage like hard disks (where the program instructions and data reside), has always been slower than the processor itself. Step (2) often introduces a lengthy (in CPU terms) delay while the data arrives over the computer bus. A considerable amount of research has been put into designs that avoid these delays as much as possible. Over the years, a central goal was to execute more instructions in parallel, thus increasing the effective execution speed of a program. These efforts introduced complicated logic and circuit structures. Initially, these techniques could only be implemented on expensive mainframes or supercomputers due to the amount of circuitry needed for these techniques. As semiconductor manufacturing progressed, more and more of these techniques could be implemented on a single semiconductor chip. See Moore's law.\n\n"
+        },
+        {
+          "node_id": "0d25628e-53fd-424a-9eee-0c4c4bc41947",
+          "uri": "ctx://resources/hydra-layer-validation/microarchitecture",
+          "version": 1,
+          "status": "active",
+          "validity_status": "fresh",
+          "l0_content": null,
+          "l1_content": null,
+          "l2_content": null,
+          "snippet": "### Branch prediction.\n\nOne barrier to achieving higher performance through instruction-level parallelism stems from pipeline stalls and flushes due to branches. Normally, whether a conditional branch will be taken isn't known until late in the pipeline as conditional branches depend on results coming from a register. From the time that the processor's instruction decoder has figured out that it has encountered a conditional branch instruction to the time that the deciding register value can be read out, the pipeline needs to be stalled for several cycles, or if it's not and the branch is taken, the pipeline needs to be flushed. As clock speeds increase the depth of the pipeline increases with it, and some modern processors may have 20 stages or more. On average, every fifth instruction executed is a branch, so without any intervention, that's a high amount of stalling.\n\nTechniques such as branch prediction and speculative execution are used to lessen these branch penalties. Branch prediction is where the hardware makes educated guesses on whether a particular branch will be taken. In reality one side or the other of the branch will be called much more often than the other. Modern designs have rather complex statistical prediction systems, which watch the results of past branches to predict the future with greater accuracy. The guess allows the hardware to prefetch instructions without waiting for the register read. Speculative execution is a further enhancement in which the code along the predicted path is not just prefetched but also executed before it is known whether the branch should be taken or not. This can yield better performance when the guess is good, with the risk of a huge penalty when the guess is bad because instructions need to be undone.\n\n",
+          "section_id": 12,
+          "snippet_offset": [
+            13335,
+            15121
+          ],
+          "service_content": "### Branch prediction.\n\nOne barrier to achieving higher performance through instruction-level parallelism stems from pipeline stalls and flushes due to branches. Normally, whether a conditional branch will be taken isn't known until late in the pipeline as conditional branches depend on results coming from a register. From the time that the processor's instruction decoder has figured out that it has encountered a conditional branch instruction to the time that the deciding register value can be read out, the pipeline needs to be stalled for several cycles, or if it's not and the branch is taken, the pipeline needs to be flushed. As clock speeds increase the depth of the pipeline increases with it, and some modern processors may have 20 stages or more. On average, every fifth instruction executed is a branch, so without any intervention, that's a high amount of stalling.\n\nTechniques such as branch prediction and speculative execution are used to lessen these branch penalties. Branch prediction is where the hardware makes educated guesses on whether a particular branch will be taken. In reality one side or the other of the branch will be called much more often than the other. Modern designs have rather complex statistical prediction systems, which watch the results of past branches to predict the future with greater accuracy. The guess allows the hardware to prefetch instructions without waiting for the register read. Speculative execution is a further enhancement in which the code along the predicted path is not just prefetched but also executed before it is known whether the branch should be taken or not. This can yield better performance when the guess is good, with the risk of a huge penalty when the guess is bad because instructions need to be undone.\n\n"
+        },
+        {
+          "node_id": "0d25628e-53fd-424a-9eee-0c4c4bc41947",
+          "uri": "ctx://resources/hydra-layer-validation/microarchitecture",
+          "version": 1,
+          "status": "active",
+          "validity_status": "fresh",
+          "l0_content": null,
+          "l1_content": null,
+          "l2_content": null,
+          "snippet": "## Aspects of microarchitecture.\n\nThe pipelined datapath is the most commonly used datapath design in microarchitecture today. This technique is used in most modern microprocessors, microcontrollers, and DSPs. The pipelined architecture allows multiple instructions to overlap in execution, much like an assembly line. The pipeline includes several different stages which are fundamental in microarchitecture designs. Some of these stages include instruction fetch, instruction decode, execute, and write back. Some architectures include other stages such as memory access. The design of pipelines is one of the central microarchitectural tasks.\n\nExecution units are also essential to microarchitecture. Execution units include arithmetic logic units (ALU), floating point units (FPU), load/store units, branch prediction, and SIMD. These units perform the operations or calculations of the processor. The choice of the number of execution units, their latency and throughput is a central microarchitectural design task. The size, latency, throughput and connectivity of memories within the system are also microarchitectural decisions.\n\nSystem-level design decisions such as whether or not to include peripherals, such as memory controllers, can be considered part of the microarchitectural design process. This includes decisions on the performance-level and connectivity of these peripherals.\n\nUnlike architectural design, where achieving a specific performance level is the main goal, microarchitectural design pays closer attention to other constraints. Since microarchitecture design decisions directly affect what goes into a system, attention must be paid to issues such as chip area/cost, power consumption, logic complexity, ease of connectivity, manufacturability, ease of debugging, and testability.\n\n",
+          "section_id": 4,
+          "snippet_offset": [
+            3111,
+            4924
+          ],
+          "service_content": "## Aspects of microarchitecture.\n\nThe pipelined datapath is the most commonly used datapath design in microarchitecture today. This technique is used in most modern microprocessors, microcontrollers, and DSPs. The pipelined architecture allows multiple instructions to overlap in execution, much like an assembly line. The pipeline includes several different stages which are fundamental in microarchitecture designs. Some of these stages include instruction fetch, instruction decode, execute, and write back. Some architectures include other stages such as memory access. The design of pipelines is one of the central microarchitectural tasks.\n\nExecution units are also essential to microarchitecture. Execution units include arithmetic logic units (ALU), floating point units (FPU), load/store units, branch prediction, and SIMD. These units perform the operations or calculations of the processor. The choice of the number of execution units, their latency and throughput is a central microarchitectural design task. The size, latency, throughput and connectivity of memories within the system are also microarchitectural decisions.\n\nSystem-level design decisions such as whether or not to include peripherals, such as memory controllers, can be considered part of the microarchitectural design process. This includes decisions on the performance-level and connectivity of these peripherals.\n\nUnlike architectural design, where achieving a specific performance level is the main goal, microarchitectural design pays closer attention to other constraints. Since microarchitecture design decisions directly affect what goes into a system, attention must be paid to issues such as chip area/cost, power consumption, logic complexity, ease of connectivity, manufacturability, ease of debugging, and testability.\n\n"
+        }
+      ],
+      "context_hash": "7c6150ddd010188c9fcf0ef7ca1207944718d074872f3c87bfa9ef3c3544738f",
+      "unsafe_debug_read": false,
+      "stale_notices": []
+    },
+    "stale_notices": []
+  }
+}

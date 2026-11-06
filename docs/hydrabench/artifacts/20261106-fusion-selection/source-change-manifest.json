@@ -1,0 +1,29 @@
+{
+  "changed_files": [
+    "docs/setup/document-section-generation.md",
+    "plugins/deepagents/src/contexthub_deepagents/tools.py",
+    "plugins/deepagents/tests/test_tools.py",
+    "sdk/src/contexthub_sdk/client.py",
+    "src/contexthub/models/search.py",
+    "src/contexthub/retrieval/long_doc/coordinator.py",
+    "src/contexthub/services/retrieval_service.py",
+    "tests/test_document_chunk_vectors.py",
+    "tests/test_long_doc_retrieval.py",
+    "tests/test_retrieval.py",
+    "tests/test_sdk.py"
+  ],
+  "other_existing_files_unchanged": true,
+  "after_hashes": {
+    "docs/setup/document-section-generation.md": "198041481c350a46776a4cc68d1c7a60a2bed148720ff9023cc22532e14357f5",
+    "plugins/deepagents/src/contexthub_deepagents/tools.py": "3e899a8e523dc4edaedb444f86e5fccd6f975f2ce5406e505c7afb81f2e50cba",
+    "plugins/deepagents/tests/test_tools.py": "eabd5d3fdc5f5379074da4a8360d60d3a48ee93e5e8f8f02c5e824ed927f444d",
+    "sdk/src/contexthub_sdk/client.py": "a1df4731cf325e1f7ae7a0a39d8ee203548b008689a6a9e2561651278f8ff00e",
+    "src/contexthub/models/search.py": "50b510d87b97dbd9e611b0df61c3b80ee131172b5aa713dc7a0120fe22726215",
+    "src/contexthub/retrieval/long_doc/coordinator.py": "dd65d6d3ddaca53a8484509607b1f6261ef6281a02d0a45ed56cdff34e58908c",
+    "src/contexthub/services/retrieval_service.py": "c1e30853ddd585bac09e1aa3b32f69663467a4adccfe92d517592f2a262ea090",
+    "tests/test_document_chunk_vectors.py": "477f8b14af9923b4f592a7eda26c4525049d903e9e4629b32f104bb4f5273b9b",
+    "tests/test_long_doc_retrieval.py": "87874868b0b0786e81d0c7ad859777d5748ad2eab94114e72ca3e69406437823",
+    "tests/test_retrieval.py": "44e6c6cd1b1d586f57bf259cb2597c20be58c1a83a0ac0237843f1155992b21f",
+    "tests/test_sdk.py": "bb90908956710dae3048798e104676b28204b377f5ff11c0ee20d21438bb9442"
+  }
+}

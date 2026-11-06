@@ -1,0 +1,15 @@
+{
+  "changed_files": [
+    "src/contexthub/retrieval/long_doc/coordinator.py",
+    "src/contexthub/retrieval/long_doc/vector_retriever.py",
+    "tests/test_document_chunk_vectors.py",
+    "docs/setup/document-section-generation.md"
+  ],
+  "other_existing_files_unchanged": true,
+  "after_hashes": {
+    "src/contexthub/retrieval/long_doc/coordinator.py": "1e85872fd744b2b7b63a0b43ef7725f2a0e753241cf84b516b87c784726b1483",
+    "src/contexthub/retrieval/long_doc/vector_retriever.py": "92ca1d65780bf413075bf0ddc82c7ac88d7e9664400c811b0739e530ef8318a6",
+    "tests/test_document_chunk_vectors.py": "ea72d80798854dd8565e608d119d006e76c21e5fd8240e71114ccde5c8618915",
+    "docs/setup/document-section-generation.md": "545f0a7d7c7a86091d61822dbe734eedc1565ec7c85d5e76a85462f51ad4e89d"
+  }
+}

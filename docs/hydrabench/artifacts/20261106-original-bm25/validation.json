@@ -1,0 +1,36 @@
+{
+  "completed_at": "2026-11-06T10:46:55.041576+08:00",
+  "tests": {
+    "passed": 101,
+    "skipped": 1,
+    "failed": 0,
+    "command": "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:sdk/src:plugins/deepagents/src /tmp/contexthub-deep-agents-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_long_doc_retrieval.py tests/test_retrieval.py tests/test_document_chunk_vectors.py tests/test_raw_context_retrieval.py"
+  },
+  "provider_calls": 0,
+  "answering_model_calls": 0,
+  "completed_comparison_search_calls": 4,
+  "completed_comparison_section_reads": 20,
+  "preserved_interrupted_attempt": {
+    "path": "after-attempt1",
+    "search_calls": 1,
+    "section_reads": 5,
+    "reason": "Harness tuple/list recording comparison; product retrieval had completed correctly."
+  },
+  "before_counter_correction": "The before comparison.json section-read count is zero because it counted /sections, not /section/{id}; five actual verified reads executed for each query. Original file preserved.",
+  "bm25_fragments": 16,
+  "lexical_tokens_not_model_tokens": 3318,
+  "average_fragment_lexical_tokens": 207.375,
+  "top_k": 5,
+  "vector_candidates": 15,
+  "rrf_constant": 60,
+  "unchanged_vector_candidates": true,
+  "unchanged_stored_data_and_historical_artifacts": true,
+  "literal": {
+    "same_body_set": true,
+    "same_result_order": true
+  },
+  "semantic": {
+    "same_body_set": true,
+    "same_result_order": false
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "evaluated_cases": 20,
+  "initial_parameter_rejections": 20,
+  "reference_matches": 13,
+  "partial": 1,
+  "reference_mismatches": 5,
+  "no_final_answer": 1,
+  "focused_tests_passed": 82,
+  "index_fingerprint_unchanged": true,
+  "sqlite_hashes_unchanged_all_attempts": true,
+  "schema_and_text_search_budgets_enforced": true,
+  "top_three_enforced": true,
+  "tool_exception_events": 0,
+  "sql_errors": 0,
+  "ranking_policy_audit": {
+    "searches_verified": 82,
+    "table_vector_searches": 40,
+    "text_keyword_searches": 42
+  },
+  "initial_rejections_preserved": true
+}

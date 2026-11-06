@@ -1,0 +1,25 @@
+{
+  "started_at": "2026-11-06T11:49:33.429496+08:00",
+  "database": "hydra_originals_qwen37_20261105",
+  "embedding_model": "qwen3.7-text-embedding",
+  "dimensions": 1536,
+  "top_k": 5,
+  "vector_candidate_budget": 15,
+  "fusion": {
+    "method": "rrf",
+    "rank_constant": 60
+  },
+  "queries": {
+    "literal": "1986 VAX 8800",
+    "semantic": "How can a CPU make progress on several instructions at once by handling different stages simultaneously?"
+  },
+  "source_sha256": "17571bc69825350c0f464fb9e4ff1478f3dc0fc4f7d6c6cb9f7836783bae808c",
+  "query_vector_file_sha256": "eaad12ddc4137bebeafe8cb116a35d89691f2f239fbbbbde1396a404751d3b99",
+  "document_l0_recall": false,
+  "l1_bm25": false,
+  "tree_navigation": false,
+  "phase": "rrf",
+  "changed_between_arms": "Score completion and fixed normalized score fusion only",
+  "provider_calls": 0,
+  "answering_model_calls": 0
+}

@@ -1,0 +1,145 @@
+{
+  "case_id": "dev_26",
+  "type": "a2s",
+  "db_id": "codebase_community",
+  "reference_tables": [
+    "posts",
+    "users"
+  ],
+  "top_k": 3,
+  "table_schema": {
+    "query": "Database: codebase_community. What is the main advantage of the Holm–Bonferroni method compared to the simple Bonferroni correction, as discussed in the most-viewed post by Harvey Motulsky?",
+    "response": {
+      "results": [
+        {
+          "uri": "ctx://datalake/hydra/toxicology/bond",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 5.505586612674944,
+          "l0_content": "Database: toxicology\nTable: bond\nCREATE TABLE `bond` (\n  `bond_id` TEXT NOT NULL,\n  `molecule_id` TEXT DEFAULT NULL,\n  `bond_type` TEXT DEFAULT NULL,\n  PRIMARY KEY (`bond_id`),\n  FOREIGN KEY (`molecule_id`) REFERENCES `molecule` (`molecule_id`)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\nbond_id,,unique id representing bonds,text,\"TRxxx_A1_A2:\nTRXXX refers to which molecule\nA1 and A2 refers to which atom\"\nmolecule_id,,identifying the molecule in which the bond appears,text,\nbond_type,,type of the bond,text,\"commonsense evidence:\n-: single bond\n'=': double bond\n'#': triple bond\"\n",
+          "l1_content": "Database: toxicology\nTable: bond\nCREATE TABLE `bond` (\n  `bond_id` TEXT NOT NULL,\n  `molecule_id` TEXT DEFAULT NULL,\n  `bond_type` TEXT DEFAULT NULL,\n  PRIMARY KEY (`bond_id`),\n  FOREIGN KEY (`molecule_id`) REFERENCES `molecule` (`molecule_id`)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\nbond_id,,unique id representing bonds,text,\"TRxxx_A1_A2:\nTRXXX refers to which molecule\nA1 and A2 refers to which atom\"\nmolecule_id,,identifying the molecule in which the bond appears,text,\nbond_type,,type of the bond,text,\"commonsense evidence:\n-: single bond\n'=': double bond\n'#': triple bond\"\n",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://datalake/hydra/codebase_community/comments",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 4.871114872000804,
+          "l0_content": "Database: codebase_community\nTable: comments\nCREATE TABLE comments\n(\n    Id              INTEGER          not null\n        primary key,\n    PostId          INTEGER          null,\n    Score           INTEGER          null,\n    Text            TEXT     null,\n    CreationDate    DATETIME     null,\n    UserId          INTEGER          null,\n    UserDisplayName TEXT null,\n        foreign key (PostId) references posts (Id)\n            on update cascade on delete cascade,\n        foreign key (UserId) references users (Id)\n            on update cascade on delete cascade\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nId,,the comment Id,integer,\r\nPostId,Post Id,the unique id of the post,integer,\r\nScore,,rating score,integer,\"commonsense evidence:\nThe score is from 0 to 100. The score more than 60 refers that the comment is a positive comment. The score less than 60 refers that the comment is a negative comment. \"\r\nText,,the detailed content of the comment,text,\r\nCreationDate,Creation Date,the creation date of the comment,datetime,\r\nUserId,User Id,the id of the user who post the comment,integer,\r\nUserDisplayName,User Display Name,user's display name,text,",
+          "l1_content": "Database: codebase_community\nTable: comments\nCREATE TABLE comments\n(\n    Id              INTEGER          not null\n        primary key,\n    PostId          INTEGER          null,\n    Score           INTEGER          null,\n    Text            TEXT     null,\n    CreationDate    DATETIME     null,\n    UserId          INTEGER          null,\n    UserDisplayName TEXT null,\n        foreign key (PostId) references posts (Id)\n            on update cascade on delete cascade,\n        foreign key (UserId) references users (Id)\n            on update cascade on delete cascade\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nId,,the comment Id,integer,\r\nPostId,Post Id,the unique id of the post,integer,\r\nScore,,rating score,integer,\"commonsense evidence:\nThe score is from 0 to 100. The score more than 60 refers that the comment is a positive comment. The score less than 60 refers that the comment is a negative comment. \"\r\nText,,the detailed content of the comment,text,\r\nCreationDate,Creation Date,the creation date of the comment,datetime,\r\nUserId,User Id,the id of the user who post the comment,integer,\r\nUserDisplayName,User Display Name,user's display name,text,",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://datalake/hydra/codebase_community/posts",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 4.666366356288844,
+          "l0_content": "Database: codebase_community\nTable: posts\nCREATE TABLE posts\n(\n    Id                    INTEGER          not null UNIQUE\n        primary key,\n    PostTypeId            INTEGER          null,\n    AcceptedAnswerId      INTEGER          null,\n    CreaionDate           DATETIME     null,\n    Score                 INTEGER          null,\n    ViewCount             INTEGER          null,\n    Body                  TEXT     null,\n    OwnerUserId           INTEGER          null,\n    LasActivityDate       DATETIME     null,\n    Title                 TEXT null,\n    Tags                  TEXT null,\n    AnswerCount           INTEGER          null,\n    CommentCount          INTEGER          null,\n    FavoriteCount         INTEGER          null,\n    LastEditorUserId      INTEGER          null,\n    LastEditDate          DATETIME     null,\n    CommunityOwnedDate    DATETIME    null,\n    ParentId              INTEGER          null,\n    ClosedDate            DATETIME     null,\n    OwnerDisplayName      TEXT null,\n    LastEditorDisplayName TEXT null,\n        foreign key (LastEditorUserId) references users (Id)\n            on update cascade on delete cascade,\n        foreign key (OwnerUserId) references users (Id)\n            on update cascade on delete cascade,\n        foreign key (ParentId) references posts (Id)\n            on update cascade on delete cascade\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nId,,the post id,integer,\r\nPostTypeId,Post Type Id,the id of the post type,integer,\r\nAcceptedAnswerId,Accepted Answer Id,the accepted answer id of the post ,integer,\r\nCreaionDate,Creation Date,the creation date of the post,datetime,\r\nScore,,the score of the post,integer,\r\nViewCount,View Count,the view count of the post,integer,\"commonsense evidence:\nHigher view count means the post has higher popularity\"\r\nBody,,the body of the post,text,\r\nOwnerUserId,Owner User Id,the id of the owner user,integer,\r\nLasActivityDate,Last Activity Date,the last activity date,datetime,\r\nTitle,,the title of the post,text,\r\nTags,,the tag of the post,text,\r\nAnswerCount,Answer Count,the total number of answers of the post,integer,\r\nCommentCount,Comment Count,the total number of comments of the post,integer,\r\nFavoriteCount,Favorite Count,the total number of favorites of the post,integer,\"commonsense evidence:\nmore favorite count refers to more valuable posts. \"\r\nLastEditorUserId,Last Editor User Id,the id of the last editor,integer,\r\nLastEditDate,Last Edit Date,the last edit date,datetime,\r\nCommunityOwnedDate,Community Owned Date,the community owned date,datetime,\r\nParentId,ParentId,the id of the parent post,integer,\"commonsense evidence:\nIf the parent id is null, the post is the root post. Otherwise, the post is the child post of other post. \"\r\nClosedDate,Closed Date,the closed date of the post,data_format,\"commonsense evidence:\nif ClosedDate is null or empty, it means this post is not well-finished\nif CloseDate is not null or empty, it means this post has well-finished.\"\r\nOwnerDisplayName,Owner Display Name,the display name of the post owner,text,\r\nLastEditorDisplayName,Last Editor Display Name,the display name of the last editor,text,",
+          "l1_content": "Database: codebase_community\nTable: posts\nCREATE TABLE posts\n(\n    Id                    INTEGER          not null UNIQUE\n        primary key,\n    PostTypeId            INTEGER          null,\n    AcceptedAnswerId      INTEGER          null,\n    CreaionDate           DATETIME     null,\n    Score                 INTEGER          null,\n    ViewCount             INTEGER          null,\n    Body                  TEXT     null,\n    OwnerUserId           INTEGER          null,\n    LasActivityDate       DATETIME     null,\n    Title                 TEXT null,\n    Tags                  TEXT null,\n    AnswerCount           INTEGER          null,\n    CommentCount          INTEGER          null,\n    FavoriteCount         INTEGER          null,\n    LastEditorUserId      INTEGER          null,\n    LastEditDate          DATETIME     null,\n    CommunityOwnedDate    DATETIME    null,\n    ParentId              INTEGER          null,\n    ClosedDate            DATETIME     null,\n    OwnerDisplayName      TEXT null,\n    LastEditorDisplayName TEXT null,\n        foreign key (LastEditorUserId) references users (Id)\n            on update cascade on delete cascade,\n        foreign key (OwnerUserId) references users (Id)\n            on update cascade on delete cascade,\n        foreign key (ParentId) references posts (Id)\n            on update cascade on delete cascade\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nId,,the post id,integer,\r\nPostTypeId,Post Type Id,the id of the post type,integer,\r\nAcceptedAnswerId,Accepted Answer Id,the accepted answer id of the post ,integer,\r\nCreaionDate,Creation Date,the creation date of the post,datetime,\r\nScore,,the score of the post,integer,\r\nViewCount,View Count,the view count of the post,integer,\"commonsense evidence:\nHigher view count means the post has higher popularity\"\r\nBody,,the body of the post,text,\r\nOwnerUserId,Owner User Id,the id of the owner user,integer,\r\nLasActivityDate,Last Activity Date,the last activity date,datetime,\r\nTitle,,the title of the post,text,\r\nTags,,the tag of the post,text,\r\nAnswerCount,Answer Count,the total number of answers of the post,integer,\r\nCommentCount,Comment Count,the total number of comments of the post,integer,\r\nFavoriteCount,Favorite Count,the total number of favorites of the post,integer,\"commonsense evidence:\nmore favorite count refers to more valuable posts. \"\r\nLastEditorUserId,Last Editor User Id,the id of the last editor,integer,\r\nLastEditDate,Last Edit Date,the last edit date,datetime,\r\nCommunityOwnedDate,Community Owned Date,the community owned date,datetime,\r\nParentId,ParentId,the id of the parent post,integer,\"commonsense evidence:\nIf the parent id is null, the post is the root post. Otherwise, the post is the child post of other post. \"\r\nClosedDate,Closed Date,the closed date of the post,data_format,\"commonsense evidence:\nif ClosedDate is null or empty, it means this post is not well-finished\nif CloseDate is not null or empty, it means this post has well-finished.\"\r\nOwnerDisplayName,Owner Display Name,the display name of the post owner,text,\r\nLastEditorDisplayName,Last Editor Display Name,the display name of the last editor,text,",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        }
+      ],
+      "total": 3,
+      "retrieval_id": "a3dddb10-0620-45c4-8f31-4a6bf8ed2350",
+      "stale_notices": []
+    }
+  },
+  "resource": {
+    "query": "What is the main advantage of the Holm–Bonferroni method compared to the simple Bonferroni correction?",
+    "response": {
+      "results": [
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/10726541/0000",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 3.4847832959384,
+          "l0_content": "Holm–Bonferroni method — Abstract\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 10726541\nIn statistics, the Holm–Bonferroni method (also called the Holm method or Bonferroni-Holm method) is used to counteract the problem of multiple comparisons. It is intended to control the family-wise error rate and offers a simple test uniformly more powerful than the Bonferroni correction. It is named after Sture Holm, who codified the method, and Carlo Emilio Bonferroni.",
+          "l1_content": "Holm–Bonferroni method — Abstract\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 10726541\nIn statistics, the Holm–Bonferroni method (also called the Holm method or Bonferroni-Holm method) is used to counteract the problem of multiple comparisons. It is intended to control the family-wise error rate and offers a simple test uniformly more powerful than the Bonferroni correction. It is named after Sture Holm, who codified the method, and Carlo Emilio Bonferroni.",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/10726541/0003",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 2.988711248169643,
+          "l0_content": "Holm–Bonferroni method — Formulation.:Rationale.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 10726541\nThe simple Bonferroni correction rejects only null hypotheses with \"p\"-value less than formula_15, in order to ensure that the risk of rejecting one or more true null hypotheses (i.e., of committing one or more type I errors) is at most formula_6. The cost of this protection against type I errors is an increased risk of accepting one or more false null hypotheses (i.e., of committing one or more type II errors). The Holm-Bonferroni method also controls the maximum family-wise error rate at formula_6, but with a lower increase of type II error risk than the classical Bonferroni method. The Holm-Bonferroni method sorts the \"p\"-values from lowest to highest and compares them to nominal alpha levels of formula_15 to formula_6 (respectively), namely the values formula_20.",
+          "l1_content": "Holm–Bonferroni method — Formulation.:Rationale.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 10726541\nThe simple Bonferroni correction rejects only null hypotheses with \"p\"-value less than formula_15, in order to ensure that the risk of rejecting one or more true null hypotheses (i.e., of committing one or more type I errors) is at most formula_6. The cost of this protection against type I errors is an increased risk of accepting one or more false null hypotheses (i.e., of committing one or more type II errors). The Holm-Bonferroni method also controls the maximum family-wise error rate at formula_6, but with a lower increase of type II error risk than the classical Bonferroni method. The Holm-Bonferroni method sorts the \"p\"-values from lowest to highest and compares them to nominal alpha levels of formula_15 to formula_6 (respectively), namely the values formula_20.",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/10726541/0009",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 2.708077064202284,
+          "l0_content": "Holm–Bonferroni method — Formulation.:Alternative proof.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 10726541\nThe Holm–Bonferroni method can be viewed as closed testing procedure, with Bonferroni method applied locally on each of the intersections of null hypotheses. As such, it controls the family-wise error rate for all the \"k\" hypotheses at level α in the strong sense. Each intersection is tested using the simple Bonferroni test. It is a \"shortcut procedure\" since practically the number of comparisons to be made equal to formula_2 or less, while the number of all intersections of null hypotheses to be tested is of order formula_44.",
+          "l1_content": "Holm–Bonferroni method — Formulation.:Alternative proof.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 10726541\nThe Holm–Bonferroni method can be viewed as closed testing procedure, with Bonferroni method applied locally on each of the intersections of null hypotheses. As such, it controls the family-wise error rate for all the \"k\" hypotheses at level α in the strong sense. Each intersection is tested using the simple Bonferroni test. It is a \"shortcut procedure\" since practically the number of comparisons to be made equal to formula_2 or less, while the number of all intersections of null hypotheses to be tested is of order formula_44.",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        }
+      ],
+      "total": 3,
+      "retrieval_id": "39812db9-60ce-4702-8d92-181502f86dfe",
+      "stale_notices": []
+    }
+  },
+  "table_metrics": {
+    "required": 2,
+    "hits_at_3": 1,
+    "recall_at_3": 0.5,
+    "all_required_at_3": false,
+    "first_hit_rank": 3
+  }
+}

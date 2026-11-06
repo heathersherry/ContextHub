@@ -1,0 +1,962 @@
+{
+  "completed_at": "2026-11-06T10:37:35.947652+08:00",
+  "records": [
+    {
+      "mode": "hybrid",
+      "label": "literal",
+      "query": "1986 VAX 8800",
+      "hits": [
+        {
+          "section_id": 10,
+          "title": "Instruction pipelining.",
+          "range": [
+            9617,
+            11920
+          ],
+          "score": 0.03177805800756621,
+          "strategy": "hybrid",
+          "characters": 2303,
+          "body_sha256": "a8692f681599c386f6a4d30da21759d6a2a19cb23059f7e4177034733f9b4a7a"
+        },
+        {
+          "section_id": 17,
+          "title": "See also.",
+          "range": [
+            20817,
+            21522
+          ],
+          "score": 0.01639344262295082,
+          "strategy": "vector",
+          "characters": 705,
+          "body_sha256": "531762db2ba0202633dc192fa34abad2738a9686f002f6217cc3b0a81f2738d0"
+        },
+        {
+          "section_id": 13,
+          "title": "Superscalar.",
+          "range": [
+            15121,
+            16310
+          ],
+          "score": 0.016129032258064516,
+          "strategy": "vector",
+          "characters": 1189,
+          "body_sha256": "495940af4513deea864323b7ee6e30593f4c3e4d7803a7f304d2b43c3b86cbe9"
+        },
+        {
+          "section_id": 8,
+          "title": "Increasing execution speed.",
+          "range": [
+            7303,
+            8317
+          ],
+          "score": 0.015873015873015872,
+          "strategy": "vector",
+          "characters": 1014,
+          "body_sha256": "fb9bbd00734f765845bd9ef063838d8d3a068f1d13c97741c79417d252d0b682"
+        },
+        {
+          "section_id": 14,
+          "title": "Out-of-order execution.",
+          "range": [
+            16310,
+            17132
+          ],
+          "score": 0.015625,
+          "strategy": "vector",
+          "characters": 822,
+          "body_sha256": "d43b8896f67d3dbeddf84d3ce6984fdfe78cdfd7c22a2e039fc4450435d49e88"
+        }
+      ],
+      "range_ranking": [
+        {
+          "section_id": 10,
+          "range": [
+            9617,
+            11920
+          ],
+          "title": "Instruction pipelining.",
+          "rrf_score": 0.03177805800756621,
+          "keyword_rank": 1,
+          "keyword_raw_score": 3.0025985275010827,
+          "vector_rank": 5,
+          "vector_raw_score": 0.38551063710324596
+        },
+        {
+          "section_id": 17,
+          "range": [
+            20817,
+            21522
+          ],
+          "title": "See also.",
+          "rrf_score": 0.01639344262295082,
+          "vector_rank": 1,
+          "vector_raw_score": 0.4232275325249084
+        },
+        {
+          "section_id": 13,
+          "range": [
+            15121,
+            16310
+          ],
+          "title": "Superscalar.",
+          "rrf_score": 0.016129032258064516,
+          "vector_rank": 2,
+          "vector_raw_score": 0.41605841373875485
+        },
+        {
+          "section_id": 8,
+          "range": [
+            7303,
+            8317
+          ],
+          "title": "Increasing execution speed.",
+          "rrf_score": 0.015873015873015872,
+          "vector_rank": 3,
+          "vector_raw_score": 0.3956873361151856
+        },
+        {
+          "section_id": 14,
+          "range": [
+            16310,
+            17132
+          ],
+          "title": "Out-of-order execution.",
+          "rrf_score": 0.015625,
+          "vector_rank": 4,
+          "vector_raw_score": 0.3876395031310933
+        },
+        {
+          "section_id": 16,
+          "range": [
+            17627,
+            20817
+          ],
+          "title": "Multiprocessing and multithreading.",
+          "rrf_score": 0.015151515151515152,
+          "vector_rank": 6,
+          "vector_raw_score": 0.38176133795726686
+        },
+        {
+          "section_id": 11,
+          "range": [
+            11920,
+            13335
+          ],
+          "title": "Cache.",
+          "rrf_score": 0.014925373134328358,
+          "vector_rank": 7,
+          "vector_raw_score": 0.37635127446942485
+        },
+        {
+          "section_id": 9,
+          "range": [
+            8317,
+            9617
+          ],
+          "title": "Instruction set choice.",
+          "rrf_score": 0.014705882352941176,
+          "vector_rank": 8,
+          "vector_raw_score": 0.36567881124994617
+        },
+        {
+          "section_id": 2,
+          "range": [
+            0,
+            573
+          ],
+          "title": "Microarchitecture",
+          "rrf_score": 0.014492753623188406,
+          "vector_rank": 9,
+          "vector_raw_score": 0.35582175850869235
+        },
+        {
+          "section_id": 4,
+          "range": [
+            3111,
+            4924
+          ],
+          "title": "Aspects of microarchitecture.",
+          "rrf_score": 0.014285714285714285,
+          "vector_rank": 10,
+          "vector_raw_score": 0.34522690233863806
+        },
+        {
+          "section_id": 3,
+          "range": [
+            573,
+            3111
+          ],
+          "title": "Relation to instruction set architecture.",
+          "rrf_score": 0.014084507042253521,
+          "vector_rank": 11,
+          "vector_raw_score": 0.34519612577030856
+        },
+        {
+          "section_id": 5,
+          "range": [
+            4924,
+            4957
+          ],
+          "title": "Microarchitectural concepts.",
+          "rrf_score": 0.013888888888888888,
+          "vector_rank": 12,
+          "vector_raw_score": 0.3394873727284605
+        },
+        {
+          "section_id": 15,
+          "range": [
+            17132,
+            17627
+          ],
+          "title": "Register renaming.",
+          "rrf_score": 0.0136986301369863,
+          "vector_rank": 13,
+          "vector_raw_score": 0.33305724465164843
+        },
+        {
+          "section_id": 7,
+          "range": [
+            5393,
+            7303
+          ],
+          "title": "Multicycle Microarchitecture.",
+          "rrf_score": 0.013513513513513514,
+          "vector_rank": 14,
+          "vector_raw_score": 0.3295400444084402
+        },
+        {
+          "section_id": 6,
+          "range": [
+            4957,
+            5393
+          ],
+          "title": "Instruction cycles.",
+          "rrf_score": 0.013333333333333334,
+          "vector_rank": 15,
+          "vector_raw_score": 0.31614964411859203
+        }
+      ],
+      "keyword_candidates": [
+        {
+          "section_id": 10,
+          "source_range": [
+            9617,
+            11920
+          ],
+          "score": 3.0025985275010827,
+          "strategy": "keyword"
+        }
+      ],
+      "vector_candidates": [
+        {
+          "section_id": 17,
+          "source_range": [
+            20817,
+            21522
+          ],
+          "score": 0.4232275325249084,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 13,
+          "source_range": [
+            15121,
+            16310
+          ],
+          "score": 0.41605841373875485,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 8,
+          "source_range": [
+            7303,
+            8317
+          ],
+          "score": 0.3956873361151856,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 14,
+          "source_range": [
+            16310,
+            17132
+          ],
+          "score": 0.3876395031310933,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 10,
+          "source_range": [
+            9617,
+            11920
+          ],
+          "score": 0.38551063710324596,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 16,
+          "source_range": [
+            17627,
+            20817
+          ],
+          "score": 0.38176133795726686,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 11,
+          "source_range": [
+            11920,
+            13335
+          ],
+          "score": 0.37635127446942485,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 9,
+          "source_range": [
+            8317,
+            9617
+          ],
+          "score": 0.36567881124994617,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 2,
+          "source_range": [
+            0,
+            573
+          ],
+          "score": 0.35582175850869235,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 4,
+          "source_range": [
+            3111,
+            4924
+          ],
+          "score": 0.34522690233863806,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 3,
+          "source_range": [
+            573,
+            3111
+          ],
+          "score": 0.34519612577030856,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 5,
+          "source_range": [
+            4924,
+            4957
+          ],
+          "score": 0.3394873727284605,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 15,
+          "source_range": [
+            17132,
+            17627
+          ],
+          "score": 0.33305724465164843,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 7,
+          "source_range": [
+            5393,
+            7303
+          ],
+          "score": 0.3295400444084402,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 6,
+          "source_range": [
+            4957,
+            5393
+          ],
+          "score": 0.31614964411859203,
+          "strategy": "vector"
+        }
+      ],
+      "body_characters": 6033,
+      "tool_message_characters": 8481
+    },
+    {
+      "mode": "hybrid",
+      "label": "semantic",
+      "query": "How can a CPU make progress on several instructions at once by handling different stages simultaneously?",
+      "hits": [
+        {
+          "section_id": 16,
+          "title": "Multiprocessing and multithreading.",
+          "range": [
+            17627,
+            20817
+          ],
+          "score": 0.031544957774465976,
+          "strategy": "hybrid",
+          "characters": 3190,
+          "body_sha256": "20fdfde8325408b3590297eb80266adcc8cd425a232bdfc833d3bc669e7cc8d8"
+        },
+        {
+          "section_id": 13,
+          "title": "Superscalar.",
+          "range": [
+            15121,
+            16310
+          ],
+          "score": 0.03125,
+          "strategy": "hybrid",
+          "characters": 1189,
+          "body_sha256": "495940af4513deea864323b7ee6e30593f4c3e4d7803a7f304d2b43c3b86cbe9"
+        },
+        {
+          "section_id": 8,
+          "title": "Increasing execution speed.",
+          "range": [
+            7303,
+            8317
+          ],
+          "score": 0.030886196246139225,
+          "strategy": "hybrid",
+          "characters": 1014,
+          "body_sha256": "fb9bbd00734f765845bd9ef063838d8d3a068f1d13c97741c79417d252d0b682"
+        },
+        {
+          "section_id": 12,
+          "title": "Branch prediction.",
+          "range": [
+            13335,
+            15121
+          ],
+          "score": 0.030834914611005692,
+          "strategy": "hybrid",
+          "characters": 1786,
+          "body_sha256": "b3b088d129060114169851333a2425fa6f1e2d676e00eac6078032408936bf58"
+        },
+        {
+          "section_id": 4,
+          "title": "Aspects of microarchitecture.",
+          "range": [
+            3111,
+            4924
+          ],
+          "score": 0.030798389007344232,
+          "strategy": "hybrid",
+          "characters": 1813,
+          "body_sha256": "f003c59efa871d9c85a86f002a3747b5307e528025635db4bd694549f95f7f03"
+        }
+      ],
+      "range_ranking": [
+        {
+          "section_id": 16,
+          "range": [
+            17627,
+            20817
+          ],
+          "title": "Multiprocessing and multithreading.",
+          "rrf_score": 0.031544957774465976,
+          "keyword_rank": 1,
+          "keyword_raw_score": 7.00592084761608,
+          "vector_rank": 6,
+          "vector_raw_score": 0.6603635347106179
+        },
+        {
+          "section_id": 13,
+          "range": [
+            15121,
+            16310
+          ],
+          "title": "Superscalar.",
+          "rrf_score": 0.03125,
+          "keyword_rank": 4,
+          "keyword_raw_score": 4.005020920502092,
+          "vector_rank": 4,
+          "vector_raw_score": 0.6767034933986362
+        },
+        {
+          "section_id": 8,
+          "range": [
+            7303,
+            8317
+          ],
+          "title": "Increasing execution speed.",
+          "rrf_score": 0.030886196246139225,
+          "keyword_rank": 9,
+          "keyword_raw_score": 3.0039292730844793,
+          "vector_rank": 1,
+          "vector_raw_score": 0.6981527029366912
+        },
+        {
+          "section_id": 12,
+          "range": [
+            13335,
+            15121
+          ],
+          "title": "Branch prediction.",
+          "rrf_score": 0.030834914611005692,
+          "keyword_rank": 2,
+          "keyword_raw_score": 5.003904071388734,
+          "vector_rank": 8,
+          "vector_raw_score": 0.6388981913535173
+        },
+        {
+          "section_id": 4,
+          "range": [
+            3111,
+            4924
+          ],
+          "title": "Aspects of microarchitecture.",
+          "rrf_score": 0.030798389007344232,
+          "keyword_rank": 3,
+          "keyword_raw_score": 5.003846153846154,
+          "vector_rank": 7,
+          "vector_raw_score": 0.6529114440951185
+        },
+        {
+          "section_id": 10,
+          "range": [
+            9617,
+            11920
+          ],
+          "title": "Instruction pipelining.",
+          "rrf_score": 0.0304147465437788,
+          "keyword_rank": 10,
+          "keyword_raw_score": 3.003892733564014,
+          "vector_rank": 2,
+          "vector_raw_score": 0.6974353402088687
+        },
+        {
+          "section_id": 9,
+          "range": [
+            8317,
+            9617
+          ],
+          "title": "Instruction set choice.",
+          "rrf_score": 0.02946912242686891,
+          "keyword_rank": 5,
+          "keyword_raw_score": 4.003831417624521,
+          "vector_rank": 11,
+          "vector_raw_score": 0.5902051153717924
+        },
+        {
+          "section_id": 7,
+          "range": [
+            5393,
+            7303
+          ],
+          "title": "Multicycle Microarchitecture.",
+          "rrf_score": 0.029437229437229435,
+          "keyword_rank": 6,
+          "keyword_raw_score": 4.0036515388628064,
+          "vector_rank": 10,
+          "vector_raw_score": 0.5998554587278043
+        },
+        {
+          "section_id": 6,
+          "range": [
+            4957,
+            5393
+          ],
+          "title": "Instruction cycles.",
+          "rrf_score": 0.029206349206349208,
+          "keyword_rank": 15,
+          "keyword_raw_score": 1.002288329519451,
+          "vector_rank": 3,
+          "vector_raw_score": 0.6863367762069936
+        },
+        {
+          "section_id": 14,
+          "range": [
+            16310,
+            17132
+          ],
+          "title": "Out-of-order execution.",
+          "rrf_score": 0.02854251012145749,
+          "keyword_rank": 16,
+          "keyword_raw_score": 1.0012150668286757,
+          "vector_rank": 5,
+          "vector_raw_score": 0.6620509435428439
+        },
+        {
+          "section_id": 3,
+          "range": [
+            573,
+            3111
+          ],
+          "title": "Relation to instruction set architecture.",
+          "rrf_score": 0.028438886647841874,
+          "keyword_rank": 7,
+          "keyword_raw_score": 4.001966181675186,
+          "vector_rank": 14,
+          "vector_raw_score": 0.559568030847074
+        },
+        {
+          "section_id": 15,
+          "range": [
+            17132,
+            17627
+          ],
+          "title": "Register renaming.",
+          "rrf_score": 0.028404512489927477,
+          "keyword_rank": 8,
+          "keyword_raw_score": 3.0119760479041915,
+          "vector_rank": 13,
+          "vector_raw_score": 0.5745430163902946
+        },
+        {
+          "section_id": 17,
+          "range": [
+            20817,
+            21522
+          ],
+          "title": "See also.",
+          "rrf_score": 0.02819138376017471,
+          "keyword_rank": 13,
+          "keyword_raw_score": 1.0042372881355932,
+          "vector_rank": 9,
+          "vector_raw_score": 0.6260343007435138
+        },
+        {
+          "section_id": 5,
+          "range": [
+            4924,
+            4957
+          ],
+          "title": "Microarchitectural concepts.",
+          "rrf_score": 0.027777777777777776,
+          "keyword_rank": 12,
+          "keyword_raw_score": 1.0294117647058822,
+          "vector_rank": 12,
+          "vector_raw_score": 0.5892854157303173
+        },
+        {
+          "section_id": 2,
+          "range": [
+            0,
+            573
+          ],
+          "title": "Microarchitecture",
+          "rrf_score": 0.02684684684684685,
+          "keyword_rank": 14,
+          "keyword_raw_score": 1.0034782608695652,
+          "vector_rank": 15,
+          "vector_raw_score": 0.5405956120186488
+        },
+        {
+          "section_id": 11,
+          "range": [
+            11920,
+            13335
+          ],
+          "title": "Cache.",
+          "rrf_score": 0.014084507042253521,
+          "keyword_rank": 11,
+          "keyword_raw_score": 3.0035211267605635
+        }
+      ],
+      "keyword_candidates": [
+        {
+          "section_id": 16,
+          "source_range": [
+            17627,
+            20817
+          ],
+          "score": 7.00592084761608,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 12,
+          "source_range": [
+            13335,
+            15121
+          ],
+          "score": 5.003904071388734,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 4,
+          "source_range": [
+            3111,
+            4924
+          ],
+          "score": 5.003846153846154,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 13,
+          "source_range": [
+            15121,
+            16310
+          ],
+          "score": 4.005020920502092,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 9,
+          "source_range": [
+            8317,
+            9617
+          ],
+          "score": 4.003831417624521,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 7,
+          "source_range": [
+            5393,
+            7303
+          ],
+          "score": 4.0036515388628064,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 3,
+          "source_range": [
+            573,
+            3111
+          ],
+          "score": 4.001966181675186,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 15,
+          "source_range": [
+            17132,
+            17627
+          ],
+          "score": 3.0119760479041915,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 8,
+          "source_range": [
+            7303,
+            8317
+          ],
+          "score": 3.0039292730844793,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 10,
+          "source_range": [
+            9617,
+            11920
+          ],
+          "score": 3.003892733564014,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 11,
+          "source_range": [
+            11920,
+            13335
+          ],
+          "score": 3.0035211267605635,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 5,
+          "source_range": [
+            4924,
+            4957
+          ],
+          "score": 1.0294117647058822,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 17,
+          "source_range": [
+            20817,
+            21522
+          ],
+          "score": 1.0042372881355932,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 2,
+          "source_range": [
+            0,
+            573
+          ],
+          "score": 1.0034782608695652,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 6,
+          "source_range": [
+            4957,
+            5393
+          ],
+          "score": 1.002288329519451,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 14,
+          "source_range": [
+            16310,
+            17132
+          ],
+          "score": 1.0012150668286757,
+          "strategy": "keyword"
+        }
+      ],
+      "vector_candidates": [
+        {
+          "section_id": 8,
+          "source_range": [
+            7303,
+            8317
+          ],
+          "score": 0.6981527029366912,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 10,
+          "source_range": [
+            9617,
+            11920
+          ],
+          "score": 0.6974353402088687,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 6,
+          "source_range": [
+            4957,
+            5393
+          ],
+          "score": 0.6863367762069936,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 13,
+          "source_range": [
+            15121,
+            16310
+          ],
+          "score": 0.6767034933986362,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 14,
+          "source_range": [
+            16310,
+            17132
+          ],
+          "score": 0.6620509435428439,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 16,
+          "source_range": [
+            17627,
+            20817
+          ],
+          "score": 0.6603635347106179,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 4,
+          "source_range": [
+            3111,
+            4924
+          ],
+          "score": 0.6529114440951185,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 12,
+          "source_range": [
+            13335,
+            15121
+          ],
+          "score": 0.6388981913535173,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 17,
+          "source_range": [
+            20817,
+            21522
+          ],
+          "score": 0.6260343007435138,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 7,
+          "source_range": [
+            5393,
+            7303
+          ],
+          "score": 0.5998554587278043,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 9,
+          "source_range": [
+            8317,
+            9617
+          ],
+          "score": 0.5902051153717924,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 5,
+          "source_range": [
+            4924,
+            4957
+          ],
+          "score": 0.5892854157303173,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 15,
+          "source_range": [
+            17132,
+            17627
+          ],
+          "score": 0.5745430163902946,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 3,
+          "source_range": [
+            573,
+            3111
+          ],
+          "score": 0.559568030847074,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 2,
+          "source_range": [
+            0,
+            573
+          ],
+          "score": 0.5405956120186488,
+          "strategy": "vector"
+        }
+      ],
+      "body_characters": 8992,
+      "tool_message_characters": 11413
+    }
+  ],
+  "checks": {
+    "identical_vector_candidates": true,
+    "before_matches_previous_trial": true,
+    "all_returned_bodies_are_exact_unique_source_ranges": true,
+    "section_reads_verified": true,
+    "old_indexes_and_historical_artifacts_unchanged": true,
+    "provider_calls": 0,
+    "answering_model_calls": 0,
+    "local_http_search_calls": 2,
+    "local_http_section_reads": 0
+  }
+}

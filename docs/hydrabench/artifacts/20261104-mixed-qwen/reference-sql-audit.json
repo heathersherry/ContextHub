@@ -1,0 +1,412 @@
+{
+  "dev_43": {
+    "query": "SELECT name, date FROM races WHERE year = 1999 ORDER BY round DESC LIMIT 1",
+    "result": {
+      "columns": [
+        "name",
+        "date"
+      ],
+      "rows": [
+        [
+          "Japanese Grand Prix",
+          "1999-10-31"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0033
+    },
+    "released_sql_output": {
+      "name": "Japanese Grand Prix",
+      "date": "1999-10-31"
+    }
+  },
+  "dev_62": {
+    "query": "SELECT T2.name FROM constructorStandings AS T1 INNER JOIN constructors AS T2 on T1.constructorId = T2.constructorId ORDER BY T1.points DESC LIMIT 1",
+    "result": {
+      "columns": [
+        "name"
+      ],
+      "rows": [
+        [
+          "Mercedes"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0013
+    },
+    "released_sql_output": {
+      "name": "Mercedes"
+    }
+  },
+  "dev_5": {
+    "query": "SELECT lat, lng FROM circuits WHERE name = 'Silverstone Circuit'",
+    "result": {
+      "columns": [
+        "lat",
+        "lng"
+      ],
+      "rows": [
+        [
+          52.0786,
+          -1.01694
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0003
+    },
+    "released_sql_output": {
+      "lat": 52.0786,
+      "lng": -1.01694
+    }
+  },
+  "dev_13": {
+    "query": "SELECT AVG(T2.points) FROM drivers AS T1 INNER JOIN driverStandings AS T2 ON T2.driverId = T1.driverId INNER JOIN races AS T3 ON T3.raceId = T2.raceId WHERE T1.forename = 'Eddie' AND T1.surname = 'Irvine' AND T3.year = 2000",
+    "result": {
+      "columns": [
+        "AVG(T2.points)"
+      ],
+      "rows": [
+        [
+          2.2666666666666666
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0031
+    },
+    "released_sql_output": {
+      "AVG(T2.points)": 2.2666666666666666
+    }
+  },
+  "dev_35": {
+    "query": "SELECT T3.race FROM superhero AS T1 INNER JOIN hero_attribute AS T2 ON T1.id = T2.hero_id INNER JOIN race AS T3 ON T1.race_id = T3.id ORDER BY T2.attribute_value DESC LIMIT 1",
+    "result": {
+      "columns": [
+        "race"
+      ],
+      "rows": [
+        [
+          "Cosmic Entity"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0016
+    },
+    "released_sql_output": {
+      "race": "Cosmic Entity"
+    }
+  },
+  "dev_72": {
+    "query": "SELECT T2.publisher_name FROM superhero AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.id WHERE T1.superhero_name = 'Blue Beetle II'",
+    "result": {
+      "columns": [
+        "publisher_name"
+      ],
+      "rows": [
+        [
+          "DC Comics"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0003
+    },
+    "released_sql_output": {
+      "publisher_name": "DC Comics"
+    }
+  },
+  "dev_10": {
+    "query": "SELECT ( SELECT weight_kg FROM superhero WHERE full_name LIKE 'Emil Blonsky' ) - ( SELECT weight_kg FROM superhero WHERE full_name LIKE 'Charles Chandler' ) AS CALCULATE",
+    "result": {
+      "columns": [
+        "CALCULATE"
+      ],
+      "rows": [
+        [
+          351
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0002
+    },
+    "released_sql_output": {
+      "CALCULATE": 351
+    }
+  },
+  "dev_68": {
+    "query": "SELECT T3.power_name FROM superhero AS T1 INNER JOIN hero_power AS T2 ON T1.id = T2.hero_id INNER JOIN superpower AS T3 ON T2.power_id = T3.id WHERE T1.full_name = 'Helen Parr'",
+    "result": {
+      "columns": [
+        "power_name"
+      ],
+      "rows": [
+        [
+          "Agility"
+        ],
+        [
+          "Durability"
+        ],
+        [
+          "Super Strength"
+        ],
+        [
+          "Size Changing"
+        ],
+        [
+          "Shapeshifting"
+        ],
+        [
+          "Invulnerability"
+        ],
+        [
+          "Elasticity"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0008
+    },
+    "released_sql_output": [
+      {
+        "power_name": "Agility"
+      },
+      {
+        "power_name": "Durability"
+      },
+      {
+        "power_name": "Super Strength"
+      },
+      {
+        "power_name": "Size Changing"
+      },
+      {
+        "power_name": "Shapeshifting"
+      },
+      {
+        "power_name": "Invulnerability"
+      },
+      {
+        "power_name": "Elasticity"
+      }
+    ]
+  },
+  "dev_26": {
+    "query": "SELECT T2.Id, T2.Title FROM users AS T1 INNER JOIN posts AS T2 ON T1.Id = T2.OwnerUserId WHERE T1.DisplayName = 'Harvey Motulsky' ORDER BY T2.ViewCount DESC LIMIT 1",
+    "result": {
+      "columns": [
+        "Id",
+        "Title"
+      ],
+      "rows": [
+        [
+          109,
+          "Power of Holm's multiple comparison testing compared to others"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.2277
+    },
+    "released_sql_output": {
+      "Id": 109,
+      "Title": "Power of Holm's multiple comparison testing compared to others"
+    }
+  },
+  "dev_31": {
+    "query": "SELECT T2.Location FROM posts AS T1 INNER JOIN users AS T2 ON T1.OwnerUserId = T2.Id WHERE T1.Title = 'Eliciting priors from experts'",
+    "result": {
+      "columns": [
+        "Location"
+      ],
+      "rows": [
+        [
+          "Newcastle, United Kingdom"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0192
+    },
+    "released_sql_output": {
+      "Location": "Newcastle, United Kingdom"
+    }
+  },
+  "dev_6": {
+    "query": "SELECT COUNT(T1.Id) FROM badges AS T1 INNER JOIN users AS T2 ON T1.UserId = T2.Id WHERE T2.Location = 'India' AND T1.Name = 'Teacher'",
+    "result": {
+      "columns": [
+        "COUNT(T1.Id)"
+      ],
+      "rows": [
+        [
+          18
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0231
+    },
+    "released_sql_output": {
+      "COUNT(T1.Id)": 18
+    }
+  },
+  "dev_20": {
+    "query": "SELECT COUNT(Id) FROM users WHERE Location = 'New York'",
+    "result": {
+      "columns": [
+        "COUNT(Id)"
+      ],
+      "rows": [
+        [
+          15
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.002
+    },
+    "released_sql_output": {
+      "COUNT(Id)": 15
+    }
+  },
+  "dev_32": {
+    "query": "SELECT T3.type FROM disp AS T1 INNER JOIN client AS T2 ON T1.client_id = T2.client_id INNER JOIN card AS T3 ON T1.disp_id = T3.disp_id WHERE T2.client_id = 13539",
+    "result": {
+      "columns": [
+        "type"
+      ],
+      "rows": [
+        [
+          "junior"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0022
+    },
+    "released_sql_output": {
+      "type": "junior"
+    }
+  },
+  "dev_46": {
+    "query": "SELECT T2.A3 FROM account AS T1 INNER JOIN district AS T2 ON T1.district_id = T2.district_id INNER JOIN loan AS T3 ON T1.account_id = T3.account_id WHERE T3.status IN ('C', 'D') GROUP BY T2.A3 ORDER BY SUM(T3.amount) DESC LIMIT 1",
+    "result": {
+      "columns": [
+        "A3"
+      ],
+      "rows": [
+        [
+          "south Moravia"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0019
+    },
+    "released_sql_output": {
+      "A3": "south Moravia"
+    }
+  },
+  "dev_42": {
+    "query": "SELECT COUNT(T2.client_id) FROM district AS T1 INNER JOIN client AS T2 ON T1.district_id = T2.district_id WHERE T2.gender = 'F' AND STRFTIME('%Y', T2.birth_date) < '1950' AND T1.A2 = 'Sokolov'",
+    "result": {
+      "columns": [
+        "COUNT(T2.client_id)"
+      ],
+      "rows": [
+        [
+          8
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0017
+    },
+    "released_sql_output": {
+      "COUNT(T2.client_id)": 8
+    }
+  },
+  "dev_60": {
+    "query": "SELECT T1.account_id FROM account AS T1 INNER JOIN district AS T2 ON T1.district_id = T2.district_id WHERE T2.A3 = 'Prague' ORDER BY T1.date ASC LIMIT 1",
+    "result": {
+      "columns": [
+        "account_id"
+      ],
+      "rows": [
+        [
+          1539
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0005
+    },
+    "released_sql_output": {
+      "account_id": 1539
+    }
+  },
+  "dev_55": {
+    "query": "SELECT T1.first_name, T1.last_name FROM member AS T1 INNER JOIN major AS T2 ON T1.link_to_major = T2.major_id WHERE T2.department = 'Art and Design Department'",
+    "result": {
+      "columns": [
+        "first_name",
+        "last_name"
+      ],
+      "rows": [
+        [
+          "Amy",
+          "Firth"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0006
+    },
+    "released_sql_output": {
+      "first_name": "Amy",
+      "last_name": "Firth"
+    }
+  },
+  "dev_66": {
+    "query": "SELECT T2.state FROM member AS T1 INNER JOIN zip_code AS T2 ON T1.zip = T2.zip_code WHERE T1.first_name = 'Sacha' AND T1.last_name = 'Harrison'",
+    "result": {
+      "columns": [
+        "state"
+      ],
+      "rows": [
+        [
+          "New Jersey"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0004
+    },
+    "released_sql_output": {
+      "state": "New Jersey"
+    }
+  },
+  "dev_0": {
+    "query": "SELECT T2.event_name FROM attendance AS T1 INNER JOIN event AS T2 ON T2.event_id = T1.link_to_event INNER JOIN member AS T3 ON T1.link_to_member = T3.member_id WHERE T3.position = 'Vice President' AND T2.location = '900 E. Washington St.' AND T2.type = 'Social'",
+    "result": {
+      "columns": [
+        "event_name"
+      ],
+      "rows": [
+        [
+          "Laugh Out Loud"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0006
+    },
+    "released_sql_output": {
+      "event_name": "Laugh Out Loud"
+    }
+  },
+  "dev_11": {
+    "query": "SELECT T1.major_name FROM major AS T1 INNER JOIN member AS T2 ON T1.major_id = T2.link_to_major WHERE T2.position = 'Vice President'",
+    "result": {
+      "columns": [
+        "major_name"
+      ],
+      "rows": [
+        [
+          "Communication Studies"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0002
+    },
+    "released_sql_output": {
+      "major_name": "Communication Studies"
+    }
+  }
+}

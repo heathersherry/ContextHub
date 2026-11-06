@@ -1,0 +1,49 @@
+{
+  "method": "Post-run coding-assistant inspection of the retrieved text for the four changed text-anchor outcomes. Frozen pre-run labels were not edited. No agent, answer-generation model, or official judge was invoked.",
+  "coverage_denominator": 19,
+  "frozen_anchor_hits": {
+    "keyword": 18,
+    "vector": 16
+  },
+  "known_core_support_including_verified_alternative": {
+    "keyword": 18,
+    "vector": 17
+  },
+  "scope": "Core evidence only; retain the qualifications in the original labels, not full reference-answer sufficiency.",
+  "cases": {
+    "dev_62": {
+      "change": "gain",
+      "keyword_core_evidence": false,
+      "vector_core_evidence": true,
+      "vector_support": [
+        "ctx://team/engineering/hydra/kilt/18564164/0001"
+      ],
+      "reason": "The rank-3 history paragraph explicitly gives the daughter-name origin. Baseline top-three passages do not."
+    },
+    "dev_10": {
+      "change": "loss",
+      "keyword_core_evidence": true,
+      "vector_core_evidence": false,
+      "reason": "Vector hits describe Ultimate Marvel Abomination (Chang Lam), Teen Abomination, and television appearances. They do not identify the intended Emil Blonsky."
+    },
+    "dev_31": {
+      "change": "anchor miss with alternative support",
+      "keyword_core_evidence": true,
+      "vector_core_evidence": true,
+      "vector_support": [
+        "ctx://team/engineering/hydra/kilt/31717/0056",
+        "ctx://team/engineering/hydra/kilt/31717/0054"
+      ],
+      "reason": "The first paragraph describes the parliamentary Westminster government; the second explicitly says constitutional monarchy. The stored historical monarch name is not a present-day claim."
+    },
+    "dev_66": {
+      "change": "loss",
+      "keyword_core_evidence": true,
+      "vector_core_evidence": false,
+      "reason": "Vector hits discuss population growth and general statewide/municipality demographics, without identifying Newark as the most populous city."
+    }
+  },
+  "coverage_gap": {
+    "dev_6": "No direct support located in the frozen corpus; excluded from covered-question denominator in both modes."
+  }
+}

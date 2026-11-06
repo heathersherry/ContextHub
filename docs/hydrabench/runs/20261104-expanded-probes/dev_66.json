@@ -1,0 +1,145 @@
+{
+  "case_id": "dev_66",
+  "type": "a2s",
+  "db_id": "student_club",
+  "reference_tables": [
+    "member",
+    "zip_code"
+  ],
+  "top_k": 3,
+  "table_schema": {
+    "query": "Database: student_club. What is the most populous city in the hometown state of Sacha Harrison?",
+    "response": {
+      "results": [
+        {
+          "uri": "ctx://datalake/hydra/student_club/zip_code",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 9.230289557069687,
+          "l0_content": "Database: student_club\nTable: zip_code\nCREATE TABLE zip_code\n(\n    zip_code    INTEGER\n        constraint zip_code_pk\n            primary key,\n    type        TEXT,\n    city        TEXT,\n    county      TEXT,\n    state       TEXT,\n    short_state TEXT\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nzip_code,zip code,The ZIP code itself. A five-digit number identifying a US post office.,integer,\r\ntype,,The kind of ZIP code,text,\"commonsense evidence: \r\n� Standard: the normal codes with which most people are familiar \r\n� PO Box: zip codes have post office boxes \r\n� Unique: zip codes that are assigned to individual organizations.\"\r\ncity,,The city to which the ZIP pertains,text,\r\ncounty,,The county to which the ZIP pertains,text,\r\nstate,,The name of the state to which the ZIP pertains,text,\r\nshort_state,short state,The abbreviation of the state to which the ZIP pertains,text,",
+          "l1_content": "Database: student_club\nTable: zip_code\nCREATE TABLE zip_code\n(\n    zip_code    INTEGER\n        constraint zip_code_pk\n            primary key,\n    type        TEXT,\n    city        TEXT,\n    county      TEXT,\n    state       TEXT,\n    short_state TEXT\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nzip_code,zip code,The ZIP code itself. A five-digit number identifying a US post office.,integer,\r\ntype,,The kind of ZIP code,text,\"commonsense evidence: \r\n� Standard: the normal codes with which most people are familiar \r\n� PO Box: zip codes have post office boxes \r\n� Unique: zip codes that are assigned to individual organizations.\"\r\ncity,,The city to which the ZIP pertains,text,\r\ncounty,,The county to which the ZIP pertains,text,\r\nstate,,The name of the state to which the ZIP pertains,text,\r\nshort_state,short state,The abbreviation of the state to which the ZIP pertains,text,",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://datalake/hydra/student_club/member",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 3.5663433456700435,
+          "l0_content": "Database: student_club\nTable: member\nCREATE TABLE \"member\"\n(\n    member_id     TEXT\n        constraint member_pk\n            primary key,\n    first_name    TEXT,\n    last_name     TEXT,\n    email         TEXT,\n    position      TEXT,\n    t_shirt_size  TEXT,\n    phone         TEXT,\n    zip           INTEGER,\n    link_to_major TEXT,\n    foreign key (link_to_major) references major(major_id),\n    foreign key (zip) references zip_code(zip_code)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nmember_id,member id,unique id of member,text,\r\nfirst_name,first name,member's first name,text,\r\nlast_name,last name,member's last name,text,\"commonsense evidence: \nfull name is first_name + last_name. e.g. A member's first name is Angela and last name is Sanders. Thus, his/her full name is Angela Sanders.\"\r\nemail,,member's email,text,\r\nposition,,The position the member holds in the club,text,\r\nt_shirt_size,,The size of tee shirt that member wants when shirts are ordered,text,commonsense evidence: usually the student ordered t-shirt with lager size has bigger body shape \r\nphone,,The best telephone at which to contact the member,text,\r\nzip,,the zip code of the member's hometown,integer,\r\nlink_to_major,link to major,The unique identifier of the major of the member. References the Major table,text,",
+          "l1_content": "Database: student_club\nTable: member\nCREATE TABLE \"member\"\n(\n    member_id     TEXT\n        constraint member_pk\n            primary key,\n    first_name    TEXT,\n    last_name     TEXT,\n    email         TEXT,\n    position      TEXT,\n    t_shirt_size  TEXT,\n    phone         TEXT,\n    zip           INTEGER,\n    link_to_major TEXT,\n    foreign key (link_to_major) references major(major_id),\n    foreign key (zip) references zip_code(zip_code)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nmember_id,member id,unique id of member,text,\r\nfirst_name,first name,member's first name,text,\r\nlast_name,last name,member's last name,text,\"commonsense evidence: \nfull name is first_name + last_name. e.g. A member's first name is Angela and last name is Sanders. Thus, his/her full name is Angela Sanders.\"\r\nemail,,member's email,text,\r\nposition,,The position the member holds in the club,text,\r\nt_shirt_size,,The size of tee shirt that member wants when shirts are ordered,text,commonsense evidence: usually the student ordered t-shirt with lager size has bigger body shape \r\nphone,,The best telephone at which to contact the member,text,\r\nzip,,the zip code of the member's hometown,integer,\r\nlink_to_major,link to major,The unique identifier of the major of the member. References the Major table,text,",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://datalake/hydra/student_club/expense",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 3.396119105283678,
+          "l0_content": "Database: student_club\nTable: expense\nCREATE TABLE \"expense\"\n(\n    expense_id          TEXT\n            primary key,\n    expense_description TEXT,\n    expense_date        TEXT,\n    cost                REAL,\n    approved            TEXT,\n    link_to_member      TEXT,\n    link_to_budget      TEXT,\n    foreign key (link_to_budget) references budget(budget_id),\n    foreign key (link_to_member) references member(member_id)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nexpense_id,expense id,unique id of income,text,\r\nexpense_description,expense description,A textual description of what the money was spend for,text,\r\nexpense_date,expense date,The date the expense was incurred,text,e.g. YYYY-MM-DD\r\ncost,,The dollar amount of the expense,real,the unit is dollar\r\napproved,,A true or false value indicating if the expense was approved,text,true/ false\r\nlink_to_member,link to member,The member who incurred the expense,text,\r\nlink_to_budget,link to budget,The unique identifier of the record in the Budget table that indicates the expected total expenditure for a given category and event. ,text,References the Budget table",
+          "l1_content": "Database: student_club\nTable: expense\nCREATE TABLE \"expense\"\n(\n    expense_id          TEXT\n            primary key,\n    expense_description TEXT,\n    expense_date        TEXT,\n    cost                REAL,\n    approved            TEXT,\n    link_to_member      TEXT,\n    link_to_budget      TEXT,\n    foreign key (link_to_budget) references budget(budget_id),\n    foreign key (link_to_member) references member(member_id)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nexpense_id,expense id,unique id of income,text,\r\nexpense_description,expense description,A textual description of what the money was spend for,text,\r\nexpense_date,expense date,The date the expense was incurred,text,e.g. YYYY-MM-DD\r\ncost,,The dollar amount of the expense,real,the unit is dollar\r\napproved,,A true or false value indicating if the expense was approved,text,true/ false\r\nlink_to_member,link to member,The member who incurred the expense,text,\r\nlink_to_budget,link to budget,The unique identifier of the record in the Budget table that indicates the expected total expenditure for a given category and event. ,text,References the Budget table",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        }
+      ],
+      "total": 3,
+      "retrieval_id": "4b64f42b-45b6-4ee6-9a82-1bd3949ecd1b",
+      "stale_notices": []
+    }
+  },
+  "resource": {
+    "query": "What is the most populous city in New Jersey?",
+    "response": {
+      "results": [
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/21648/0063",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 3.2348176577822874,
+          "l0_content": "New Jersey — Demographics.:Settlements.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 21648\nCape May County: 93,553\nBULLET::::21. Salem County: 62,792\nFor its overall population and nation-leading population density, New Jersey has a relative paucity of classic large cities. This paradox is most pronounced in Bergen County, New Jersey's most populous county, whose more than 930,000 residents in 2014 inhabited 70 municipalities, the most populous being Hackensack, with 44,519 residents estimated in 2014. Many urban areas extend far beyond the limits of a single large city, as New Jersey cities (and indeed municipalities in general) tend to be geographically small; three of the four largest cities in New Jersey by population have under 20 square miles of land area, and eight of the top ten, including all of the top five have land area under 30 square miles.",
+          "l1_content": "New Jersey — Demographics.:Settlements.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 21648\nCape May County: 93,553\nBULLET::::21. Salem County: 62,792\nFor its overall population and nation-leading population density, New Jersey has a relative paucity of classic large cities. This paradox is most pronounced in Bergen County, New Jersey's most populous county, whose more than 930,000 residents in 2014 inhabited 70 municipalities, the most populous being Hackensack, with 44,519 residents estimated in 2014. Many urban areas extend far beyond the limits of a single large city, as New Jersey cities (and indeed municipalities in general) tend to be geographically small; three of the four largest cities in New Jersey by population have under 20 square miles of land area, and eight of the top ten, including all of the top five have land area under 30 square miles.",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/67234/0000",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 3.209246492444032,
+          "l0_content": "Newark, New Jersey — Abstract\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 67234\nNewark (, ) is the most populous city in the U.S. state of New Jersey and the seat of Essex County. As one of the nation's major air, shipping, and rail hubs, the city had a population of 282,090 in 2018, making it the nation's 73rd-most populous municipality, after being ranked 63rd in the nation in 2000.\nSettled in 1666 by Puritans from New Haven Colony, Newark is one of the oldest cities in the United States. Its location at the mouth of the Passaic River (where it flows into Newark Bay) has made the city's waterfront an integral part of the Port of New York and New Jersey. Today, Port Newark–Elizabeth is the primary container shipping terminal of the busiest seaport on the U.S. East Coast. In addition, Newark Liberty International Airport was the first municipal commercial airport in the United States, and today is one of its busiest.\nSeveral leading companies have their headquarters in Newark, including Prudential, PSEG, Panasonic Corporation of North America, Audible.com, IDT Corporation, and Manischewitz. A number of important higher education institutions are also in the city, including the Newark campus of Rutgers University (which includes law and medical schools and the Rutgers Institute of Jazz Studies); the New Jersey Institute of Technology; and Seton Hall University's law school. The U.S. District Court for the District of New Jersey sits in the city as well. Local cultural venues include the New Jersey Performing Arts Center, Newark Symphony Hall, the Prudential Center and the Newark Museum.\nNewark is divided into five political wards (the East, West, South, North and Central wards) and contains neighborhoods ranging in character from bustling urban districts to quiet suburban enclaves. Newark's Branch Brook Park is the oldest county park in the United States and is home to the nation's largest collection of cherry blossom trees, numbering over 5,000.",
+          "l1_content": "Newark, New Jersey — Abstract\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 67234\nNewark (, ) is the most populous city in the U.S. state of New Jersey and the seat of Essex County. As one of the nation's major air, shipping, and rail hubs, the city had a population of 282,090 in 2018, making it the nation's 73rd-most populous municipality, after being ranked 63rd in the nation in 2000.\nSettled in 1666 by Puritans from New Haven Colony, Newark is one of the oldest cities in the United States. Its location at the mouth of the Passaic River (where it flows into Newark Bay) has made the city's waterfront an integral part of the Port of New York and New Jersey. Today, Port Newark–Elizabeth is the primary container shipping terminal of the busiest seaport on the U.S. East Coast. In addition, Newark Liberty International Airport was the first municipal commercial airport in the United States, and today is one of its busiest.\nSeveral leading companies have their headquarters in Newark, including Prudential, PSEG, Panasonic Corporation of North America, Audible.com, IDT Corporation, and Manischewitz. A number of important higher education institutions are also in the city, including the Newark campus of Rutgers University (which includes law and medical schools and the Rutgers Institute of Jazz Studies); the New Jersey Institute of Technology; and Seton Hall University's law school. The U.S. District Court for the District of New Jersey sits in the city as well. Local cultural venues include the New Jersey Performing Arts Center, Newark Symphony Hall, the Prudential Center and the Newark Museum.\nNewark is divided into five political wards (the East, West, South, North and Central wards) and contains neighborhoods ranging in character from bustling urban districts to quiet suburban enclaves. Newark's Branch Brook Park is the oldest county park in the United States and is home to the nation's largest collection of cherry blossom trees, numbering over 5,000.",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/21648/0046",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 3.01745243394872,
+          "l0_content": "New Jersey — Demographics.:State population.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 21648\nThe United States Census Bureau, , estimated New Jersey's population at 9,005,644, which represents an increase of 213,750, or 2.4%, since the last census in 2010. As of 2010, New Jersey was the eleventh-most populous state in the United States, and the most densely populated, at 1,185 residents per square mile (458 per km), with most of the population residing in the counties surrounding New York City, Philadelphia, and along the eastern Jersey Shore, while the extreme southern and northwestern counties are relatively less dense overall. It is also the second wealthiest state according to the U.S. Census Bureau.",
+          "l1_content": "New Jersey — Demographics.:State population.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 21648\nThe United States Census Bureau, , estimated New Jersey's population at 9,005,644, which represents an increase of 213,750, or 2.4%, since the last census in 2010. As of 2010, New Jersey was the eleventh-most populous state in the United States, and the most densely populated, at 1,185 residents per square mile (458 per km), with most of the population residing in the counties surrounding New York City, Philadelphia, and along the eastern Jersey Shore, while the extreme southern and northwestern counties are relatively less dense overall. It is also the second wealthiest state according to the U.S. Census Bureau.",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        }
+      ],
+      "total": 3,
+      "retrieval_id": "b1b04e86-232b-4ff1-9b5f-91788acc6c26",
+      "stale_notices": []
+    }
+  },
+  "table_metrics": {
+    "required": 2,
+    "hits_at_3": 2,
+    "recall_at_3": 1.0,
+    "all_required_at_3": true,
+    "first_hit_rank": 1
+  }
+}

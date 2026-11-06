@@ -1,0 +1,16 @@
+{
+  "index": {
+    "chunks": 16,
+    "dimensions": 1536,
+    "documents": 1
+  },
+  "rls": {
+    "relrowsecurity": true,
+    "relforcerowsecurity": true
+  },
+  "role": {
+    "rolsuper": false,
+    "rolbypassrls": false
+  },
+  "other_tenant_visible_rows": 0
+}

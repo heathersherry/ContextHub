@@ -1,0 +1,5 @@
+{
+  "status": "failed_before_provider_call",
+  "reason": "Migration command used system Python 3.9 against Python 3.13 libraries; missing table prevented indexing. Corrected interpreter before retry.",
+  "embedding_calls": 0
+}

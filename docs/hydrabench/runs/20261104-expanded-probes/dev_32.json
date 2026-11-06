@@ -1,0 +1,146 @@
+{
+  "case_id": "dev_32",
+  "type": "a2s",
+  "db_id": "financial",
+  "reference_tables": [
+    "card",
+    "client",
+    "disp"
+  ],
+  "top_k": 3,
+  "table_schema": {
+    "query": "Database: financial. What type of credit card does the client with ID 13539 own, and how does this type of credit card promote financial management for its users, and what features distinguish it from other types of credit cards?",
+    "response": {
+      "results": [
+        {
+          "uri": "ctx://datalake/hydra/financial/card",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 22.299119591630223,
+          "l0_content": "Database: financial\nTable: card\nCREATE TABLE card\n(\n    card_id INTEGER default 0 not null\n        primary key,\n    disp_id INTEGER           not null,\n    type    TEXT    not null,\n    issued  DATE          not null,\n    foreign key (disp_id) references disp (disp_id)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\ncard_id,credit card id,id number of credit card,integer,\r\ndisp_id,disposition id,disposition id,integer,\r\ntype,,type of credit card,text,\"\"\"junior\"\": junior class of credit card; \n\"\"classic\"\": standard class of credit card; \n\"\"gold\"\": high-level credit card\"\r\nissued,,the date when the credit card issued ,date,in the form YYMMDD",
+          "l1_content": "Database: financial\nTable: card\nCREATE TABLE card\n(\n    card_id INTEGER default 0 not null\n        primary key,\n    disp_id INTEGER           not null,\n    type    TEXT    not null,\n    issued  DATE          not null,\n    foreign key (disp_id) references disp (disp_id)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\ncard_id,credit card id,id number of credit card,integer,\r\ndisp_id,disposition id,disposition id,integer,\r\ntype,,type of credit card,text,\"\"\"junior\"\": junior class of credit card; \n\"\"classic\"\": standard class of credit card; \n\"\"gold\"\": high-level credit card\"\r\nissued,,the date when the credit card issued ,date,in the form YYMMDD",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://datalake/hydra/financial/trans",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 15.708328394645536,
+          "l0_content": "Database: financial\nTable: trans\nCREATE TABLE trans\n(\n    trans_id   INTEGER default 0    not null\n        primary key,\n    account_id INTEGER default 0    not null,\n    date       DATE             not null,\n    type       TEXT       not null,\n    operation  TEXT      null,\n    amount     INTEGER              not null,\n    balance    INTEGER             not null,\n    k_symbol   TEXT      null,\n    bank       TEXT       null,\n    account    INTEGER          null,\n    foreign key (account_id) references account (account_id)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\ntrans_id,transaction id,transaction id,integer,\r\naccount_id,,,integer,\r\ndate,date of transaction,date of transaction,date,\r\ntype,+/- transaction,+/- transaction,text,\"\"\"PRIJEM\"\" stands for credit\n\"\"VYDAJ\"\" stands for withdrawal\"\r\noperation,mode of transaction,mode of transaction,text,\"\"\"VYBER KARTOU\"\": credit card withdrawal\n\"\"VKLAD\"\": credit in cash\n\"\"PREVOD Z UCTU\"\" :collection from another bank\n\"\"VYBER\"\": withdrawal in cash\n\"\"PREVOD NA UCET\"\": remittance to another bank\"\r\namount,amount of money,amount of money,integer,Unit：USD\r\nbalance,balance after transaction,balance after transaction,integer,Unit：USD\r\nk_symbol,characterization of the transaction,,text,\"\"\"POJISTNE\"\": stands for insurrance payment\n\"\"SLUZBY\"\": stands for payment for statement\n\"\"UROK\"\": stands for interest credited\n\"\"SANKC. UROK\"\": sanction interest if negative balance\n\"\"SIPO\"\": stands for household\n\"\"DUCHOD\"\": stands for old-age pension\n\"\"UVER\"\": stands for loan payment\"\r\nbank,bank of the partner,,text,each bank has unique two-letter code\r\naccount,account of the partner,,integer,",
+          "l1_content": "Database: financial\nTable: trans\nCREATE TABLE trans\n(\n    trans_id   INTEGER default 0    not null\n        primary key,\n    account_id INTEGER default 0    not null,\n    date       DATE             not null,\n    type       TEXT       not null,\n    operation  TEXT      null,\n    amount     INTEGER              not null,\n    balance    INTEGER             not null,\n    k_symbol   TEXT      null,\n    bank       TEXT       null,\n    account    INTEGER          null,\n    foreign key (account_id) references account (account_id)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\ntrans_id,transaction id,transaction id,integer,\r\naccount_id,,,integer,\r\ndate,date of transaction,date of transaction,date,\r\ntype,+/- transaction,+/- transaction,text,\"\"\"PRIJEM\"\" stands for credit\n\"\"VYDAJ\"\" stands for withdrawal\"\r\noperation,mode of transaction,mode of transaction,text,\"\"\"VYBER KARTOU\"\": credit card withdrawal\n\"\"VKLAD\"\": credit in cash\n\"\"PREVOD Z UCTU\"\" :collection from another bank\n\"\"VYBER\"\": withdrawal in cash\n\"\"PREVOD NA UCET\"\": remittance to another bank\"\r\namount,amount of money,amount of money,integer,Unit：USD\r\nbalance,balance after transaction,balance after transaction,integer,Unit：USD\r\nk_symbol,characterization of the transaction,,text,\"\"\"POJISTNE\"\": stands for insurrance payment\n\"\"SLUZBY\"\": stands for payment for statement\n\"\"UROK\"\": stands for interest credited\n\"\"SANKC. UROK\"\": sanction interest if negative balance\n\"\"SIPO\"\": stands for household\n\"\"DUCHOD\"\": stands for old-age pension\n\"\"UVER\"\": stands for loan payment\"\r\nbank,bank of the partner,,text,each bank has unique two-letter code\r\naccount,account of the partner,,integer,",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://datalake/hydra/financial/disp",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 11.616038830526385,
+          "l0_content": "Database: financial\nTable: disp\nCREATE TABLE disp\n(\n    disp_id    INTEGER        not null\n        primary key,\n    client_id  INTEGER        not null,\n    account_id INTEGER        not null,\n    type      TEXT not null,\n    foreign key (account_id) references account (account_id),\n    foreign key (client_id) references client (client_id)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\ndisp_id,disposition id,unique number of identifying this row of record,integer,\r\nclient_id,,id number of client,integer,\r\naccount_id,,id number of account,integer,\r\ntype,,type of disposition,text,\"\"\"OWNER\"\" : \"\"USER\"\" : \"\"DISPONENT\"\"\ncommonsense evidence:\nthe account can only have the right to issue permanent orders or apply for loans\"",
+          "l1_content": "Database: financial\nTable: disp\nCREATE TABLE disp\n(\n    disp_id    INTEGER        not null\n        primary key,\n    client_id  INTEGER        not null,\n    account_id INTEGER        not null,\n    type      TEXT not null,\n    foreign key (account_id) references account (account_id),\n    foreign key (client_id) references client (client_id)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\ndisp_id,disposition id,unique number of identifying this row of record,integer,\r\nclient_id,,id number of client,integer,\r\naccount_id,,id number of account,integer,\r\ntype,,type of disposition,text,\"\"\"OWNER\"\" : \"\"USER\"\" : \"\"DISPONENT\"\"\ncommonsense evidence:\nthe account can only have the right to issue permanent orders or apply for loans\"",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        }
+      ],
+      "total": 3,
+      "retrieval_id": "50a64a0c-547b-400c-9db2-61af74dcf2a2",
+      "stale_notices": []
+    }
+  },
+  "resource": {
+    "query": "How does a junior credit card promote financial management for its users, and what features distinguish it from other types of credit cards?",
+    "response": {
+      "results": [
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/17182301/0064",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 9.346028022721375,
+          "l0_content": "Credit card — Types.:Prepaid cards.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 17182301\nWith prepaid credit cards purchasers are not charged any interest but are often charged a purchasing fee plus monthly fees after an arbitrary time period. Many other fees also usually apply to a prepaid card. Prepaid credit cards are sometimes marketed to teenagers for shopping online without having their parents complete the transaction. Teenagers can only use funds that are available on the card which helps promote financial management to reduce the risk of debt problems later in life.",
+          "l1_content": "Credit card — Types.:Prepaid cards.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 17182301\nWith prepaid credit cards purchasers are not charged any interest but are often charged a purchasing fee plus monthly fees after an arbitrary time period. Many other fees also usually apply to a prepaid card. Prepaid credit cards are sometimes marketed to teenagers for shopping online without having their parents complete the transaction. Teenagers can only use funds that are available on the card which helps promote financial management to reduce the risk of debt problems later in life.",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/17182301/0000",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 7.376631747403776,
+          "l0_content": "Credit card — Abstract\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 17182301\nA credit card is a payment card issued to users (cardholders) to enable the cardholder to pay a merchant for goods and services based on the cardholder's promise to the card issuer to pay them for the amounts plus the other agreed charges. The card issuer (usually a bank) creates a revolving account and grants a line of credit to the cardholder, from which the cardholder can borrow money for payment to a merchant or as a cash advance.\nA credit card is different from a charge card, which requires the balance to be repaid in full each month. In contrast, credit cards allow the consumers to build a continuing balance of debt, subject to interest being charged. A credit card also differs from a cash card, which can be used like currency by the owner of the card. A credit card differs from a charge card also in that a credit card typically involves a third-party entity that pays the seller and is reimbursed by the buyer, whereas a charge card simply defers payment by the buyer until a later date.",
+          "l1_content": "Credit card — Abstract\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 17182301\nA credit card is a payment card issued to users (cardholders) to enable the cardholder to pay a merchant for goods and services based on the cardholder's promise to the card issuer to pay them for the amounts plus the other agreed charges. The card issuer (usually a bank) creates a revolving account and grants a line of credit to the cardholder, from which the cardholder can borrow money for payment to a merchant or as a cash advance.\nA credit card is different from a charge card, which requires the balance to be repaid in full each month. In contrast, credit cards allow the consumers to build a continuing balance of debt, subject to interest being charged. A credit card also differs from a cash card, which can be used like currency by the owner of the card. A credit card differs from a charge card also in that a credit card typically involves a third-party entity that pays the seller and is reimbursed by the buyer, whereas a charge card simply defers payment by the buyer until a later date.",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/17182301/0121",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 5.047734968708869,
+          "l0_content": "Credit card — Neutral consumer resources.:Canada.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 17182301\nIt is available in PDF comparison tables that break down the information according to type of credit card, allowing the reader to compare the features of, for example, all the student credit cards in the database. The database also feeds into an interactive tool on the FCAC website. The interactive tool uses several interview-type questions to build a profile of the user's credit card usage habits and needs, eliminating unsuitable choices based on the profile, so that the user is presented with a small number of credit cards and the ability to carry out detailed comparisons of features, reward programs, interest rates, etc.",
+          "l1_content": "Credit card — Neutral consumer resources.:Canada.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 17182301\nIt is available in PDF comparison tables that break down the information according to type of credit card, allowing the reader to compare the features of, for example, all the student credit cards in the database. The database also feeds into an interactive tool on the FCAC website. The interactive tool uses several interview-type questions to build a profile of the user's credit card usage habits and needs, eliminating unsuitable choices based on the profile, so that the user is presented with a small number of credit cards and the ability to carry out detailed comparisons of features, reward programs, interest rates, etc.",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        }
+      ],
+      "total": 3,
+      "retrieval_id": "383cf47a-0628-4367-8fc2-94aa4b3df973",
+      "stale_notices": []
+    }
+  },
+  "table_metrics": {
+    "required": 3,
+    "hits_at_3": 2,
+    "recall_at_3": 0.6666666666666666,
+    "all_required_at_3": false,
+    "first_hit_rank": 1
+  }
+}

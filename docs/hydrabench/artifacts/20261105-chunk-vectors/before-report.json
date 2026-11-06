@@ -1,0 +1,40 @@
+{
+  "queries": [
+    {
+      "label": "literal",
+      "query": "1986 VAX 8800",
+      "section_id": 10,
+      "section_title": "Instruction pipelining.",
+      "strategy": "keyword",
+      "source_range": [
+        9617,
+        11920
+      ],
+      "content_characters": 2303,
+      "payload_characters": 2843,
+      "estimated_content_tokens_chars_div_4": 575.75
+    },
+    {
+      "label": "semantic",
+      "query": "How can a CPU make progress on several instructions at once by handling different stages simultaneously?",
+      "section_id": 16,
+      "section_title": "Multiprocessing and multithreading.",
+      "strategy": "keyword",
+      "source_range": [
+        17627,
+        20817
+      ],
+      "content_characters": 3190,
+      "payload_characters": 3736,
+      "estimated_content_tokens_chars_div_4": 797.5
+    }
+  ],
+  "database_snapshot": {
+    "contexts": "5edb94f41b3f63e2a144120176b998d3353c686aee69e984d8f09b311a22cc2f",
+    "document_sections": "e8b65fb0e807190ac24bb5a15f7556a94cfff1990ccec3277663987cb701f70a",
+    "retrieval_trace": "df2f120f9f14e0814979a06c471f76384dff81b666b12bb4446a5f1da820b185"
+  },
+  "chat_calls": 0,
+  "search_provider_calls": 0,
+  "note": "Query vectors replayed identically. Tree uses NoOp chat in both arms; this is not a live LLM tree comparison. SDK/DeepAgents tool messages are actual; no answering model was invoked."
+}

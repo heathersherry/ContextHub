@@ -1,0 +1,146 @@
+{
+  "case_id": "dev_32",
+  "type": "a2s",
+  "db_id": "financial",
+  "reference_tables": [
+    "card",
+    "client",
+    "disp"
+  ],
+  "top_k": 3,
+  "table_schema": {
+    "query": "Database: financial. What type of credit card does the client with ID 13539 own, and how does this type of credit card promote financial management for its users, and what features distinguish it from other types of credit cards?",
+    "response": {
+      "results": [
+        {
+          "uri": "ctx://datalake/hydra/financial/card",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 0.5131564156003494,
+          "l0_content": "Database: financial\nTable: card\nCREATE TABLE card\n(\n    card_id INTEGER default 0 not null\n        primary key,\n    disp_id INTEGER           not null,\n    type    TEXT    not null,\n    issued  DATE          not null,\n    foreign key (disp_id) references disp (disp_id)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\ncard_id,credit card id,id number of credit card,integer,\r\ndisp_id,disposition id,disposition id,integer,\r\ntype,,type of credit card,text,\"\"\"junior\"\": junior class of credit card; \n\"\"classic\"\": standard class of credit card; \n\"\"gold\"\": high-level credit card\"\r\nissued,,the date when the credit card issued ,date,in the form YYMMDD",
+          "l1_content": "Database: financial\nTable: card\nCREATE TABLE card\n(\n    card_id INTEGER default 0 not null\n        primary key,\n    disp_id INTEGER           not null,\n    type    TEXT    not null,\n    issued  DATE          not null,\n    foreign key (disp_id) references disp (disp_id)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\ncard_id,credit card id,id number of credit card,integer,\r\ndisp_id,disposition id,disposition id,integer,\r\ntype,,type of credit card,text,\"\"\"junior\"\": junior class of credit card; \n\"\"classic\"\": standard class of credit card; \n\"\"gold\"\": high-level credit card\"\r\nissued,,the date when the credit card issued ,date,in the form YYMMDD",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://datalake/hydra/financial/disp",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 0.4825116108351063,
+          "l0_content": "Database: financial\nTable: disp\nCREATE TABLE disp\n(\n    disp_id    INTEGER        not null\n        primary key,\n    client_id  INTEGER        not null,\n    account_id INTEGER        not null,\n    type      TEXT not null,\n    foreign key (account_id) references account (account_id),\n    foreign key (client_id) references client (client_id)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\ndisp_id,disposition id,unique number of identifying this row of record,integer,\r\nclient_id,,id number of client,integer,\r\naccount_id,,id number of account,integer,\r\ntype,,type of disposition,text,\"\"\"OWNER\"\" : \"\"USER\"\" : \"\"DISPONENT\"\"\ncommonsense evidence:\nthe account can only have the right to issue permanent orders or apply for loans\"",
+          "l1_content": "Database: financial\nTable: disp\nCREATE TABLE disp\n(\n    disp_id    INTEGER        not null\n        primary key,\n    client_id  INTEGER        not null,\n    account_id INTEGER        not null,\n    type      TEXT not null,\n    foreign key (account_id) references account (account_id),\n    foreign key (client_id) references client (client_id)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\ndisp_id,disposition id,unique number of identifying this row of record,integer,\r\nclient_id,,id number of client,integer,\r\naccount_id,,id number of account,integer,\r\ntype,,type of disposition,text,\"\"\"OWNER\"\" : \"\"USER\"\" : \"\"DISPONENT\"\"\ncommonsense evidence:\nthe account can only have the right to issue permanent orders or apply for loans\"",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://datalake/hydra/financial/client",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 0.4678857288224374,
+          "l0_content": "Database: financial\nTable: client\nCREATE TABLE client\n(\n    client_id   INTEGER        not null\n        primary key,\n    gender      TEXT not null,\n    birth_date  DATE       not null,\n    district_id INTEGER        not null,\n    foreign key (district_id) references district (district_id)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nclient_id,,the unique number,integer,\r\ngender,,,text,\"F：female \nM：male \"\r\nbirth_date,,birth date,date,\r\ndistrict_id,location of branch,location of branch,integer,",
+          "l1_content": "Database: financial\nTable: client\nCREATE TABLE client\n(\n    client_id   INTEGER        not null\n        primary key,\n    gender      TEXT not null,\n    birth_date  DATE       not null,\n    district_id INTEGER        not null,\n    foreign key (district_id) references district (district_id)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nclient_id,,the unique number,integer,\r\ngender,,,text,\"F：female \nM：male \"\r\nbirth_date,,birth date,date,\r\ndistrict_id,location of branch,location of branch,integer,",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        }
+      ],
+      "total": 3,
+      "retrieval_id": "8ec83e2a-6fe7-4003-8ca8-12ad0dd60646",
+      "stale_notices": []
+    }
+  },
+  "resource": {
+    "query": "How does a junior credit card promote financial management for its users, and what features distinguish it from other types of credit cards?",
+    "response": {
+      "results": [
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/17182301/0064",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 0.5186048392639052,
+          "l0_content": "Credit card — Types.:Prepaid cards.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 17182301\nWith prepaid credit cards purchasers are not charged any interest but are often charged a purchasing fee plus monthly fees after an arbitrary time period. Many other fees also usually apply to a prepaid card. Prepaid credit cards are sometimes marketed to teenagers for shopping online without having their parents complete the transaction. Teenagers can only use funds that are available on the card which helps promote financial management to reduce the risk of debt problems later in life.",
+          "l1_content": "Credit card — Types.:Prepaid cards.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 17182301\nWith prepaid credit cards purchasers are not charged any interest but are often charged a purchasing fee plus monthly fees after an arbitrary time period. Many other fees also usually apply to a prepaid card. Prepaid credit cards are sometimes marketed to teenagers for shopping online without having their parents complete the transaction. Teenagers can only use funds that are available on the card which helps promote financial management to reduce the risk of debt problems later in life.",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/17182301/0052",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 0.47967888717668994,
+          "l0_content": "Credit card — Features.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 17182301\nAs well as convenient credit, credit cards offer consumers an easy way to track expenses, which is necessary for both monitoring personal expenditures and the tracking of work-related expenses for taxation and reimbursement purposes. Credit cards are accepted in larger establishments in almost all countries, and are available with a variety of credit limits, repayment arrangements. Some have added perks (such as insurance protection, rewards schemes in which points earned by purchasing goods with the card can be redeemed for further goods and services or cashback).",
+          "l1_content": "Credit card — Features.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 17182301\nAs well as convenient credit, credit cards offer consumers an easy way to track expenses, which is necessary for both monitoring personal expenditures and the tracking of work-related expenses for taxation and reimbursement purposes. Credit cards are accepted in larger establishments in almost all countries, and are available with a variety of credit limits, repayment arrangements. Some have added perks (such as insurance protection, rewards schemes in which points earned by purchasing goods with the card can be redeemed for further goods and services or cashback).",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/17182301/0000",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 0.4585167678420692,
+          "l0_content": "Credit card — Abstract\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 17182301\nA credit card is a payment card issued to users (cardholders) to enable the cardholder to pay a merchant for goods and services based on the cardholder's promise to the card issuer to pay them for the amounts plus the other agreed charges. The card issuer (usually a bank) creates a revolving account and grants a line of credit to the cardholder, from which the cardholder can borrow money for payment to a merchant or as a cash advance.\nA credit card is different from a charge card, which requires the balance to be repaid in full each month. In contrast, credit cards allow the consumers to build a continuing balance of debt, subject to interest being charged. A credit card also differs from a cash card, which can be used like currency by the owner of the card. A credit card differs from a charge card also in that a credit card typically involves a third-party entity that pays the seller and is reimbursed by the buyer, whereas a charge card simply defers payment by the buyer until a later date.",
+          "l1_content": "Credit card — Abstract\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 17182301\nA credit card is a payment card issued to users (cardholders) to enable the cardholder to pay a merchant for goods and services based on the cardholder's promise to the card issuer to pay them for the amounts plus the other agreed charges. The card issuer (usually a bank) creates a revolving account and grants a line of credit to the cardholder, from which the cardholder can borrow money for payment to a merchant or as a cash advance.\nA credit card is different from a charge card, which requires the balance to be repaid in full each month. In contrast, credit cards allow the consumers to build a continuing balance of debt, subject to interest being charged. A credit card also differs from a cash card, which can be used like currency by the owner of the card. A credit card differs from a charge card also in that a credit card typically involves a third-party entity that pays the seller and is reimbursed by the buyer, whereas a charge card simply defers payment by the buyer until a later date.",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        }
+      ],
+      "total": 3,
+      "retrieval_id": "608732ca-ade9-4acc-945f-2b4a8378c925",
+      "stale_notices": []
+    }
+  },
+  "table_metrics": {
+    "required": 3,
+    "hits_at_3": 3,
+    "recall_at_3": 1.0,
+    "all_required_at_3": true,
+    "first_hit_rank": 1
+  }
+}

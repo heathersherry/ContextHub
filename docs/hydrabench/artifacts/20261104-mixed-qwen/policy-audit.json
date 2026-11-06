@@ -1,0 +1,1075 @@
+{
+  "summary": {
+    "searches_verified": 82,
+    "table_vector_searches": 40,
+    "text_keyword_searches": 42
+  },
+  "records": [
+    {
+      "case_id": "dev_43",
+      "context_type": "table_schema",
+      "retrieval_id": "9e9a0cf8-377d-41f6-a797-4239be352e84",
+      "query": "formula_1 races 1999 season rounds",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://datalake/hydra/formula_1/races",
+        "ctx://datalake/hydra/formula_1/qualifying",
+        "ctx://datalake/hydra/formula_1/results"
+      ]
+    },
+    {
+      "case_id": "dev_43",
+      "context_type": "resource",
+      "retrieval_id": "4abb94ee-34cd-4447-8bb1-ad8cf9c90be0",
+      "query": "Joint Declaration on the Doctrine of Justification",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://team/engineering/hydra/kilt/2325040/0001",
+        "ctx://team/engineering/hydra/kilt/2325040/0000",
+        "ctx://team/engineering/hydra/kilt/157972/0008"
+      ]
+    },
+    {
+      "case_id": "dev_43",
+      "context_type": "resource",
+      "retrieval_id": "05624ad4-3569-4dda-8f9e-f6ede7f5a9e0",
+      "query": "Joint Declaration Doctrine of Justification signed 31 October 1999 Augsburg",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://team/engineering/hydra/kilt/2325040/0001",
+        "ctx://team/engineering/hydra/kilt/2325040/0000",
+        "ctx://team/engineering/hydra/kilt/512920/0005"
+      ]
+    },
+    {
+      "case_id": "dev_62",
+      "context_type": "table_schema",
+      "retrieval_id": "cd6d927e-cf01-4299-9361-287a81d8f38f",
+      "query": "formula_1 constructors points",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://datalake/hydra/formula_1/constructorStandings",
+        "ctx://datalake/hydra/formula_1/constructors",
+        "ctx://datalake/hydra/formula_1/constructorResults"
+      ]
+    },
+    {
+      "case_id": "dev_62",
+      "context_type": "table_schema",
+      "retrieval_id": "666353ef-cad4-45e6-9ba4-643cf52d7890",
+      "query": "formula_1 constructor standings results",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://datalake/hydra/formula_1/constructorStandings",
+        "ctx://datalake/hydra/formula_1/constructors",
+        "ctx://datalake/hydra/formula_1/constructorResults"
+      ]
+    },
+    {
+      "case_id": "dev_62",
+      "context_type": "resource",
+      "retrieval_id": "a0023125-7dae-49c2-8ac7-d87776baf641",
+      "query": "Ferrari automotive brand name origin Enzo Ferrari",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://team/engineering/hydra/kilt/11225/0004",
+        "ctx://team/engineering/hydra/kilt/11225/0000",
+        "ctx://team/engineering/hydra/kilt/11225/0002"
+      ]
+    },
+    {
+      "case_id": "dev_5",
+      "context_type": "table_schema",
+      "retrieval_id": "2ef57409-26ad-4f0b-828b-aaaa28fe9ff1",
+      "query": "formula_1 circuits location coordinates",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://datalake/hydra/formula_1/circuits",
+        "ctx://datalake/hydra/formula_1/races",
+        "ctx://datalake/hydra/formula_1/constructorStandings"
+      ]
+    },
+    {
+      "case_id": "dev_5",
+      "context_type": "resource",
+      "retrieval_id": "46b5c1f7-3bca-444d-93c1-d251cbc76c8a",
+      "query": "Silverstone circuit World War II RAF bomber station runways triangle",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://team/engineering/hydra/kilt/522676/0001",
+        "ctx://team/engineering/hydra/kilt/812294/0002",
+        "ctx://team/engineering/hydra/kilt/812294/0000"
+      ]
+    },
+    {
+      "case_id": "dev_13",
+      "context_type": "table_schema",
+      "retrieval_id": "bc6a881b-c96a-402c-a393-717cb23f7a7d",
+      "query": "formula_1 drivers results points",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://datalake/hydra/formula_1/driverStandings",
+        "ctx://datalake/hydra/formula_1/results",
+        "ctx://datalake/hydra/formula_1/qualifying"
+      ]
+    },
+    {
+      "case_id": "dev_13",
+      "context_type": "table_schema",
+      "retrieval_id": "21f2ec0c-3251-4bbc-86d5-53a34a4ecad7",
+      "query": "formula_1 drivers table forename surname",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://datalake/hydra/formula_1/drivers",
+        "ctx://datalake/hydra/formula_1/qualifying",
+        "ctx://datalake/hydra/formula_1/driverStandings"
+      ]
+    },
+    {
+      "case_id": "dev_13",
+      "context_type": "table_schema",
+      "retrieval_id": "6998544b-67eb-4586-b0fc-552db3d84087",
+      "query": "formula_1 races table year date",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://datalake/hydra/formula_1/races",
+        "ctx://datalake/hydra/formula_1/results",
+        "ctx://datalake/hydra/formula_1/qualifying"
+      ]
+    },
+    {
+      "case_id": "dev_13",
+      "context_type": "resource",
+      "retrieval_id": "ad5f4962-7aa2-4185-9f28-1c5e153c1de5",
+      "query": "\"Irv the Swerve\" \"Fast Eddie\" Formula 1 driver nickname",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://team/engineering/hydra/kilt/424417/0052",
+        "ctx://team/engineering/hydra/kilt/424417/0054",
+        "ctx://team/engineering/hydra/kilt/424417/0004"
+      ]
+    },
+    {
+      "case_id": "dev_35",
+      "context_type": "table_schema",
+      "retrieval_id": "2cdbca4e-882e-4fd2-b381-91c052241bcc",
+      "query": "superhero race",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://datalake/hydra/superhero/race",
+        "ctx://datalake/hydra/superhero/superhero",
+        "ctx://datalake/hydra/superhero/alignment"
+      ]
+    },
+    {
+      "case_id": "dev_35",
+      "context_type": "table_schema",
+      "retrieval_id": "35d2d38d-1111-4e57-bd4d-367b86899474",
+      "query": "superhero attribute value",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://datalake/hydra/superhero/hero_attribute",
+        "ctx://datalake/hydra/superhero/attribute",
+        "ctx://datalake/hydra/superhero/hero_power"
+      ]
+    },
+    {
+      "case_id": "dev_35",
+      "context_type": "resource",
+      "retrieval_id": "36093fe3-8157-4934-9972-5c99a05406d1",
+      "query": "Theosophy root races role teachings",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://team/engineering/hydra/kilt/51429008/0022",
+        "ctx://team/engineering/hydra/kilt/51429008/0023",
+        "ctx://team/engineering/hydra/kilt/51429008/0025"
+      ]
+    },
+    {
+      "case_id": "dev_35",
+      "context_type": "resource",
+      "retrieval_id": "ae2cc51d-4402-4611-9c1f-5f3e0327c921",
+      "query": "Theosophy fifth root race Aryan humanity role",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://team/engineering/hydra/kilt/51429008/0024",
+        "ctx://team/engineering/hydra/kilt/51429008/0025",
+        "ctx://team/engineering/hydra/kilt/200264/0016"
+      ]
+    },
+    {
+      "case_id": "dev_35",
+      "context_type": "resource",
+      "retrieval_id": "e743f44d-3c43-4d7f-b22c-11c09d51b23a",
+      "query": "Theosophy human evolution purpose of humanity Earth rounds",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://team/engineering/hydra/kilt/200264/0010",
+        "ctx://team/engineering/hydra/kilt/51429008/0028",
+        "ctx://team/engineering/hydra/kilt/200264/0003"
+      ]
+    },
+    {
+      "case_id": "dev_72",
+      "context_type": "table_schema",
+      "retrieval_id": "d8708a77-97b9-4534-9fbe-dd966042ded1",
+      "query": "superhero database superhero table publisher",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://datalake/hydra/superhero/publisher",
+        "ctx://datalake/hydra/superhero/superhero",
+        "ctx://datalake/hydra/superhero/alignment"
+      ]
+    },
+    {
+      "case_id": "dev_72",
+      "context_type": "table_schema",
+      "retrieval_id": "55eeb2d3-c0fb-478b-b0ea-144aefc831b2",
+      "query": "superhero publisher table",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://datalake/hydra/superhero/publisher",
+        "ctx://datalake/hydra/superhero/superhero",
+        "ctx://datalake/hydra/superhero/alignment"
+      ]
+    },
+    {
+      "case_id": "dev_72",
+      "context_type": "resource",
+      "retrieval_id": "2cba71f5-35f9-4eb8-9ea1-018e40bbad02",
+      "query": "Brightest Day storyline DC Comics significance",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://team/engineering/hydra/kilt/25769371/0000",
+        "ctx://team/engineering/hydra/kilt/25769371/0007",
+        "ctx://team/engineering/hydra/kilt/25769371/0008"
+      ]
+    },
+    {
+      "case_id": "dev_10",
+      "context_type": "table_schema",
+      "retrieval_id": "290bf7d5-e2b6-41b8-b2f1-67f7f43cbbff",
+      "query": "superhero database superhero table weight",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://datalake/hydra/superhero/superhero",
+        "ctx://datalake/hydra/superhero/alignment",
+        "ctx://datalake/hydra/superhero/attribute"
+      ]
+    },
+    {
+      "case_id": "dev_10",
+      "context_type": "table_schema",
+      "retrieval_id": "f5e76ffc-3ba2-43f8-b85b-d8b00dd4a269",
+      "query": "superhero database alter ego superhero_name",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://datalake/hydra/superhero/superhero",
+        "ctx://datalake/hydra/superhero/alignment",
+        "ctx://datalake/hydra/superhero/race"
+      ]
+    },
+    {
+      "case_id": "dev_68",
+      "context_type": "table_schema",
+      "retrieval_id": "4ae76d35-d3f5-42fe-8200-65e28dbf3b96",
+      "query": "superhero database superhero table",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://datalake/hydra/superhero/superhero",
+        "ctx://datalake/hydra/superhero/hero_power",
+        "ctx://datalake/hydra/superhero/race"
+      ]
+    },
+    {
+      "case_id": "dev_68",
+      "context_type": "table_schema",
+      "retrieval_id": "b12e9198-f11b-4eee-95e9-df93b5320e49",
+      "query": "superpower powers table superhero database",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://datalake/hydra/superhero/superpower",
+        "ctx://datalake/hydra/superhero/hero_power",
+        "ctx://datalake/hydra/superhero/alignment"
+      ]
+    },
+    {
+      "case_id": "dev_68",
+      "context_type": "resource",
+      "retrieval_id": "a11a21f6-8954-4499-99f1-25aa886f5eec",
+      "query": "Elastigirl Helen Parr The Incredibles married Bob Parr",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://team/engineering/hydra/kilt/565879/0013",
+        "ctx://team/engineering/hydra/kilt/5016516/0000",
+        "ctx://team/engineering/hydra/kilt/565879/0001"
+      ]
+    },
+    {
+      "case_id": "dev_26",
+      "context_type": "table_schema",
+      "retrieval_id": "17284f12-0ccd-4dd6-be8c-1c77dfe9a412",
+      "query": "codebase_community posts users views",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://datalake/hydra/codebase_community/posts",
+        "ctx://datalake/hydra/codebase_community/comments",
+        "ctx://datalake/hydra/codebase_community/users"
+      ]
+    },
+    {
+      "case_id": "dev_26",
+      "context_type": "resource",
+      "retrieval_id": "0de18cbd-a35c-48be-910d-321fd1aeb374",
+      "query": "Holm-Bonferroni method advantage over Bonferroni correction",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://team/engineering/hydra/kilt/7838811/0007",
+        "ctx://team/engineering/hydra/kilt/9444220/0008",
+        "ctx://team/engineering/hydra/kilt/10726541/0000"
+      ]
+    },
+    {
+      "case_id": "dev_31",
+      "context_type": "table_schema",
+      "retrieval_id": "909562d3-861b-4717-9a73-da0223e8655e",
+      "query": "codebase_community posts users",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://datalake/hydra/codebase_community/posts",
+        "ctx://datalake/hydra/codebase_community/comments",
+        "ctx://datalake/hydra/codebase_community/users"
+      ]
+    },
+    {
+      "case_id": "dev_31",
+      "context_type": "table_schema",
+      "retrieval_id": "8a5c2b4f-db9c-424c-a808-6377230714b7",
+      "query": "codebase_community post owner location",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://datalake/hydra/codebase_community/posts",
+        "ctx://datalake/hydra/codebase_community/comments",
+        "ctx://datalake/hydra/codebase_community/users"
+      ]
+    },
+    {
+      "case_id": "dev_31",
+      "context_type": "resource",
+      "retrieval_id": "ed38efe3-e35d-4806-a8a6-7bea135cd4d1",
+      "query": "United Kingdom form of government",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://team/engineering/hydra/kilt/31726/0005",
+        "ctx://team/engineering/hydra/kilt/31726/0021",
+        "ctx://team/engineering/hydra/kilt/31726/0022"
+      ]
+    },
+    {
+      "case_id": "dev_31",
+      "context_type": "resource",
+      "retrieval_id": "6c241209-414c-49b2-ac73-784176fc82a9",
+      "query": "United Kingdom constitutional monarchy parliamentary democracy unitary",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://team/engineering/hydra/kilt/31717/0054",
+        "ctx://team/engineering/hydra/kilt/31726/0000",
+        "ctx://team/engineering/hydra/kilt/31717/0000"
+      ]
+    },
+    {
+      "case_id": "dev_6",
+      "context_type": "table_schema",
+      "retrieval_id": "011871a0-5409-49dc-9c8e-2b61a6215128",
+      "query": "codebase_community users badges",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://datalake/hydra/codebase_community/badges",
+        "ctx://datalake/hydra/codebase_community/users",
+        "ctx://datalake/hydra/codebase_community/posts"
+      ]
+    },
+    {
+      "case_id": "dev_6",
+      "context_type": "resource",
+      "retrieval_id": "3706ae34-84ba-42e6-bdc0-9a43ead92928",
+      "query": "Indian Half-bred horse type country primarily found",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://team/engineering/hydra/kilt/9572685/0012",
+        "ctx://team/engineering/hydra/kilt/9572685/0004",
+        "ctx://team/engineering/hydra/kilt/9572685/0000"
+      ]
+    },
+    {
+      "case_id": "dev_6",
+      "context_type": "resource",
+      "retrieval_id": "9b21ba30-b83d-4912-bf7d-be2fedc388cc",
+      "query": "Indian Half-bred horse breed India",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://team/engineering/hydra/kilt/12955849/0001",
+        "ctx://team/engineering/hydra/kilt/7390791/0000",
+        "ctx://team/engineering/hydra/kilt/14533/0035"
+      ]
+    },
+    {
+      "case_id": "dev_6",
+      "context_type": "resource",
+      "retrieval_id": "8a21624f-12d4-4298-a600-11d240170213",
+      "query": "Half-bred horse type primarily found country",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://team/engineering/hydra/kilt/9572685/0004",
+        "ctx://team/engineering/hydra/kilt/9572685/0000",
+        "ctx://team/engineering/hydra/kilt/9572685/0005"
+      ]
+    },
+    {
+      "case_id": "dev_6",
+      "context_type": "resource",
+      "retrieval_id": "8a78c5d7-bb2b-4152-9f5e-1fc2a3457149",
+      "query": "\"Indian Half-bred\" horse",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://team/engineering/hydra/kilt/12950069/0007",
+        "ctx://team/engineering/hydra/kilt/12955849/0000",
+        "ctx://team/engineering/hydra/kilt/9572685/0005"
+      ]
+    },
+    {
+      "case_id": "dev_6",
+      "context_type": "resource",
+      "retrieval_id": "37d3a5d1-1617-419d-8bac-1b80919a4c38",
+      "query": "horse types India half-bred cavalry remount",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://team/engineering/hydra/kilt/12955849/0001",
+        "ctx://team/engineering/hydra/kilt/9572685/0005",
+        "ctx://team/engineering/hydra/kilt/9572685/0008"
+      ]
+    },
+    {
+      "case_id": "dev_6",
+      "context_type": "resource",
+      "retrieval_id": "283770a8-857e-4e90-8b0a-7297ae73aa6d",
+      "query": "Indian Half-bred horse breed developed India warmblood",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://team/engineering/hydra/kilt/12955849/0000",
+        "ctx://team/engineering/hydra/kilt/12955849/0001",
+        "ctx://team/engineering/hydra/kilt/3808008/0001"
+      ]
+    },
+    {
+      "case_id": "dev_6",
+      "context_type": "resource",
+      "retrieval_id": "0ec6e125-338a-4f1c-945b-d4b08a6193c6",
+      "query": "list of horse breeds India",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://team/engineering/hydra/kilt/6127302/0002",
+        "ctx://team/engineering/hydra/kilt/14533/0098",
+        "ctx://team/engineering/hydra/kilt/14533/0089"
+      ]
+    },
+    {
+      "case_id": "dev_6",
+      "context_type": "resource",
+      "retrieval_id": "b295bff0-092d-4f64-8ce8-5b9639d1769f",
+      "query": "Indian Half-bred horse breed country of origin",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://team/engineering/hydra/kilt/9572685/0012",
+        "ctx://team/engineering/hydra/kilt/9572685/0005",
+        "ctx://team/engineering/hydra/kilt/9572685/0000"
+      ]
+    },
+    {
+      "case_id": "dev_6",
+      "context_type": "resource",
+      "retrieval_id": "f7064592-86f5-4fa9-8d9b-eca38cc0a244",
+      "query": "Half-bred horse breed origin India Thoroughbred cross",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://team/engineering/hydra/kilt/9572685/0012",
+        "ctx://team/engineering/hydra/kilt/12955849/0001",
+        "ctx://team/engineering/hydra/kilt/6127302/0000"
+      ]
+    },
+    {
+      "case_id": "dev_6",
+      "context_type": "resource",
+      "retrieval_id": "b78dfe67-dd9f-4db1-9e2b-94810e0544b7",
+      "query": "Half-bred horse breed type",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://team/engineering/hydra/kilt/9572685/0004",
+        "ctx://team/engineering/hydra/kilt/9572685/0005",
+        "ctx://team/engineering/hydra/kilt/9572685/0011"
+      ]
+    },
+    {
+      "case_id": "dev_20",
+      "context_type": "table_schema",
+      "retrieval_id": "5278fbc6-36c8-4dab-88ef-804191cbbc5f",
+      "query": "codebase_community users table",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://datalake/hydra/codebase_community/users",
+        "ctx://datalake/hydra/codebase_community/badges",
+        "ctx://datalake/hydra/codebase_community/comments"
+      ]
+    },
+    {
+      "case_id": "dev_20",
+      "context_type": "resource",
+      "retrieval_id": "5321c31c-397e-4b8f-877e-6e1635d8a3c3",
+      "query": "Leonard Rosenfeld art showings exhibitions city",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://team/engineering/hydra/kilt/27307590/0011",
+        "ctx://team/engineering/hydra/kilt/27307590/0001",
+        "ctx://team/engineering/hydra/kilt/27307590/0002"
+      ]
+    },
+    {
+      "case_id": "dev_32",
+      "context_type": "table_schema",
+      "retrieval_id": "5ed5c1db-a354-41f5-9d3d-1a1fffd7f162",
+      "query": "financial database card type client credit card",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://datalake/hydra/financial/card",
+        "ctx://datalake/hydra/debit_card_specializing/customers",
+        "ctx://datalake/hydra/financial/disp"
+      ]
+    },
+    {
+      "case_id": "dev_32",
+      "context_type": "table_schema",
+      "retrieval_id": "37f77fa0-5df5-42d8-a017-f3fa5ce127ef",
+      "query": "financial database client disposition account",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://datalake/hydra/financial/disp",
+        "ctx://datalake/hydra/financial/card",
+        "ctx://datalake/hydra/financial/order"
+      ]
+    },
+    {
+      "case_id": "dev_32",
+      "context_type": "table_schema",
+      "retrieval_id": "442cb825-81d7-4747-bf63-a8370364c9e4",
+      "query": "financial client table birth date gender district",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://datalake/hydra/financial/client",
+        "ctx://datalake/hydra/financial/disp",
+        "ctx://datalake/hydra/financial/district"
+      ]
+    },
+    {
+      "case_id": "dev_32",
+      "context_type": "resource",
+      "retrieval_id": "9c796ad8-c15a-41b6-8734-a88dcd1b3e58",
+      "query": "junior credit card financial management features benefits",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://team/engineering/hydra/kilt/17182301/0064",
+        "ctx://team/engineering/hydra/kilt/17182301/0121",
+        "ctx://team/engineering/hydra/kilt/17182301/0052"
+      ]
+    },
+    {
+      "case_id": "dev_32",
+      "context_type": "resource",
+      "retrieval_id": "3645e2e4-c824-429f-8c2e-5129aecabd61",
+      "query": "junior class credit card vs classic gold credit card differences",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://team/engineering/hydra/kilt/17182301/0062",
+        "ctx://team/engineering/hydra/kilt/17182301/0000",
+        "ctx://team/engineering/hydra/kilt/17182301/0063"
+      ]
+    },
+    {
+      "case_id": "dev_32",
+      "context_type": "resource",
+      "retrieval_id": "a7caa221-d34c-4ebb-8591-3bac2265bba8",
+      "query": "junior credit card young cardholders limited features spending control",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://team/engineering/hydra/kilt/17182301/0121",
+        "ctx://team/engineering/hydra/kilt/17182301/0052",
+        "ctx://team/engineering/hydra/kilt/17182301/0089"
+      ]
+    },
+    {
+      "case_id": "dev_32",
+      "context_type": "resource",
+      "retrieval_id": "ece72964-c5bc-4e67-b3c4-152b69b06fbe",
+      "query": "financial database credit card types junior classic gold description",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://team/engineering/hydra/kilt/17182301/0121",
+        "ctx://team/engineering/hydra/kilt/17182301/0064",
+        "ctx://team/engineering/hydra/kilt/17182301/0057"
+      ]
+    },
+    {
+      "case_id": "dev_32",
+      "context_type": "resource",
+      "retrieval_id": "155f37a4-7207-434c-8d2a-b9c9ba9f0ef7",
+      "query": "junior card teenagers young people basic credit card no rewards lower limit",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://team/engineering/hydra/kilt/17182301/0064",
+        "ctx://team/engineering/hydra/kilt/17182301/0063",
+        "ctx://team/engineering/hydra/kilt/17182301/0060"
+      ]
+    },
+    {
+      "case_id": "dev_32",
+      "context_type": "resource",
+      "retrieval_id": "325433bd-7b7f-4da9-9ad9-531ab46c8c7a",
+      "query": "junior",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://team/engineering/hydra/kilt/13886387/0000",
+        "ctx://team/engineering/hydra/kilt/13886387/0004",
+        "ctx://team/engineering/hydra/kilt/40516677/0000"
+      ]
+    },
+    {
+      "case_id": "dev_32",
+      "context_type": "resource",
+      "retrieval_id": "c2bade3b-d05f-46eb-995d-2e5e6ac52db9",
+      "query": "credit card types charge card standard gold premium benefits comparison",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://team/engineering/hydra/kilt/9008/0084",
+        "ctx://team/engineering/hydra/kilt/17182301/0056",
+        "ctx://team/engineering/hydra/kilt/17182301/0000"
+      ]
+    },
+    {
+      "case_id": "dev_32",
+      "context_type": "resource",
+      "retrieval_id": "b7bdd75e-a4de-4c63-b8a0-28904db2129d",
+      "query": "\"junior credit card\"",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://team/engineering/hydra/kilt/17182301/0057",
+        "ctx://team/engineering/hydra/kilt/17182301/0062",
+        "ctx://team/engineering/hydra/kilt/17182301/0000"
+      ]
+    },
+    {
+      "case_id": "dev_46",
+      "context_type": "table_schema",
+      "retrieval_id": "ae7e1e4a-1adf-435a-ad34-b06d7cd80815",
+      "query": "financial loan table schema",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://datalake/hydra/financial/loan",
+        "ctx://datalake/hydra/financial/disp",
+        "ctx://datalake/hydra/financial/order"
+      ]
+    },
+    {
+      "case_id": "dev_46",
+      "context_type": "table_schema",
+      "retrieval_id": "d521500b-6511-4e58-bfb2-d98ac3eff706",
+      "query": "financial district table schema",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://datalake/hydra/financial/district",
+        "ctx://datalake/hydra/financial/client",
+        "ctx://datalake/hydra/financial/account"
+      ]
+    },
+    {
+      "case_id": "dev_46",
+      "context_type": "resource",
+      "retrieval_id": "ee0b70f3-f788-4d2c-b855-bca5c36fd250",
+      "query": "Brno historical significance Czechoslovakia",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://team/engineering/hydra/kilt/20216/0027",
+        "ctx://team/engineering/hydra/kilt/23844/0000",
+        "ctx://team/engineering/hydra/kilt/682528/0016"
+      ]
+    },
+    {
+      "case_id": "dev_46",
+      "context_type": "resource",
+      "retrieval_id": "54e29328-a510-49b3-83c7-b81f78ced020",
+      "query": "Brno history capital Moravia",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://team/engineering/hydra/kilt/20216/0029",
+        "ctx://team/engineering/hydra/kilt/20216/0027",
+        "ctx://team/engineering/hydra/kilt/23844/0000"
+      ]
+    },
+    {
+      "case_id": "dev_42",
+      "context_type": "table_schema",
+      "retrieval_id": "35fbd6d7-1ada-4098-83ce-de9dc08c4e69",
+      "query": "financial database account client disposition district town",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://datalake/hydra/financial/disp",
+        "ctx://datalake/hydra/financial/client",
+        "ctx://datalake/hydra/financial/account"
+      ]
+    },
+    {
+      "case_id": "dev_42",
+      "context_type": "table_schema",
+      "retrieval_id": "51fa3a7a-0168-4816-ae1e-15e6ea3efa2c",
+      "query": "financial district table A2 town name",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://datalake/hydra/financial/district",
+        "ctx://datalake/hydra/financial/client",
+        "ctx://datalake/hydra/financial/account"
+      ]
+    },
+    {
+      "case_id": "dev_42",
+      "context_type": "resource",
+      "retrieval_id": "b6a6b54a-e84f-45d6-944e-bd1912d88c01",
+      "query": "Nikolai Yevgrafovich Soviet football player",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://team/engineering/hydra/kilt/20014218/0000",
+        "ctx://team/engineering/hydra/kilt/23861863/0000",
+        "ctx://team/engineering/hydra/kilt/29017260/0000"
+      ]
+    },
+    {
+      "case_id": "dev_60",
+      "context_type": "table_schema",
+      "retrieval_id": "0c068073-1ad5-4ee6-af17-146c866c2b58",
+      "query": "financial account client district",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://datalake/hydra/financial/client",
+        "ctx://datalake/hydra/financial/disp",
+        "ctx://datalake/hydra/financial/account"
+      ]
+    },
+    {
+      "case_id": "dev_60",
+      "context_type": "table_schema",
+      "retrieval_id": "a37c8a5e-353a-4cec-9774-e02bdf235ffb",
+      "query": "financial district table A2 name region",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://datalake/hydra/financial/district",
+        "ctx://datalake/hydra/financial/client",
+        "ctx://datalake/hydra/financial/account"
+      ]
+    },
+    {
+      "case_id": "dev_60",
+      "context_type": "resource",
+      "retrieval_id": "8496bf2a-7f5a-4fef-84b7-b7b039276d86",
+      "query": "capital of Czechia",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://team/engineering/hydra/kilt/23844/0001",
+        "ctx://team/engineering/hydra/kilt/23844/0042",
+        "ctx://team/engineering/hydra/kilt/23844/0000"
+      ]
+    },
+    {
+      "case_id": "dev_55",
+      "context_type": "table_schema",
+      "retrieval_id": "3f3a9232-fcba-48a1-b5a2-d8c16cdb09a7",
+      "query": "student_club members department",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://datalake/hydra/student_club/member",
+        "ctx://datalake/hydra/student_club/major",
+        "ctx://datalake/hydra/student_club/income"
+      ]
+    },
+    {
+      "case_id": "dev_55",
+      "context_type": "table_schema",
+      "retrieval_id": "d49f30a7-9e30-46b9-a734-fe09a3edff7e",
+      "query": "student_club student table",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://datalake/hydra/student_club/event",
+        "ctx://datalake/hydra/student_club/member",
+        "ctx://datalake/hydra/student_club/major"
+      ]
+    },
+    {
+      "case_id": "dev_55",
+      "context_type": "table_schema",
+      "retrieval_id": "7a1b3ee8-7aec-406a-b86a-0e16f2bfa0ae",
+      "query": "student_club zip_code table",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://datalake/hydra/student_club/zip_code",
+        "ctx://datalake/hydra/student_club/member",
+        "ctx://datalake/hydra/student_club/event"
+      ]
+    },
+    {
+      "case_id": "dev_55",
+      "context_type": "table_schema",
+      "retrieval_id": "8ab3b011-92db-4a29-bd9d-8cb1be34158a",
+      "query": "student_club attendance event participant",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://datalake/hydra/student_club/attendance",
+        "ctx://datalake/hydra/student_club/event",
+        "ctx://datalake/hydra/student_club/budget"
+      ]
+    },
+    {
+      "case_id": "dev_55",
+      "context_type": "table_schema",
+      "retrieval_id": "755a4c76-1e10-4163-ad8f-c11e0303ba39",
+      "query": "student_club contact person name",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://datalake/hydra/student_club/member",
+        "ctx://datalake/hydra/student_club/income",
+        "ctx://datalake/hydra/student_club/event"
+      ]
+    },
+    {
+      "case_id": "dev_55",
+      "context_type": "resource",
+      "retrieval_id": "2341f13c-a12d-486a-bee4-c08b67f3cc20",
+      "query": "Peter Firth",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://team/engineering/hydra/kilt/937587/0010",
+        "ctx://team/engineering/hydra/kilt/937587/0000",
+        "ctx://team/engineering/hydra/kilt/937587/0003"
+      ]
+    },
+    {
+      "case_id": "dev_66",
+      "context_type": "table_schema",
+      "retrieval_id": "221dfca2-8410-45ea-bb6f-94684bdfcd74",
+      "query": "student_club member hometown state",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://datalake/hydra/student_club/member",
+        "ctx://datalake/hydra/student_club/income",
+        "ctx://datalake/hydra/student_club/zip_code"
+      ]
+    },
+    {
+      "case_id": "dev_66",
+      "context_type": "table_schema",
+      "retrieval_id": "9175d9c9-75db-4c0b-803c-fb7d8e6367e6",
+      "query": "student_club city population",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://datalake/hydra/student_club/zip_code",
+        "ctx://datalake/hydra/student_club/member",
+        "ctx://datalake/hydra/student_club/event"
+      ]
+    },
+    {
+      "case_id": "dev_66",
+      "context_type": "table_schema",
+      "retrieval_id": "0dc08b95-3418-4e56-a65d-6574920d4473",
+      "query": "student_club population city state table",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://datalake/hydra/student_club/zip_code",
+        "ctx://datalake/hydra/student_club/event",
+        "ctx://datalake/hydra/student_club/member"
+      ]
+    },
+    {
+      "case_id": "dev_66",
+      "context_type": "resource",
+      "retrieval_id": "459e128e-fbce-4d41-a1f5-7664dbb45a2d",
+      "query": "most populous city New Jersey Newark population",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://team/engineering/hydra/kilt/21648/0063",
+        "ctx://team/engineering/hydra/kilt/67234/0025",
+        "ctx://team/engineering/hydra/kilt/67234/0021"
+      ]
+    },
+    {
+      "case_id": "dev_0",
+      "context_type": "table_schema",
+      "retrieval_id": "9db59554-2a68-4349-9415-0be5e7583d80",
+      "query": "student_club organization event member",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://datalake/hydra/student_club/attendance",
+        "ctx://datalake/hydra/student_club/event",
+        "ctx://datalake/hydra/student_club/member"
+      ]
+    },
+    {
+      "case_id": "dev_0",
+      "context_type": "table_schema",
+      "retrieval_id": "dd266c37-0018-46d3-9d01-b630a5c211ad",
+      "query": "student_club event attendance",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://datalake/hydra/student_club/attendance",
+        "ctx://datalake/hydra/student_club/event",
+        "ctx://datalake/hydra/student_club/budget"
+      ]
+    },
+    {
+      "case_id": "dev_0",
+      "context_type": "resource",
+      "retrieval_id": "d2eac0a2-4465-48af-9a2f-2a75994ab656",
+      "query": "student club American University of Science and Technology 900 E. Washington St promote student interests",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://team/engineering/hydra/kilt/30861034/0015",
+        "ctx://team/engineering/hydra/kilt/30861034/0016",
+        "ctx://team/engineering/hydra/kilt/30861034/0009"
+      ]
+    },
+    {
+      "case_id": "dev_0",
+      "context_type": "resource",
+      "retrieval_id": "103658df-dcda-4af2-999a-8898b212c021",
+      "query": "American University of Science and Technology 900 E. Washington St location address",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://team/engineering/hydra/kilt/30861034/0012",
+        "ctx://team/engineering/hydra/kilt/30861034/0001",
+        "ctx://team/engineering/hydra/kilt/30861034/0000"
+      ]
+    },
+    {
+      "case_id": "dev_0",
+      "context_type": "resource",
+      "retrieval_id": "ea7babd3-e435-4df9-88db-efd80ff7380e",
+      "query": "\"900 E. Washington\" student club database description",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://team/engineering/hydra/kilt/1600426/0014",
+        "ctx://team/engineering/hydra/kilt/30861034/0016",
+        "ctx://team/engineering/hydra/kilt/322977/0002"
+      ]
+    },
+    {
+      "case_id": "dev_11",
+      "context_type": "table_schema",
+      "retrieval_id": "5171cc48-fc6f-4d84-8b75-5d1e344ab833",
+      "query": "student_club member major table",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://datalake/hydra/student_club/major",
+        "ctx://datalake/hydra/student_club/member",
+        "ctx://datalake/hydra/student_club/income"
+      ]
+    },
+    {
+      "case_id": "dev_11",
+      "context_type": "resource",
+      "retrieval_id": "bcbb2f7c-0e71-491e-9ed8-84d97bd68dd5",
+      "query": "second highest political position Afghanistan",
+      "candidate_count": 9,
+      "policy_verified": true,
+      "uris": [
+        "ctx://team/engineering/hydra/kilt/10158450/0000",
+        "ctx://team/engineering/hydra/kilt/66463/0022",
+        "ctx://team/engineering/hydra/kilt/66463/0034"
+      ]
+    }
+  ]
+}

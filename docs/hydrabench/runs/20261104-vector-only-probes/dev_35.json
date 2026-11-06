@@ -1,0 +1,146 @@
+{
+  "case_id": "dev_35",
+  "type": "a2s",
+  "db_id": "superhero",
+  "reference_tables": [
+    "hero_attribute",
+    "race",
+    "superhero"
+  ],
+  "top_k": 3,
+  "table_schema": {
+    "query": "Database: superhero. What is the role in Theosophical teachings of the race of the superhero with the maximum attribute value?",
+    "response": {
+      "results": [
+        {
+          "uri": "ctx://datalake/hydra/superhero/attribute",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 0.48202187937955066,
+          "l0_content": "Database: superhero\nTable: attribute\nCREATE TABLE attribute\n(\n    id             INTEGER not null\n            primary key,\n    attribute_name TEXT default NULL\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\nid,,the unique identifier of the attribute,integer,\nattribute_name,attribute name,the attribute,text,\"commonsense evidence:\nA superhero's attribute is a characteristic or quality that defines who they are and what they are capable of. This could be a physical trait, such as superhuman strength or the ability to fly, or a personal trait, such as extraordinary intelligence or exceptional bravery. \"\n",
+          "l1_content": "Database: superhero\nTable: attribute\nCREATE TABLE attribute\n(\n    id             INTEGER not null\n            primary key,\n    attribute_name TEXT default NULL\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\nid,,the unique identifier of the attribute,integer,\nattribute_name,attribute name,the attribute,text,\"commonsense evidence:\nA superhero's attribute is a characteristic or quality that defines who they are and what they are capable of. This could be a physical trait, such as superhuman strength or the ability to fly, or a personal trait, such as extraordinary intelligence or exceptional bravery. \"\n",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://datalake/hydra/superhero/race",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 0.47854556079344657,
+          "l0_content": "Database: superhero\nTable: race\nCREATE TABLE race\n(\n    id   INTEGER not null\n            primary key,\n    race TEXT default NULL\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\nid,,the unique identifier of the race,integer,\nrace,,the race of the superhero,text,\"commonsense evidence:\nIn the context of superheroes, a superhero's race would refer to the particular group of people that the superhero belongs to base on these physical characteristics\"\n",
+          "l1_content": "Database: superhero\nTable: race\nCREATE TABLE race\n(\n    id   INTEGER not null\n            primary key,\n    race TEXT default NULL\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\nid,,the unique identifier of the race,integer,\nrace,,the race of the superhero,text,\"commonsense evidence:\nIn the context of superheroes, a superhero's race would refer to the particular group of people that the superhero belongs to base on these physical characteristics\"\n",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://datalake/hydra/superhero/hero_attribute",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 0.4624187581095892,
+          "l0_content": "Database: superhero\nTable: hero_attribute\nCREATE TABLE hero_attribute\n(\n    hero_id         INTEGER default NULL,\n    attribute_id    INTEGER default NULL,\n    attribute_value INTEGER default NULL,\n    foreign key (attribute_id) references attribute(id),\n    foreign key (hero_id) references superhero(id)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\nhero_id,hero id,\"the id of the hero\nMaps to superhero(id)\",,\nattribute_id,attribute id,\"the id of the attribute\nMaps to attribute(id)\",,\nattribute_value,attribute value,the attribute value,,\"commonsense evidence:\nIf a superhero has a higher attribute value on a particular attribute, it means that they are more skilled or powerful in that area compared to other superheroes. For example, if a superhero has a higher attribute value for strength, they may be able to lift heavier objects or deliver more powerful punches than other superheroes.\"\n",
+          "l1_content": "Database: superhero\nTable: hero_attribute\nCREATE TABLE hero_attribute\n(\n    hero_id         INTEGER default NULL,\n    attribute_id    INTEGER default NULL,\n    attribute_value INTEGER default NULL,\n    foreign key (attribute_id) references attribute(id),\n    foreign key (hero_id) references superhero(id)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\nhero_id,hero id,\"the id of the hero\nMaps to superhero(id)\",,\nattribute_id,attribute id,\"the id of the attribute\nMaps to attribute(id)\",,\nattribute_value,attribute value,the attribute value,,\"commonsense evidence:\nIf a superhero has a higher attribute value on a particular attribute, it means that they are more skilled or powerful in that area compared to other superheroes. For example, if a superhero has a higher attribute value for strength, they may be able to lift heavier objects or deliver more powerful punches than other superheroes.\"\n",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        }
+      ],
+      "total": 3,
+      "retrieval_id": "732726be-3ab7-4f63-a78d-f047fda07e0a",
+      "stale_notices": []
+    }
+  },
+  "resource": {
+    "query": "What is the role of a cosmic entity in Theosophical teachings?",
+    "response": {
+      "results": [
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/2285389/0003",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 0.5696527195804949,
+          "l0_content": "Cosmic entity — Occultism and Theosophy.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 2285389\nBULLET::::- A transcendent concept intended to replace or supplement the traditional concept of 'God':\nBULLET::::- In the writings of Gottfried de Purucker (1935)\nBULLET::::- In the writings of the Theosophist Alice Bailey (1920s-1940s)\nBULLET::::- In the Ascended Master Teachings, a group of religions based on Theosophy, a cosmic entity is equivalent to a cosmic being",
+          "l1_content": "Cosmic entity — Occultism and Theosophy.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 2285389\nBULLET::::- A transcendent concept intended to replace or supplement the traditional concept of 'God':\nBULLET::::- In the writings of Gottfried de Purucker (1935)\nBULLET::::- In the writings of the Theosophist Alice Bailey (1920s-1940s)\nBULLET::::- In the Ascended Master Teachings, a group of religions based on Theosophy, a cosmic entity is equivalent to a cosmic being",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/51429008/0020",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 0.5019663268428147,
+          "l0_content": "Theosophy (Blavatskian) — Beliefs and teachings.:Theology and cosmology.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 51429008\nTheosophy promotes an emanationist cosmology, promoting the belief that the universe is an outward reflection from the Absolute. Theosophy presents the idea that the world as humans perceive it is illusory, or \"maya\", an idea that it draws from Asian religions. Accordingly, Blavatsky taught that a life limited by the perception of this illusory world was ignorant and deluded. According to Blavatsky's teaching, every solar system in the universe is the expression of what is termed a \"Logos\" or \"Solar Deity\".",
+          "l1_content": "Theosophy (Blavatskian) — Beliefs and teachings.:Theology and cosmology.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 51429008\nTheosophy promotes an emanationist cosmology, promoting the belief that the universe is an outward reflection from the Absolute. Theosophy presents the idea that the world as humans perceive it is illusory, or \"maya\", an idea that it draws from Asian religions. Accordingly, Blavatsky taught that a life limited by the perception of this illusory world was ignorant and deluded. According to Blavatsky's teaching, every solar system in the universe is the expression of what is termed a \"Logos\" or \"Solar Deity\".",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/51429008/0029",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 0.4632718076492004,
+          "l0_content": "Theosophy (Blavatskian) — Beliefs and teachings.:Personal development and reincarnation.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 51429008\nAccording to Theosophical teaching, it is the latter three of these components that are immortal, while the other aspects perish following bodily death. Theosophy teaches that the Spiritual Soul and the Spirit do not reside within the human body alongside the other components, but that they are connected to it through the Human Soul. In \"The Voice of the Silence\", Blavatsky taught that within each individual human there is an eternal, divine facet, which she referred to as \"the Master\", the \"uncreate\", the \"inner God\", and the \"higher self\". She promoted the idea that uniting with this \"higher self\" results in wisdom.",
+          "l1_content": "Theosophy (Blavatskian) — Beliefs and teachings.:Personal development and reincarnation.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 51429008\nAccording to Theosophical teaching, it is the latter three of these components that are immortal, while the other aspects perish following bodily death. Theosophy teaches that the Spiritual Soul and the Spirit do not reside within the human body alongside the other components, but that they are connected to it through the Human Soul. In \"The Voice of the Silence\", Blavatsky taught that within each individual human there is an eternal, divine facet, which she referred to as \"the Master\", the \"uncreate\", the \"inner God\", and the \"higher self\". She promoted the idea that uniting with this \"higher self\" results in wisdom.",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        }
+      ],
+      "total": 3,
+      "retrieval_id": "640851d7-62b3-4f7a-8f8c-9a720c9e1e54",
+      "stale_notices": []
+    }
+  },
+  "table_metrics": {
+    "required": 3,
+    "hits_at_3": 2,
+    "recall_at_3": 0.6666666666666666,
+    "all_required_at_3": false,
+    "first_hit_rank": 2
+  }
+}

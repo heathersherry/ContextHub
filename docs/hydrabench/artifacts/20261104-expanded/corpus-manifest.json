@@ -1,0 +1,24 @@
+{
+  "original_source": "https://dl.fbaipublicfiles.com/KILT/kilt_knowledgesource.json",
+  "retrieved_from": [
+    "https://huggingface.co/datasets/s-nlp/kilt"
+  ],
+  "snapshot": "2019-08-01",
+  "selection": "All articles in the frozen input JSONL",
+  "articles": 2060,
+  "passages": 18265,
+  "character_cap": 3000,
+  "truncated_passages": 49,
+  "source_subset_sha256": "9a042decbb701b65c9b7449d2afb3c5edca0974f97574e55b9319e136f5b68e7",
+  "passages_sha256": "9181071dd090acfe5dfd21dd912f5287866120d4e3c9b6a92143e457ab063c25",
+  "chunking": "Abstract retained as one passage; body split by punctuation into groups of four sentences; each stored context capped at 3000 characters including provenance.",
+  "background_articles": 2000,
+  "added_topic_articles": 60,
+  "background_selection": "Lowest SHA256(seed + title) among complete articles in fixed s-nlp/kilt parquet shard 0000; seed hydrabench-retrieval-20261104.",
+  "topic_selection": "Case-informed source candidates and related distractors; no model results used. Exact seed candidates retained.",
+  "source_revision": {
+    "dataset": "s-nlp/kilt",
+    "revision": "a564cec5a4bc4bdcd9f32075a481e738bbed7067",
+    "last_modified": "2026-03-21T08:57:38.000Z"
+  }
+}

@@ -1,0 +1,142 @@
+[
+  {
+    "title": "Aluminium",
+    "wikipedia_id": "904",
+    "row_start": 1622089,
+    "paragraph_count": 139,
+    "text_sha256": "06d18cfacb1a99433772f78798f47a17da5d5b7283a40d52769e519fb74d102c"
+  },
+  {
+    "title": "Argon",
+    "wikipedia_id": "896",
+    "row_start": 1620485,
+    "paragraph_count": 72,
+    "text_sha256": "0065f75017fe86a659826958802b0c9b1cb089eb4d7721f2d0c855cfaaddd368"
+  },
+  {
+    "title": "Beryllium",
+    "wikipedia_id": "3378",
+    "row_start": 15343300,
+    "paragraph_count": 104,
+    "text_sha256": "74f83d2b9ed6e66cf9e76c1324e9a5f5bd39a24c194db7632864409e923deba7"
+  },
+  {
+    "title": "Boron",
+    "wikipedia_id": "3755",
+    "row_start": 17123809,
+    "paragraph_count": 151,
+    "text_sha256": "bdeaf4ae22122b1e6d3122db0d748271f32b802e091a7dfaad5bb53ce098736c"
+  },
+  {
+    "title": "Calcium",
+    "wikipedia_id": "5668",
+    "row_start": 29003783,
+    "paragraph_count": 60,
+    "text_sha256": "7cbfb13cbb8d27d3021e1195fc2e6fd33388220a3179ae4d258ae590e0943270"
+  },
+  {
+    "title": "Carbon",
+    "wikipedia_id": "5299",
+    "row_start": 25408667,
+    "paragraph_count": 107,
+    "text_sha256": "1ccbeeaf463e0bf9767ac027fb8e4d9e4ae705cb6c5f456fd1dd903a74a4722e"
+  },
+  {
+    "title": "Chlorine",
+    "wikipedia_id": "5667",
+    "row_start": 29004787,
+    "paragraph_count": 120,
+    "text_sha256": "da54516b891ac43ecf2ae09afc079aa4e73a5a16f1be586cc693f6ac6bc2458a"
+  },
+  {
+    "title": "Fluorine",
+    "wikipedia_id": "17481271",
+    "row_start": 60165636,
+    "paragraph_count": 118,
+    "text_sha256": "ade4a548680566100148ee94e6b6efe9a0cc70a7066b32e76cbd5885f953ebb0"
+  },
+  {
+    "title": "Helium",
+    "wikipedia_id": "13256",
+    "row_start": 64468981,
+    "paragraph_count": 139,
+    "text_sha256": "42e2a45a8cb37778988a12c3652e450aef939fec3d5a69a21bf9e6062bccd43a"
+  },
+  {
+    "title": "Hydrogen",
+    "wikipedia_id": "13255",
+    "row_start": 64468823,
+    "paragraph_count": 127,
+    "text_sha256": "6cf25e4c136ec176a898011e1811b5361dc086d7b7c796f5c34a0875594fd206"
+  },
+  {
+    "title": "Lithium",
+    "wikipedia_id": "17561",
+    "row_start": 88528525,
+    "paragraph_count": 131,
+    "text_sha256": "58c8b1801512d215f7a0ae5da7c4819daaa8a34f32066732a4a1e48c4e1b51ff"
+  },
+  {
+    "title": "Magnesium",
+    "wikipedia_id": "18909",
+    "row_start": 96613409,
+    "paragraph_count": 130,
+    "text_sha256": "1f347fdb34127ec464eb34b2f5846ee56f6a9bfa45e69b1e3f74168c46cf9efb"
+  },
+  {
+    "title": "Neon",
+    "wikipedia_id": "21273",
+    "row_start": 8159962,
+    "paragraph_count": 44,
+    "text_sha256": "05b8ecb47408634f4dd5a040cc144dc00085d69d9bae8db5480e87de6da65293"
+  },
+  {
+    "title": "Nitrogen",
+    "wikipedia_id": "21175",
+    "row_start": 6914708,
+    "paragraph_count": 112,
+    "text_sha256": "e27bd410e5d123f9e50876fc8499d92a3910e38c1c3e85aee0e27ce91933a142"
+  },
+  {
+    "title": "Oxygen",
+    "wikipedia_id": "22303",
+    "row_start": 12560956,
+    "paragraph_count": 136,
+    "text_sha256": "d919bf4a437d2419014f327fa97cc327de53b46a0c6b169750f1a15c3653acb8"
+  },
+  {
+    "title": "Phosphorus",
+    "wikipedia_id": "23318",
+    "row_start": 18816211,
+    "paragraph_count": 130,
+    "text_sha256": "077899a579f46d096152cfd8395fe40db254e2d48cf859590da09c28e313365b"
+  },
+  {
+    "title": "Potassium",
+    "wikipedia_id": "23055",
+    "row_start": 17578047,
+    "paragraph_count": 124,
+    "text_sha256": "4e7595c4763fbfaf1142cfddbc5f749f3f6b7b5fa5486e01edb3992003b7ff97"
+  },
+  {
+    "title": "Silicon",
+    "wikipedia_id": "27114",
+    "row_start": 36852596,
+    "paragraph_count": 130,
+    "text_sha256": "7ec22a9448cbc8b7192c338247c235fd32ce036b1e35f6ef8ef5079ca507803b"
+  },
+  {
+    "title": "Sodium",
+    "wikipedia_id": "26826",
+    "row_start": 35280299,
+    "paragraph_count": 62,
+    "text_sha256": "0d4e5e90579db48458856bec3ef9c1197fd2063929158c82152137de1e71356f"
+  },
+  {
+    "title": "Sulfur",
+    "wikipedia_id": "27127",
+    "row_start": 37223064,
+    "paragraph_count": 137,
+    "text_sha256": "269a10a7c83f2a5a5c36d4e2ab0e46596021c358cb6d57957626c1142d441563"
+  }
+]

@@ -1,0 +1,25 @@
+{
+  "results": [
+    {
+      "uri": "ctx://resources/hydra-layer-validation/microarchitecture",
+      "context_type": "resource",
+      "scope": "team",
+      "owner_space": "",
+      "score": 0.03278688524590164,
+      "status": "active",
+      "version": 1,
+      "validity_status": "fresh",
+      "tags": [
+        "kilt-2019",
+        "source-sha256:17571bc69825350c0f464fb9e4ff1478f3dc0fc4f7d6c6cb9f7836783bae808c"
+      ],
+      "section_id": 12,
+      "retrieval_strategy": "hybrid",
+      "content": "### Branch prediction.\n\nOne barrier to achieving higher performance through instruction-level parallelism stems from pipeline stalls and flushes due to branches. Normally, whether a conditional branch will be taken isn't known until late in the pipeline as conditional branches depend on results coming from a register. From the time that the processor's instruction decoder has figured out that it has encountered a conditional branch instruction to the time that the deciding register value can be read out, the pipeline needs to be stalled for several cycles, or if it's not and the branch is taken, the pipeline needs to be flushed. As clock speeds increase the depth of the pipeline increases with it, and some modern processors may have 20 stages or more. On average, every fifth instruction executed is a branch, so without any intervention, that's a high amount of stalling.\n\nTechniques such as branch prediction and speculative execution are used to lessen these branch penalties. Branch prediction is where the hardware makes educated guesses on whether a particular branch will be taken. In reality one side or the other of the branch will be called much more often than the other. Modern designs have rather complex statistical prediction systems, which watch the results of past branches to predict the future with greater accuracy. The guess allows the hardware to prefetch instructions without waiting for the register read. Speculative execution is a further enhancement in which the code along the predicted path is not just prefetched but also executed before it is known whether the branch should be taken or not. This can yield better performance when the guess is good, with the risk of a huge penalty when the guess is bad because instructions need to be undone.\n\n",
+      "content_level": "snippet"
+    }
+  ],
+  "total": 1,
+  "retrieval_id": "bbc0369e-bce8-4476-8cc8-663e24846b60",
+  "stale_notices": []
+}

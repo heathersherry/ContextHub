@@ -1,0 +1,18 @@
+{
+  "started_at": "2026-11-05T16:41:53.450984+08:00",
+  "embedding_model": "qwen3.7-text-embedding",
+  "requested_dimensions": 1536,
+  "database": "hydra_originals_qwen37_20261105",
+  "source_database": "hydra_chunks_sample_20261105",
+  "queries": {
+    "literal": "1986 VAX 8800",
+    "semantic": "How can a CPU make progress on several instructions at once by handling different stages simultaneously?"
+  },
+  "top_k": 1,
+  "vector_candidate_budget": 3,
+  "range_max_characters": 4000,
+  "rrf_constant": 60,
+  "tree_control": "NoOpChatClient; deterministic fallback, no provider call",
+  "chat_calls": 0,
+  "answering_model_calls": 0
+}

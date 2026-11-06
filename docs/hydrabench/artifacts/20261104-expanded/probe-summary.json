@@ -1,0 +1,250 @@
+{
+  "table_hits": 27,
+  "required_tables": 42,
+  "all_required_at_3_cases": 7,
+  "cases": 20,
+  "known_text_anchor_hit_cases": 18,
+  "text_covered_cases": 19,
+  "results": [
+    {
+      "case_id": "dev_43",
+      "table_metrics": {
+        "required": 1,
+        "hits_at_3": 1,
+        "recall_at_3": 1.0,
+        "all_required_at_3": true,
+        "first_hit_rank": 2
+      },
+      "known_text_anchor_hit_at_3": true,
+      "text_coverage": "core_support_located"
+    },
+    {
+      "case_id": "dev_62",
+      "table_metrics": {
+        "required": 2,
+        "hits_at_3": 1,
+        "recall_at_3": 0.5,
+        "all_required_at_3": false,
+        "first_hit_rank": 3
+      },
+      "known_text_anchor_hit_at_3": false,
+      "text_coverage": "core_support_located"
+    },
+    {
+      "case_id": "dev_5",
+      "table_metrics": {
+        "required": 1,
+        "hits_at_3": 1,
+        "recall_at_3": 1.0,
+        "all_required_at_3": true,
+        "first_hit_rank": 2
+      },
+      "known_text_anchor_hit_at_3": true,
+      "text_coverage": "core_support_located"
+    },
+    {
+      "case_id": "dev_13",
+      "table_metrics": {
+        "required": 3,
+        "hits_at_3": 1,
+        "recall_at_3": 0.3333333333333333,
+        "all_required_at_3": false,
+        "first_hit_rank": 2
+      },
+      "known_text_anchor_hit_at_3": true,
+      "text_coverage": "core_support_located"
+    },
+    {
+      "case_id": "dev_35",
+      "table_metrics": {
+        "required": 3,
+        "hits_at_3": 2,
+        "recall_at_3": 0.6666666666666666,
+        "all_required_at_3": false,
+        "first_hit_rank": 1
+      },
+      "known_text_anchor_hit_at_3": true,
+      "text_coverage": "core_support_located"
+    },
+    {
+      "case_id": "dev_72",
+      "table_metrics": {
+        "required": 2,
+        "hits_at_3": 2,
+        "recall_at_3": 1.0,
+        "all_required_at_3": true,
+        "first_hit_rank": 1
+      },
+      "known_text_anchor_hit_at_3": true,
+      "text_coverage": "core_support_located"
+    },
+    {
+      "case_id": "dev_10",
+      "table_metrics": {
+        "required": 1,
+        "hits_at_3": 1,
+        "recall_at_3": 1.0,
+        "all_required_at_3": true,
+        "first_hit_rank": 1
+      },
+      "known_text_anchor_hit_at_3": true,
+      "text_coverage": "core_support_located"
+    },
+    {
+      "case_id": "dev_68",
+      "table_metrics": {
+        "required": 3,
+        "hits_at_3": 1,
+        "recall_at_3": 0.3333333333333333,
+        "all_required_at_3": false,
+        "first_hit_rank": 2
+      },
+      "known_text_anchor_hit_at_3": true,
+      "text_coverage": "core_support_located"
+    },
+    {
+      "case_id": "dev_26",
+      "table_metrics": {
+        "required": 2,
+        "hits_at_3": 1,
+        "recall_at_3": 0.5,
+        "all_required_at_3": false,
+        "first_hit_rank": 3
+      },
+      "known_text_anchor_hit_at_3": true,
+      "text_coverage": "core_support_located"
+    },
+    {
+      "case_id": "dev_31",
+      "table_metrics": {
+        "required": 2,
+        "hits_at_3": 1,
+        "recall_at_3": 0.5,
+        "all_required_at_3": false,
+        "first_hit_rank": 1
+      },
+      "known_text_anchor_hit_at_3": true,
+      "text_coverage": "core_support_located"
+    },
+    {
+      "case_id": "dev_6",
+      "table_metrics": {
+        "required": 2,
+        "hits_at_3": 1,
+        "recall_at_3": 0.5,
+        "all_required_at_3": false,
+        "first_hit_rank": 1
+      },
+      "known_text_anchor_hit_at_3": false,
+      "text_coverage": "not_located"
+    },
+    {
+      "case_id": "dev_20",
+      "table_metrics": {
+        "required": 1,
+        "hits_at_3": 0,
+        "recall_at_3": 0.0,
+        "all_required_at_3": false,
+        "first_hit_rank": null
+      },
+      "known_text_anchor_hit_at_3": true,
+      "text_coverage": "core_support_located"
+    },
+    {
+      "case_id": "dev_32",
+      "table_metrics": {
+        "required": 3,
+        "hits_at_3": 2,
+        "recall_at_3": 0.6666666666666666,
+        "all_required_at_3": false,
+        "first_hit_rank": 1
+      },
+      "known_text_anchor_hit_at_3": true,
+      "text_coverage": "core_support_located"
+    },
+    {
+      "case_id": "dev_46",
+      "table_metrics": {
+        "required": 3,
+        "hits_at_3": 3,
+        "recall_at_3": 1.0,
+        "all_required_at_3": true,
+        "first_hit_rank": 1
+      },
+      "known_text_anchor_hit_at_3": true,
+      "text_coverage": "core_support_located"
+    },
+    {
+      "case_id": "dev_42",
+      "table_metrics": {
+        "required": 2,
+        "hits_at_3": 1,
+        "recall_at_3": 0.5,
+        "all_required_at_3": false,
+        "first_hit_rank": 3
+      },
+      "known_text_anchor_hit_at_3": true,
+      "text_coverage": "core_support_located"
+    },
+    {
+      "case_id": "dev_60",
+      "table_metrics": {
+        "required": 2,
+        "hits_at_3": 1,
+        "recall_at_3": 0.5,
+        "all_required_at_3": false,
+        "first_hit_rank": 2
+      },
+      "known_text_anchor_hit_at_3": true,
+      "text_coverage": "core_support_located"
+    },
+    {
+      "case_id": "dev_55",
+      "table_metrics": {
+        "required": 2,
+        "hits_at_3": 1,
+        "recall_at_3": 0.5,
+        "all_required_at_3": false,
+        "first_hit_rank": 3
+      },
+      "known_text_anchor_hit_at_3": true,
+      "text_coverage": "core_support_located"
+    },
+    {
+      "case_id": "dev_66",
+      "table_metrics": {
+        "required": 2,
+        "hits_at_3": 2,
+        "recall_at_3": 1.0,
+        "all_required_at_3": true,
+        "first_hit_rank": 1
+      },
+      "known_text_anchor_hit_at_3": true,
+      "text_coverage": "core_support_located"
+    },
+    {
+      "case_id": "dev_0",
+      "table_metrics": {
+        "required": 3,
+        "hits_at_3": 2,
+        "recall_at_3": 0.6666666666666666,
+        "all_required_at_3": false,
+        "first_hit_rank": 1
+      },
+      "known_text_anchor_hit_at_3": true,
+      "text_coverage": "core_support_located"
+    },
+    {
+      "case_id": "dev_11",
+      "table_metrics": {
+        "required": 2,
+        "hits_at_3": 2,
+        "recall_at_3": 1.0,
+        "all_required_at_3": true,
+        "first_hit_rank": 1
+      },
+      "known_text_anchor_hit_at_3": true,
+      "text_coverage": "core_support_located"
+    }
+  ]
+}

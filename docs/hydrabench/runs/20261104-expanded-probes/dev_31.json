@@ -1,0 +1,145 @@
+{
+  "case_id": "dev_31",
+  "type": "a2s",
+  "db_id": "codebase_community",
+  "reference_tables": [
+    "posts",
+    "users"
+  ],
+  "top_k": 3,
+  "table_schema": {
+    "query": "Database: codebase_community. What is the form of government in the country where the owner of the post \"Eliciting priors from experts\" is located?",
+    "response": {
+      "results": [
+        {
+          "uri": "ctx://datalake/hydra/codebase_community/posts",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 6.260858903320894,
+          "l0_content": "Database: codebase_community\nTable: posts\nCREATE TABLE posts\n(\n    Id                    INTEGER          not null UNIQUE\n        primary key,\n    PostTypeId            INTEGER          null,\n    AcceptedAnswerId      INTEGER          null,\n    CreaionDate           DATETIME     null,\n    Score                 INTEGER          null,\n    ViewCount             INTEGER          null,\n    Body                  TEXT     null,\n    OwnerUserId           INTEGER          null,\n    LasActivityDate       DATETIME     null,\n    Title                 TEXT null,\n    Tags                  TEXT null,\n    AnswerCount           INTEGER          null,\n    CommentCount          INTEGER          null,\n    FavoriteCount         INTEGER          null,\n    LastEditorUserId      INTEGER          null,\n    LastEditDate          DATETIME     null,\n    CommunityOwnedDate    DATETIME    null,\n    ParentId              INTEGER          null,\n    ClosedDate            DATETIME     null,\n    OwnerDisplayName      TEXT null,\n    LastEditorDisplayName TEXT null,\n        foreign key (LastEditorUserId) references users (Id)\n            on update cascade on delete cascade,\n        foreign key (OwnerUserId) references users (Id)\n            on update cascade on delete cascade,\n        foreign key (ParentId) references posts (Id)\n            on update cascade on delete cascade\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nId,,the post id,integer,\r\nPostTypeId,Post Type Id,the id of the post type,integer,\r\nAcceptedAnswerId,Accepted Answer Id,the accepted answer id of the post ,integer,\r\nCreaionDate,Creation Date,the creation date of the post,datetime,\r\nScore,,the score of the post,integer,\r\nViewCount,View Count,the view count of the post,integer,\"commonsense evidence:\nHigher view count means the post has higher popularity\"\r\nBody,,the body of the post,text,\r\nOwnerUserId,Owner User Id,the id of the owner user,integer,\r\nLasActivityDate,Last Activity Date,the last activity date,datetime,\r\nTitle,,the title of the post,text,\r\nTags,,the tag of the post,text,\r\nAnswerCount,Answer Count,the total number of answers of the post,integer,\r\nCommentCount,Comment Count,the total number of comments of the post,integer,\r\nFavoriteCount,Favorite Count,the total number of favorites of the post,integer,\"commonsense evidence:\nmore favorite count refers to more valuable posts. \"\r\nLastEditorUserId,Last Editor User Id,the id of the last editor,integer,\r\nLastEditDate,Last Edit Date,the last edit date,datetime,\r\nCommunityOwnedDate,Community Owned Date,the community owned date,datetime,\r\nParentId,ParentId,the id of the parent post,integer,\"commonsense evidence:\nIf the parent id is null, the post is the root post. Otherwise, the post is the child post of other post. \"\r\nClosedDate,Closed Date,the closed date of the post,data_format,\"commonsense evidence:\nif ClosedDate is null or empty, it means this post is not well-finished\nif CloseDate is not null or empty, it means this post has well-finished.\"\r\nOwnerDisplayName,Owner Display Name,the display name of the post owner,text,\r\nLastEditorDisplayName,Last Editor Display Name,the display name of the last editor,text,",
+          "l1_content": "Database: codebase_community\nTable: posts\nCREATE TABLE posts\n(\n    Id                    INTEGER          not null UNIQUE\n        primary key,\n    PostTypeId            INTEGER          null,\n    AcceptedAnswerId      INTEGER          null,\n    CreaionDate           DATETIME     null,\n    Score                 INTEGER          null,\n    ViewCount             INTEGER          null,\n    Body                  TEXT     null,\n    OwnerUserId           INTEGER          null,\n    LasActivityDate       DATETIME     null,\n    Title                 TEXT null,\n    Tags                  TEXT null,\n    AnswerCount           INTEGER          null,\n    CommentCount          INTEGER          null,\n    FavoriteCount         INTEGER          null,\n    LastEditorUserId      INTEGER          null,\n    LastEditDate          DATETIME     null,\n    CommunityOwnedDate    DATETIME    null,\n    ParentId              INTEGER          null,\n    ClosedDate            DATETIME     null,\n    OwnerDisplayName      TEXT null,\n    LastEditorDisplayName TEXT null,\n        foreign key (LastEditorUserId) references users (Id)\n            on update cascade on delete cascade,\n        foreign key (OwnerUserId) references users (Id)\n            on update cascade on delete cascade,\n        foreign key (ParentId) references posts (Id)\n            on update cascade on delete cascade\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nId,,the post id,integer,\r\nPostTypeId,Post Type Id,the id of the post type,integer,\r\nAcceptedAnswerId,Accepted Answer Id,the accepted answer id of the post ,integer,\r\nCreaionDate,Creation Date,the creation date of the post,datetime,\r\nScore,,the score of the post,integer,\r\nViewCount,View Count,the view count of the post,integer,\"commonsense evidence:\nHigher view count means the post has higher popularity\"\r\nBody,,the body of the post,text,\r\nOwnerUserId,Owner User Id,the id of the owner user,integer,\r\nLasActivityDate,Last Activity Date,the last activity date,datetime,\r\nTitle,,the title of the post,text,\r\nTags,,the tag of the post,text,\r\nAnswerCount,Answer Count,the total number of answers of the post,integer,\r\nCommentCount,Comment Count,the total number of comments of the post,integer,\r\nFavoriteCount,Favorite Count,the total number of favorites of the post,integer,\"commonsense evidence:\nmore favorite count refers to more valuable posts. \"\r\nLastEditorUserId,Last Editor User Id,the id of the last editor,integer,\r\nLastEditDate,Last Edit Date,the last edit date,datetime,\r\nCommunityOwnedDate,Community Owned Date,the community owned date,datetime,\r\nParentId,ParentId,the id of the parent post,integer,\"commonsense evidence:\nIf the parent id is null, the post is the root post. Otherwise, the post is the child post of other post. \"\r\nClosedDate,Closed Date,the closed date of the post,data_format,\"commonsense evidence:\nif ClosedDate is null or empty, it means this post is not well-finished\nif CloseDate is not null or empty, it means this post has well-finished.\"\r\nOwnerDisplayName,Owner Display Name,the display name of the post owner,text,\r\nLastEditorDisplayName,Last Editor Display Name,the display name of the last editor,text,",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://datalake/hydra/codebase_community/comments",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 6.110254964227377,
+          "l0_content": "Database: codebase_community\nTable: comments\nCREATE TABLE comments\n(\n    Id              INTEGER          not null\n        primary key,\n    PostId          INTEGER          null,\n    Score           INTEGER          null,\n    Text            TEXT     null,\n    CreationDate    DATETIME     null,\n    UserId          INTEGER          null,\n    UserDisplayName TEXT null,\n        foreign key (PostId) references posts (Id)\n            on update cascade on delete cascade,\n        foreign key (UserId) references users (Id)\n            on update cascade on delete cascade\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nId,,the comment Id,integer,\r\nPostId,Post Id,the unique id of the post,integer,\r\nScore,,rating score,integer,\"commonsense evidence:\nThe score is from 0 to 100. The score more than 60 refers that the comment is a positive comment. The score less than 60 refers that the comment is a negative comment. \"\r\nText,,the detailed content of the comment,text,\r\nCreationDate,Creation Date,the creation date of the comment,datetime,\r\nUserId,User Id,the id of the user who post the comment,integer,\r\nUserDisplayName,User Display Name,user's display name,text,",
+          "l1_content": "Database: codebase_community\nTable: comments\nCREATE TABLE comments\n(\n    Id              INTEGER          not null\n        primary key,\n    PostId          INTEGER          null,\n    Score           INTEGER          null,\n    Text            TEXT     null,\n    CreationDate    DATETIME     null,\n    UserId          INTEGER          null,\n    UserDisplayName TEXT null,\n        foreign key (PostId) references posts (Id)\n            on update cascade on delete cascade,\n        foreign key (UserId) references users (Id)\n            on update cascade on delete cascade\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nId,,the comment Id,integer,\r\nPostId,Post Id,the unique id of the post,integer,\r\nScore,,rating score,integer,\"commonsense evidence:\nThe score is from 0 to 100. The score more than 60 refers that the comment is a positive comment. The score less than 60 refers that the comment is a negative comment. \"\r\nText,,the detailed content of the comment,text,\r\nCreationDate,Creation Date,the creation date of the comment,datetime,\r\nUserId,User Id,the id of the user who post the comment,integer,\r\nUserDisplayName,User Display Name,user's display name,text,",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://datalake/hydra/codebase_community/tags",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 3.6435386061919672,
+          "l0_content": "Database: codebase_community\nTable: tags\nCREATE TABLE tags\n(\n    Id            INTEGER          not null\n        primary key,\n    TagName       TEXT null,\n    Count         INTEGER          null,\n    ExcerptPostId INTEGER          null,\n    WikiPostId    INTEGER          null,\n    foreign key (ExcerptPostId) references posts (Id)\n        on update cascade on delete cascade\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nId,,the tag id,integer,\r\nTagName,Tag Name,the name of the tag,text,\r\nCount,,the count of posts that contain this tag,integer,more counts --> this tag is more popular\r\nExcerptPostId,Excerpt Post Id,the excerpt post id of the tag,integer,\r\nWikiPostId,Wiki Post Id,the wiki post id of the tag,integer,",
+          "l1_content": "Database: codebase_community\nTable: tags\nCREATE TABLE tags\n(\n    Id            INTEGER          not null\n        primary key,\n    TagName       TEXT null,\n    Count         INTEGER          null,\n    ExcerptPostId INTEGER          null,\n    WikiPostId    INTEGER          null,\n    foreign key (ExcerptPostId) references posts (Id)\n        on update cascade on delete cascade\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nId,,the tag id,integer,\r\nTagName,Tag Name,the name of the tag,text,\r\nCount,,the count of posts that contain this tag,integer,more counts --> this tag is more popular\r\nExcerptPostId,Excerpt Post Id,the excerpt post id of the tag,integer,\r\nWikiPostId,Wiki Post Id,the wiki post id of the tag,integer,",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        }
+      ],
+      "total": 3,
+      "retrieval_id": "6b749d59-495a-44ca-ad27-cdd4e0b09b34",
+      "stale_notices": []
+    }
+  },
+  "resource": {
+    "query": "What is the form of government in the United Kingdom?",
+    "response": {
+      "results": [
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/31726/0005",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 4.38272881153914,
+          "l0_content": "Politics of the United Kingdom — Executive.:The United Kingdom Government.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 31726\nThe monarch appoints a Prime Minister as the head of Her Majesty's Government in the United Kingdom, guided by the strict convention that the Prime Minister should be the member of the House of Commons most likely to be able to form a Government with the support of that House. In practice, this means that the leader of the political party with an absolute majority of seats in the House of Commons is chosen to be the Prime Minister. If no party has an absolute majority, the leader of the largest party is given the first opportunity to form a coalition. The Prime Minister then selects the other Ministers which make up the Government and act as political heads of the various Government Departments.",
+          "l1_content": "Politics of the United Kingdom — Executive.:The United Kingdom Government.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 31726\nThe monarch appoints a Prime Minister as the head of Her Majesty's Government in the United Kingdom, guided by the strict convention that the Prime Minister should be the member of the House of Commons most likely to be able to form a Government with the support of that House. In practice, this means that the leader of the political party with an absolute majority of seats in the House of Commons is chosen to be the Prime Minister. If no party has an absolute majority, the leader of the largest party is given the first opportunity to form a coalition. The Prime Minister then selects the other Ministers which make up the Government and act as political heads of the various Government Departments.",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/31726/0000",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 1.6085300370318931,
+          "l0_content": "Politics of the United Kingdom — Abstract\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 31726\nThe United Kingdom is a unitary state with devolution that is governed within the framework of a parliamentary democracy under a constitutional monarchy in which the monarch, currently Queen Elizabeth II, is the head of state while the Prime Minister of the United Kingdom, currently Boris Johnson, is the head of government. Executive power is exercised by the British government, on behalf of and by the consent of the monarch, as well as by the devolved governments of Scotland and Wales and the Northern Ireland Executive. Legislative power is vested in the two chambers of the Parliament of the United Kingdom, the House of Commons and the House of Lords, as well as in the Scottish Parliament and Welsh and Northern Ireland assemblies. The judiciary is independent of the executive and the legislature. The highest court is the Supreme Court of the United Kingdom.\nThe UK political system is a multi-party system. Since the 1920s, the two dominant parties have been the Conservative Party and the Labour Party. Before the Labour Party rose in British politics, the Liberal Party was the other major political party, along with the Conservatives. While coalition and minority governments have been an occasional feature of parliamentary politics, the first-past-the-post electoral system used for general elections tends to maintain the dominance of these two parties, though each has in the past century relied upon a third party, such as the Liberal Democrats, to deliver a working majority in Parliament. A Conservative–Liberal Democrat coalition government held office from 2010 until 2015, the first coalition since 1945. The coalition ended following parliamentary elections on 7 May 2015, in which the Conservative Party won an outright majority of 330 seats in the House of Commons, while their coalition partners lost all but eight seats.\nWith the partition of Ireland, Northern Ireland received home rule in 1920, though civil unrest meant direct rule was restored in 1972. Support for nationalist parties in Scotland and Wales led to proposals for devolution in the 1970s, though only in the 1990s did devolution happen. Today, Scotland, Wales and Northern Ireland each possess a legislature and executive, with devolution in Northern Ireland being conditional on participation in certain all-Ireland institutions. The UK government remains responsible for non-devolved matters and, in the case of Northern Ireland, co-operates with the government of the Republic of Ireland.\nIt is a matter of dispute as to whether increased autonomy and devolution of executive and legislative powers has contributed to the increase in support for independence. The principal Scottish pro-independence party, the Scottish National Party, became a minority government in 2007 and then went on to win an overall majority of MSPs at the 2011 Scottish parliament elections and forms the Scottish Go",
+          "l1_content": "Politics of the United Kingdom — Abstract\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 31726\nThe United Kingdom is a unitary state with devolution that is governed within the framework of a parliamentary democracy under a constitutional monarchy in which the monarch, currently Queen Elizabeth II, is the head of state while the Prime Minister of the United Kingdom, currently Boris Johnson, is the head of government. Executive power is exercised by the British government, on behalf of and by the consent of the monarch, as well as by the devolved governments of Scotland and Wales and the Northern Ireland Executive. Legislative power is vested in the two chambers of the Parliament of the United Kingdom, the House of Commons and the House of Lords, as well as in the Scottish Parliament and Welsh and Northern Ireland assemblies. The judiciary is independent of the executive and the legislature. The highest court is the Supreme Court of the United Kingdom.\nThe UK political system is a multi-party system. Since the 1920s, the two dominant parties have been the Conservative Party and the Labour Party. Before the Labour Party rose in British politics, the Liberal Party was the other major political party, along with the Conservatives. While coalition and minority governments have been an occasional feature of parliamentary politics, the first-past-the-post electoral system used for general elections tends to maintain the dominance of these two parties, though each has in the past century relied upon a third party, such as the Liberal Democrats, to deliver a working majority in Parliament. A Conservative–Liberal Democrat coalition government held office from 2010 until 2015, the first coalition since 1945. The coalition ended following parliamentary elections on 7 May 2015, in which the Conservative Party won an outright majority of 330 seats in the House of Commons, while their coalition partners lost all but eight seats.\nWith the partition of Ireland, Northern Ireland received home rule in 1920, though civil unrest meant direct rule was restored in 1972. Support for nationalist parties in Scotland and Wales led to proposals for devolution in the 1970s, though only in the 1990s did devolution happen. Today, Scotland, Wales and Northern Ireland each possess a legislature and executive, with devolution in Northern Ireland being conditional on participation in certain all-Ireland institutions. The UK government remains responsible for non-devolved matters and, in the case of Northern Ireland, co-operates with the government of the Republic of Ireland.\nIt is a matter of dispute as to whether increased autonomy and devolution of executive and legislative powers has contributed to the increase in support for independence. The principal Scottish pro-independence party, the Scottish National Party, became a minority government in 2007 and then went on to win an overall majority of MSPs at the 2011 Scottish parliament elections and forms the Scottish Go",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/31717/0056",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 1.4976914131136225,
+          "l0_content": "United Kingdom — Politics.:Government.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 31717\nThe UK has a parliamentary government based on the Westminster system that has been emulated around the world: a legacy of the British Empire. The parliament of the United Kingdom meets in the Palace of Westminster and has two houses: an elected House of Commons and an appointed House of Lords. All bills passed are given Royal Assent before becoming law. The position of prime minister, the UK's head of government, belongs to the person most likely to command the confidence of the House of Commons; this individual is typically the leader of the political party or coalition of parties that holds the largest number of seats in that chamber.",
+          "l1_content": "United Kingdom — Politics.:Government.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 31717\nThe UK has a parliamentary government based on the Westminster system that has been emulated around the world: a legacy of the British Empire. The parliament of the United Kingdom meets in the Palace of Westminster and has two houses: an elected House of Commons and an appointed House of Lords. All bills passed are given Royal Assent before becoming law. The position of prime minister, the UK's head of government, belongs to the person most likely to command the confidence of the House of Commons; this individual is typically the leader of the political party or coalition of parties that holds the largest number of seats in that chamber.",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        }
+      ],
+      "total": 3,
+      "retrieval_id": "85a0954b-6b66-4cc2-b5ba-3fe6534331a9",
+      "stale_notices": []
+    }
+  },
+  "table_metrics": {
+    "required": 2,
+    "hits_at_3": 1,
+    "recall_at_3": 0.5,
+    "all_required_at_3": false,
+    "first_hit_rank": 1
+  }
+}

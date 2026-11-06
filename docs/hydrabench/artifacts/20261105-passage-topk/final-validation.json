@@ -1,0 +1,36 @@
+{
+  "tests": [
+    {
+      "files": [
+        "tests/test_document_chunk_vectors.py",
+        "tests/test_long_doc_retrieval.py",
+        "tests/test_retrieval.py",
+        "tests/test_raw_context_retrieval.py",
+        "plugins/deepagents/tests/test_tools.py"
+      ],
+      "passed": 130,
+      "skipped": 1
+    },
+    {
+      "files": [
+        "tests/test_sdk.py",
+        "tests/test_documents_api.py"
+      ],
+      "passed": 45,
+      "skipped": 6
+    }
+  ],
+  "total_passed": 175,
+  "total_skipped": 7,
+  "git_diff_check": "pass",
+  "report_links": "pass",
+  "new_model_calls": 0,
+  "index_rebuilds": 0,
+  "full_benchmark_runs": 0,
+  "saved_vector_and_keyword_candidates_identical_before_after": true,
+  "top1_bodies_identical_before_after": true,
+  "default5_returns_five_distinct_ranges_per_query": true,
+  "old_databases_vectors_and_experiment_artifacts_unchanged": true,
+  "semantic_pipeline_chapter_fused_rank_at_default5": 6,
+  "semantic_result_5_contains_direct_pipeline_overlap_evidence": true
+}

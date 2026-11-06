@@ -1,0 +1,177 @@
+{
+  "selection": "Five databases with most tables, ties by db_id; first two dev examples per type per database in release order. Fixed before retrieval or model runs.",
+  "case_ids": [
+    "dev_43",
+    "dev_62",
+    "dev_5",
+    "dev_13",
+    "dev_35",
+    "dev_72",
+    "dev_10",
+    "dev_68",
+    "dev_26",
+    "dev_31",
+    "dev_6",
+    "dev_20",
+    "dev_32",
+    "dev_46",
+    "dev_42",
+    "dev_60",
+    "dev_55",
+    "dev_66",
+    "dev_0",
+    "dev_11"
+  ],
+  "database_ids": [
+    "formula_1",
+    "superhero",
+    "codebase_community",
+    "financial",
+    "student_club"
+  ],
+  "table_inventory": [
+    {
+      "db_id": "formula_1",
+      "tables": [
+        "circuits",
+        "constructors",
+        "drivers",
+        "seasons",
+        "races",
+        "constructorResults",
+        "constructorStandings",
+        "driverStandings",
+        "lapTimes",
+        "pitStops",
+        "qualifying",
+        "status",
+        "results"
+      ],
+      "table_count": 13
+    },
+    {
+      "db_id": "superhero",
+      "tables": [
+        "alignment",
+        "attribute",
+        "colour",
+        "gender",
+        "publisher",
+        "race",
+        "superhero",
+        "hero_attribute",
+        "superpower",
+        "hero_power"
+      ],
+      "table_count": 10
+    },
+    {
+      "db_id": "codebase_community",
+      "tables": [
+        "badges",
+        "comments",
+        "postHistory",
+        "postLinks",
+        "posts",
+        "tags",
+        "users",
+        "votes"
+      ],
+      "table_count": 8
+    },
+    {
+      "db_id": "financial",
+      "tables": [
+        "account",
+        "card",
+        "client",
+        "disp",
+        "district",
+        "loan",
+        "order",
+        "trans"
+      ],
+      "table_count": 8
+    },
+    {
+      "db_id": "student_club",
+      "tables": [
+        "event",
+        "major",
+        "zip_code",
+        "attendance",
+        "budget",
+        "expense",
+        "income",
+        "member"
+      ],
+      "table_count": 8
+    },
+    {
+      "db_id": "european_football_2",
+      "tables": [
+        "Player_Attributes",
+        "Player",
+        "League",
+        "Country",
+        "Team",
+        "Team_Attributes",
+        "Match"
+      ],
+      "table_count": 7
+    },
+    {
+      "db_id": "card_games",
+      "tables": [
+        "cards",
+        "foreign_data",
+        "legalities",
+        "sets",
+        "set_translations",
+        "rulings"
+      ],
+      "table_count": 6
+    },
+    {
+      "db_id": "debit_card_specializing",
+      "tables": [
+        "customers",
+        "gasstations",
+        "products",
+        "transactions_1k",
+        "yearmonth"
+      ],
+      "table_count": 5
+    },
+    {
+      "db_id": "toxicology",
+      "tables": [
+        "atom",
+        "bond",
+        "connected",
+        "molecule"
+      ],
+      "table_count": 4
+    },
+    {
+      "db_id": "california_schools",
+      "tables": [
+        "frpm",
+        "satscores",
+        "schools"
+      ],
+      "table_count": 3
+    },
+    {
+      "db_id": "thrombosis_prediction",
+      "tables": [
+        "Examination",
+        "Patient",
+        "Laboratory"
+      ],
+      "table_count": 3
+    }
+  ],
+  "total_tables": 75,
+  "dev_sha256": "8122c0f2487aa1eb558fdb68f3bd3c1dbba155fd936f499d5e73d63b2d9d87e3"
+}

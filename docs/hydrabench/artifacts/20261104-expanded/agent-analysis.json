@@ -1,0 +1,3386 @@
+{
+  "summary": {
+    "selected": 20,
+    "completed": 9,
+    "provider_errors": 11,
+    "completed_a2s": 5,
+    "completed_s2a": 4,
+    "completed_required_tables": 18,
+    "completed_first_table_hits": 11,
+    "completed_cumulative_table_hits": 18,
+    "completed_all_tables_first": 5,
+    "completed_all_tables_cumulative": 9,
+    "completed_known_text_anchor_cumulative": 6,
+    "database_unchanged_all": true
+  },
+  "records": [
+    {
+      "case_id": "dev_43",
+      "type": "a2s",
+      "db_id": "formula_1",
+      "status": "completed",
+      "error": null,
+      "elapsed_seconds": 12.533,
+      "required_tables": [
+        "races"
+      ],
+      "required_count": 1,
+      "first_table_hits": 1,
+      "cumulative_table_hits": 1,
+      "all_tables_first": true,
+      "all_tables_cumulative": true,
+      "missing_reference_tables": [],
+      "known_text_anchor_first": true,
+      "known_text_anchor_cumulative": true,
+      "text_coverage": "core_support_located",
+      "searches": {
+        "table_schema": [
+          {
+            "query": "formula_1 race results 1999",
+            "uris": [
+              "ctx://datalake/hydra/formula_1/constructorResults",
+              "ctx://datalake/hydra/formula_1/results",
+              "ctx://datalake/hydra/formula_1/races"
+            ],
+            "started_seconds": 3.265,
+            "finished_seconds": 3.666,
+            "error": null
+          }
+        ],
+        "resource": [
+          {
+            "query": "Joint Declaration on the Doctrine of Justification significance",
+            "uris": [
+              "ctx://team/engineering/hydra/kilt/2325040/0001",
+              "ctx://team/engineering/hydra/kilt/2325040/0000",
+              "ctx://team/engineering/hydra/kilt/157972/0008"
+            ],
+            "started_seconds": 3.265,
+            "finished_seconds": 3.76,
+            "error": null
+          }
+        ]
+      },
+      "sql_calls": [
+        {
+          "query": "SELECT raceId, year, round, name, date FROM races WHERE year = 1999 ORDER BY round DESC",
+          "result": {
+            "columns": [
+              "raceId",
+              "year",
+              "round",
+              "name",
+              "date"
+            ],
+            "rows": [
+              [
+                190,
+                1999,
+                16,
+                "Japanese Grand Prix",
+                "1999-10-31"
+              ],
+              [
+                189,
+                1999,
+                15,
+                "Malaysian Grand Prix",
+                "1999-10-17"
+              ],
+              [
+                188,
+                1999,
+                14,
+                "European Grand Prix",
+                "1999-09-26"
+              ],
+              [
+                187,
+                1999,
+                13,
+                "Italian Grand Prix",
+                "1999-09-12"
+              ],
+              [
+                186,
+                1999,
+                12,
+                "Belgian Grand Prix",
+                "1999-08-29"
+              ],
+              [
+                185,
+                1999,
+                11,
+                "Hungarian Grand Prix",
+                "1999-08-15"
+              ],
+              [
+                184,
+                1999,
+                10,
+                "German Grand Prix",
+                "1999-08-01"
+              ],
+              [
+                183,
+                1999,
+                9,
+                "Austrian Grand Prix",
+                "1999-07-25"
+              ],
+              [
+                182,
+                1999,
+                8,
+                "British Grand Prix",
+                "1999-07-11"
+              ],
+              [
+                181,
+                1999,
+                7,
+                "French Grand Prix",
+                "1999-06-27"
+              ],
+              [
+                180,
+                1999,
+                6,
+                "Canadian Grand Prix",
+                "1999-06-13"
+              ],
+              [
+                179,
+                1999,
+                5,
+                "Spanish Grand Prix",
+                "1999-05-30"
+              ],
+              [
+                178,
+                1999,
+                4,
+                "Monaco Grand Prix",
+                "1999-05-16"
+              ],
+              [
+                177,
+                1999,
+                3,
+                "San Marino Grand Prix",
+                "1999-05-02"
+              ],
+              [
+                176,
+                1999,
+                2,
+                "Brazilian Grand Prix",
+                "1999-04-11"
+              ],
+              [
+                175,
+                1999,
+                1,
+                "Australian Grand Prix",
+                "1999-03-07"
+              ]
+            ],
+            "truncated": false,
+            "elapsed_seconds": 0.0013
+          },
+          "seconds": 6.519
+        }
+      ],
+      "final_answer": "The last round (round 16) of 1999 was the Japanese Grand Prix on 1999-10-31 (October 31, 1999).\n\nThe Joint Declaration on the Doctrine of Justification was signed on October 31, 1999 — the same date. I have the resource text confirming its significance.\n\nThe answer is clear. The Joint Declaration was signed on October 31, 1999, which matches the date of the last round (Japanese Grand Prix).\n\n## Answer\n\nThe last round of the 1999 Formula 1 season was the **Japanese Grand Prix**, held on **October 31, 1999** (round 16 of 16).\n\nThe **Joint Declaration on the Doctrine of Justification (JDDJ)** was signed on that same date, October 31, 1999, by the Catholic Church's Pontifical Council for Promoting Christian Unity (PCPCU) and the Lutheran World Federation.\n\n**Its significance:** It was a landmark ecumenical document in which the Catholic and Lutheran churches declared that they now share \"a common understanding of our justification by God's grace through faith in Christ.\" This essentially resolved the 500-year-old conflict over the nature of justification that had been at the root of the Protestant Reformation. Specifically, the two bodies acknowledged that the mutual excommunications and condemnations from the Reformation era (the Council of Trent's canons and the Lutheran Confessions' condemnations) do not apply to the teachings set forth in the declaration. It was later also adopted by the World Methodist Council (2006) and the World Communion of Reformed Churches (2017).\n\n*(Source: ctx://team/engineering/hydra/kilt/2325040/0000, version 1)*",
+      "reference_answer": "The Joint Declaration on the Doctrine of Justification, signed on the same date as the Japanese Grand Prix on October 31, 1999, was significant because it resolved a 500-year-old theological conflict between the Catholic Church and the Lutheran World Federation over the nature of justification. It established a shared understanding of justification by God's grace through faith in Christ and declared that the mutual condemnations from the 16th century no longer apply to the signatories, marking a major step in ecumenical reconciliation.",
+      "reference_sql": "SELECT name, date FROM races WHERE year = 1999 ORDER BY round DESC LIMIT 1",
+      "reference_sql_output": {
+        "name": "Japanese Grand Prix",
+        "date": "1999-10-31"
+      },
+      "database_unchanged": true
+    },
+    {
+      "case_id": "dev_62",
+      "type": "a2s",
+      "db_id": "formula_1",
+      "status": "completed",
+      "error": null,
+      "elapsed_seconds": 13.684,
+      "required_tables": [
+        "constructorStandings",
+        "constructors"
+      ],
+      "required_count": 2,
+      "first_table_hits": 1,
+      "cumulative_table_hits": 2,
+      "all_tables_first": false,
+      "all_tables_cumulative": true,
+      "missing_reference_tables": [],
+      "known_text_anchor_first": false,
+      "known_text_anchor_cumulative": false,
+      "text_coverage": "core_support_located",
+      "searches": {
+        "table_schema": [
+          {
+            "query": "formula_1 constructor points",
+            "uris": [
+              "ctx://datalake/hydra/formula_1/constructorResults",
+              "ctx://datalake/hydra/formula_1/constructorStandings",
+              "ctx://datalake/hydra/formula_1/driverStandings"
+            ],
+            "started_seconds": 3.16,
+            "finished_seconds": 3.551,
+            "error": null
+          },
+          {
+            "query": "formula_1 constructors",
+            "uris": [
+              "ctx://datalake/hydra/formula_1/constructors",
+              "ctx://datalake/hydra/formula_1/constructorResults",
+              "ctx://datalake/hydra/formula_1/constructorStandings"
+            ],
+            "started_seconds": 3.161,
+            "finished_seconds": 3.548,
+            "error": null
+          }
+        ],
+        "resource": [
+          {
+            "query": "Ferrari name origin Enzo Ferrari automotive brand",
+            "uris": [
+              "ctx://team/engineering/hydra/kilt/11225/0004",
+              "ctx://team/engineering/hydra/kilt/11225/0000",
+              "ctx://team/engineering/hydra/kilt/11225/0002"
+            ],
+            "started_seconds": 9.064,
+            "finished_seconds": 9.334,
+            "error": null
+          }
+        ]
+      },
+      "sql_calls": [
+        {
+          "query": "SELECT c.name, c.nationality, c.url, SUM(cs.points) AS total_points\nFROM constructorStandings cs\nJOIN constructors c ON c.constructorId = cs.constructorId\nGROUP BY cs.constructorId\nORDER BY total_points DESC\nLIMIT 5",
+          "result": {
+            "columns": [
+              "name",
+              "nationality",
+              "url",
+              "total_points"
+            ],
+            "rows": [
+              [
+                "Ferrari",
+                "Italian",
+                "http://en.wikipedia.org/wiki/Scuderia_Ferrari",
+                63855.5
+              ],
+              [
+                "McLaren",
+                "British",
+                "http://en.wikipedia.org/wiki/McLaren",
+                47339.5
+              ],
+              [
+                "Red Bull",
+                "Austrian",
+                "http://en.wikipedia.org/wiki/Red_Bull_Racing",
+                36203.0
+              ],
+              [
+                "Mercedes",
+                "German",
+                "http://en.wikipedia.org/wiki/Mercedes-Benz_in_Formula_One",
+                34781.0
+              ],
+              [
+                "Williams",
+                "British",
+                "http://en.wikipedia.org/wiki/Williams_Grand_Prix_Engineering",
+                31201.5
+              ]
+            ],
+            "truncated": false,
+            "elapsed_seconds": 0.013
+          },
+          "seconds": 6.465
+        }
+      ],
+      "final_answer": "I have the supporting evidence. The name \"Ferrari\" comes from its founder, Enzo Ferrari.\n\n## Answer\n\nThe constructor with the highest points is **Ferrari**, with a total of **63,855.5 points** (summed across constructor standings).\n\n**Origin of the name:** The name \"Ferrari\" comes directly from the company's founder, **Enzo Ferrari**. As the retrieved source states, Ferrari is \"an Italian luxury sports car manufacturer based in Maranello. Founded by Enzo Ferrari in 1939 out of Alfa Romeo's race division.\" The automotive brand is named after its founder's surname — Enzo Ferrari — who established the company (initially as \"Auto Avio Costruzioni\" in 1939, later producing the first Ferrari-badged car in 1947).\n\nSource: ctx://team/engineering/hydra/kilt/11225/0000 (Ferrari — Abstract, version 1).",
+      "reference_answer": "The constructor with the highest points is Mercedes. The name \"Mercedes\" originates from Emil Jellinek, who named the cars after his daughter, Mercédès Jellinek. Jellinek raced Daimler-Motoren-Gesellschaft automobiles under the pseudonym \"Mercédès,\" and the name was later adopted for the brand, eventually becoming part of \"Mercedes-Benz\" after the merger of DMG and Benz & Cie in 1926.",
+      "reference_sql": "SELECT T2.name FROM constructorStandings AS T1 INNER JOIN constructors AS T2 on T1.constructorId = T2.constructorId ORDER BY T1.points DESC LIMIT 1",
+      "reference_sql_output": {
+        "name": "Mercedes"
+      },
+      "database_unchanged": true
+    },
+    {
+      "case_id": "dev_5",
+      "type": "s2a",
+      "db_id": "formula_1",
+      "status": "completed",
+      "error": null,
+      "elapsed_seconds": 8.382,
+      "required_tables": [
+        "circuits"
+      ],
+      "required_count": 1,
+      "first_table_hits": 1,
+      "cumulative_table_hits": 1,
+      "all_tables_first": true,
+      "all_tables_cumulative": true,
+      "missing_reference_tables": [],
+      "known_text_anchor_first": true,
+      "known_text_anchor_cumulative": true,
+      "text_coverage": "core_support_located",
+      "searches": {
+        "table_schema": [
+          {
+            "query": "Silverstone circuit location coordinates",
+            "uris": [
+              "ctx://datalake/hydra/formula_1/circuits",
+              "ctx://datalake/hydra/formula_1/races",
+              "ctx://datalake/hydra/formula_1/qualifying"
+            ],
+            "started_seconds": 3.062,
+            "finished_seconds": 3.425,
+            "error": null
+          }
+        ],
+        "resource": [
+          {
+            "query": "Silverstone circuit location coordinates latitude longitude",
+            "uris": [
+              "ctx://team/engineering/hydra/kilt/522676/0113",
+              "ctx://team/engineering/hydra/kilt/522676/0111",
+              "ctx://team/engineering/hydra/kilt/522676/0001"
+            ],
+            "started_seconds": 3.063,
+            "finished_seconds": 3.526,
+            "error": null
+          }
+        ]
+      },
+      "sql_calls": [
+        {
+          "query": "SELECT name, location, country, lat, lng FROM circuits WHERE name LIKE '%Silverstone%'",
+          "result": {
+            "columns": [
+              "name",
+              "location",
+              "country",
+              "lat",
+              "lng"
+            ],
+            "rows": [
+              [
+                "Silverstone Circuit",
+                "Silverstone",
+                "UK",
+                52.0786,
+                -1.01694
+              ]
+            ],
+            "truncated": false,
+            "elapsed_seconds": 0.001
+          },
+          "seconds": 5.729
+        }
+      ],
+      "final_answer": "The Silverstone Circuit is located at latitude **52.0786** and longitude **-1.01694** (in Silverstone, UK).\n\nThe resource text (ctx://team/engineering/hydra/kilt/522676/0001) confirms this is the correct circuit — it was built on the site of RAF Silverstone, a WWII Royal Air Force bomber station, whose three runways in classic WWII triangle format lie within the present track outline.",
+      "reference_answer": "The Silverstone Circuit, built on the site of a World War II Royal Air Force bomber station and featuring runways in a classic WWII triangle format within its track outline, is located at coordinates 52.0786 (latitude) and -1.01694 (longitude).",
+      "reference_sql": "SELECT lat, lng FROM circuits WHERE name = 'Silverstone Circuit'",
+      "reference_sql_output": {
+        "lat": 52.0786,
+        "lng": -1.01694
+      },
+      "database_unchanged": true
+    },
+    {
+      "case_id": "dev_13",
+      "type": "s2a",
+      "db_id": "formula_1",
+      "status": "completed",
+      "error": null,
+      "elapsed_seconds": 16.598,
+      "required_tables": [
+        "driverStandings",
+        "drivers",
+        "races"
+      ],
+      "required_count": 3,
+      "first_table_hits": 1,
+      "cumulative_table_hits": 3,
+      "all_tables_first": false,
+      "all_tables_cumulative": true,
+      "missing_reference_tables": [],
+      "known_text_anchor_first": true,
+      "known_text_anchor_cumulative": true,
+      "text_coverage": "core_support_located",
+      "searches": {
+        "table_schema": [
+          {
+            "query": "formula_1 drivers nicknames points",
+            "uris": [
+              "ctx://datalake/hydra/formula_1/driverStandings",
+              "ctx://datalake/hydra/formula_1/results",
+              "ctx://datalake/hydra/formula_1/constructorStandings"
+            ],
+            "started_seconds": 3.027,
+            "finished_seconds": 3.246,
+            "error": null
+          },
+          {
+            "query": "formula_1 drivers driverId forename surname",
+            "uris": [
+              "ctx://datalake/hydra/formula_1/drivers",
+              "ctx://datalake/hydra/formula_1/driverStandings",
+              "ctx://datalake/hydra/formula_1/lapTimes"
+            ],
+            "started_seconds": 6.939,
+            "finished_seconds": 7.131,
+            "error": null
+          },
+          {
+            "query": "formula_1 races raceId year date",
+            "uris": [
+              "ctx://datalake/hydra/formula_1/races",
+              "ctx://datalake/hydra/formula_1/seasons",
+              "ctx://datalake/hydra/formula_1/constructorStandings"
+            ],
+            "started_seconds": 6.94,
+            "finished_seconds": 7.084,
+            "error": null
+          }
+        ],
+        "resource": [
+          {
+            "query": "Irv the Swerve Fast Eddie nickname Formula 1 driver",
+            "uris": [
+              "ctx://team/engineering/hydra/kilt/424417/0052",
+              "ctx://team/engineering/hydra/kilt/424417/0004",
+              "ctx://team/engineering/hydra/kilt/424417/0029"
+            ],
+            "started_seconds": 3.028,
+            "finished_seconds": 3.346,
+            "error": null
+          }
+        ]
+      },
+      "sql_calls": [
+        {
+          "query": "SELECT driverId, forename, surname FROM drivers WHERE surname = 'Irvine'",
+          "result": {
+            "columns": [
+              "driverId",
+              "forename",
+              "surname"
+            ],
+            "rows": [
+              [
+                56,
+                "Eddie",
+                "Irvine"
+              ]
+            ],
+            "truncated": false,
+            "elapsed_seconds": 0.0012
+          },
+          "seconds": 9.964
+        },
+        {
+          "query": "SELECT raceId, year, round, name FROM races WHERE year = 2000 ORDER BY round",
+          "result": {
+            "columns": [
+              "raceId",
+              "year",
+              "round",
+              "name"
+            ],
+            "rows": [
+              [
+                158,
+                2000,
+                1,
+                "Australian Grand Prix"
+              ],
+              [
+                159,
+                2000,
+                2,
+                "Brazilian Grand Prix"
+              ],
+              [
+                160,
+                2000,
+                3,
+                "San Marino Grand Prix"
+              ],
+              [
+                161,
+                2000,
+                4,
+                "British Grand Prix"
+              ],
+              [
+                162,
+                2000,
+                5,
+                "Spanish Grand Prix"
+              ],
+              [
+                163,
+                2000,
+                6,
+                "European Grand Prix"
+              ],
+              [
+                164,
+                2000,
+                7,
+                "Monaco Grand Prix"
+              ],
+              [
+                165,
+                2000,
+                8,
+                "Canadian Grand Prix"
+              ],
+              [
+                166,
+                2000,
+                9,
+                "French Grand Prix"
+              ],
+              [
+                167,
+                2000,
+                10,
+                "Austrian Grand Prix"
+              ],
+              [
+                168,
+                2000,
+                11,
+                "German Grand Prix"
+              ],
+              [
+                169,
+                2000,
+                12,
+                "Hungarian Grand Prix"
+              ],
+              [
+                170,
+                2000,
+                13,
+                "Belgian Grand Prix"
+              ],
+              [
+                171,
+                2000,
+                14,
+                "Italian Grand Prix"
+              ],
+              [
+                172,
+                2000,
+                15,
+                "United States Grand Prix"
+              ],
+              [
+                173,
+                2000,
+                16,
+                "Japanese Grand Prix"
+              ],
+              [
+                174,
+                2000,
+                17,
+                "Malaysian Grand Prix"
+              ]
+            ],
+            "truncated": false,
+            "elapsed_seconds": 0.0009
+          },
+          "seconds": 9.965
+        },
+        {
+          "query": "SELECT AVG(points) AS avg_points, SUM(points) AS total_points, COUNT(*) AS num_races FROM results WHERE driverId = 56 AND raceId IN (SELECT raceId FROM races WHERE year = 2000)",
+          "result": {
+            "columns": [
+              "avg_points",
+              "total_points",
+              "num_races"
+            ],
+            "rows": [
+              [
+                0.25,
+                4.0,
+                16
+              ]
+            ],
+            "truncated": false,
+            "elapsed_seconds": 0.0027
+          },
+          "seconds": 13.373
+        }
+      ],
+      "final_answer": "The person nicknamed \"Irv the Swerve\" and \"Fast Eddie\" is **Eddie Irvine** (confirmed by the Wikipedia source, ctx://team/engineering/hydra/kilt/424417/0052).\n\nIn the 2000 Formula 1 season, Eddie Irvine scored a total of **4 points** across **16 races**, giving an **average of 0.25 points** per race.\n\n**Answer: 0.25 points** (average points scored in 2000).",
+      "reference_answer": "The person nicknamed \"Irv the Swerve\" and \"Fast Eddie\" is Eddie Irvine, who had an average points score of 2.27 in the year 2000.",
+      "reference_sql": "SELECT AVG(T2.points) FROM drivers AS T1 INNER JOIN driverStandings AS T2 ON T2.driverId = T1.driverId INNER JOIN races AS T3 ON T3.raceId = T2.raceId WHERE T1.forename = 'Eddie' AND T1.surname = 'Irvine' AND T3.year = 2000",
+      "reference_sql_output": {
+        "AVG(T2.points)": 2.2666666666666666
+      },
+      "database_unchanged": true
+    },
+    {
+      "case_id": "dev_35",
+      "type": "a2s",
+      "db_id": "superhero",
+      "status": "completed",
+      "error": null,
+      "elapsed_seconds": 58.197,
+      "required_tables": [
+        "hero_attribute",
+        "race",
+        "superhero"
+      ],
+      "required_count": 3,
+      "first_table_hits": 3,
+      "cumulative_table_hits": 3,
+      "all_tables_first": true,
+      "all_tables_cumulative": true,
+      "missing_reference_tables": [],
+      "known_text_anchor_first": false,
+      "known_text_anchor_cumulative": false,
+      "text_coverage": "core_support_located",
+      "searches": {
+        "table_schema": [
+          {
+            "query": "superhero tables schema",
+            "uris": [
+              "ctx://datalake/hydra/superhero/superhero",
+              "ctx://datalake/hydra/superhero/race",
+              "ctx://datalake/hydra/superhero/hero_attribute"
+            ],
+            "started_seconds": 3.1,
+            "finished_seconds": 3.262,
+            "error": null
+          },
+          {
+            "query": "superhero attribute table",
+            "uris": [
+              "ctx://datalake/hydra/superhero/hero_attribute",
+              "ctx://datalake/hydra/superhero/attribute",
+              "ctx://datalake/hydra/superhero/race"
+            ],
+            "started_seconds": 7.087,
+            "finished_seconds": 7.307,
+            "error": null
+          }
+        ],
+        "resource": [
+          {
+            "query": "Theosophical teachings race superhero",
+            "uris": [
+              "ctx://team/engineering/hydra/kilt/200264/0016",
+              "ctx://team/engineering/hydra/kilt/51429008/0013",
+              "ctx://team/engineering/hydra/kilt/51429008/0025"
+            ],
+            "started_seconds": 3.1,
+            "finished_seconds": 3.37,
+            "error": null
+          },
+          {
+            "query": "Aryan race Theosophy root race teachings",
+            "uris": [
+              "ctx://team/engineering/hydra/kilt/200264/0016",
+              "ctx://team/engineering/hydra/kilt/51429008/0023",
+              "ctx://team/engineering/hydra/kilt/51429008/0024"
+            ],
+            "started_seconds": 7.088,
+            "finished_seconds": 7.416,
+            "error": null
+          },
+          {
+            "query": "Aryan race Theosophy fifth root race role",
+            "uris": [
+              "ctx://team/engineering/hydra/kilt/51429008/0024",
+              "ctx://team/engineering/hydra/kilt/200264/0016",
+              "ctx://team/engineering/hydra/kilt/51429008/0023"
+            ],
+            "started_seconds": 36.433,
+            "finished_seconds": 36.919,
+            "error": null
+          }
+        ]
+      },
+      "sql_calls": [
+        {
+          "query": "SELECT ha.hero_id, s.superhero_name, s.race_id, r.race, ha.attribute_value\nFROM hero_attribute ha\nJOIN superhero s ON s.id = ha.hero_id\nLEFT JOIN race r ON r.id = s.race_id\nORDER BY ha.attribute_value DESC\nLIMIT 5",
+          "result": {
+            "columns": [
+              "hero_id",
+              "superhero_name",
+              "race_id",
+              "race",
+              "attribute_value"
+            ],
+            "rows": [
+              [
+                6,
+                "Abraxas",
+                12,
+                "Cosmic Entity",
+                100
+              ],
+              [
+                31,
+                "Ant-Man",
+                24,
+                "Human",
+                100
+              ],
+              [
+                36,
+                "Apocalypse",
+                42,
+                "Mutant",
+                100
+              ],
+              [
+                73,
+                "Batman",
+                24,
+                "Human",
+                100
+              ],
+              [
+                79,
+                "Beast",
+                42,
+                "Mutant",
+                100
+              ]
+            ],
+            "truncated": false,
+            "elapsed_seconds": 0.0013
+          },
+          "seconds": 10.249
+        },
+        {
+          "query": "SELECT MAX(attribute_value) AS max_val, COUNT(*) AS cnt FROM hero_attribute",
+          "result": {
+            "columns": [
+              "max_val",
+              "cnt"
+            ],
+            "rows": [
+              [
+                100,
+                3738
+              ]
+            ],
+            "truncated": false,
+            "elapsed_seconds": 0.0018
+          },
+          "seconds": 14.157
+        },
+        {
+          "query": "SELECT ha.hero_id, s.superhero_name, r.race, ha.attribute_value\nFROM hero_attribute ha\nJOIN superhero s ON s.id = ha.hero_id\nLEFT JOIN race r ON r.id = s.race_id\nWHERE ha.attribute_value = (SELECT MAX(attribute_value) FROM hero_attribute)\nORDER BY ha.hero_id",
+          "result": {
+            "columns": [
+              "hero_id",
+              "superhero_name",
+              "race",
+              "attribute_value"
+            ],
+            "rows": [
+              [
+                2,
+                "A-Bomb",
+                "Human",
+                100
+              ],
+              [
+                6,
+                "Abraxas",
+                "Cosmic Entity",
+                100
+              ],
+              [
+                6,
+                "Abraxas",
+                "Cosmic Entity",
+                100
+              ],
+              [
+                13,
+                "Air-Walker",
+                "-",
+                100
+              ],
+              [
+                13,
+                "Air-Walker",
+                "-",
+                100
+              ],
+              [
+                13,
+                "Air-Walker",
+                "-",
+                100
+              ],
+              [
+                13,
+                "Air-Walker",
+                "-",
+                100
+              ],
+              [
+                21,
+                "Amazo",
+                "Android",
+                100
+              ],
+              [
+                28,
+                "Angela",
+                "-",
+                100
+              ],
+              [
+                28,
+                "Angela",
+                "-",
+                100
+              ],
+              [
+                28,
+                "Angela",
+                "-",
+                100
+              ],
+              [
+                28,
+                "Angela",
+                "-",
+                100
+              ],
+              [
+                28,
+                "Angela",
+                "-",
+                100
+              ],
+              [
+                31,
+                "Ant-Man",
+                "Human",
+                100
+              ],
+              [
+                36,
+                "Apocalypse",
+                "Mutant",
+                100
+              ],
+              [
+                36,
+                "Apocalypse",
+                "Mutant",
+                100
+              ],
+              [
+                43,
+                "Ardina",
+                "Alien",
+                100
+              ],
+              [
+                43,
+                "Ardina",
+                "Alien",
+                100
+              ],
+              [
+                43,
+                "Ardina",
+                "Alien",
+                100
+              ],
+              [
+                43,
+                "Ardina",
+                "Alien",
+                100
+              ],
+              [
+                43,
+                "Ardina",
+                "Alien",
+                100
+              ],
+              [
+                44,
+                "Ares",
+                "God / Eternal",
+                100
+              ],
+              [
+                50,
+                "Atlas",
+                "God / Eternal",
+                100
+              ],
+              [
+                52,
+                "Atlas",
+                "God / Eternal",
+                100
+              ],
+              [
+                59,
+                "Aurora",
+                "Mutant",
+                100
+              ],
+              [
+                59,
+                "Aurora",
+                "Mutant",
+                100
+              ],
+              [
+                59,
+                "Aurora",
+                "Mutant",
+                100
+              ],
+              [
+                59,
+                "Aurora",
+                "Mutant",
+                100
+              ],
+              [
+                73,
+                "Batman",
+                "Human",
+                100
+              ],
+              [
+                79,
+                "Beast",
+                "Mutant",
+                100
+              ],
+              [
+                82,
+                "Ben 10",
+                "-",
+                100
+              ],
+              [
+                82,
+                "Ben 10",
+                "-",
+                100
+              ],
+              [
+                82,
+                "Ben 10",
+                "-",
+                100
+              ],
+              [
+                82,
+                "Ben 10",
+                "-",
+                100
+              ],
+              [
+                82,
+                "Ben 10",
+                "-",
+                100
+              ],
+              [
+                84,
+                "Beyonder",
+                "God / Eternal",
+                100
+              ],
+              [
+                84,
+                "Beyonder",
+                "God / Eternal",
+                100
+              ],
+              [
+                84,
+                "Beyonder",
+                "God / Eternal",
+                100
+              ],
+              [
+                84,
+                "Beyonder",
+                "God / Eternal",
+                100
+              ],
+              [
+                84,
+                "Beyonder",
+                "God / Eternal",
+                100
+              ],
+              [
+                84,
+                "Beyonder",
+                "God / Eternal",
+                100
+              ],
+              [
+                85,
+                "Bi-Beast",
+                "Android",
+                100
+              ],
+              [
+                86,
+                "Big Barda",
+                "New God",
+                100
+              ],
+              [
+                91,
+                "Binary",
+                "-",
+                100
+              ],
+              [
+                91,
+                "Binary",
+                "-",
+                100
+              ],
+              [
+                91,
+                "Binary",
+                "-",
+                100
+              ],
+              [
+                91,
+                "Binary",
+                "-",
+                100
+              ],
+              [
+                91,
+                "Binary",
+                "-",
+                100
+              ],
+              [
+                98,
+                "Bizarro",
+                "Bizarro",
+                100
+              ],
+              [
+                98,
+                "Bizarro",
+                "Bizarro",
+                100
+              ],
+              [
+                98,
+                "Bizarro",
+                "Bizarro",
+                100
+              ],
+              [
+                98,
+                "Bizarro",
+                "Bizarro",
+                100
+              ],
+              [
+                100,
+                "Black Adam",
+                "-",
+                100
+              ],
+              [
+                101,
+                "Black Bolt",
+                "Inhuman",
+                100
+              ],
+              [
+                101,
+                "Black Bolt",
+                "Inhuman",
+                100
+              ],
+              [
+                101,
+                "Black Bolt",
+                "Inhuman",
+                100
+              ],
+              [
+                101,
+                "Black Bolt",
+                "Inhuman",
+                100
+              ],
+              [
+                105,
+                "Black Flash",
+                "God / Eternal",
+                100
+              ],
+              [
+                105,
+                "Black Flash",
+                "God / Eternal",
+                100
+              ],
+              [
+                105,
+                "Black Flash",
+                "God / Eternal",
+                100
+              ],
+              [
+                105,
+                "Black Flash",
+                "God / Eternal",
+                100
+              ],
+              [
+                139,
+                "Brainiac",
+                "Android",
+                100
+              ],
+              [
+                140,
+                "Brainiac 5",
+                "-",
+                100
+              ],
+              [
+                179,
+                "Cheetah III",
+                "Human",
+                100
+              ],
+              [
+                199,
+                "Cy-Gor",
+                "-",
+                100
+              ],
+              [
+                210,
+                "Darkseid",
+                "New God",
+                100
+              ],
+              [
+                216,
+                "Data",
+                "Android",
+                100
+              ],
+              [
+                228,
+                "Doctor Doom",
+                "Human",
+                100
+              ],
+              [
+                231,
+                "Doctor Octopus",
+                "Human",
+                100
+              ],
+              [
+                232,
+                "Doctor Strange",
+                "Human",
+                100
+              ],
+              [
+                236,
+                "Doomsday",
+                "Alien",
+                100
+              ],
+              [
+                239,
+                "Dr Manhattan",
+                "Human / Cosmic",
+                100
+              ],
+              [
+                239,
+                "Dr Manhattan",
+                "Human / Cosmic",
+                100
+              ],
+              [
+                269,
+                "Flash",
+                "Human",
+                100
+              ],
+              [
+                269,
+                "Flash",
+                "Human",
+                100
+              ],
+              [
+                269,
+                "Flash",
+                "Human",
+                100
+              ],
+              [
+                269,
+                "Flash",
+                "Human",
+                100
+              ],
+              [
+                271,
+                "Flash II",
+                "Human",
+                100
+              ],
+              [
+                271,
+                "Flash II",
+                "Human",
+                100
+              ],
+              [
+                271,
+                "Flash II",
+                "Human",
+                100
+              ],
+              [
+                271,
+                "Flash II",
+                "Human",
+                100
+              ],
+              [
+                272,
+                "Flash III",
+                "Human",
+                100
+              ],
+              [
+                272,
+                "Flash III",
+                "Human",
+                100
+              ],
+              [
+                272,
+                "Flash III",
+                "Human",
+                100
+              ],
+              [
+                272,
+                "Flash III",
+                "Human",
+                100
+              ],
+              [
+                273,
+                "Flash IV",
+                "Human",
+                100
+              ],
+              [
+                273,
+                "Flash IV",
+                "Human",
+                100
+              ],
+              [
+                273,
+                "Flash IV",
+                "Human",
+                100
+              ],
+              [
+                273,
+                "Flash IV",
+                "Human",
+                100
+              ],
+              [
+                284,
+                "General Zod",
+                "Kryptonian",
+                100
+              ],
+              [
+                284,
+                "General Zod",
+                "Kryptonian",
+                100
+              ],
+              [
+                284,
+                "General Zod",
+                "Kryptonian",
+                100
+              ],
+              [
+                284,
+                "General Zod",
+                "Kryptonian",
+                100
+              ],
+              [
+                284,
+                "General Zod",
+                "Kryptonian",
+                100
+              ],
+              [
+                284,
+                "General Zod",
+                "Kryptonian",
+                100
+              ],
+              [
+                291,
+                "Gladiator",
+                "Strontian",
+                100
+              ],
+              [
+                291,
+                "Gladiator",
+                "Strontian",
+                100
+              ],
+              [
+                291,
+                "Gladiator",
+                "Strontian",
+                100
+              ],
+              [
+                291,
+                "Gladiator",
+                "Strontian",
+                100
+              ],
+              [
+                291,
+                "Gladiator",
+                "Strontian",
+                100
+              ],
+              [
+                293,
+                "Godzilla",
+                null,
+                100
+              ],
+              [
+                295,
+                "Goku",
+                "Saiyan",
+                100
+              ],
+              [
+                299,
+                "Granny Goodness",
+                "-",
+                100
+              ],
+              [
+                299,
+                "Granny Goodness",
+                "-",
+                100
+              ],
+              [
+                331,
+                "Hela",
+                "Asgardian",
+                100
+              ],
+              [
+                335,
+                "Hercules",
+                "Demi-God",
+                100
+              ],
+              [
+                342,
+                "Hulk",
+                "Human / Radiation",
+                100
+              ],
+              [
+                348,
+                "Hyperion",
+                "Eternal",
+                100
+              ],
+              [
+                348,
+                "Hyperion",
+                "Eternal",
+                100
+              ],
+              [
+                348,
+                "Hyperion",
+                "Eternal",
+                100
+              ],
+              [
+                348,
+                "Hyperion",
+                "Eternal",
+                100
+              ],
+              [
+                348,
+                "Hyperion",
+                "Eternal",
+                100
+              ],
+              [
+                350,
+                "Impulse",
+                "Human",
+                100
+              ],
+              [
+                350,
+                "Impulse",
+                "Human",
+                100
+              ],
+              [
+                350,
+                "Impulse",
+                "Human",
+                100
+              ],
+              [
+                350,
+                "Impulse",
+                "Human",
+                100
+              ],
+              [
+                356,
+                "Iron Man",
+                "Human",
+                100
+              ],
+              [
+                360,
+                "Jack of Hearts",
+                "Human",
+                100
+              ],
+              [
+                360,
+                "Jack of Hearts",
+                "Human",
+                100
+              ],
+              [
+                360,
+                "Jack of Hearts",
+                "Human",
+                100
+              ],
+              [
+                360,
+                "Jack of Hearts",
+                "Human",
+                100
+              ],
+              [
+                368,
+                "Jean Grey",
+                "Mutant",
+                100
+              ],
+              [
+                371,
+                "Jesse Quick",
+                "Human",
+                100
+              ],
+              [
+                371,
+                "Jesse Quick",
+                "Human",
+                100
+              ],
+              [
+                371,
+                "Jesse Quick",
+                "Human",
+                100
+              ],
+              [
+                371,
+                "Jesse Quick",
+                "Human",
+                100
+              ],
+              [
+                382,
+                "Joker",
+                "Human",
+                100
+              ],
+              [
+                386,
+                "Juggernaut",
+                "Human",
+                100
+              ],
+              [
+                391,
+                "Kang",
+                "-",
+                100
+              ],
+              [
+                398,
+                "Kid Flash II",
+                "-",
+                100
+              ],
+              [
+                398,
+                "Kid Flash II",
+                "-",
+                100
+              ],
+              [
+                398,
+                "Kid Flash II",
+                "-",
+                100
+              ],
+              [
+                398,
+                "Kid Flash II",
+                "-",
+                100
+              ],
+              [
+                402,
+                "King Kong",
+                "Animal",
+                100
+              ],
+              [
+                410,
+                "Krypto",
+                "Kryptonian",
+                100
+              ],
+              [
+                410,
+                "Krypto",
+                "Kryptonian",
+                100
+              ],
+              [
+                410,
+                "Krypto",
+                "Kryptonian",
+                100
+              ],
+              [
+                410,
+                "Krypto",
+                "Kryptonian",
+                100
+              ],
+              [
+                415,
+                "Leader",
+                "-",
+                100
+              ],
+              [
+                419,
+                "Lex Luthor",
+                "Human",
+                100
+              ],
+              [
+                424,
+                "Living Tribunal",
+                "Cosmic Entity",
+                100
+              ],
+              [
+                424,
+                "Living Tribunal",
+                "Cosmic Entity",
+                100
+              ],
+              [
+                424,
+                "Living Tribunal",
+                "Cosmic Entity",
+                100
+              ],
+              [
+                424,
+                "Living Tribunal",
+                "Cosmic Entity",
+                100
+              ],
+              [
+                424,
+                "Living Tribunal",
+                "Cosmic Entity",
+                100
+              ],
+              [
+                424,
+                "Living Tribunal",
+                "Cosmic Entity",
+                100
+              ],
+              [
+                427,
+                "Lobo",
+                "Czarnian",
+                100
+              ],
+              [
+                427,
+                "Lobo",
+                "Czarnian",
+                100
+              ],
+              [
+                430,
+                "Lucifer Morningstar",
+                "God / Eternal",
+                100
+              ],
+              [
+                430,
+                "Lucifer Morningstar",
+                "God / Eternal",
+                100
+              ],
+              [
+                440,
+                "Magus",
+                "-",
+                100
+              ],
+              [
+                441,
+                "Man of Miracles",
+                "God / Eternal",
+                100
+              ],
+              [
+                441,
+                "Man of Miracles",
+                "God / Eternal",
+                100
+              ],
+              [
+                441,
+                "Man of Miracles",
+                "God / Eternal",
+                100
+              ],
+              [
+                441,
+                "Man of Miracles",
+                "God / Eternal",
+                100
+              ],
+              [
+                441,
+                "Man of Miracles",
+                "God / Eternal",
+                100
+              ],
+              [
+                441,
+                "Man of Miracles",
+                "God / Eternal",
+                100
+              ],
+              [
+                445,
+                "Mandarin",
+                "Human",
+                100
+              ],
+              [
+                447,
+                "Martian Manhunter",
+                "Martian",
+                100
+              ],
+              [
+                471,
+                "Mister Fantastic",
+                "Human / Radiation",
+                100
+              ],
+              [
+                474,
+                "Mister Mxyzptlk",
+                "God / Eternal",
+                100
+              ],
+              [
+                474,
+                "Mister Mxyzptlk",
+                "God / Eternal",
+                100
+              ],
+              [
+                474,
+                "Mister Mxyzptlk",
+                "God / Eternal",
+                100
+              ],
+              [
+                474,
+                "Mister Mxyzptlk",
+                "God / Eternal",
+                100
+              ],
+              [
+                474,
+                "Mister Mxyzptlk",
+                "God / Eternal",
+                100
+              ],
+              [
+                475,
+                "Mister Sinister",
+                "Human / Altered",
+                100
+              ],
+              [
+                476,
+                "Mister Zsasz",
+                "Human",
+                100
+              ],
+              [
+                478,
+                "MODOK",
+                "Cyborg",
+                100
+              ],
+              [
+                481,
+                "Molecule Man",
+                "Human / Radiation",
+                100
+              ],
+              [
+                484,
+                "Monarch",
+                "-",
+                100
+              ],
+              [
+                484,
+                "Monarch",
+                "-",
+                100
+              ],
+              [
+                484,
+                "Monarch",
+                "-",
+                100
+              ],
+              [
+                484,
+                "Monarch",
+                "-",
+                100
+              ],
+              [
+                484,
+                "Monarch",
+                "-",
+                100
+              ],
+              [
+                511,
+                "Nova",
+                "Human",
+                100
+              ],
+              [
+                513,
+                "Odin",
+                "God / Eternal",
+                100
+              ],
+              [
+                517,
+                "One Punch Man",
+                "Human",
+                100
+              ],
+              [
+                518,
+                "One-Above-All",
+                "Cosmic Entity",
+                100
+              ],
+              [
+                518,
+                "One-Above-All",
+                "Cosmic Entity",
+                100
+              ],
+              [
+                518,
+                "One-Above-All",
+                "Cosmic Entity",
+                100
+              ],
+              [
+                518,
+                "One-Above-All",
+                "Cosmic Entity",
+                100
+              ],
+              [
+                518,
+                "One-Above-All",
+                "Cosmic Entity",
+                100
+              ],
+              [
+                518,
+                "One-Above-All",
+                "Cosmic Entity",
+                100
+              ],
+              [
+                519,
+                "Onslaught",
+                "Mutant",
+                100
+              ],
+              [
+                523,
+                "Ozymandias",
+                "Human",
+                100
+              ],
+              [
+                530,
+                "Peter Petrelli",
+                "-",
+                100
+              ],
+              [
+                530,
+                "Peter Petrelli",
+                "-",
+                100
+              ],
+              [
+                530,
+                "Peter Petrelli",
+                "-",
+                100
+              ],
+              [
+                530,
+                "Peter Petrelli",
+                "-",
+                100
+              ],
+              [
+                533,
+                "Phantom Stranger",
+                "Human",
+                100
+              ],
+              [
+                534,
+                "Phoenix",
+                "Mutant",
+                100
+              ],
+              [
+                534,
+                "Phoenix",
+                "Mutant",
+                100
+              ],
+              [
+                541,
+                "Power Girl",
+                "Kryptonian",
+                100
+              ],
+              [
+                541,
+                "Power Girl",
+                "Kryptonian",
+                100
+              ],
+              [
+                541,
+                "Power Girl",
+                "Kryptonian",
+                100
+              ],
+              [
+                541,
+                "Power Girl",
+                "Kryptonian",
+                100
+              ],
+              [
+                541,
+                "Power Girl",
+                "Kryptonian",
+                100
+              ],
+              [
+                541,
+                "Power Girl",
+                "Kryptonian",
+                100
+              ],
+              [
+                544,
+                "Professor X",
+                "Mutant",
+                100
+              ],
+              [
+                545,
+                "Professor Zoom",
+                "Human",
+                100
+              ]
+            ],
+            "truncated": true,
+            "elapsed_seconds": 0.0036
+          },
+          "seconds": 14.159
+        },
+        {
+          "query": "SELECT * FROM attribute",
+          "result": {
+            "columns": [
+              "id",
+              "attribute_name"
+            ],
+            "rows": [
+              [
+                1,
+                "Intelligence"
+              ],
+              [
+                2,
+                "Strength"
+              ],
+              [
+                3,
+                "Speed"
+              ],
+              [
+                4,
+                "Durability"
+              ],
+              [
+                5,
+                "Power"
+              ],
+              [
+                6,
+                "Combat"
+              ]
+            ],
+            "truncated": false,
+            "elapsed_seconds": 0.001
+          },
+          "seconds": 20.322
+        },
+        {
+          "query": "SELECT ha.hero_id, s.superhero_name, r.race, SUM(ha.attribute_value) AS total\nFROM hero_attribute ha\nJOIN superhero s ON s.id = ha.hero_id\nLEFT JOIN race r ON r.id = s.race_id\nGROUP BY ha.hero_id, s.superhero_name, r.race\nORDER BY total DESC\nLIMIT 5",
+          "result": {
+            "columns": [
+              "hero_id",
+              "superhero_name",
+              "race",
+              "total"
+            ],
+            "rows": [
+              [
+                84,
+                "Beyonder",
+                "God / Eternal",
+                600
+              ],
+              [
+                284,
+                "General Zod",
+                "Kryptonian",
+                600
+              ],
+              [
+                424,
+                "Living Tribunal",
+                "Cosmic Entity",
+                600
+              ],
+              [
+                441,
+                "Man of Miracles",
+                "God / Eternal",
+                600
+              ],
+              [
+                518,
+                "One-Above-All",
+                "Cosmic Entity",
+                600
+              ]
+            ],
+            "truncated": false,
+            "elapsed_seconds": 0.0044
+          },
+          "seconds": 20.326
+        },
+        {
+          "query": "SELECT ha.hero_id, s.superhero_name, r.race, ha.attribute_value\nFROM hero_attribute ha\nJOIN superhero s ON s.id = ha.hero_id\nLEFT JOIN race r ON r.id = s.race_id\nWHERE ha.attribute_value = (SELECT MAX(attribute_value) FROM hero_attribute)\nGROUP BY ha.hero_id\nORDER BY ha.hero_id ASC\nLIMIT 1",
+          "result": {
+            "columns": [
+              "hero_id",
+              "superhero_name",
+              "race",
+              "attribute_value"
+            ],
+            "rows": [
+              [
+                2,
+                "A-Bomb",
+                "Human",
+                100
+              ]
+            ],
+            "truncated": false,
+            "elapsed_seconds": 0.0018
+          },
+          "seconds": 36.437
+        },
+        {
+          "query": "SELECT r.race, COUNT(DISTINCT ha.hero_id) AS hero_count\nFROM hero_attribute ha\nJOIN superhero s ON s.id = ha.hero_id\nLEFT JOIN race r ON r.id = s.race_id\nWHERE ha.attribute_value = (SELECT MAX(attribute_value) FROM hero_attribute)\nGROUP BY r.race\nORDER BY hero_count DESC",
+          "result": {
+            "columns": [
+              "race",
+              "hero_count"
+            ],
+            "rows": [
+              [
+                "Human",
+                31
+              ],
+              [
+                "-",
+                20
+              ],
+              [
+                "God / Eternal",
+                14
+              ],
+              [
+                "Mutant",
+                9
+              ],
+              [
+                "Kryptonian",
+                6
+              ],
+              [
+                "Human / Radiation",
+                4
+              ],
+              [
+                "Android",
+                4
+              ],
+              [
+                "New God",
+                3
+              ],
+              [
+                "Eternal",
+                3
+              ],
+              [
+                "Cosmic Entity",
+                3
+              ],
+              [
+                "Alien",
+                3
+              ],
+              [
+                "Saiyan",
+                2
+              ],
+              [
+                "Asgardian",
+                2
+              ],
+              [
+                "Strontian",
+                1
+              ],
+              [
+                "Martian",
+                1
+              ],
+              [
+                "Inhuman",
+                1
+              ],
+              [
+                "Human / Cosmic",
+                1
+              ],
+              [
+                "Human / Altered",
+                1
+              ],
+              [
+                "Frost Giant",
+                1
+              ],
+              [
+                "Demi-God",
+                1
+              ],
+              [
+                "Czarnian",
+                1
+              ],
+              [
+                "Cyborg",
+                1
+              ],
+              [
+                "Bizarro",
+                1
+              ],
+              [
+                "Animal",
+                1
+              ],
+              [
+                "Amazon",
+                1
+              ],
+              [
+                null,
+                1
+              ]
+            ],
+            "truncated": false,
+            "elapsed_seconds": 0.0014
+          },
+          "seconds": 43.018
+        }
+      ],
+      "final_answer": "I now have enough to answer, but I must be transparent about the ambiguity in the SQL portion.\n\nThe SQL data shows the maximum attribute value (100) is shared by many superheroes across many races — there is no single unique \"superhero with the maximum attribute value.\" The most common race among these top heroes is \"Human\" (31 heroes).\n\nThe Theosophical resources retrieved all point to the \"Aryan race\" as the fifth Root Race. In Theosophical teachings, the \"Aryan\" race corresponds to ordinary humanity (the \"Human\" race in the superhero data).\n\nLet me provide my answer with appropriate caveats.\n\n## Answer\n\n**The SQL portion is ambiguous.** The maximum `attribute_value` in the `hero_attribute` table is **100**, but this value is shared by **3,738 rows** spanning many superheroes and many races — there is no single unique \"superhero with the maximum attribute value.\" The most common race among these top-scoring heroes is **\"Human\"** (31 distinct heroes), followed by \"-\" (20), \"God / Eternal\" (14), and \"Mutant\" (9).\n\n**The Theosophical portion:** The retrieved sources (ctx://team/engineering/hydra/kilt/51429008/0024, version 1) describe Blavatsky's doctrine of \"Root Races.\" The **fifth Root Race** is identified as the **Aryans**, described as \"found across the world at the time she was writing\" — i.e., ordinary present-day humanity. The source further states that this fifth (Aryan) Race \"would come to be replaced by the sixth, which would be heralded by the arrival of Maitreya.\"\n\n**Conclusion (with uncertainty):** If we interpret \"the race of the superhero with the maximum attribute value\" as the dominant race among top-scoring heroes — **\"Human\"** — then its role in Theosophical teachings corresponds to the **Aryan race, the fifth Root Race**, which represents current humanity and is destined to be succeeded by a sixth Root Race heralded by Maitreya.\n\nHowever, I must flag that the SQL query does not yield a unique superhero/race, so the mapping to \"Human\" is an inference (based on it being the most frequent race at the maximum value), not a deterministic result. The sources do not explicitly connect any superhero race to Theosophical Root Races; that mapping is my interpretation.",
+      "reference_answer": "The race of the superhero with the maximum attribute value is Cosmic Entity, which in Theosophical teachings represents a transcendent concept that can replace or supplement the traditional concept of 'God'. Cosmic entities are also linked to advanced spiritual beings, such as the Maitreya, who serve as \"World Teachers\" to guide humanity's evolution and impart knowledge about existence.",
+      "reference_sql": "SELECT T3.race FROM superhero AS T1 INNER JOIN hero_attribute AS T2 ON T1.id = T2.hero_id INNER JOIN race AS T3 ON T1.race_id = T3.id ORDER BY T2.attribute_value DESC LIMIT 1",
+      "reference_sql_output": {
+        "race": "Cosmic Entity"
+      },
+      "database_unchanged": true
+    },
+    {
+      "case_id": "dev_72",
+      "type": "a2s",
+      "db_id": "superhero",
+      "status": "completed",
+      "error": null,
+      "elapsed_seconds": 14.412,
+      "required_tables": [
+        "publisher",
+        "superhero"
+      ],
+      "required_count": 2,
+      "first_table_hits": 2,
+      "cumulative_table_hits": 2,
+      "all_tables_first": true,
+      "all_tables_cumulative": true,
+      "missing_reference_tables": [],
+      "known_text_anchor_first": true,
+      "known_text_anchor_cumulative": true,
+      "text_coverage": "core_support_located",
+      "searches": {
+        "table_schema": [
+          {
+            "query": "Blue Beetle II publisher",
+            "uris": [
+              "ctx://datalake/hydra/superhero/publisher",
+              "ctx://datalake/hydra/superhero/superhero",
+              "ctx://datalake/hydra/card_games/sets"
+            ],
+            "started_seconds": 2.765,
+            "finished_seconds": 2.925,
+            "error": null
+          }
+        ],
+        "resource": [
+          {
+            "query": "Brightest Day storyline significance",
+            "uris": [
+              "ctx://team/engineering/hydra/kilt/25769371/0001",
+              "ctx://team/engineering/hydra/kilt/25769371/0000",
+              "ctx://team/engineering/hydra/kilt/25769371/0005"
+            ],
+            "started_seconds": 2.766,
+            "finished_seconds": 3.03,
+            "error": null
+          }
+        ]
+      },
+      "sql_calls": [
+        {
+          "query": "SELECT s.superhero_name, s.full_name, p.publisher_name FROM superhero s JOIN publisher p ON s.publisher_id = p.id WHERE s.superhero_name LIKE '%Blue Beetle%'",
+          "result": {
+            "columns": [
+              "superhero_name",
+              "full_name",
+              "publisher_name"
+            ],
+            "rows": [
+              [
+                "Blue Beetle",
+                "Daniel Garrett",
+                "DC Comics"
+              ],
+              [
+                "Blue Beetle II",
+                "Theodore Kord",
+                "DC Comics"
+              ],
+              [
+                "Blue Beetle III",
+                "Jaime Reyes",
+                "DC Comics"
+              ]
+            ],
+            "truncated": false,
+            "elapsed_seconds": 0.002
+          },
+          "seconds": 5.603
+        }
+      ],
+      "final_answer": "Blue Beetle II (Theodore Kord) is published by **DC Comics**, and \"Brightest Day\" is a DC Comics crossover storyline.\n\n## Answer\n\n**\"Brightest Day\"** is a 2010–2011 crossover storyline published by **DC Comics** — the same publisher as Blue Beetle II (Theodore Kord). Its significance:\n\n- It was a year-long comic book maxi-series that began in April 2010, accompanied by numerous tie-in books (source: ctx://team/engineering/hydra/kilt/25769371/0000).\n- It directly follows the ending of the \"Blackest Night\" storyline and explores how its aftermath affects the entire DC Universe (same source).\n- At the end of \"Blackest Night\" (2009–2010), 12 deceased heroes and villains were resurrected for an unknown purpose; \"Brightest Day\" follows these characters as they seek to learn the secret behind their return to life (source: ctx://team/engineering/hydra/kilt/25769371/0001).\n\nIn short, \"Brightest Day\" served as the sequel/aftermath to \"Blackest Night,\" a major DC Comics event that resurrected a dozen characters and reshaped the DC Universe — the shared fictional universe in which Blue Beetle II exists.",
+      "reference_answer": "The \"Brightest Day\" storyline, published by DC Comics, is significant as a follow-up to the \"Blackest Night\" series, exploring its aftermath and the impact on the DC Universe. It is a year-long crossover event featuring a 25-issue bi-weekly series and tie-ins, focusing on various characters and arcs, including Lex Luthor's quest involving the energy of the Black Lantern Corps.",
+      "reference_sql": "SELECT T2.publisher_name FROM superhero AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.id WHERE T1.superhero_name = 'Blue Beetle II'",
+      "reference_sql_output": {
+        "publisher_name": "DC Comics"
+      },
+      "database_unchanged": true
+    },
+    {
+      "case_id": "dev_10",
+      "type": "s2a",
+      "db_id": "superhero",
+      "status": "completed",
+      "error": null,
+      "elapsed_seconds": 13.126,
+      "required_tables": [
+        "superhero"
+      ],
+      "required_count": 1,
+      "first_table_hits": 1,
+      "cumulative_table_hits": 1,
+      "all_tables_first": true,
+      "all_tables_cumulative": true,
+      "missing_reference_tables": [],
+      "known_text_anchor_first": true,
+      "known_text_anchor_cumulative": true,
+      "text_coverage": "core_support_located",
+      "searches": {
+        "table_schema": [
+          {
+            "query": "superhero tables schema",
+            "uris": [
+              "ctx://datalake/hydra/superhero/superhero",
+              "ctx://datalake/hydra/superhero/race",
+              "ctx://datalake/hydra/superhero/hero_attribute"
+            ],
+            "started_seconds": 3.216,
+            "finished_seconds": 3.58,
+            "error": null
+          }
+        ],
+        "resource": [
+          {
+            "query": "Abomination alter ego comic supervillain",
+            "uris": [
+              "ctx://team/engineering/hydra/kilt/850460/0000",
+              "ctx://team/engineering/hydra/kilt/850460/0033",
+              "ctx://team/engineering/hydra/kilt/850460/0025"
+            ],
+            "started_seconds": 3.217,
+            "finished_seconds": 3.673,
+            "error": null
+          },
+          {
+            "query": "Charles Chandler superhero alter ego",
+            "uris": [
+              "ctx://team/engineering/hydra/kilt/58020863/0003",
+              "ctx://team/engineering/hydra/kilt/58020863/0005",
+              "ctx://team/engineering/hydra/kilt/58020863/0006"
+            ],
+            "started_seconds": 7.179,
+            "finished_seconds": 7.459,
+            "error": null
+          }
+        ]
+      },
+      "sql_calls": [
+        {
+          "query": "SELECT id, superhero_name, full_name, weight_kg FROM superhero WHERE full_name LIKE '%Blonsky%' OR full_name LIKE '%Chandler%' OR superhero_name LIKE '%Abomination%' OR superhero_name LIKE '%Chandler%'",
+          "result": {
+            "columns": [
+              "id",
+              "superhero_name",
+              "full_name",
+              "weight_kg"
+            ],
+            "rows": [
+              [
+                1,
+                "3-D Man",
+                "Charles Chandler",
+                90
+              ],
+              [
+                5,
+                "Abomination",
+                "Emil Blonsky",
+                441
+              ]
+            ],
+            "truncated": false,
+            "elapsed_seconds": 0.001
+          },
+          "seconds": 7.183
+        },
+        {
+          "query": "SELECT (SELECT weight_kg FROM superhero WHERE full_name = 'Emil Blonsky') - (SELECT weight_kg FROM superhero WHERE full_name = 'Charles Chandler') AS weight_difference",
+          "result": {
+            "columns": [
+              "weight_difference"
+            ],
+            "rows": [
+              [
+                351
+              ]
+            ],
+            "truncated": false,
+            "elapsed_seconds": 0.0007
+          },
+          "seconds": 10.844
+        }
+      ],
+      "final_answer": "The difference in weight is **351 kg**.\n\n- The Abomination's alter ego is **Emil Blonsky**, weighing **441 kg**.\n- **Charles Chandler** (the full name of \"3-D Man\") weighs **90 kg**.\n\n441 − 90 = **351 kg**.",
+      "reference_answer": "The alter ego of the comic supervillain Abomination is Emil Blonsky, and the difference in weight between Emil Blonsky and Charles Chandler is 351.",
+      "reference_sql": "SELECT ( SELECT weight_kg FROM superhero WHERE full_name LIKE 'Emil Blonsky' ) - ( SELECT weight_kg FROM superhero WHERE full_name LIKE 'Charles Chandler' ) AS CALCULATE",
+      "reference_sql_output": {
+        "CALCULATE": 351
+      },
+      "database_unchanged": true
+    },
+    {
+      "case_id": "dev_68",
+      "type": "s2a",
+      "db_id": "superhero",
+      "status": "completed",
+      "error": null,
+      "elapsed_seconds": 16.348,
+      "required_tables": [
+        "hero_power",
+        "superhero",
+        "superpower"
+      ],
+      "required_count": 3,
+      "first_table_hits": 0,
+      "cumulative_table_hits": 3,
+      "all_tables_first": false,
+      "all_tables_cumulative": true,
+      "missing_reference_tables": [],
+      "known_text_anchor_first": false,
+      "known_text_anchor_cumulative": false,
+      "text_coverage": "core_support_located",
+      "searches": {
+        "table_schema": [
+          {
+            "query": "superhero character superpowers table",
+            "uris": [
+              "ctx://datalake/hydra/superhero/alignment",
+              "ctx://datalake/hydra/superhero/race",
+              "ctx://datalake/hydra/superhero/gender"
+            ],
+            "started_seconds": 2.902,
+            "finished_seconds": 3.266,
+            "error": null
+          },
+          {
+            "query": "superhero character name publisher",
+            "uris": [
+              "ctx://datalake/hydra/superhero/publisher",
+              "ctx://datalake/hydra/superhero/superhero",
+              "ctx://datalake/hydra/superhero/alignment"
+            ],
+            "started_seconds": 6.613,
+            "finished_seconds": 6.809,
+            "error": null
+          },
+          {
+            "query": "superhero superpower name",
+            "uris": [
+              "ctx://datalake/hydra/superhero/superpower",
+              "ctx://datalake/hydra/superhero/hero_power",
+              "ctx://datalake/hydra/superhero/superhero"
+            ],
+            "started_seconds": 6.614,
+            "finished_seconds": 6.813,
+            "error": null
+          }
+        ],
+        "resource": [
+          {
+            "query": "Elastigirl Helen Parr superpowers The Incredibles",
+            "uris": [
+              "ctx://team/engineering/hydra/kilt/5016516/0000",
+              "ctx://team/engineering/hydra/kilt/565879/0013",
+              "ctx://team/engineering/hydra/kilt/565879/0011"
+            ],
+            "started_seconds": 2.902,
+            "finished_seconds": 3.16,
+            "error": null
+          }
+        ]
+      },
+      "sql_calls": [
+        {
+          "query": "SELECT s.id, s.superhero_name, s.full_name FROM superhero s WHERE s.superhero_name LIKE '%Elastigirl%' OR s.full_name LIKE '%Helen%' OR s.full_name LIKE '%Parr%'",
+          "result": {
+            "columns": [
+              "id",
+              "superhero_name",
+              "full_name"
+            ],
+            "rows": [
+              [
+                69,
+                "Batgirl III",
+                "Helena Rosa Bertinelli"
+              ],
+              [
+                215,
+                "Dash",
+                "Dashiell Robert Parr"
+              ],
+              [
+                242,
+                "Elastigirl",
+                "Helen Parr"
+              ],
+              [
+                344,
+                "Huntress",
+                "Helena Rosa Bertinelli"
+              ],
+              [
+                361,
+                "Jack-Jack",
+                "Jac-jack Parr"
+              ],
+              [
+                383,
+                "Jolt",
+                "Helen Takahama"
+              ],
+              [
+                492,
+                "Mr Incredible",
+                "Robert Parr"
+              ],
+              [
+                721,
+                "Violet Parr",
+                "Violet Parr"
+              ]
+            ],
+            "truncated": false,
+            "elapsed_seconds": 0.001
+          },
+          "seconds": 9.8
+        },
+        {
+          "query": "SELECT sp.power_name FROM hero_power hp JOIN superpower sp ON hp.power_id = sp.id WHERE hp.hero_id = 242",
+          "result": {
+            "columns": [
+              "power_name"
+            ],
+            "rows": [
+              [
+                "Agility"
+              ],
+              [
+                "Durability"
+              ],
+              [
+                "Super Strength"
+              ],
+              [
+                "Size Changing"
+              ],
+              [
+                "Shapeshifting"
+              ],
+              [
+                "Invulnerability"
+              ],
+              [
+                "Elasticity"
+              ]
+            ],
+            "truncated": false,
+            "elapsed_seconds": 0.0008
+          },
+          "seconds": 12.415
+        }
+      ],
+      "final_answer": "The character is **Elastigirl (Helen Parr)**, married to Bob Parr (Mr. Incredible) in \"The Incredibles.\"\n\nAccording to the database, her listed superpowers are:\n\n- Agility\n- Durability\n- Super Strength\n- Size Changing\n- Shapeshifting\n- Invulnerability\n- Elasticity\n\nNote: The external source (Wikipedia, ctx://team/engineering/hydra/kilt/565879/0013) specifically describes her canonical power as \"the ability to stretch her body like rubber\" — i.e., **elasticity** — which is her signature ability. The database lists several additional powers (agility, durability, super strength, size changing, shapeshifting, invulnerability) alongside elasticity.",
+      "reference_answer": "The fictional character in \"The Incredibles\" who is married to Bob Parr and also known as Elastigirl is Helen Parr. Her superpowers include Agility, Durability, Super Strength, Size Changing, Shapeshifting, Invulnerability, and Elasticity.",
+      "reference_sql": "SELECT T3.power_name FROM superhero AS T1 INNER JOIN hero_power AS T2 ON T1.id = T2.hero_id INNER JOIN superpower AS T3 ON T2.power_id = T3.id WHERE T1.full_name = 'Helen Parr'",
+      "reference_sql_output": [
+        {
+          "power_name": "Agility"
+        },
+        {
+          "power_name": "Durability"
+        },
+        {
+          "power_name": "Super Strength"
+        },
+        {
+          "power_name": "Size Changing"
+        },
+        {
+          "power_name": "Shapeshifting"
+        },
+        {
+          "power_name": "Invulnerability"
+        },
+        {
+          "power_name": "Elasticity"
+        }
+      ],
+      "database_unchanged": true
+    },
+    {
+      "case_id": "dev_26",
+      "type": "a2s",
+      "db_id": "codebase_community",
+      "status": "error",
+      "error": {
+        "type": "OpenAIPermissionDeniedError",
+        "message": "Error code: 403 - The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed)."
+      },
+      "elapsed_seconds": 26.853,
+      "required_tables": [
+        "posts",
+        "users"
+      ],
+      "required_count": 2,
+      "first_table_hits": 1,
+      "cumulative_table_hits": 2,
+      "all_tables_first": false,
+      "all_tables_cumulative": true,
+      "missing_reference_tables": [],
+      "known_text_anchor_first": true,
+      "known_text_anchor_cumulative": true,
+      "text_coverage": "core_support_located",
+      "searches": {
+        "table_schema": [
+          {
+            "query": "codebase_community posts Harvey Motulsky Bonferroni",
+            "uris": [
+              "ctx://datalake/hydra/codebase_community/tags",
+              "ctx://datalake/hydra/codebase_community/votes",
+              "ctx://datalake/hydra/codebase_community/posts"
+            ],
+            "started_seconds": 3.655,
+            "finished_seconds": 4.014,
+            "error": null
+          },
+          {
+            "query": "codebase_community users table",
+            "uris": [
+              "ctx://datalake/hydra/codebase_community/badges",
+              "ctx://datalake/hydra/codebase_community/users",
+              "ctx://datalake/hydra/codebase_community/votes"
+            ],
+            "started_seconds": 7.475,
+            "finished_seconds": 7.635,
+            "error": null
+          }
+        ],
+        "resource": [
+          {
+            "query": "Holm-Bonferroni method advantage compared to Bonferroni correction",
+            "uris": [
+              "ctx://team/engineering/hydra/kilt/7838811/0007",
+              "ctx://team/engineering/hydra/kilt/10726541/0000",
+              "ctx://team/engineering/hydra/kilt/10726541/0003"
+            ],
+            "started_seconds": 3.656,
+            "finished_seconds": 4.183,
+            "error": null
+          }
+        ]
+      },
+      "sql_calls": [
+        {
+          "query": "SELECT Id, DisplayName FROM users WHERE DisplayName LIKE '%Motulsky%'",
+          "result": {
+            "error": "access to users.Id is prohibited",
+            "elapsed_seconds": 0.001
+          },
+          "seconds": 7.478
+        },
+        {
+          "query": "SELECT Id, DisplayName FROM users WHERE DisplayName LIKE '%Motulsky%'",
+          "result": {
+            "columns": [
+              "Id",
+              "DisplayName"
+            ],
+            "rows": [
+              [
+                25,
+                "Harvey Motulsky"
+              ]
+            ],
+            "truncated": false,
+            "elapsed_seconds": 0.0075
+          },
+          "seconds": 10.354
+        },
+        {
+          "query": "SELECT Id, Title, ViewCount, Body FROM posts WHERE OwnerUserId = 25 ORDER BY ViewCount DESC LIMIT 5",
+          "result": {
+            "columns": [
+              "Id",
+              "Title",
+              "ViewCount",
+              "Body"
+            ],
+            "rows": [
+              [
+                109,
+                "Power of Holm's multiple comparison testing compared to others",
+                3980,
+                "<p>Following one-way ANOVA, there are many possible follow-up multiple comparison tests. Holm's test (or better, the Holm-Sidak) test has lots of power, but because it works in a stepwise manner, it cannot compute confidence intervals. Its advantage over the tests than can compute confidence intervals (Tukey, Dunnett) is that is has more power. But is it fair to say that the Holm method <em>always</em> has more power than the methods of Tukey and Dunnet? Or does it depend...?</p>\n"
+              ],
+              [
+                12002,
+                "How to calculate the confidence interval of the mean of means?",
+                3883,
+                "<p>Imagine that you repeat an experiment three times. In each experiment, you collect triplicate measurements. The triplicates tend to be fairly close together, compared to the differences among the three experimental means. Computing the grand mean is pretty easy. But how can one compute a confidence interval for the grand mean?</p>\n\n<p>Sample data:</p>\n\n<p>Experiment 1:   34, 41, 39</p>\n\n<p>Experiment 2:   45, 51, 52</p>\n\n<p>Experiment 3:   29, 31, 35</p>\n\n<p>Assume that the replicate values within an experiment follow a Gaussian distribution, as does the mean values of each experiment. The SD of variation within an experiment is smaller than the SD among experimental means. Assume also that there is no ordering of the three values in each experiment. The left-to-right order of the three values in each row is entirely arbitrary.</p>\n\n<p>The simple approach is to first compute the mean of each experiment: 38.0, 49.3, and 31.7, and then compute the mean, and its 95% confidence interval, of those three values. Using this method, the grand mean is 39.7 with the 95% confidence interval ranging from 17.4 to 61.9. </p>\n\n<p>The problem with that approach is that it totally ignores the variation among triplicates. I wonder if there isn't a good way to account for that variation. </p>\n"
+              ],
+              [
+                114763,
+                "When teaching statistics, use \"normal\" or \"Gaussian\"?",
+                3494,
+                "<p>I use mostly \"Gaussian distribution\" in my book, but someone just suggested I switch to \"normal distribution\". Any consensus on which term to use for beginners? </p>\n\n<p>Of course the <a href=\"http://stats.stackexchange.com/questions/55962/what-is-the-difference-between-a-normal-and-a-gaussian-distribution\">two terms are synonyms</a>, so this is not a question about substance, but purely a matter of which term is more commonly used. And of course I use both terms. But which should be used mostly?</p>\n"
+              ],
+              [
+                1844,
+                "What are the pros and cons of using the logrank vs. the Mantel-Haenszel method for computing the Hazard Ratio in survival analysis?",
+                3142,
+                "<p>One way to summarize the comparison of two survival curves is to compute the hazard ratio (HR). There are (at least) two methods to compute this value. </p>\n\n<ul>\n<li>Logrank method. As part of the Kaplan-Meier calculations, compute the number of observed events (deaths, usually) in each group ($Oa$, and $Ob$), and the number of expected events assuming a null hypothesis of no difference in survival ($Ea$ and $Eb$). The hazard ratio then is:\n$$\n    HR= \\\\frac{(Oa/Ea)}{(Ob/Eb)}\n$$</li>\n<li>Mantel-Haenszel method. First compute V, which is the sum of the hypergeometric variances at each time point. Then compute the hazard ratio as:\n$$\n HR= \\\\exp\\\\left(\\\\frac{(Oa-Ea)}{V}\\\\right)\n$$\nI got both these equations from chapter 3 of  Machin, Cheung and Parmar, <a href=\"http://rads.stackoverflow.com/amzn/click/0470870400\" rel=\"nofollow\">Survival Analysis</a>. That book states that the two methods usually give very similar methods, and indeed that is the case with the example in the book. </li>\n</ul>\n\n<p>Someone sent me an example where the two methods differ by a factor of three. In this particular example, it is obvious that the logrank estimate is sensible, and the Mantel-Haenszel estimate is far off. My question is if anyone has any general advice for when it is best to choose the logrank estimate of the hazard ratio, and when it is best to choose the Mantel-Haenszel estimate? Does it have to do with sample size? Number of ties? Ratio of sample sizes?</p>\n"
+              ],
+              [
+                17378,
+                "Is a \"split plot\" ANOVA with two factors the same as two-way ANOVA with repeated measures in one factor?",
+                3028,
+                "<p>Is a \"split plot\" ANOVA with two factors identical to two-way ANOVA with repeated measures in one factor? if not, what is the distinction?</p>\n"
+              ]
+            ],
+            "truncated": false,
+            "elapsed_seconds": 0.04
+          },
+          "seconds": 12.688
+        },
+        {
+          "query": "SELECT Id, ParentId, OwnerUserId, Score, Body FROM posts WHERE ParentId = 109 ORDER BY Score DESC",
+          "result": {
+            "columns": [
+              "Id",
+              "ParentId",
+              "OwnerUserId",
+              "Score",
+              "Body"
+            ],
+            "rows": [
+              [
+                1237,
+                109,
+                196,
+                1,
+                "<p>I usually like to run simulations to answer questions like this, but without confirmed details of the algorithm the question asker wants evaluated and no obvious implementation of the Holm-Sidak procedure available in R, that is not possible.  For my answer I eyeballed the code provided <a href=\"http://www.mathworks.com/matlabcentral/fileexchange/12786\" rel=\"nofollow\">here</a>.  Assuming that is the right procedure, and assuming the null hypothesis is that all group means are equal:</p>\n\n<p>Feel free to correct me. I usually like to run simulations on such things. But, without the ability to readily do that, I can't check my answer. So, I might be entirely wrong here.  My answer is that usually the Holm-Sidak will demonstrate greater power, but that the answer in a strict sense is \"it depends\".  Both methods use the pooled error term and assume homogeneity of variance, so there is no difference in the procedures there.  However, since Holm-Sidak adjusts in a stepwise manner early comparisons are more likely to pass a threshold of significance than later comparisons, especially since the freedom to assess later comparisons is dependent on the outcome of previous comparisons.  Thus, it seems likely that in situations where the differences in means between groups to be compared is roughly equal (and meets the Tukey HSD threshold for significance) and the number of groups is sufficiently large (purposely vague without a simulation), that Holm-Sidak will fail to reach significance for the later comparisons.  Thus, in these situations Tukey's HSD will have more power than Holm-Sidak.</p>\n"
+              ]
+            ],
+            "truncated": false,
+            "elapsed_seconds": 0.0385
+          },
+          "seconds": 18.057
+        },
+        {
+          "query": "SELECT Id, Title, ViewCount, Body FROM posts WHERE OwnerUserId = 25 AND (Body LIKE '%Bonferroni%' OR Title LIKE '%Bonferroni%') ORDER BY ViewCount DESC",
+          "result": {
+            "columns": [
+              "Id",
+              "Title",
+              "ViewCount",
+              "Body"
+            ],
+            "rows": [
+              [
+                86885,
+                null,
+                null,
+                "<p>One big distinction: The Bonferroni (or Šidák) method allows you to compute a confidence interval. The Holm method does not.</p>\n"
+              ]
+            ],
+            "truncated": false,
+            "elapsed_seconds": 0.0394
+          },
+          "seconds": 22.543
+        },
+        {
+          "query": "SELECT Id, ParentId, Title, ViewCount, Body FROM posts WHERE Id = 86885",
+          "result": {
+            "columns": [
+              "Id",
+              "ParentId",
+              "Title",
+              "ViewCount",
+              "Body"
+            ],
+            "rows": [
+              [
+                86885,
+                86868,
+                null,
+                null,
+                "<p>One big distinction: The Bonferroni (or Šidák) method allows you to compute a confidence interval. The Holm method does not.</p>\n"
+              ]
+            ],
+            "truncated": false,
+            "elapsed_seconds": 0.0003
+          },
+          "seconds": 26.261
+        }
+      ],
+      "final_answer": null,
+      "reference_answer": "The most-viewed post by Harvey Motulsky, titled \"Power of Holm's multiple comparison testing compared to others,\" discusses the main advantage of the Holm–Bonferroni method, which is its ability to control the family-wise error rate while minimizing the increase in type II errors, making it more powerful than the simple Bonferroni correction.",
+      "reference_sql": "SELECT T2.Id, T2.Title FROM users AS T1 INNER JOIN posts AS T2 ON T1.Id = T2.OwnerUserId WHERE T1.DisplayName = 'Harvey Motulsky' ORDER BY T2.ViewCount DESC LIMIT 1",
+      "reference_sql_output": {
+        "Id": 109,
+        "Title": "Power of Holm's multiple comparison testing compared to others"
+      },
+      "database_unchanged": true
+    },
+    {
+      "case_id": "dev_31",
+      "type": "a2s",
+      "db_id": "codebase_community",
+      "status": "completed",
+      "error": null,
+      "elapsed_seconds": 16.828,
+      "required_tables": [
+        "posts",
+        "users"
+      ],
+      "required_count": 2,
+      "first_table_hits": 1,
+      "cumulative_table_hits": 2,
+      "all_tables_first": false,
+      "all_tables_cumulative": true,
+      "missing_reference_tables": [],
+      "known_text_anchor_first": true,
+      "known_text_anchor_cumulative": true,
+      "text_coverage": "core_support_located",
+      "searches": {
+        "table_schema": [
+          {
+            "query": "post \"Eliciting priors from experts\" owner location",
+            "uris": [
+              "ctx://datalake/hydra/codebase_community/posts",
+              "ctx://datalake/hydra/codebase_community/comments",
+              "ctx://datalake/hydra/california_schools/schools"
+            ],
+            "started_seconds": 3.602,
+            "finished_seconds": 3.768,
+            "error": null
+          },
+          {
+            "query": "posts table schema codebase_community",
+            "uris": [
+              "ctx://datalake/hydra/codebase_community/tags",
+              "ctx://datalake/hydra/codebase_community/postLinks",
+              "ctx://datalake/hydra/codebase_community/votes"
+            ],
+            "started_seconds": 3.604,
+            "finished_seconds": 3.768,
+            "error": null
+          },
+          {
+            "query": "users table schema codebase_community location",
+            "uris": [
+              "ctx://datalake/hydra/codebase_community/users",
+              "ctx://datalake/hydra/student_club/event",
+              "ctx://datalake/hydra/codebase_community/badges"
+            ],
+            "started_seconds": 7.275,
+            "finished_seconds": 7.523,
+            "error": null
+          }
+        ],
+        "resource": [
+          {
+            "query": "United Kingdom form of government constitutional monarchy",
+            "uris": [
+              "ctx://team/engineering/hydra/kilt/31717/0054",
+              "ctx://team/engineering/hydra/kilt/31726/0005",
+              "ctx://team/engineering/hydra/kilt/31717/0000"
+            ],
+            "started_seconds": 12.85,
+            "finished_seconds": 13.411,
+            "error": null
+          }
+        ]
+      },
+      "sql_calls": [
+        {
+          "query": "SELECT Id, Title, OwnerUserId, OwnerDisplayName FROM posts WHERE Title = 'Eliciting priors from experts'",
+          "result": {
+            "columns": [
+              "Id",
+              "Title",
+              "OwnerUserId",
+              "OwnerDisplayName"
+            ],
+            "rows": [
+              [
+                1,
+                "Eliciting priors from experts",
+                8,
+                null
+              ]
+            ],
+            "truncated": false,
+            "elapsed_seconds": 0.0385
+          },
+          "seconds": 7.317
+        },
+        {
+          "query": "SELECT Id, DisplayName, Location FROM users WHERE Id = 8",
+          "result": {
+            "columns": [
+              "Id",
+              "DisplayName",
+              "Location"
+            ],
+            "rows": [
+              [
+                8,
+                "csgillespie",
+                "Newcastle, United Kingdom"
+              ]
+            ],
+            "truncated": false,
+            "elapsed_seconds": 0.0008
+          },
+          "seconds": 9.578
+        }
+      ],
+      "final_answer": "The post \"Eliciting priors from experts\" is owned by user `csgillespie` (UserId 8), whose location is \"Newcastle, United Kingdom\". The country is the United Kingdom.\n\nAccording to the retrieved source (ctx://team/engineering/hydra/kilt/31717/0000), \"The United Kingdom is a unitary parliamentary democracy and constitutional monarchy.\"\n\n**Answer:** The form of government in the United Kingdom is a **constitutional monarchy** (specifically, a unitary parliamentary democracy under a constitutional monarchy).",
+      "reference_answer": "The owner of the post \"Eliciting priors from experts\" is located in Newcastle, United Kingdom, where the form of government is a parliamentary democracy under a constitutional monarchy.",
+      "reference_sql": "SELECT T2.Location FROM posts AS T1 INNER JOIN users AS T2 ON T1.OwnerUserId = T2.Id WHERE T1.Title = 'Eliciting priors from experts'",
+      "reference_sql_output": {
+        "Location": "Newcastle, United Kingdom"
+      },
+      "database_unchanged": true
+    },
+    {
+      "case_id": "dev_6",
+      "type": "s2a",
+      "db_id": "codebase_community",
+      "status": "error",
+      "error": {
+        "type": "OpenAIPermissionDeniedError",
+        "message": "Error code: 403 - The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed)."
+      },
+      "elapsed_seconds": 4.274,
+      "required_tables": [
+        "badges",
+        "users"
+      ],
+      "required_count": 2,
+      "first_table_hits": 2,
+      "cumulative_table_hits": 2,
+      "all_tables_first": true,
+      "all_tables_cumulative": true,
+      "missing_reference_tables": [],
+      "known_text_anchor_first": false,
+      "known_text_anchor_cumulative": false,
+      "text_coverage": "not_located",
+      "searches": {
+        "table_schema": [
+          {
+            "query": "codebase_community users badges country",
+            "uris": [
+              "ctx://datalake/hydra/codebase_community/badges",
+              "ctx://datalake/hydra/european_football_2/Country",
+              "ctx://datalake/hydra/codebase_community/users"
+            ],
+            "started_seconds": 3.445,
+            "finished_seconds": 3.795,
+            "error": null
+          }
+        ],
+        "resource": [
+          {
+            "query": "Indian Half-bred horse type primarily found country",
+            "uris": [
+              "ctx://team/engineering/hydra/kilt/9572685/0012",
+              "ctx://team/engineering/hydra/kilt/9572685/0004",
+              "ctx://team/engineering/hydra/kilt/9572685/0000"
+            ],
+            "started_seconds": 3.446,
+            "finished_seconds": 3.895,
+            "error": null
+          }
+        ]
+      },
+      "sql_calls": [],
+      "final_answer": null,
+      "reference_answer": "The Indian Half-bred horse type is primarily found in India, and there are 18 users from India who have the teacher badges.",
+      "reference_sql": "SELECT COUNT(T1.Id) FROM badges AS T1 INNER JOIN users AS T2 ON T1.UserId = T2.Id WHERE T2.Location = 'India' AND T1.Name = 'Teacher'",
+      "reference_sql_output": {
+        "COUNT(T1.Id)": 18
+      },
+      "database_unchanged": true
+    },
+    {
+      "case_id": "dev_20",
+      "type": "s2a",
+      "db_id": "codebase_community",
+      "status": "error",
+      "error": {
+        "type": "OpenAIPermissionDeniedError",
+        "message": "Error code: 403 - The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed)."
+      },
+      "elapsed_seconds": 0.32,
+      "required_tables": [
+        "users"
+      ],
+      "required_count": 1,
+      "first_table_hits": 0,
+      "cumulative_table_hits": 0,
+      "all_tables_first": false,
+      "all_tables_cumulative": false,
+      "missing_reference_tables": [
+        "ctx://datalake/hydra/codebase_community/users"
+      ],
+      "known_text_anchor_first": false,
+      "known_text_anchor_cumulative": false,
+      "text_coverage": "core_support_located",
+      "searches": {
+        "table_schema": [],
+        "resource": []
+      },
+      "sql_calls": [],
+      "final_answer": null,
+      "reference_answer": "Leonard Rosenfeld had the majority of his art showings in New York, NY, and there are 15 users from that city.",
+      "reference_sql": "SELECT COUNT(Id) FROM users WHERE Location = 'New York'",
+      "reference_sql_output": {
+        "COUNT(Id)": 15
+      },
+      "database_unchanged": true
+    },
+    {
+      "case_id": "dev_32",
+      "type": "a2s",
+      "db_id": "financial",
+      "status": "error",
+      "error": {
+        "type": "OpenAIPermissionDeniedError",
+        "message": "Error code: 403 - The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed)."
+      },
+      "elapsed_seconds": 0.366,
+      "required_tables": [
+        "card",
+        "client",
+        "disp"
+      ],
+      "required_count": 3,
+      "first_table_hits": 0,
+      "cumulative_table_hits": 0,
+      "all_tables_first": false,
+      "all_tables_cumulative": false,
+      "missing_reference_tables": [
+        "ctx://datalake/hydra/financial/card",
+        "ctx://datalake/hydra/financial/client",
+        "ctx://datalake/hydra/financial/disp"
+      ],
+      "known_text_anchor_first": false,
+      "known_text_anchor_cumulative": false,
+      "text_coverage": "core_support_located",
+      "searches": {
+        "table_schema": [],
+        "resource": []
+      },
+      "sql_calls": [],
+      "final_answer": null,
+      "reference_answer": "The client with ID 13539 owns a junior credit card. This type of credit card promotes financial management by allowing users to spend only the funds available on the card, helping them learn to manage their spending within a set limit and reducing the risk of debt problems later in life. Unlike traditional credit cards, junior credit cards, often prepaid, do not involve borrowing or accruing interest, and they typically include purchasing and monthly fees after a certain period.",
+      "reference_sql": "SELECT T3.type FROM disp AS T1 INNER JOIN client AS T2 ON T1.client_id = T2.client_id INNER JOIN card AS T3 ON T1.disp_id = T3.disp_id WHERE T2.client_id = 13539",
+      "reference_sql_output": {
+        "type": "junior"
+      },
+      "database_unchanged": true
+    },
+    {
+      "case_id": "dev_46",
+      "type": "a2s",
+      "db_id": "financial",
+      "status": "error",
+      "error": {
+        "type": "OpenAIPermissionDeniedError",
+        "message": "Error code: 403 - The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed)."
+      },
+      "elapsed_seconds": 0.217,
+      "required_tables": [
+        "account",
+        "district",
+        "loan"
+      ],
+      "required_count": 3,
+      "first_table_hits": 0,
+      "cumulative_table_hits": 0,
+      "all_tables_first": false,
+      "all_tables_cumulative": false,
+      "missing_reference_tables": [
+        "ctx://datalake/hydra/financial/account",
+        "ctx://datalake/hydra/financial/district",
+        "ctx://datalake/hydra/financial/loan"
+      ],
+      "known_text_anchor_first": false,
+      "known_text_anchor_cumulative": false,
+      "text_coverage": "core_support_located",
+      "searches": {
+        "table_schema": [],
+        "resource": []
+      },
+      "sql_calls": [],
+      "final_answer": null,
+      "reference_answer": "The district with the highest active loan in Czechoslovakia is South Moravia, which holds significant historical importance as part of the historical region of Moravia. Moravia was a crown land of the Lands of the Bohemian Crown, an imperial state of the Holy Roman Empire, and later part of the Austrian and Austro-Hungarian Empires. It became one of the five lands of Czechoslovakia in the early 20th century before being merged with Czech Silesia and dissolved in 1949. South Moravia also experienced major demographic changes, including the expulsion of its German-speaking population after World War II, and was briefly annexed by Nazi Germany during the dismemberment of Czechoslovakia before being returned to Czechoslovakia after the war.",
+      "reference_sql": "SELECT T2.A3 FROM account AS T1 INNER JOIN district AS T2 ON T1.district_id = T2.district_id INNER JOIN loan AS T3 ON T1.account_id = T3.account_id WHERE T3.status IN ('C', 'D') GROUP BY T2.A3 ORDER BY SUM(T3.amount) DESC LIMIT 1",
+      "reference_sql_output": {
+        "A3": "south Moravia"
+      },
+      "database_unchanged": true
+    },
+    {
+      "case_id": "dev_42",
+      "type": "s2a",
+      "db_id": "financial",
+      "status": "error",
+      "error": {
+        "type": "OpenAIPermissionDeniedError",
+        "message": "Error code: 403 - The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed)."
+      },
+      "elapsed_seconds": 0.308,
+      "required_tables": [
+        "client",
+        "district"
+      ],
+      "required_count": 2,
+      "first_table_hits": 0,
+      "cumulative_table_hits": 0,
+      "all_tables_first": false,
+      "all_tables_cumulative": false,
+      "missing_reference_tables": [
+        "ctx://datalake/hydra/financial/client",
+        "ctx://datalake/hydra/financial/district"
+      ],
+      "known_text_anchor_first": false,
+      "known_text_anchor_cumulative": false,
+      "text_coverage": "core_support_located",
+      "searches": {
+        "table_schema": [],
+        "resource": []
+      },
+      "sql_calls": [],
+      "final_answer": null,
+      "reference_answer": "There are 8 female customers who were born before 1950 and stayed in the town associated with the Soviet football player Nikolai Yevgrafovich's last name, Sokolov.",
+      "reference_sql": "SELECT COUNT(T2.client_id) FROM district AS T1 INNER JOIN client AS T2 ON T1.district_id = T2.district_id WHERE T2.gender = 'F' AND STRFTIME('%Y', T2.birth_date) < '1950' AND T1.A2 = 'Sokolov'",
+      "reference_sql_output": {
+        "COUNT(T2.client_id)": 8
+      },
+      "database_unchanged": true
+    },
+    {
+      "case_id": "dev_60",
+      "type": "s2a",
+      "db_id": "financial",
+      "status": "error",
+      "error": {
+        "type": "OpenAIPermissionDeniedError",
+        "message": "Error code: 403 - The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed)."
+      },
+      "elapsed_seconds": 0.163,
+      "required_tables": [
+        "account",
+        "district"
+      ],
+      "required_count": 2,
+      "first_table_hits": 0,
+      "cumulative_table_hits": 0,
+      "all_tables_first": false,
+      "all_tables_cumulative": false,
+      "missing_reference_tables": [
+        "ctx://datalake/hydra/financial/account",
+        "ctx://datalake/hydra/financial/district"
+      ],
+      "known_text_anchor_first": false,
+      "known_text_anchor_cumulative": false,
+      "text_coverage": "core_support_located",
+      "searches": {
+        "table_schema": [],
+        "resource": []
+      },
+      "sql_calls": [],
+      "final_answer": null,
+      "reference_answer": "The account ID for the first client who opened his/her account in the capital of Czechia, Prague, is 1539.",
+      "reference_sql": "SELECT T1.account_id FROM account AS T1 INNER JOIN district AS T2 ON T1.district_id = T2.district_id WHERE T2.A3 = 'Prague' ORDER BY T1.date ASC LIMIT 1",
+      "reference_sql_output": {
+        "account_id": 1539
+      },
+      "database_unchanged": true
+    },
+    {
+      "case_id": "dev_55",
+      "type": "a2s",
+      "db_id": "student_club",
+      "status": "error",
+      "error": {
+        "type": "OpenAIPermissionDeniedError",
+        "message": "Error code: 403 - The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed)."
+      },
+      "elapsed_seconds": 0.135,
+      "required_tables": [
+        "major",
+        "member"
+      ],
+      "required_count": 2,
+      "first_table_hits": 0,
+      "cumulative_table_hits": 0,
+      "all_tables_first": false,
+      "all_tables_cumulative": false,
+      "missing_reference_tables": [
+        "ctx://datalake/hydra/student_club/major",
+        "ctx://datalake/hydra/student_club/member"
+      ],
+      "known_text_anchor_first": false,
+      "known_text_anchor_cumulative": false,
+      "text_coverage": "core_support_located",
+      "searches": {
+        "table_schema": [],
+        "resource": []
+      },
+      "sql_calls": [],
+      "final_answer": null,
+      "reference_answer": "The student from the Art and Design Department in the Student_Club is Amy Firth, who is one of Peter Firth's children from his second marriage.",
+      "reference_sql": "SELECT T1.first_name, T1.last_name FROM member AS T1 INNER JOIN major AS T2 ON T1.link_to_major = T2.major_id WHERE T2.department = 'Art and Design Department'",
+      "reference_sql_output": {
+        "first_name": "Amy",
+        "last_name": "Firth"
+      },
+      "database_unchanged": true
+    },
+    {
+      "case_id": "dev_66",
+      "type": "a2s",
+      "db_id": "student_club",
+      "status": "error",
+      "error": {
+        "type": "OpenAIPermissionDeniedError",
+        "message": "Error code: 403 - The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed)."
+      },
+      "elapsed_seconds": 0.127,
+      "required_tables": [
+        "member",
+        "zip_code"
+      ],
+      "required_count": 2,
+      "first_table_hits": 0,
+      "cumulative_table_hits": 0,
+      "all_tables_first": false,
+      "all_tables_cumulative": false,
+      "missing_reference_tables": [
+        "ctx://datalake/hydra/student_club/member",
+        "ctx://datalake/hydra/student_club/zip_code"
+      ],
+      "known_text_anchor_first": false,
+      "known_text_anchor_cumulative": false,
+      "text_coverage": "core_support_located",
+      "searches": {
+        "table_schema": [],
+        "resource": []
+      },
+      "sql_calls": [],
+      "final_answer": null,
+      "reference_answer": "The most populous city in the hometown state of Sacha Harrison, New Jersey, is Newark, which had a population of 282,090 in 2018.",
+      "reference_sql": "SELECT T2.state FROM member AS T1 INNER JOIN zip_code AS T2 ON T1.zip = T2.zip_code WHERE T1.first_name = 'Sacha' AND T1.last_name = 'Harrison'",
+      "reference_sql_output": {
+        "state": "New Jersey"
+      },
+      "database_unchanged": true
+    },
+    {
+      "case_id": "dev_0",
+      "type": "s2a",
+      "db_id": "student_club",
+      "status": "error",
+      "error": {
+        "type": "OpenAIPermissionDeniedError",
+        "message": "Error code: 403 - The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed)."
+      },
+      "elapsed_seconds": 0.13,
+      "required_tables": [
+        "attendance",
+        "event",
+        "member"
+      ],
+      "required_count": 3,
+      "first_table_hits": 0,
+      "cumulative_table_hits": 0,
+      "all_tables_first": false,
+      "all_tables_cumulative": false,
+      "missing_reference_tables": [
+        "ctx://datalake/hydra/student_club/attendance",
+        "ctx://datalake/hydra/student_club/event",
+        "ctx://datalake/hydra/student_club/member"
+      ],
+      "known_text_anchor_first": false,
+      "known_text_anchor_cumulative": false,
+      "text_coverage": "core_support_located",
+      "searches": {
+        "table_schema": [],
+        "resource": []
+      },
+      "sql_calls": [],
+      "final_answer": null,
+      "reference_answer": "The social event attended by the vice president of a student club established at the American University of Science and Technology to promote student interests, located at 900 E. Washington St., is called \"Laugh Out Loud.\"",
+      "reference_sql": "SELECT T2.event_name FROM attendance AS T1 INNER JOIN event AS T2 ON T2.event_id = T1.link_to_event INNER JOIN member AS T3 ON T1.link_to_member = T3.member_id WHERE T3.position = 'Vice President' AND T2.location = '900 E. Washington St.' AND T2.type = 'Social'",
+      "reference_sql_output": {
+        "event_name": "Laugh Out Loud"
+      },
+      "database_unchanged": true
+    },
+    {
+      "case_id": "dev_11",
+      "type": "s2a",
+      "db_id": "student_club",
+      "status": "error",
+      "error": {
+        "type": "OpenAIPermissionDeniedError",
+        "message": "Error code: 403 - The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed)."
+      },
+      "elapsed_seconds": 0.125,
+      "required_tables": [
+        "major",
+        "member"
+      ],
+      "required_count": 2,
+      "first_table_hits": 0,
+      "cumulative_table_hits": 0,
+      "all_tables_first": false,
+      "all_tables_cumulative": false,
+      "missing_reference_tables": [
+        "ctx://datalake/hydra/student_club/major",
+        "ctx://datalake/hydra/student_club/member"
+      ],
+      "known_text_anchor_first": false,
+      "known_text_anchor_cumulative": false,
+      "text_coverage": "core_support_located",
+      "searches": {
+        "table_schema": [],
+        "resource": []
+      },
+      "sql_calls": [],
+      "final_answer": null,
+      "reference_answer": "The person holding the second highest political position in Afghanistan, the Vice President, has joined the major \"Communication Studies.\"",
+      "reference_sql": "SELECT T1.major_name FROM major AS T1 INNER JOIN member AS T2 ON T1.major_id = T2.link_to_major WHERE T2.position = 'Vice President'",
+      "reference_sql_output": {
+        "major_name": "Communication Studies"
+      },
+      "database_unchanged": true
+    }
+  ]
+}

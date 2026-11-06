@@ -1,0 +1,69 @@
+{
+  "completed_at": "2026-11-06T11:51:52.775728+08:00",
+  "tests": {
+    "passed": 190,
+    "skipped": 1,
+    "failed": 0
+  },
+  "default": "weighted",
+  "allowed_values": [
+    "rrf",
+    "weighted"
+  ],
+  "provider_calls": 0,
+  "answering_model_calls": 0,
+  "search_calls": 4,
+  "section_reads": 20,
+  "results": [
+    {
+      "mode": "rrf",
+      "query": "literal",
+      "sections": [
+        10,
+        17,
+        13,
+        8,
+        14
+      ],
+      "matches_preserved_results": true
+    },
+    {
+      "mode": "rrf",
+      "query": "semantic",
+      "sections": [
+        16,
+        4,
+        8,
+        13,
+        12
+      ],
+      "matches_preserved_results": true
+    },
+    {
+      "mode": "weighted",
+      "query": "literal",
+      "sections": [
+        17,
+        13,
+        10,
+        8,
+        14
+      ],
+      "matches_preserved_results": true
+    },
+    {
+      "mode": "weighted",
+      "query": "semantic",
+      "sections": [
+        8,
+        10,
+        16,
+        13,
+        4
+      ],
+      "matches_preserved_results": true
+    }
+  ],
+  "request_and_server_trace_parameter_verified": true,
+  "stored_data_old_indexes_and_historical_artifacts_unchanged": true
+}

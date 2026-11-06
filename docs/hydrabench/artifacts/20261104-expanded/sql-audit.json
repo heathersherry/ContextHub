@@ -1,0 +1,178 @@
+{
+  "dev_43": {
+    "query": "SELECT name, date FROM races WHERE year = 1999 ORDER BY round DESC LIMIT 1",
+    "result": {
+      "columns": [
+        "name",
+        "date"
+      ],
+      "rows": [
+        [
+          "Japanese Grand Prix",
+          "1999-10-31"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0048
+    }
+  },
+  "dev_62": {
+    "query": "SELECT T2.name FROM constructorStandings AS T1 INNER JOIN constructors AS T2 on T1.constructorId = T2.constructorId ORDER BY T1.points DESC LIMIT 1",
+    "result": {
+      "columns": [
+        "name"
+      ],
+      "rows": [
+        [
+          "Mercedes"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0028
+    }
+  },
+  "dev_5": {
+    "query": "SELECT lat, lng FROM circuits WHERE name = 'Silverstone Circuit'",
+    "result": {
+      "columns": [
+        "lat",
+        "lng"
+      ],
+      "rows": [
+        [
+          52.0786,
+          -1.01694
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0006
+    }
+  },
+  "dev_13": {
+    "query": "SELECT AVG(T2.points) FROM drivers AS T1 INNER JOIN driverStandings AS T2 ON T2.driverId = T1.driverId INNER JOIN races AS T3 ON T3.raceId = T2.raceId WHERE T1.forename = 'Eddie' AND T1.surname = 'Irvine' AND T3.year = 2000",
+    "result": {
+      "columns": [
+        "AVG(T2.points)"
+      ],
+      "rows": [
+        [
+          2.2666666666666666
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0078
+    }
+  },
+  "dev_35": {
+    "query": "SELECT T3.race FROM superhero AS T1 INNER JOIN hero_attribute AS T2 ON T1.id = T2.hero_id INNER JOIN race AS T3 ON T1.race_id = T3.id ORDER BY T2.attribute_value DESC LIMIT 1",
+    "result": {
+      "columns": [
+        "race"
+      ],
+      "rows": [
+        [
+          "Cosmic Entity"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0017
+    }
+  },
+  "dev_72": {
+    "query": "SELECT T2.publisher_name FROM superhero AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.id WHERE T1.superhero_name = 'Blue Beetle II'",
+    "result": {
+      "columns": [
+        "publisher_name"
+      ],
+      "rows": [
+        [
+          "DC Comics"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0003
+    }
+  },
+  "dev_10": {
+    "query": "SELECT ( SELECT weight_kg FROM superhero WHERE full_name LIKE 'Emil Blonsky' ) - ( SELECT weight_kg FROM superhero WHERE full_name LIKE 'Charles Chandler' ) AS CALCULATE",
+    "result": {
+      "columns": [
+        "CALCULATE"
+      ],
+      "rows": [
+        [
+          351
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0002
+    }
+  },
+  "dev_68": {
+    "query": "SELECT T3.power_name FROM superhero AS T1 INNER JOIN hero_power AS T2 ON T1.id = T2.hero_id INNER JOIN superpower AS T3 ON T2.power_id = T3.id WHERE T1.full_name = 'Helen Parr'",
+    "result": {
+      "columns": [
+        "power_name"
+      ],
+      "rows": [
+        [
+          "Agility"
+        ],
+        [
+          "Durability"
+        ],
+        [
+          "Super Strength"
+        ],
+        [
+          "Size Changing"
+        ],
+        [
+          "Shapeshifting"
+        ],
+        [
+          "Invulnerability"
+        ],
+        [
+          "Elasticity"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0008
+    }
+  },
+  "dev_31": {
+    "query": "SELECT T2.Location FROM posts AS T1 INNER JOIN users AS T2 ON T1.OwnerUserId = T2.Id WHERE T1.Title = 'Eliciting priors from experts'",
+    "result": {
+      "columns": [
+        "Location"
+      ],
+      "rows": [
+        [
+          "Newcastle, United Kingdom"
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.1295
+    }
+  },
+  "dev_35_count_audit": {
+    "query": "SELECT COUNT(*) AS all_rows, SUM(attribute_value=(SELECT MAX(attribute_value) FROM hero_attribute)) AS max_rows, COUNT(DISTINCT CASE WHEN attribute_value=(SELECT MAX(attribute_value) FROM hero_attribute) THEN hero_id END) AS max_heroes FROM hero_attribute",
+    "result": {
+      "columns": [
+        "all_rows",
+        "max_rows",
+        "max_heroes"
+      ],
+      "rows": [
+        [
+          3738,
+          279,
+          117
+        ]
+      ],
+      "truncated": false,
+      "elapsed_seconds": 0.0008
+    }
+  }
+}

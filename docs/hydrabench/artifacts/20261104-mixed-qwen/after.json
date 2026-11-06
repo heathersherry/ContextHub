@@ -1,0 +1,54 @@
+{
+  "counts": [
+    {
+      "context_type": "resource",
+      "count": 18265,
+      "embedded": 18265,
+      "long_document_paths": 0,
+      "adopted_count": 0,
+      "ignored_count": 0,
+      "content_and_vector_fingerprint": "658e37c223c53c10c167b1a644298d7d"
+    },
+    {
+      "context_type": "table_schema",
+      "count": 75,
+      "embedded": 75,
+      "long_document_paths": 0,
+      "adopted_count": 0,
+      "ignored_count": 0,
+      "content_and_vector_fingerprint": "b41fe8d9640dfb28ef0be0a97d21d08d"
+    }
+  ],
+  "settings": {
+    "rerank_strategy": "by_type",
+    "embedding_model": "text-embedding-v4",
+    "embedding_dimensions": 1536,
+    "search_over_retrieve_factor": 3,
+    "embedding_endpoint_host": "dashscope-intl.aliyuncs.com",
+    "propagation_enabled": false,
+    "lifecycle_enabled": false,
+    "chat_model": "qwen3.8-2.4t-a95b",
+    "chat_enable_thinking": true,
+    "chat_model_used": true
+  },
+  "sha256": {
+    "integrations/hydrabench/run.py": "29f2a3ba482a01eca302ea4527658a60183e477214c647e57579cdffc033cc3a",
+    "integrations/hydrabench/retrieval_tools.py": "3a358bda17084864fae9fac653f17fe31ebf33134e24b0ed3bb7a0b4d248856a",
+    "integrations/hydrabench/sqlite_tool.py": "c5e6719403467b08d937726e7a043edaf0f8a60ed6a776dbd32ee607329452d7",
+    "integrations/hydrabench/probe.py": "08d33d00a32896440e5104e4b8ad685c850f81e040d77c021338594cf8076135",
+    "data/hydrabench-expanded/selected-private.json": "9994346eba2db49c1bfb73e2da61294cf481b907369f4657672469dfc14d5188",
+    "data/hydrabench-expanded/text-support-labels.json": "473f38317f8fca6d6a2ebaadb076725d97593889333f19686c8b8ed53aabe8b0",
+    "src/contexthub/config.py": "318e1ad918dea62837a4ce1b46beabb682c050aafec223ebfa2ebbe902115a2a",
+    "src/contexthub/main.py": "87ded325b977cdac70fc91d443cf19c693768ea7eeb5c23ea1af580d02e6eabb",
+    "src/contexthub/retrieval/router.py": "1a4991a2884bc35502ff683896d9199c01d80d6bcbfc3765f2a8d4f391468c6e",
+    "src/contexthub/retrieval/rerank.py": "36a5979ddc97c02548d9fa68351efda45aeba22168d199547839907dad2cfe6a",
+    "src/contexthub/services/retrieval_service.py": "2cee00f4d2d6e4b86d2572ad878363faeb857b42c4cfb45652ff8498d3aaef8e"
+  },
+  "packages": {
+    "asyncpg": "0.32.0",
+    "httpx": "0.28.1",
+    "openai": "3.42.1",
+    "pydantic": "2.14.2",
+    "uvicorn": "0.54.0"
+  }
+}

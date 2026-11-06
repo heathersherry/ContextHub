@@ -1,0 +1,145 @@
+{
+  "case_id": "dev_31",
+  "type": "a2s",
+  "db_id": "codebase_community",
+  "reference_tables": [
+    "posts",
+    "users"
+  ],
+  "top_k": 3,
+  "table_schema": {
+    "query": "Database: codebase_community. What is the form of government in the country where the owner of the post \"Eliciting priors from experts\" is located?",
+    "response": {
+      "results": [
+        {
+          "uri": "ctx://datalake/hydra/codebase_community/posts",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 0.42707492597250885,
+          "l0_content": "Database: codebase_community\nTable: posts\nCREATE TABLE posts\n(\n    Id                    INTEGER          not null UNIQUE\n        primary key,\n    PostTypeId            INTEGER          null,\n    AcceptedAnswerId      INTEGER          null,\n    CreaionDate           DATETIME     null,\n    Score                 INTEGER          null,\n    ViewCount             INTEGER          null,\n    Body                  TEXT     null,\n    OwnerUserId           INTEGER          null,\n    LasActivityDate       DATETIME     null,\n    Title                 TEXT null,\n    Tags                  TEXT null,\n    AnswerCount           INTEGER          null,\n    CommentCount          INTEGER          null,\n    FavoriteCount         INTEGER          null,\n    LastEditorUserId      INTEGER          null,\n    LastEditDate          DATETIME     null,\n    CommunityOwnedDate    DATETIME    null,\n    ParentId              INTEGER          null,\n    ClosedDate            DATETIME     null,\n    OwnerDisplayName      TEXT null,\n    LastEditorDisplayName TEXT null,\n        foreign key (LastEditorUserId) references users (Id)\n            on update cascade on delete cascade,\n        foreign key (OwnerUserId) references users (Id)\n            on update cascade on delete cascade,\n        foreign key (ParentId) references posts (Id)\n            on update cascade on delete cascade\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nId,,the post id,integer,\r\nPostTypeId,Post Type Id,the id of the post type,integer,\r\nAcceptedAnswerId,Accepted Answer Id,the accepted answer id of the post ,integer,\r\nCreaionDate,Creation Date,the creation date of the post,datetime,\r\nScore,,the score of the post,integer,\r\nViewCount,View Count,the view count of the post,integer,\"commonsense evidence:\nHigher view count means the post has higher popularity\"\r\nBody,,the body of the post,text,\r\nOwnerUserId,Owner User Id,the id of the owner user,integer,\r\nLasActivityDate,Last Activity Date,the last activity date,datetime,\r\nTitle,,the title of the post,text,\r\nTags,,the tag of the post,text,\r\nAnswerCount,Answer Count,the total number of answers of the post,integer,\r\nCommentCount,Comment Count,the total number of comments of the post,integer,\r\nFavoriteCount,Favorite Count,the total number of favorites of the post,integer,\"commonsense evidence:\nmore favorite count refers to more valuable posts. \"\r\nLastEditorUserId,Last Editor User Id,the id of the last editor,integer,\r\nLastEditDate,Last Edit Date,the last edit date,datetime,\r\nCommunityOwnedDate,Community Owned Date,the community owned date,datetime,\r\nParentId,ParentId,the id of the parent post,integer,\"commonsense evidence:\nIf the parent id is null, the post is the root post. Otherwise, the post is the child post of other post. \"\r\nClosedDate,Closed Date,the closed date of the post,data_format,\"commonsense evidence:\nif ClosedDate is null or empty, it means this post is not well-finished\nif CloseDate is not null or empty, it means this post has well-finished.\"\r\nOwnerDisplayName,Owner Display Name,the display name of the post owner,text,\r\nLastEditorDisplayName,Last Editor Display Name,the display name of the last editor,text,",
+          "l1_content": "Database: codebase_community\nTable: posts\nCREATE TABLE posts\n(\n    Id                    INTEGER          not null UNIQUE\n        primary key,\n    PostTypeId            INTEGER          null,\n    AcceptedAnswerId      INTEGER          null,\n    CreaionDate           DATETIME     null,\n    Score                 INTEGER          null,\n    ViewCount             INTEGER          null,\n    Body                  TEXT     null,\n    OwnerUserId           INTEGER          null,\n    LasActivityDate       DATETIME     null,\n    Title                 TEXT null,\n    Tags                  TEXT null,\n    AnswerCount           INTEGER          null,\n    CommentCount          INTEGER          null,\n    FavoriteCount         INTEGER          null,\n    LastEditorUserId      INTEGER          null,\n    LastEditDate          DATETIME     null,\n    CommunityOwnedDate    DATETIME    null,\n    ParentId              INTEGER          null,\n    ClosedDate            DATETIME     null,\n    OwnerDisplayName      TEXT null,\n    LastEditorDisplayName TEXT null,\n        foreign key (LastEditorUserId) references users (Id)\n            on update cascade on delete cascade,\n        foreign key (OwnerUserId) references users (Id)\n            on update cascade on delete cascade,\n        foreign key (ParentId) references posts (Id)\n            on update cascade on delete cascade\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nId,,the post id,integer,\r\nPostTypeId,Post Type Id,the id of the post type,integer,\r\nAcceptedAnswerId,Accepted Answer Id,the accepted answer id of the post ,integer,\r\nCreaionDate,Creation Date,the creation date of the post,datetime,\r\nScore,,the score of the post,integer,\r\nViewCount,View Count,the view count of the post,integer,\"commonsense evidence:\nHigher view count means the post has higher popularity\"\r\nBody,,the body of the post,text,\r\nOwnerUserId,Owner User Id,the id of the owner user,integer,\r\nLasActivityDate,Last Activity Date,the last activity date,datetime,\r\nTitle,,the title of the post,text,\r\nTags,,the tag of the post,text,\r\nAnswerCount,Answer Count,the total number of answers of the post,integer,\r\nCommentCount,Comment Count,the total number of comments of the post,integer,\r\nFavoriteCount,Favorite Count,the total number of favorites of the post,integer,\"commonsense evidence:\nmore favorite count refers to more valuable posts. \"\r\nLastEditorUserId,Last Editor User Id,the id of the last editor,integer,\r\nLastEditDate,Last Edit Date,the last edit date,datetime,\r\nCommunityOwnedDate,Community Owned Date,the community owned date,datetime,\r\nParentId,ParentId,the id of the parent post,integer,\"commonsense evidence:\nIf the parent id is null, the post is the root post. Otherwise, the post is the child post of other post. \"\r\nClosedDate,Closed Date,the closed date of the post,data_format,\"commonsense evidence:\nif ClosedDate is null or empty, it means this post is not well-finished\nif CloseDate is not null or empty, it means this post has well-finished.\"\r\nOwnerDisplayName,Owner Display Name,the display name of the post owner,text,\r\nLastEditorDisplayName,Last Editor Display Name,the display name of the last editor,text,",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://datalake/hydra/codebase_community/comments",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 0.3865740597248104,
+          "l0_content": "Database: codebase_community\nTable: comments\nCREATE TABLE comments\n(\n    Id              INTEGER          not null\n        primary key,\n    PostId          INTEGER          null,\n    Score           INTEGER          null,\n    Text            TEXT     null,\n    CreationDate    DATETIME     null,\n    UserId          INTEGER          null,\n    UserDisplayName TEXT null,\n        foreign key (PostId) references posts (Id)\n            on update cascade on delete cascade,\n        foreign key (UserId) references users (Id)\n            on update cascade on delete cascade\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nId,,the comment Id,integer,\r\nPostId,Post Id,the unique id of the post,integer,\r\nScore,,rating score,integer,\"commonsense evidence:\nThe score is from 0 to 100. The score more than 60 refers that the comment is a positive comment. The score less than 60 refers that the comment is a negative comment. \"\r\nText,,the detailed content of the comment,text,\r\nCreationDate,Creation Date,the creation date of the comment,datetime,\r\nUserId,User Id,the id of the user who post the comment,integer,\r\nUserDisplayName,User Display Name,user's display name,text,",
+          "l1_content": "Database: codebase_community\nTable: comments\nCREATE TABLE comments\n(\n    Id              INTEGER          not null\n        primary key,\n    PostId          INTEGER          null,\n    Score           INTEGER          null,\n    Text            TEXT     null,\n    CreationDate    DATETIME     null,\n    UserId          INTEGER          null,\n    UserDisplayName TEXT null,\n        foreign key (PostId) references posts (Id)\n            on update cascade on delete cascade,\n        foreign key (UserId) references users (Id)\n            on update cascade on delete cascade\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nId,,the comment Id,integer,\r\nPostId,Post Id,the unique id of the post,integer,\r\nScore,,rating score,integer,\"commonsense evidence:\nThe score is from 0 to 100. The score more than 60 refers that the comment is a positive comment. The score less than 60 refers that the comment is a negative comment. \"\r\nText,,the detailed content of the comment,text,\r\nCreationDate,Creation Date,the creation date of the comment,datetime,\r\nUserId,User Id,the id of the user who post the comment,integer,\r\nUserDisplayName,User Display Name,user's display name,text,",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://datalake/hydra/codebase_community/users",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 0.38325019975007835,
+          "l0_content": "Database: codebase_community\nTable: users\nCREATE TABLE users\n(\n    Id              INTEGER          not null UNIQUE\n        primary key,\n    Reputation      INTEGER          null,\n    CreationDate    DATETIME     null,\n    DisplayName     TEXT null,\n    LastAccessDate  DATETIME     null,\n    WebsiteUrl      TEXT null,\n    Location        TEXT null,\n    AboutMe         TEXT     null,\n    Views           INTEGER          null,\n    UpVotes         INTEGER          null,\n    DownVotes       INTEGER          null,\n    AccountId       INTEGER          null,\n    Age             INTEGER          null,\n    ProfileImageUrl TEXT null\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nId,,the user id,integer,\r\nReputation,,the user's reputation,integer,\"commonsense evidence:\nThe user with higher reputation has more influence. \"\r\nCreationDate,Creation Date,the creation date of the user account,datetime,\r\nDisplayName,Display Name,the user's display name,text,\r\nLastAccessDate,Last Access Date,the last access date of the user account,datetime,\r\nWebsiteUrl,Website Url,the website url of the user account,text,\r\nLocation,,user's location,text,\r\nAboutMe,About Me,the self introduction of the user,text,\r\nViews,,the number of views ,integer,\r\nUpVotes,,the number of upvotes,integer,\r\nDownVotes,,the number of downvotes,integer,\r\nAccountId,Account Id,the unique id of the account,integer,\r\nAge,,user's age,integer,\" teenager: 13-18\n adult: 19-65\n elder: > 65\"\r\nProfileImageUrl,Profile Image Url,the profile image url,text,",
+          "l1_content": "Database: codebase_community\nTable: users\nCREATE TABLE users\n(\n    Id              INTEGER          not null UNIQUE\n        primary key,\n    Reputation      INTEGER          null,\n    CreationDate    DATETIME     null,\n    DisplayName     TEXT null,\n    LastAccessDate  DATETIME     null,\n    WebsiteUrl      TEXT null,\n    Location        TEXT null,\n    AboutMe         TEXT     null,\n    Views           INTEGER          null,\n    UpVotes         INTEGER          null,\n    DownVotes       INTEGER          null,\n    AccountId       INTEGER          null,\n    Age             INTEGER          null,\n    ProfileImageUrl TEXT null\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nId,,the user id,integer,\r\nReputation,,the user's reputation,integer,\"commonsense evidence:\nThe user with higher reputation has more influence. \"\r\nCreationDate,Creation Date,the creation date of the user account,datetime,\r\nDisplayName,Display Name,the user's display name,text,\r\nLastAccessDate,Last Access Date,the last access date of the user account,datetime,\r\nWebsiteUrl,Website Url,the website url of the user account,text,\r\nLocation,,user's location,text,\r\nAboutMe,About Me,the self introduction of the user,text,\r\nViews,,the number of views ,integer,\r\nUpVotes,,the number of upvotes,integer,\r\nDownVotes,,the number of downvotes,integer,\r\nAccountId,Account Id,the unique id of the account,integer,\r\nAge,,user's age,integer,\" teenager: 13-18\n adult: 19-65\n elder: > 65\"\r\nProfileImageUrl,Profile Image Url,the profile image url,text,",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        }
+      ],
+      "total": 3,
+      "retrieval_id": "c0e0d303-f0f0-430f-83d3-b84cf8015848",
+      "stale_notices": []
+    }
+  },
+  "resource": {
+    "query": "What is the form of government in the United Kingdom?",
+    "response": {
+      "results": [
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/31717/0056",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 0.584744428679041,
+          "l0_content": "United Kingdom — Politics.:Government.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 31717\nThe UK has a parliamentary government based on the Westminster system that has been emulated around the world: a legacy of the British Empire. The parliament of the United Kingdom meets in the Palace of Westminster and has two houses: an elected House of Commons and an appointed House of Lords. All bills passed are given Royal Assent before becoming law. The position of prime minister, the UK's head of government, belongs to the person most likely to command the confidence of the House of Commons; this individual is typically the leader of the political party or coalition of parties that holds the largest number of seats in that chamber.",
+          "l1_content": "United Kingdom — Politics.:Government.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 31717\nThe UK has a parliamentary government based on the Westminster system that has been emulated around the world: a legacy of the British Empire. The parliament of the United Kingdom meets in the Palace of Westminster and has two houses: an elected House of Commons and an appointed House of Lords. All bills passed are given Royal Assent before becoming law. The position of prime minister, the UK's head of government, belongs to the person most likely to command the confidence of the House of Commons; this individual is typically the leader of the political party or coalition of parties that holds the largest number of seats in that chamber.",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/31717/0054",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 0.5605682635815681,
+          "l0_content": "United Kingdom — Politics.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 31717\nThe United Kingdom is a unitary state under a constitutional monarchy. Queen Elizabeth II is the monarch and head of state of the UK, as well as fifteen other independent countries. These sixteen countries are sometimes referred to as \"Commonwealth realms\". The monarch has \"the right to be consulted, the right to encourage, and the right to warn\".",
+          "l1_content": "United Kingdom — Politics.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 31717\nThe United Kingdom is a unitary state under a constitutional monarchy. Queen Elizabeth II is the monarch and head of state of the UK, as well as fifteen other independent countries. These sixteen countries are sometimes referred to as \"Commonwealth realms\". The monarch has \"the right to be consulted, the right to encourage, and the right to warn\".",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/31726/0005",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 0.5268258420436608,
+          "l0_content": "Politics of the United Kingdom — Executive.:The United Kingdom Government.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 31726\nThe monarch appoints a Prime Minister as the head of Her Majesty's Government in the United Kingdom, guided by the strict convention that the Prime Minister should be the member of the House of Commons most likely to be able to form a Government with the support of that House. In practice, this means that the leader of the political party with an absolute majority of seats in the House of Commons is chosen to be the Prime Minister. If no party has an absolute majority, the leader of the largest party is given the first opportunity to form a coalition. The Prime Minister then selects the other Ministers which make up the Government and act as political heads of the various Government Departments.",
+          "l1_content": "Politics of the United Kingdom — Executive.:The United Kingdom Government.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 31726\nThe monarch appoints a Prime Minister as the head of Her Majesty's Government in the United Kingdom, guided by the strict convention that the Prime Minister should be the member of the House of Commons most likely to be able to form a Government with the support of that House. In practice, this means that the leader of the political party with an absolute majority of seats in the House of Commons is chosen to be the Prime Minister. If no party has an absolute majority, the leader of the largest party is given the first opportunity to form a coalition. The Prime Minister then selects the other Ministers which make up the Government and act as political heads of the various Government Departments.",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        }
+      ],
+      "total": 3,
+      "retrieval_id": "b789fd6e-354f-4e9b-9744-8bd2f114dd13",
+      "stale_notices": []
+    }
+  },
+  "table_metrics": {
+    "required": 2,
+    "hits_at_3": 2,
+    "recall_at_3": 1.0,
+    "all_required_at_3": true,
+    "first_hit_rank": 1
+  }
+}

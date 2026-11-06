@@ -1,0 +1,64 @@
+{
+  "completed_at": "2026-11-06T11:17:27.598908+08:00",
+  "tests": {
+    "passed": 108,
+    "skipped": 1,
+    "failed": 0,
+    "command": "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:sdk/src:plugins/deepagents/src /tmp/contexthub-deep-agents-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_long_doc_retrieval.py tests/test_retrieval.py tests/test_document_chunk_vectors.py tests/test_raw_context_retrieval.py"
+  },
+  "provider_calls": 0,
+  "answering_model_calls": 0,
+  "search_tool_calls": 4,
+  "section_reads": 20,
+  "fixed_weights": {
+    "vector": 0.8,
+    "bm25": 0.2
+  },
+  "weight_tuning": false,
+  "top_k": 5,
+  "vector_discovery_budget": 15,
+  "bm25_statistics_corpus_size": 16,
+  "score_completion_candidates": 1,
+  "identical_candidate_discovery_lists": true,
+  "identical_candidate_unions": true,
+  "identical_bm25_corpus_statistics": true,
+  "protected_data_and_historical_artifacts_unchanged": true,
+  "outcomes": {
+    "literal": {
+      "sections_before": [
+        10,
+        17,
+        13,
+        8,
+        14
+      ],
+      "sections_after": [
+        17,
+        13,
+        10,
+        8,
+        14
+      ],
+      "characters_before": 6033,
+      "characters_after": 6033
+    },
+    "semantic": {
+      "sections_before": [
+        16,
+        4,
+        8,
+        13,
+        12
+      ],
+      "sections_after": [
+        8,
+        10,
+        16,
+        13,
+        4
+      ],
+      "characters_before": 8992,
+      "characters_after": 9509
+    }
+  }
+}

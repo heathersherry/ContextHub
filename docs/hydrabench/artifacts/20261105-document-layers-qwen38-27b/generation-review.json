@@ -1,0 +1,57 @@
+{
+  "generation_model": "qwen3.8-27b",
+  "result": "passed",
+  "scope": "One real combined-generation ingestion; four-source pipeline checks. No answering model or batch benchmark.",
+  "document_introduction": "A technical overview of microarchitecture in computer engineering, detailing its relationship to instruction set architecture (ISA), key design aspects like pipelining and execution units, and advanced concepts such as caching, branch prediction, superscalar processing, out-of-order execution, and multithreading.",
+  "document_introduction_characters": 314,
+  "document_introduction_stored_verbatim": true,
+  "source_heading_count": 16,
+  "model_heading_span_matches": 16,
+  "persisted_model_section_descriptions": 16,
+  "navigation_characters": 989,
+  "independent_original_retrieval": {
+    "summary_candidate_count": 0,
+    "query_terms_absent_from_l0_l1": true
+  },
+  "observed_quality": "The introduction covers the source subject and principal mechanisms. It is a document-level description, not a source excerpt.",
+  "section_description_caveats": [
+    "The branch-prediction description says \"minimize pipeline flushes and speculative execution\"; the source describes speculative execution as a technique, so this phrasing is imprecise.",
+    "The register-renaming description mentions mapping logical to physical registers, a mechanism not explicitly stated in this source section. Treat summaries as navigation, not quoted evidence."
+  ],
+  "provider_usage": [
+    {
+      "route": "/compatible-mode/v1/chat/completions",
+      "status_code": 200,
+      "model": "qwen3.8-27b",
+      "usage": {
+        "completion_tokens": 1181,
+        "completion_tokens_details": {},
+        "prompt_tokens": 5460,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "text_tokens": 5460
+        },
+        "total_tokens": 6641
+      }
+    },
+    {
+      "route": "/compatible-mode/v1/embeddings",
+      "status_code": 200,
+      "model": "text-embedding-v4",
+      "usage": {
+        "prompt_tokens": 56,
+        "total_tokens": 56
+      }
+    }
+  ],
+  "old_index_unchanged": true,
+  "prior_record_sha256": {
+    "docs/hydrabench/artifacts/20261104-paper-metrics/token-usage.json": "3bdfcbdabd5c704ac1a1db1a0ce9e9458bfefe75435eb02fb4356e7622ace971",
+    "docs/hydrabench/artifacts/20261105-document-layers/provider-usage.json": "136085e99e720676df9ab88da316540eff119d1ef8696e25528023c646009164",
+    "docs/hydrabench/artifacts/20261105-document-layers/attempt-status.json": "65e3e2be8eba73a93097cecfda1b19c6cdbe8760d76f497248935902b5908731",
+    "docs/hydrabench/artifacts/20261105-document-layers-offline/validation.json": "673b5bd58e32b4c6c47090382af2fa542755baba007e19c653c79eebbef90f5b",
+    "docs/hydrabench/artifacts/20261105-document-layers-offline/unstructured-validation.json": "ba39a1584d9cbc7fd471db29d037c0a9abddc381c12f049cd67e930e3a40d1cc"
+  },
+  "source_sha256": "17571bc69825350c0f464fb9e4ff1478f3dc0fc4f7d6c6cb9f7836783bae808c",
+  "generated_response_sha256": "772c93a87a4e095c4485f246e1c0aaf445f87bb1c62ad658add3667b06f9dbda"
+}

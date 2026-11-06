@@ -1,0 +1,1555 @@
+{
+  "completed_at": "2026-11-05T18:08:02.081868+08:00",
+  "records": [
+    {
+      "mode": "originals_only",
+      "budget": "top1",
+      "query_label": "literal",
+      "query": "1986 VAX 8800",
+      "tool_arguments": {
+        "query": "1986 VAX 8800",
+        "context_type": [
+          "resource"
+        ],
+        "level": "L1",
+        "top_k": 1
+      },
+      "actual_top_k": 1,
+      "vector_candidate_budget": 3,
+      "hits": [
+        {
+          "section_id": 10,
+          "section_title": "Instruction pipelining.",
+          "range": [
+            9617,
+            11920
+          ],
+          "characters": 2303,
+          "body_sha256": "a8692f681599c386f6a4d30da21759d6a2a19cb23059f7e4177034733f9b4a7a",
+          "score": 0.01639344262295082,
+          "strategy": "keyword"
+        }
+      ],
+      "keyword_candidates": [
+        {
+          "section_id": 10,
+          "source_range": [
+            9617,
+            11920
+          ],
+          "score": 3.0025985275010827,
+          "strategy": "keyword"
+        }
+      ],
+      "vector_candidates": [
+        {
+          "section_id": 17,
+          "source_range": [
+            20817,
+            21522
+          ],
+          "score": 0.4232275325249084,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 13,
+          "source_range": [
+            15121,
+            16310
+          ],
+          "score": 0.41605841373875485,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 8,
+          "source_range": [
+            7303,
+            8317
+          ],
+          "score": 0.3956873361151856,
+          "strategy": "vector"
+        }
+      ],
+      "body_characters": 2303,
+      "tool_message_characters": 2843
+    },
+    {
+      "mode": "originals_only",
+      "budget": "top1",
+      "query_label": "semantic",
+      "query": "How can a CPU make progress on several instructions at once by handling different stages simultaneously?",
+      "tool_arguments": {
+        "query": "How can a CPU make progress on several instructions at once by handling different stages simultaneously?",
+        "context_type": [
+          "resource"
+        ],
+        "level": "L1",
+        "top_k": 1
+      },
+      "actual_top_k": 1,
+      "vector_candidate_budget": 3,
+      "hits": [
+        {
+          "section_id": 8,
+          "section_title": "Increasing execution speed.",
+          "range": [
+            7303,
+            8317
+          ],
+          "characters": 1014,
+          "body_sha256": "fb9bbd00734f765845bd9ef063838d8d3a068f1d13c97741c79417d252d0b682",
+          "score": 0.01639344262295082,
+          "strategy": "hybrid"
+        }
+      ],
+      "keyword_candidates": [
+        {
+          "section_id": 16,
+          "source_range": [
+            17627,
+            20817
+          ],
+          "score": 7.00592084761608,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 12,
+          "source_range": [
+            13335,
+            15121
+          ],
+          "score": 5.003904071388734,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 4,
+          "source_range": [
+            3111,
+            4924
+          ],
+          "score": 5.003846153846154,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 13,
+          "source_range": [
+            15121,
+            16310
+          ],
+          "score": 4.005020920502092,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 9,
+          "source_range": [
+            8317,
+            9617
+          ],
+          "score": 4.003831417624521,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 7,
+          "source_range": [
+            5393,
+            7303
+          ],
+          "score": 4.0036515388628064,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 3,
+          "source_range": [
+            573,
+            3111
+          ],
+          "score": 4.001966181675186,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 15,
+          "source_range": [
+            17132,
+            17627
+          ],
+          "score": 3.0119760479041915,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 8,
+          "source_range": [
+            7303,
+            8317
+          ],
+          "score": 3.0039292730844793,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 10,
+          "source_range": [
+            9617,
+            11920
+          ],
+          "score": 3.003892733564014,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 11,
+          "source_range": [
+            11920,
+            13335
+          ],
+          "score": 3.0035211267605635,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 5,
+          "source_range": [
+            4924,
+            4957
+          ],
+          "score": 1.0294117647058822,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 17,
+          "source_range": [
+            20817,
+            21522
+          ],
+          "score": 1.0042372881355932,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 2,
+          "source_range": [
+            0,
+            573
+          ],
+          "score": 1.0034782608695652,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 6,
+          "source_range": [
+            4957,
+            5393
+          ],
+          "score": 1.002288329519451,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 14,
+          "source_range": [
+            16310,
+            17132
+          ],
+          "score": 1.0012150668286757,
+          "strategy": "keyword"
+        }
+      ],
+      "vector_candidates": [
+        {
+          "section_id": 8,
+          "source_range": [
+            7303,
+            8317
+          ],
+          "score": 0.6981527029366912,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 10,
+          "source_range": [
+            9617,
+            11920
+          ],
+          "score": 0.6974353402088687,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 6,
+          "source_range": [
+            4957,
+            5393
+          ],
+          "score": 0.6863367762069936,
+          "strategy": "vector"
+        }
+      ],
+      "body_characters": 1014,
+      "tool_message_characters": 1542
+    },
+    {
+      "mode": "originals_only",
+      "budget": "default5",
+      "query_label": "literal",
+      "query": "1986 VAX 8800",
+      "tool_arguments": {
+        "query": "1986 VAX 8800",
+        "context_type": [
+          "resource"
+        ],
+        "level": "L1"
+      },
+      "actual_top_k": 5,
+      "vector_candidate_budget": 15,
+      "hits": [
+        {
+          "section_id": 10,
+          "section_title": "Instruction pipelining.",
+          "range": [
+            9617,
+            11920
+          ],
+          "characters": 2303,
+          "body_sha256": "a8692f681599c386f6a4d30da21759d6a2a19cb23059f7e4177034733f9b4a7a",
+          "score": 0.01639344262295082,
+          "strategy": "hybrid"
+        }
+      ],
+      "keyword_candidates": [
+        {
+          "section_id": 10,
+          "source_range": [
+            9617,
+            11920
+          ],
+          "score": 3.0025985275010827,
+          "strategy": "keyword"
+        }
+      ],
+      "vector_candidates": [
+        {
+          "section_id": 17,
+          "source_range": [
+            20817,
+            21522
+          ],
+          "score": 0.4232275325249084,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 13,
+          "source_range": [
+            15121,
+            16310
+          ],
+          "score": 0.41605841373875485,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 8,
+          "source_range": [
+            7303,
+            8317
+          ],
+          "score": 0.3956873361151856,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 14,
+          "source_range": [
+            16310,
+            17132
+          ],
+          "score": 0.3876395031310933,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 10,
+          "source_range": [
+            9617,
+            11920
+          ],
+          "score": 0.38551063710324596,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 16,
+          "source_range": [
+            17627,
+            20817
+          ],
+          "score": 0.38176133795726686,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 11,
+          "source_range": [
+            11920,
+            13335
+          ],
+          "score": 0.37635127446942485,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 9,
+          "source_range": [
+            8317,
+            9617
+          ],
+          "score": 0.36567881124994617,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 2,
+          "source_range": [
+            0,
+            573
+          ],
+          "score": 0.35582175850869235,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 4,
+          "source_range": [
+            3111,
+            4924
+          ],
+          "score": 0.34522690233863806,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 3,
+          "source_range": [
+            573,
+            3111
+          ],
+          "score": 0.34519612577030856,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 5,
+          "source_range": [
+            4924,
+            4957
+          ],
+          "score": 0.3394873727284605,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 15,
+          "source_range": [
+            17132,
+            17627
+          ],
+          "score": 0.33305724465164843,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 7,
+          "source_range": [
+            5393,
+            7303
+          ],
+          "score": 0.3295400444084402,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 6,
+          "source_range": [
+            4957,
+            5393
+          ],
+          "score": 0.31614964411859203,
+          "strategy": "vector"
+        }
+      ],
+      "body_characters": 2303,
+      "tool_message_characters": 2842
+    },
+    {
+      "mode": "originals_only",
+      "budget": "default5",
+      "query_label": "semantic",
+      "query": "How can a CPU make progress on several instructions at once by handling different stages simultaneously?",
+      "tool_arguments": {
+        "query": "How can a CPU make progress on several instructions at once by handling different stages simultaneously?",
+        "context_type": [
+          "resource"
+        ],
+        "level": "L1"
+      },
+      "actual_top_k": 5,
+      "vector_candidate_budget": 15,
+      "hits": [
+        {
+          "section_id": 16,
+          "section_title": "Multiprocessing and multithreading.",
+          "range": [
+            17627,
+            20817
+          ],
+          "characters": 3190,
+          "body_sha256": "20fdfde8325408b3590297eb80266adcc8cd425a232bdfc833d3bc669e7cc8d8",
+          "score": 0.01639344262295082,
+          "strategy": "hybrid"
+        }
+      ],
+      "keyword_candidates": [
+        {
+          "section_id": 16,
+          "source_range": [
+            17627,
+            20817
+          ],
+          "score": 7.00592084761608,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 12,
+          "source_range": [
+            13335,
+            15121
+          ],
+          "score": 5.003904071388734,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 4,
+          "source_range": [
+            3111,
+            4924
+          ],
+          "score": 5.003846153846154,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 13,
+          "source_range": [
+            15121,
+            16310
+          ],
+          "score": 4.005020920502092,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 9,
+          "source_range": [
+            8317,
+            9617
+          ],
+          "score": 4.003831417624521,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 7,
+          "source_range": [
+            5393,
+            7303
+          ],
+          "score": 4.0036515388628064,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 3,
+          "source_range": [
+            573,
+            3111
+          ],
+          "score": 4.001966181675186,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 15,
+          "source_range": [
+            17132,
+            17627
+          ],
+          "score": 3.0119760479041915,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 8,
+          "source_range": [
+            7303,
+            8317
+          ],
+          "score": 3.0039292730844793,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 10,
+          "source_range": [
+            9617,
+            11920
+          ],
+          "score": 3.003892733564014,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 11,
+          "source_range": [
+            11920,
+            13335
+          ],
+          "score": 3.0035211267605635,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 5,
+          "source_range": [
+            4924,
+            4957
+          ],
+          "score": 1.0294117647058822,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 17,
+          "source_range": [
+            20817,
+            21522
+          ],
+          "score": 1.0042372881355932,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 2,
+          "source_range": [
+            0,
+            573
+          ],
+          "score": 1.0034782608695652,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 6,
+          "source_range": [
+            4957,
+            5393
+          ],
+          "score": 1.002288329519451,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 14,
+          "source_range": [
+            16310,
+            17132
+          ],
+          "score": 1.0012150668286757,
+          "strategy": "keyword"
+        }
+      ],
+      "vector_candidates": [
+        {
+          "section_id": 8,
+          "source_range": [
+            7303,
+            8317
+          ],
+          "score": 0.6981527029366912,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 10,
+          "source_range": [
+            9617,
+            11920
+          ],
+          "score": 0.6974353402088687,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 6,
+          "source_range": [
+            4957,
+            5393
+          ],
+          "score": 0.6863367762069936,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 13,
+          "source_range": [
+            15121,
+            16310
+          ],
+          "score": 0.6767034933986362,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 14,
+          "source_range": [
+            16310,
+            17132
+          ],
+          "score": 0.6620509435428439,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 16,
+          "source_range": [
+            17627,
+            20817
+          ],
+          "score": 0.6603635347106179,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 4,
+          "source_range": [
+            3111,
+            4924
+          ],
+          "score": 0.6529114440951185,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 12,
+          "source_range": [
+            13335,
+            15121
+          ],
+          "score": 0.6388981913535173,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 17,
+          "source_range": [
+            20817,
+            21522
+          ],
+          "score": 0.6260343007435138,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 7,
+          "source_range": [
+            5393,
+            7303
+          ],
+          "score": 0.5998554587278043,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 9,
+          "source_range": [
+            8317,
+            9617
+          ],
+          "score": 0.5902051153717924,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 5,
+          "source_range": [
+            4924,
+            4957
+          ],
+          "score": 0.5892854157303173,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 15,
+          "source_range": [
+            17132,
+            17627
+          ],
+          "score": 0.5745430163902946,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 3,
+          "source_range": [
+            573,
+            3111
+          ],
+          "score": 0.559568030847074,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 2,
+          "source_range": [
+            0,
+            573
+          ],
+          "score": 0.5405956120186488,
+          "strategy": "vector"
+        }
+      ],
+      "body_characters": 3190,
+      "tool_message_characters": 3735
+    },
+    {
+      "mode": "mixed",
+      "budget": "top1",
+      "query_label": "literal",
+      "query": "1986 VAX 8800",
+      "tool_arguments": {
+        "query": "1986 VAX 8800",
+        "context_type": [
+          "resource"
+        ],
+        "level": "L1",
+        "top_k": 1
+      },
+      "actual_top_k": 1,
+      "vector_candidate_budget": 3,
+      "hits": [
+        {
+          "section_id": 10,
+          "section_title": "Instruction pipelining.",
+          "range": [
+            9617,
+            11920
+          ],
+          "characters": 2303,
+          "body_sha256": "a8692f681599c386f6a4d30da21759d6a2a19cb23059f7e4177034733f9b4a7a",
+          "score": 0.03278688524590164,
+          "strategy": "keyword"
+        }
+      ],
+      "keyword_candidates": [
+        {
+          "section_id": 10,
+          "source_range": [
+            9617,
+            11920
+          ],
+          "score": 3.0025985275010827,
+          "strategy": "keyword"
+        }
+      ],
+      "vector_candidates": [
+        {
+          "section_id": 17,
+          "source_range": [
+            20817,
+            21522
+          ],
+          "score": 0.4232275325249084,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 13,
+          "source_range": [
+            15121,
+            16310
+          ],
+          "score": 0.41605841373875485,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 8,
+          "source_range": [
+            7303,
+            8317
+          ],
+          "score": 0.3956873361151856,
+          "strategy": "vector"
+        }
+      ],
+      "body_characters": 2303,
+      "tool_message_characters": 2843
+    },
+    {
+      "mode": "mixed",
+      "budget": "top1",
+      "query_label": "semantic",
+      "query": "How can a CPU make progress on several instructions at once by handling different stages simultaneously?",
+      "tool_arguments": {
+        "query": "How can a CPU make progress on several instructions at once by handling different stages simultaneously?",
+        "context_type": [
+          "resource"
+        ],
+        "level": "L1",
+        "top_k": 1
+      },
+      "actual_top_k": 1,
+      "vector_candidate_budget": 3,
+      "hits": [
+        {
+          "section_id": 8,
+          "section_title": "Increasing execution speed.",
+          "range": [
+            7303,
+            8317
+          ],
+          "characters": 1014,
+          "body_sha256": "fb9bbd00734f765845bd9ef063838d8d3a068f1d13c97741c79417d252d0b682",
+          "score": 0.03278688524590164,
+          "strategy": "hybrid"
+        }
+      ],
+      "keyword_candidates": [
+        {
+          "section_id": 16,
+          "source_range": [
+            17627,
+            20817
+          ],
+          "score": 7.00592084761608,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 12,
+          "source_range": [
+            13335,
+            15121
+          ],
+          "score": 5.003904071388734,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 4,
+          "source_range": [
+            3111,
+            4924
+          ],
+          "score": 5.003846153846154,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 13,
+          "source_range": [
+            15121,
+            16310
+          ],
+          "score": 4.005020920502092,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 9,
+          "source_range": [
+            8317,
+            9617
+          ],
+          "score": 4.003831417624521,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 7,
+          "source_range": [
+            5393,
+            7303
+          ],
+          "score": 4.0036515388628064,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 3,
+          "source_range": [
+            573,
+            3111
+          ],
+          "score": 4.001966181675186,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 15,
+          "source_range": [
+            17132,
+            17627
+          ],
+          "score": 3.0119760479041915,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 8,
+          "source_range": [
+            7303,
+            8317
+          ],
+          "score": 3.0039292730844793,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 10,
+          "source_range": [
+            9617,
+            11920
+          ],
+          "score": 3.003892733564014,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 11,
+          "source_range": [
+            11920,
+            13335
+          ],
+          "score": 3.0035211267605635,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 5,
+          "source_range": [
+            4924,
+            4957
+          ],
+          "score": 1.0294117647058822,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 17,
+          "source_range": [
+            20817,
+            21522
+          ],
+          "score": 1.0042372881355932,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 2,
+          "source_range": [
+            0,
+            573
+          ],
+          "score": 1.0034782608695652,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 6,
+          "source_range": [
+            4957,
+            5393
+          ],
+          "score": 1.002288329519451,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 14,
+          "source_range": [
+            16310,
+            17132
+          ],
+          "score": 1.0012150668286757,
+          "strategy": "keyword"
+        }
+      ],
+      "vector_candidates": [
+        {
+          "section_id": 8,
+          "source_range": [
+            7303,
+            8317
+          ],
+          "score": 0.6981527029366912,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 10,
+          "source_range": [
+            9617,
+            11920
+          ],
+          "score": 0.6974353402088687,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 6,
+          "source_range": [
+            4957,
+            5393
+          ],
+          "score": 0.6863367762069936,
+          "strategy": "vector"
+        }
+      ],
+      "body_characters": 1014,
+      "tool_message_characters": 1542
+    },
+    {
+      "mode": "mixed",
+      "budget": "default5",
+      "query_label": "literal",
+      "query": "1986 VAX 8800",
+      "tool_arguments": {
+        "query": "1986 VAX 8800",
+        "context_type": [
+          "resource"
+        ],
+        "level": "L1"
+      },
+      "actual_top_k": 5,
+      "vector_candidate_budget": 15,
+      "hits": [
+        {
+          "section_id": 10,
+          "section_title": "Instruction pipelining.",
+          "range": [
+            9617,
+            11920
+          ],
+          "characters": 2303,
+          "body_sha256": "a8692f681599c386f6a4d30da21759d6a2a19cb23059f7e4177034733f9b4a7a",
+          "score": 0.03278688524590164,
+          "strategy": "hybrid"
+        }
+      ],
+      "keyword_candidates": [
+        {
+          "section_id": 10,
+          "source_range": [
+            9617,
+            11920
+          ],
+          "score": 3.0025985275010827,
+          "strategy": "keyword"
+        }
+      ],
+      "vector_candidates": [
+        {
+          "section_id": 17,
+          "source_range": [
+            20817,
+            21522
+          ],
+          "score": 0.4232275325249084,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 13,
+          "source_range": [
+            15121,
+            16310
+          ],
+          "score": 0.41605841373875485,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 8,
+          "source_range": [
+            7303,
+            8317
+          ],
+          "score": 0.3956873361151856,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 14,
+          "source_range": [
+            16310,
+            17132
+          ],
+          "score": 0.3876395031310933,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 10,
+          "source_range": [
+            9617,
+            11920
+          ],
+          "score": 0.38551063710324596,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 16,
+          "source_range": [
+            17627,
+            20817
+          ],
+          "score": 0.38176133795726686,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 11,
+          "source_range": [
+            11920,
+            13335
+          ],
+          "score": 0.37635127446942485,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 9,
+          "source_range": [
+            8317,
+            9617
+          ],
+          "score": 0.36567881124994617,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 2,
+          "source_range": [
+            0,
+            573
+          ],
+          "score": 0.35582175850869235,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 4,
+          "source_range": [
+            3111,
+            4924
+          ],
+          "score": 0.34522690233863806,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 3,
+          "source_range": [
+            573,
+            3111
+          ],
+          "score": 0.34519612577030856,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 5,
+          "source_range": [
+            4924,
+            4957
+          ],
+          "score": 0.3394873727284605,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 15,
+          "source_range": [
+            17132,
+            17627
+          ],
+          "score": 0.33305724465164843,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 7,
+          "source_range": [
+            5393,
+            7303
+          ],
+          "score": 0.3295400444084402,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 6,
+          "source_range": [
+            4957,
+            5393
+          ],
+          "score": 0.31614964411859203,
+          "strategy": "vector"
+        }
+      ],
+      "body_characters": 2303,
+      "tool_message_characters": 2842
+    },
+    {
+      "mode": "mixed",
+      "budget": "default5",
+      "query_label": "semantic",
+      "query": "How can a CPU make progress on several instructions at once by handling different stages simultaneously?",
+      "tool_arguments": {
+        "query": "How can a CPU make progress on several instructions at once by handling different stages simultaneously?",
+        "context_type": [
+          "resource"
+        ],
+        "level": "L1"
+      },
+      "actual_top_k": 5,
+      "vector_candidate_budget": 15,
+      "hits": [
+        {
+          "section_id": 16,
+          "section_title": "Multiprocessing and multithreading.",
+          "range": [
+            17627,
+            20817
+          ],
+          "characters": 3190,
+          "body_sha256": "20fdfde8325408b3590297eb80266adcc8cd425a232bdfc833d3bc669e7cc8d8",
+          "score": 0.03278688524590164,
+          "strategy": "hybrid"
+        }
+      ],
+      "keyword_candidates": [
+        {
+          "section_id": 16,
+          "source_range": [
+            17627,
+            20817
+          ],
+          "score": 7.00592084761608,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 12,
+          "source_range": [
+            13335,
+            15121
+          ],
+          "score": 5.003904071388734,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 4,
+          "source_range": [
+            3111,
+            4924
+          ],
+          "score": 5.003846153846154,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 13,
+          "source_range": [
+            15121,
+            16310
+          ],
+          "score": 4.005020920502092,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 9,
+          "source_range": [
+            8317,
+            9617
+          ],
+          "score": 4.003831417624521,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 7,
+          "source_range": [
+            5393,
+            7303
+          ],
+          "score": 4.0036515388628064,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 3,
+          "source_range": [
+            573,
+            3111
+          ],
+          "score": 4.001966181675186,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 15,
+          "source_range": [
+            17132,
+            17627
+          ],
+          "score": 3.0119760479041915,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 8,
+          "source_range": [
+            7303,
+            8317
+          ],
+          "score": 3.0039292730844793,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 10,
+          "source_range": [
+            9617,
+            11920
+          ],
+          "score": 3.003892733564014,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 11,
+          "source_range": [
+            11920,
+            13335
+          ],
+          "score": 3.0035211267605635,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 5,
+          "source_range": [
+            4924,
+            4957
+          ],
+          "score": 1.0294117647058822,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 17,
+          "source_range": [
+            20817,
+            21522
+          ],
+          "score": 1.0042372881355932,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 2,
+          "source_range": [
+            0,
+            573
+          ],
+          "score": 1.0034782608695652,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 6,
+          "source_range": [
+            4957,
+            5393
+          ],
+          "score": 1.002288329519451,
+          "strategy": "keyword"
+        },
+        {
+          "section_id": 14,
+          "source_range": [
+            16310,
+            17132
+          ],
+          "score": 1.0012150668286757,
+          "strategy": "keyword"
+        }
+      ],
+      "vector_candidates": [
+        {
+          "section_id": 8,
+          "source_range": [
+            7303,
+            8317
+          ],
+          "score": 0.6981527029366912,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 10,
+          "source_range": [
+            9617,
+            11920
+          ],
+          "score": 0.6974353402088687,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 6,
+          "source_range": [
+            4957,
+            5393
+          ],
+          "score": 0.6863367762069936,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 13,
+          "source_range": [
+            15121,
+            16310
+          ],
+          "score": 0.6767034933986362,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 14,
+          "source_range": [
+            16310,
+            17132
+          ],
+          "score": 0.6620509435428439,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 16,
+          "source_range": [
+            17627,
+            20817
+          ],
+          "score": 0.6603635347106179,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 4,
+          "source_range": [
+            3111,
+            4924
+          ],
+          "score": 0.6529114440951185,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 12,
+          "source_range": [
+            13335,
+            15121
+          ],
+          "score": 0.6388981913535173,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 17,
+          "source_range": [
+            20817,
+            21522
+          ],
+          "score": 0.6260343007435138,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 7,
+          "source_range": [
+            5393,
+            7303
+          ],
+          "score": 0.5998554587278043,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 9,
+          "source_range": [
+            8317,
+            9617
+          ],
+          "score": 0.5902051153717924,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 5,
+          "source_range": [
+            4924,
+            4957
+          ],
+          "score": 0.5892854157303173,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 15,
+          "source_range": [
+            17132,
+            17627
+          ],
+          "score": 0.5745430163902946,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 3,
+          "source_range": [
+            573,
+            3111
+          ],
+          "score": 0.559568030847074,
+          "strategy": "vector"
+        },
+        {
+          "section_id": 2,
+          "source_range": [
+            0,
+            573
+          ],
+          "score": 0.5405956120186488,
+          "strategy": "vector"
+        }
+      ],
+      "body_characters": 3190,
+      "tool_message_characters": 3735
+    }
+  ],
+  "provider_calls": 0,
+  "chat_calls": 0,
+  "answering_model_calls": 0,
+  "all_original_reads_match": true,
+  "no_duplicate_ranges": true,
+  "data_unchanged": true
+}

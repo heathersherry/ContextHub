@@ -1,0 +1,1976 @@
+{
+  "summary": {
+    "keyword": {
+      "cases": 20,
+      "required_table_occurrences": 42,
+      "table_hits_at_3": 27,
+      "all_tables_at_3_cases": 7,
+      "any_table_at_3_cases": 19,
+      "other_database_table_hits": 4,
+      "text_covered_cases": 19,
+      "text_anchor_hit_at_3_cases": 18,
+      "text_anchor_hit_at_1_cases": 10
+    },
+    "vector": {
+      "cases": 20,
+      "required_table_occurrences": 42,
+      "table_hits_at_3": 35,
+      "all_tables_at_3_cases": 14,
+      "any_table_at_3_cases": 19,
+      "other_database_table_hits": 0,
+      "text_covered_cases": 19,
+      "text_anchor_hit_at_3_cases": 16,
+      "text_anchor_hit_at_1_cases": 11
+    },
+    "paired_changes": {
+      "table_more_hits": [
+        "dev_0",
+        "dev_6",
+        "dev_13",
+        "dev_20",
+        "dev_26",
+        "dev_31",
+        "dev_32",
+        "dev_55",
+        "dev_62",
+        "dev_68"
+      ],
+      "table_fewer_hits": [
+        "dev_46",
+        "dev_60"
+      ],
+      "table_same_hit_count": [
+        "dev_5",
+        "dev_10",
+        "dev_11",
+        "dev_35",
+        "dev_42",
+        "dev_43",
+        "dev_66",
+        "dev_72"
+      ],
+      "text_anchor_gained": [
+        "dev_62"
+      ],
+      "text_anchor_lost": [
+        "dev_10",
+        "dev_31",
+        "dev_66"
+      ]
+    }
+  },
+  "records": [
+    {
+      "case_id": "dev_0",
+      "type": "s2a",
+      "db_id": "student_club",
+      "reference_tables": [
+        "attendance",
+        "event",
+        "member"
+      ],
+      "text_coverage": "core_support_located",
+      "known_text_anchors": [
+        "ctx://team/engineering/hydra/kilt/30861034/0015"
+      ],
+      "table_schema": {
+        "query": "Database: student_club. What is the name of the social event attended by the vice president of an organization established at the American University of Science and Technology to promote student interests, located at 900 E. Washington St.?",
+        "keyword": {
+          "uris": [
+            "ctx://datalake/hydra/student_club/member",
+            "ctx://datalake/hydra/student_club/budget",
+            "ctx://datalake/hydra/student_club/event"
+          ],
+          "scores": [
+            10.08420009222575,
+            10.059448556354376,
+            9.250953006693823
+          ],
+          "retrieval_id": "145cb0cc-327e-4477-856e-dc175ecfa23c",
+          "required_count": 3,
+          "hits": 2,
+          "any_hit": true,
+          "all_required": false,
+          "first_hit_rank": 1,
+          "other_database_hits": 0
+        },
+        "vector": {
+          "uris": [
+            "ctx://datalake/hydra/student_club/event",
+            "ctx://datalake/hydra/student_club/attendance",
+            "ctx://datalake/hydra/student_club/member"
+          ],
+          "scores": [
+            0.4337192177772522,
+            0.4062809701990511,
+            0.39636731147766113
+          ],
+          "retrieval_id": "63e3bd82-3238-44bc-ba39-ec8b0a0de296",
+          "required_count": 3,
+          "hits": 3,
+          "any_hit": true,
+          "all_required": true,
+          "first_hit_rank": 1,
+          "other_database_hits": 0
+        }
+      },
+      "resource": {
+        "query": "What is established at the American University of Science and Technology to promote the interests of students?",
+        "keyword": {
+          "uris": [
+            "ctx://team/engineering/hydra/kilt/30861034/0015",
+            "ctx://team/engineering/hydra/kilt/30861034/0010",
+            "ctx://team/engineering/hydra/kilt/30861034/0008"
+          ],
+          "scores": [
+            7.736442171582944,
+            3.405223743838614,
+            3.1654260150483906
+          ],
+          "retrieval_id": "430234da-7bb0-4013-9474-bcbc691e75b6",
+          "required_count": 1,
+          "hits": 1,
+          "any_hit": true,
+          "all_required": true,
+          "first_hit_rank": 1
+        },
+        "vector": {
+          "uris": [
+            "ctx://team/engineering/hydra/kilt/30861034/0015",
+            "ctx://team/engineering/hydra/kilt/30861034/0008",
+            "ctx://team/engineering/hydra/kilt/30861034/0009"
+          ],
+          "scores": [
+            0.5184468626976013,
+            0.49903225898742676,
+            0.4961677493949095
+          ],
+          "retrieval_id": "21018a36-cc90-400d-9642-65438b288eaa",
+          "required_count": 1,
+          "hits": 1,
+          "any_hit": true,
+          "all_required": true,
+          "first_hit_rank": 1
+        }
+      },
+      "table_hit_delta": 1,
+      "text_anchor_hit_delta": 0
+    },
+    {
+      "case_id": "dev_5",
+      "type": "s2a",
+      "db_id": "formula_1",
+      "reference_tables": [
+        "circuits"
+      ],
+      "text_coverage": "core_support_located",
+      "known_text_anchors": [
+        "ctx://team/engineering/hydra/kilt/522676/0001",
+        "ctx://team/engineering/hydra/kilt/812294/0002"
+      ],
+      "table_schema": {
+        "query": "Database: formula_1. What are the location coordinates of the racing circuit, Silverstone, which was built on the site of a World War II Royal Air Force bomber station and features runways in a classic WWII triangle format within its track outline?",
+        "keyword": {
+          "uris": [
+            "ctx://datalake/hydra/formula_1/qualifying",
+            "ctx://datalake/hydra/formula_1/circuits",
+            "ctx://datalake/hydra/formula_1/constructorStandings"
+          ],
+          "scores": [
+            16.582358114881604,
+            8.438259477705813,
+            4.730908669220318
+          ],
+          "retrieval_id": "871d80b7-27c8-42e8-90a1-cac9c9fcce72",
+          "required_count": 1,
+          "hits": 1,
+          "any_hit": true,
+          "all_required": true,
+          "first_hit_rank": 2,
+          "other_database_hits": 0
+        },
+        "vector": {
+          "uris": [
+            "ctx://datalake/hydra/formula_1/circuits",
+            "ctx://datalake/hydra/formula_1/races",
+            "ctx://datalake/hydra/formula_1/constructorStandings"
+          ],
+          "scores": [
+            0.3706096631651923,
+            0.33002146065363114,
+            0.2934195661621899
+          ],
+          "retrieval_id": "147c0d0f-7aff-42b0-a037-4dd9b644dc57",
+          "required_count": 1,
+          "hits": 1,
+          "any_hit": true,
+          "all_required": true,
+          "first_hit_rank": 1,
+          "other_database_hits": 0
+        }
+      },
+      "resource": {
+        "query": "Which racing circuit, built on the site of a World War II Royal Air Force bomber station, features runways in a classic WWII triangle format within its track outline?",
+        "keyword": {
+          "uris": [
+            "ctx://team/engineering/hydra/kilt/522676/0001",
+            "ctx://team/engineering/hydra/kilt/812294/0002",
+            "ctx://team/engineering/hydra/kilt/812294/0000"
+          ],
+          "scores": [
+            31.06627059148815,
+            15.209729002979763,
+            12.799950897453815
+          ],
+          "retrieval_id": "f21c4f89-1167-48db-8189-493e6e4e6609",
+          "required_count": 2,
+          "hits": 2,
+          "any_hit": true,
+          "all_required": true,
+          "first_hit_rank": 1
+        },
+        "vector": {
+          "uris": [
+            "ctx://team/engineering/hydra/kilt/522676/0001",
+            "ctx://team/engineering/hydra/kilt/812294/0002",
+            "ctx://team/engineering/hydra/kilt/522676/0003"
+          ],
+          "scores": [
+            0.5793085443561412,
+            0.5368782761882197,
+            0.4879946999546716
+          ],
+          "retrieval_id": "55c5557f-bce3-4bfb-8f1b-2afbcc59907a",
+          "required_count": 2,
+          "hits": 2,
+          "any_hit": true,
+          "all_required": true,
+          "first_hit_rank": 1
+        }
+      },
+      "table_hit_delta": 0,
+      "text_anchor_hit_delta": 0
+    },
+    {
+      "case_id": "dev_6",
+      "type": "s2a",
+      "db_id": "codebase_community",
+      "reference_tables": [
+        "badges",
+        "users"
+      ],
+      "text_coverage": "not_located",
+      "known_text_anchors": [],
+      "table_schema": {
+        "query": "Database: codebase_community. How many users from the country where the Indian Half-bred horse type is primarily found have the teacher badges?",
+        "keyword": {
+          "uris": [
+            "ctx://datalake/hydra/codebase_community/badges",
+            "ctx://datalake/hydra/codebase_community/comments",
+            "ctx://datalake/hydra/codebase_community/votes"
+          ],
+          "scores": [
+            4.436542792785833,
+            4.2180608191863325,
+            3.2272211981924377
+          ],
+          "retrieval_id": "9598a018-d171-4ab7-acea-1912cc07f9fb",
+          "required_count": 2,
+          "hits": 1,
+          "any_hit": true,
+          "all_required": false,
+          "first_hit_rank": 1,
+          "other_database_hits": 0
+        },
+        "vector": {
+          "uris": [
+            "ctx://datalake/hydra/codebase_community/badges",
+            "ctx://datalake/hydra/codebase_community/users",
+            "ctx://datalake/hydra/codebase_community/posts"
+          ],
+          "scores": [
+            0.46334775845381726,
+            0.4474723009748647,
+            0.4188933227467526
+          ],
+          "retrieval_id": "5db68d2c-9f6c-4810-b519-29074d51a0af",
+          "required_count": 2,
+          "hits": 2,
+          "any_hit": true,
+          "all_required": true,
+          "first_hit_rank": 1,
+          "other_database_hits": 0
+        }
+      },
+      "resource": {
+        "query": "In which country is the Indian Half-bred horse type primarily found?",
+        "keyword": {
+          "uris": [
+            "ctx://team/engineering/hydra/kilt/14533/0035",
+            "ctx://team/engineering/hydra/kilt/38209875/0000",
+            "ctx://team/engineering/hydra/kilt/12955849/0001"
+          ],
+          "scores": [
+            3.469702079248529,
+            3.137459349957829,
+            2.948082442779452
+          ],
+          "retrieval_id": "f07843c9-4307-4872-bcb6-cda787a82012",
+          "required_count": 0,
+          "hits": 0,
+          "any_hit": false,
+          "all_required": false,
+          "first_hit_rank": null
+        },
+        "vector": {
+          "uris": [
+            "ctx://team/engineering/hydra/kilt/12955849/0001",
+            "ctx://team/engineering/hydra/kilt/512274/0025",
+            "ctx://team/engineering/hydra/kilt/9572685/0003"
+          ],
+          "scores": [
+            0.3827297573468177,
+            0.3631635687849786,
+            0.3600895058948692
+          ],
+          "retrieval_id": "06ed76dc-0691-42d6-b5be-7e0abf8d6a48",
+          "required_count": 0,
+          "hits": 0,
+          "any_hit": false,
+          "all_required": false,
+          "first_hit_rank": null
+        }
+      },
+      "table_hit_delta": 1,
+      "text_anchor_hit_delta": 0
+    },
+    {
+      "case_id": "dev_10",
+      "type": "s2a",
+      "db_id": "superhero",
+      "reference_tables": [
+        "superhero"
+      ],
+      "text_coverage": "core_support_located",
+      "known_text_anchors": [
+        "ctx://team/engineering/hydra/kilt/850460/0000",
+        "ctx://team/engineering/hydra/kilt/850460/0001"
+      ],
+      "table_schema": {
+        "query": "Database: superhero. What is the difference in weight between the alter ego of the comic supervillain Abomination and Charles Chandler?",
+        "keyword": {
+          "uris": [
+            "ctx://datalake/hydra/superhero/superhero",
+            "ctx://datalake/hydra/superhero/attribute",
+            "ctx://datalake/hydra/superhero/alignment"
+          ],
+          "scores": [
+            6.100897103397896,
+            5.048387319830521,
+            3.0934106873032343
+          ],
+          "retrieval_id": "62610d44-9f0f-451b-939a-48e6b41b2120",
+          "required_count": 1,
+          "hits": 1,
+          "any_hit": true,
+          "all_required": true,
+          "first_hit_rank": 1,
+          "other_database_hits": 0
+        },
+        "vector": {
+          "uris": [
+            "ctx://datalake/hydra/superhero/superhero",
+            "ctx://datalake/hydra/superhero/alignment",
+            "ctx://datalake/hydra/superhero/attribute"
+          ],
+          "scores": [
+            0.39628884759147753,
+            0.3725315180458455,
+            0.3563813628981207
+          ],
+          "retrieval_id": "84f40659-f1ef-40ef-9143-8da3062eb878",
+          "required_count": 1,
+          "hits": 1,
+          "any_hit": true,
+          "all_required": true,
+          "first_hit_rank": 1,
+          "other_database_hits": 0
+        }
+      },
+      "resource": {
+        "query": "What is the alter ego of the comic supervillain Abomination?",
+        "keyword": {
+          "uris": [
+            "ctx://team/engineering/hydra/kilt/850460/0000",
+            "ctx://team/engineering/hydra/kilt/850460/0033",
+            "ctx://team/engineering/hydra/kilt/850460/0021"
+          ],
+          "scores": [
+            4.538349232025111,
+            2.4693139841294025,
+            1.0754043908022328
+          ],
+          "retrieval_id": "5f5401b2-5585-486e-82d0-af7966f08ad1",
+          "required_count": 2,
+          "hits": 1,
+          "any_hit": true,
+          "all_required": false,
+          "first_hit_rank": 1
+        },
+        "vector": {
+          "uris": [
+            "ctx://team/engineering/hydra/kilt/850460/0027",
+            "ctx://team/engineering/hydra/kilt/850460/0025",
+            "ctx://team/engineering/hydra/kilt/850460/0033"
+          ],
+          "scores": [
+            0.5539139179042715,
+            0.5343273004488538,
+            0.5250511482388475
+          ],
+          "retrieval_id": "f9d70907-4609-4de5-b09b-d7702e18c906",
+          "required_count": 2,
+          "hits": 0,
+          "any_hit": false,
+          "all_required": false,
+          "first_hit_rank": null
+        }
+      },
+      "table_hit_delta": 0,
+      "text_anchor_hit_delta": -1
+    },
+    {
+      "case_id": "dev_11",
+      "type": "s2a",
+      "db_id": "student_club",
+      "reference_tables": [
+        "major",
+        "member"
+      ],
+      "text_coverage": "core_support_located",
+      "known_text_anchors": [
+        "ctx://team/engineering/hydra/kilt/10158450/0000"
+      ],
+      "table_schema": {
+        "query": "Database: student_club. What is the name of the major that the person holding the second highest political position in Afghanistan has joined?",
+        "keyword": {
+          "uris": [
+            "ctx://datalake/hydra/student_club/member",
+            "ctx://datalake/hydra/student_club/major",
+            "ctx://datalake/hydra/student_club/expense"
+          ],
+          "scores": [
+            10.439880583249003,
+            6.025632920961639,
+            4.496736328095009
+          ],
+          "retrieval_id": "68a9cc75-35bf-4c3d-adb7-d97dfd5a319d",
+          "required_count": 2,
+          "hits": 2,
+          "any_hit": true,
+          "all_required": true,
+          "first_hit_rank": 1,
+          "other_database_hits": 0
+        },
+        "vector": {
+          "uris": [
+            "ctx://datalake/hydra/student_club/member",
+            "ctx://datalake/hydra/student_club/major",
+            "ctx://datalake/hydra/student_club/income"
+          ],
+          "scores": [
+            0.3641560971736908,
+            0.35881637913233133,
+            0.32890957593917847
+          ],
+          "retrieval_id": "aa653680-042b-4d5a-ba0f-a4d5cfe75d01",
+          "required_count": 2,
+          "hits": 2,
+          "any_hit": true,
+          "all_required": true,
+          "first_hit_rank": 1,
+          "other_database_hits": 0
+        }
+      },
+      "resource": {
+        "query": "What is the second highest political position in Afghanistan?",
+        "keyword": {
+          "uris": [
+            "ctx://team/engineering/hydra/kilt/10158450/0000",
+            "ctx://team/engineering/hydra/kilt/66463/0034",
+            "ctx://team/engineering/hydra/kilt/66463/0000"
+          ],
+          "scores": [
+            8.454823719095959,
+            2.4750840670556697,
+            1.948226772596712
+          ],
+          "retrieval_id": "688e381d-b3e7-46c4-96ac-4662ff3bc346",
+          "required_count": 1,
+          "hits": 1,
+          "any_hit": true,
+          "all_required": true,
+          "first_hit_rank": 1
+        },
+        "vector": {
+          "uris": [
+            "ctx://team/engineering/hydra/kilt/10158450/0000",
+            "ctx://team/engineering/hydra/kilt/66463/0000",
+            "ctx://team/engineering/hydra/kilt/66463/0018"
+          ],
+          "scores": [
+            0.6013900279170269,
+            0.5319472830326994,
+            0.5235865996130357
+          ],
+          "retrieval_id": "b9d52747-b2bc-4077-a732-22be3373d8d1",
+          "required_count": 1,
+          "hits": 1,
+          "any_hit": true,
+          "all_required": true,
+          "first_hit_rank": 1
+        }
+      },
+      "table_hit_delta": 0,
+      "text_anchor_hit_delta": 0
+    },
+    {
+      "case_id": "dev_13",
+      "type": "s2a",
+      "db_id": "formula_1",
+      "reference_tables": [
+        "driverStandings",
+        "drivers",
+        "races"
+      ],
+      "text_coverage": "core_support_located",
+      "known_text_anchors": [
+        "ctx://team/engineering/hydra/kilt/424417/0052"
+      ],
+      "table_schema": {
+        "query": "Database: formula_1. What was the average points scored in the year 2000 by the person nicknamed \"Irv the Swerve\" and \"Fast Eddie\"?",
+        "keyword": {
+          "uris": [
+            "ctx://datalake/hydra/formula_1/results",
+            "ctx://datalake/hydra/formula_1/races",
+            "ctx://datalake/hydra/formula_1/constructorStandings"
+          ],
+          "scores": [
+            4.4757676463541625,
+            3.3160367359776792,
+            3.274113989355634
+          ],
+          "retrieval_id": "d44ade82-54a6-4d95-a8f0-3e7bc067edc0",
+          "required_count": 3,
+          "hits": 1,
+          "any_hit": true,
+          "all_required": false,
+          "first_hit_rank": 2,
+          "other_database_hits": 0
+        },
+        "vector": {
+          "uris": [
+            "ctx://datalake/hydra/formula_1/drivers",
+            "ctx://datalake/hydra/formula_1/driverStandings",
+            "ctx://datalake/hydra/formula_1/seasons"
+          ],
+          "scores": [
+            0.2568907149899877,
+            0.2487590535365699,
+            0.24118500124082076
+          ],
+          "retrieval_id": "0649466f-8984-45f2-aed8-5d63b587cb4e",
+          "required_count": 3,
+          "hits": 2,
+          "any_hit": true,
+          "all_required": false,
+          "first_hit_rank": 1,
+          "other_database_hits": 0
+        }
+      },
+      "resource": {
+        "query": "Who was nicknamed \"Irv the Swerve\" and \"Fast Eddie\"?",
+        "keyword": {
+          "uris": [
+            "ctx://team/engineering/hydra/kilt/424417/0052",
+            "ctx://team/engineering/hydra/kilt/424417/0003",
+            "ctx://team/engineering/hydra/kilt/424417/0044"
+          ],
+          "scores": [
+            9.576414891195107,
+            0.9804662737293557,
+            0.9032555922428765
+          ],
+          "retrieval_id": "11aa04ce-c354-40d7-acef-98e21fd57026",
+          "required_count": 1,
+          "hits": 1,
+          "any_hit": true,
+          "all_required": true,
+          "first_hit_rank": 1
+        },
+        "vector": {
+          "uris": [
+            "ctx://team/engineering/hydra/kilt/424417/0052",
+            "ctx://team/engineering/hydra/kilt/424417/0047",
+            "ctx://team/engineering/hydra/kilt/424417/0044"
+          ],
+          "scores": [
+            0.5276225176307575,
+            0.3953277939948818,
+            0.3917389266257534
+          ],
+          "retrieval_id": "77accebe-fb81-4400-a0fa-7ef2d358b4cc",
+          "required_count": 1,
+          "hits": 1,
+          "any_hit": true,
+          "all_required": true,
+          "first_hit_rank": 1
+        }
+      },
+      "table_hit_delta": 1,
+      "text_anchor_hit_delta": 0
+    },
+    {
+      "case_id": "dev_20",
+      "type": "s2a",
+      "db_id": "codebase_community",
+      "reference_tables": [
+        "users"
+      ],
+      "text_coverage": "core_support_located",
+      "known_text_anchors": [
+        "ctx://team/engineering/hydra/kilt/27307590/0011"
+      ],
+      "table_schema": {
+        "query": "Database: codebase_community. How many users were from the city where Leonard Rosenfeld had the majority of his art showings?",
+        "keyword": {
+          "uris": [
+            "ctx://datalake/hydra/codebase_community/comments",
+            "ctx://datalake/hydra/student_club/member",
+            "ctx://datalake/hydra/codebase_community/badges"
+          ],
+          "scores": [
+            2.921453119496867,
+            2.1689306082093194,
+            1.1501832002423542
+          ],
+          "retrieval_id": "d42824ee-6d58-48c0-96f9-b612b91db1c4",
+          "required_count": 1,
+          "hits": 0,
+          "any_hit": false,
+          "all_required": false,
+          "first_hit_rank": null,
+          "other_database_hits": 1
+        },
+        "vector": {
+          "uris": [
+            "ctx://datalake/hydra/codebase_community/users",
+            "ctx://datalake/hydra/codebase_community/posts",
+            "ctx://datalake/hydra/codebase_community/comments"
+          ],
+          "scores": [
+            0.4187805652618408,
+            0.40441741399972897,
+            0.38983283103508826
+          ],
+          "retrieval_id": "0523bc6f-b964-4277-917c-403c55545cc8",
+          "required_count": 1,
+          "hits": 1,
+          "any_hit": true,
+          "all_required": true,
+          "first_hit_rank": 1,
+          "other_database_hits": 0
+        }
+      },
+      "resource": {
+        "query": "In which city did Leonard Rosenfeld have the majority of his art showings?",
+        "keyword": {
+          "uris": [
+            "ctx://team/engineering/hydra/kilt/27307590/0001",
+            "ctx://team/engineering/hydra/kilt/27307590/0011",
+            "ctx://team/engineering/hydra/kilt/27307590/0002"
+          ],
+          "scores": [
+            2.826891847329535,
+            2.4352431725144923,
+            2.2380149100231312
+          ],
+          "retrieval_id": "fcda5157-226f-4724-b21e-72cbd79f6b9d",
+          "required_count": 1,
+          "hits": 1,
+          "any_hit": true,
+          "all_required": true,
+          "first_hit_rank": 2
+        },
+        "vector": {
+          "uris": [
+            "ctx://team/engineering/hydra/kilt/27307590/0000",
+            "ctx://team/engineering/hydra/kilt/27307590/0011",
+            "ctx://team/engineering/hydra/kilt/27307590/0002"
+          ],
+          "scores": [
+            0.5984512745872522,
+            0.5702169281373587,
+            0.5688241545243631
+          ],
+          "retrieval_id": "a0084c17-a80c-45ec-86d7-d574d6d1a6e8",
+          "required_count": 1,
+          "hits": 1,
+          "any_hit": true,
+          "all_required": true,
+          "first_hit_rank": 2
+        }
+      },
+      "table_hit_delta": 1,
+      "text_anchor_hit_delta": 0
+    },
+    {
+      "case_id": "dev_26",
+      "type": "a2s",
+      "db_id": "codebase_community",
+      "reference_tables": [
+        "posts",
+        "users"
+      ],
+      "text_coverage": "core_support_located",
+      "known_text_anchors": [
+        "ctx://team/engineering/hydra/kilt/10726541/0000",
+        "ctx://team/engineering/hydra/kilt/10726541/0003",
+        "ctx://team/engineering/hydra/kilt/10726541/0019",
+        "ctx://team/engineering/hydra/kilt/7838811/0007"
+      ],
+      "table_schema": {
+        "query": "Database: codebase_community. What is the main advantage of the Holm–Bonferroni method compared to the simple Bonferroni correction, as discussed in the most-viewed post by Harvey Motulsky?",
+        "keyword": {
+          "uris": [
+            "ctx://datalake/hydra/toxicology/bond",
+            "ctx://datalake/hydra/codebase_community/comments",
+            "ctx://datalake/hydra/codebase_community/posts"
+          ],
+          "scores": [
+            5.505586612674944,
+            4.871114872000804,
+            4.666366356288844
+          ],
+          "retrieval_id": "a3dddb10-0620-45c4-8f31-4a6bf8ed2350",
+          "required_count": 2,
+          "hits": 1,
+          "any_hit": true,
+          "all_required": false,
+          "first_hit_rank": 3,
+          "other_database_hits": 1
+        },
+        "vector": {
+          "uris": [
+            "ctx://datalake/hydra/codebase_community/comments",
+            "ctx://datalake/hydra/codebase_community/posts",
+            "ctx://datalake/hydra/codebase_community/users"
+          ],
+          "scores": [
+            0.3746716827545544,
+            0.37389447533455944,
+            0.3500205069768133
+          ],
+          "retrieval_id": "44a16a5d-e4ad-453b-a724-0fd5d2cadf38",
+          "required_count": 2,
+          "hits": 2,
+          "any_hit": true,
+          "all_required": true,
+          "first_hit_rank": 2,
+          "other_database_hits": 0
+        }
+      },
+      "resource": {
+        "query": "What is the main advantage of the Holm–Bonferroni method compared to the simple Bonferroni correction?",
+        "keyword": {
+          "uris": [
+            "ctx://team/engineering/hydra/kilt/10726541/0000",
+            "ctx://team/engineering/hydra/kilt/10726541/0003",
+            "ctx://team/engineering/hydra/kilt/10726541/0009"
+          ],
+          "scores": [
+            3.4847832959384,
+            2.988711248169643,
+            2.708077064202284
+          ],
+          "retrieval_id": "39812db9-60ce-4702-8d92-181502f86dfe",
+          "required_count": 4,
+          "hits": 2,
+          "any_hit": true,
+          "all_required": false,
+          "first_hit_rank": 1
+        },
+        "vector": {
+          "uris": [
+            "ctx://team/engineering/hydra/kilt/10726541/0019",
+            "ctx://team/engineering/hydra/kilt/10726541/0000",
+            "ctx://team/engineering/hydra/kilt/10726541/0001"
+          ],
+          "scores": [
+            0.6664078832135422,
+            0.6532222227222463,
+            0.6285064186310683
+          ],
+          "retrieval_id": "a171eb5e-0ee1-475f-87a2-1cd1127543b4",
+          "required_count": 4,
+          "hits": 2,
+          "any_hit": true,
+          "all_required": false,
+          "first_hit_rank": 1
+        }
+      },
+      "table_hit_delta": 1,
+      "text_anchor_hit_delta": 0
+    },
+    {
+      "case_id": "dev_31",
+      "type": "a2s",
+      "db_id": "codebase_community",
+      "reference_tables": [
+        "posts",
+        "users"
+      ],
+      "text_coverage": "core_support_located",
+      "known_text_anchors": [
+        "ctx://team/engineering/hydra/kilt/31726/0000",
+        "ctx://team/engineering/hydra/kilt/31717/0000"
+      ],
+      "table_schema": {
+        "query": "Database: codebase_community. What is the form of government in the country where the owner of the post \"Eliciting priors from experts\" is located?",
+        "keyword": {
+          "uris": [
+            "ctx://datalake/hydra/codebase_community/posts",
+            "ctx://datalake/hydra/codebase_community/comments",
+            "ctx://datalake/hydra/codebase_community/tags"
+          ],
+          "scores": [
+            6.260858903320894,
+            6.110254964227377,
+            3.6435386061919672
+          ],
+          "retrieval_id": "6b749d59-495a-44ca-ad27-cdd4e0b09b34",
+          "required_count": 2,
+          "hits": 1,
+          "any_hit": true,
+          "all_required": false,
+          "first_hit_rank": 1,
+          "other_database_hits": 0
+        },
+        "vector": {
+          "uris": [
+            "ctx://datalake/hydra/codebase_community/posts",
+            "ctx://datalake/hydra/codebase_community/comments",
+            "ctx://datalake/hydra/codebase_community/users"
+          ],
+          "scores": [
+            0.42707492597250885,
+            0.3865740597248104,
+            0.38325019975007835
+          ],
+          "retrieval_id": "c0e0d303-f0f0-430f-83d3-b84cf8015848",
+          "required_count": 2,
+          "hits": 2,
+          "any_hit": true,
+          "all_required": true,
+          "first_hit_rank": 1,
+          "other_database_hits": 0
+        }
+      },
+      "resource": {
+        "query": "What is the form of government in the United Kingdom?",
+        "keyword": {
+          "uris": [
+            "ctx://team/engineering/hydra/kilt/31726/0005",
+            "ctx://team/engineering/hydra/kilt/31726/0000",
+            "ctx://team/engineering/hydra/kilt/31717/0056"
+          ],
+          "scores": [
+            4.38272881153914,
+            1.6085300370318931,
+            1.4976914131136225
+          ],
+          "retrieval_id": "85a0954b-6b66-4cc2-b5ba-3fe6534331a9",
+          "required_count": 2,
+          "hits": 1,
+          "any_hit": true,
+          "all_required": false,
+          "first_hit_rank": 2
+        },
+        "vector": {
+          "uris": [
+            "ctx://team/engineering/hydra/kilt/31717/0056",
+            "ctx://team/engineering/hydra/kilt/31717/0054",
+            "ctx://team/engineering/hydra/kilt/31726/0005"
+          ],
+          "scores": [
+            0.584744428679041,
+            0.5605682635815681,
+            0.5268258420436608
+          ],
+          "retrieval_id": "b789fd6e-354f-4e9b-9744-8bd2f114dd13",
+          "required_count": 2,
+          "hits": 0,
+          "any_hit": false,
+          "all_required": false,
+          "first_hit_rank": null
+        }
+      },
+      "table_hit_delta": 1,
+      "text_anchor_hit_delta": -1
+    },
+    {
+      "case_id": "dev_32",
+      "type": "a2s",
+      "db_id": "financial",
+      "reference_tables": [
+        "card",
+        "client",
+        "disp"
+      ],
+      "text_coverage": "core_support_located",
+      "known_text_anchors": [
+        "ctx://team/engineering/hydra/kilt/17182301/0064"
+      ],
+      "table_schema": {
+        "query": "Database: financial. What type of credit card does the client with ID 13539 own, and how does this type of credit card promote financial management for its users, and what features distinguish it from other types of credit cards?",
+        "keyword": {
+          "uris": [
+            "ctx://datalake/hydra/financial/card",
+            "ctx://datalake/hydra/financial/trans",
+            "ctx://datalake/hydra/financial/disp"
+          ],
+          "scores": [
+            22.299119591630223,
+            15.708328394645536,
+            11.616038830526385
+          ],
+          "retrieval_id": "50a64a0c-547b-400c-9db2-61af74dcf2a2",
+          "required_count": 3,
+          "hits": 2,
+          "any_hit": true,
+          "all_required": false,
+          "first_hit_rank": 1,
+          "other_database_hits": 0
+        },
+        "vector": {
+          "uris": [
+            "ctx://datalake/hydra/financial/card",
+            "ctx://datalake/hydra/financial/disp",
+            "ctx://datalake/hydra/financial/client"
+          ],
+          "scores": [
+            0.5131564156003494,
+            0.4825116108351063,
+            0.4678857288224374
+          ],
+          "retrieval_id": "8ec83e2a-6fe7-4003-8ca8-12ad0dd60646",
+          "required_count": 3,
+          "hits": 3,
+          "any_hit": true,
+          "all_required": true,
+          "first_hit_rank": 1,
+          "other_database_hits": 0
+        }
+      },
+      "resource": {
+        "query": "How does a junior credit card promote financial management for its users, and what features distinguish it from other types of credit cards?",
+        "keyword": {
+          "uris": [
+            "ctx://team/engineering/hydra/kilt/17182301/0064",
+            "ctx://team/engineering/hydra/kilt/17182301/0000",
+            "ctx://team/engineering/hydra/kilt/17182301/0121"
+          ],
+          "scores": [
+            9.346028022721375,
+            7.376631747403776,
+            5.047734968708869
+          ],
+          "retrieval_id": "383cf47a-0628-4367-8fc2-94aa4b3df973",
+          "required_count": 1,
+          "hits": 1,
+          "any_hit": true,
+          "all_required": true,
+          "first_hit_rank": 1
+        },
+        "vector": {
+          "uris": [
+            "ctx://team/engineering/hydra/kilt/17182301/0064",
+            "ctx://team/engineering/hydra/kilt/17182301/0052",
+            "ctx://team/engineering/hydra/kilt/17182301/0000"
+          ],
+          "scores": [
+            0.5186048392639052,
+            0.47967888717668994,
+            0.4585167678420692
+          ],
+          "retrieval_id": "608732ca-ade9-4acc-945f-2b4a8378c925",
+          "required_count": 1,
+          "hits": 1,
+          "any_hit": true,
+          "all_required": true,
+          "first_hit_rank": 1
+        }
+      },
+      "table_hit_delta": 1,
+      "text_anchor_hit_delta": 0
+    },
+    {
+      "case_id": "dev_35",
+      "type": "a2s",
+      "db_id": "superhero",
+      "reference_tables": [
+        "hero_attribute",
+        "race",
+        "superhero"
+      ],
+      "text_coverage": "core_support_located",
+      "known_text_anchors": [
+        "ctx://team/engineering/hydra/kilt/2285389/0003",
+        "ctx://team/engineering/hydra/kilt/51429008/0020"
+      ],
+      "table_schema": {
+        "query": "Database: superhero. What is the role in Theosophical teachings of the race of the superhero with the maximum attribute value?",
+        "keyword": {
+          "uris": [
+            "ctx://datalake/hydra/superhero/hero_attribute",
+            "ctx://datalake/hydra/superhero/attribute",
+            "ctx://datalake/hydra/superhero/race"
+          ],
+          "scores": [
+            7.814596318748681,
+            7.285037504595721,
+            4.882978853737183
+          ],
+          "retrieval_id": "f05b0509-34ac-4c28-b278-de6cc6a1c7a6",
+          "required_count": 3,
+          "hits": 2,
+          "any_hit": true,
+          "all_required": false,
+          "first_hit_rank": 1,
+          "other_database_hits": 0
+        },
+        "vector": {
+          "uris": [
+            "ctx://datalake/hydra/superhero/attribute",
+            "ctx://datalake/hydra/superhero/race",
+            "ctx://datalake/hydra/superhero/hero_attribute"
+          ],
+          "scores": [
+            0.48202187937955066,
+            0.47854556079344657,
+            0.4624187581095892
+          ],
+          "retrieval_id": "732726be-3ab7-4f63-a78d-f047fda07e0a",
+          "required_count": 3,
+          "hits": 2,
+          "any_hit": true,
+          "all_required": false,
+          "first_hit_rank": 2,
+          "other_database_hits": 0
+        }
+      },
+      "resource": {
+        "query": "What is the role of a cosmic entity in Theosophical teachings?",
+        "keyword": {
+          "uris": [
+            "ctx://team/engineering/hydra/kilt/2285389/0003",
+            "ctx://team/engineering/hydra/kilt/51429008/0020",
+            "ctx://team/engineering/hydra/kilt/2285389/0004"
+          ],
+          "scores": [
+            5.072392965474695,
+            4.131402277480021,
+            3.911468084969633
+          ],
+          "retrieval_id": "e284d8b7-91bd-48a9-8d25-86852e34d443",
+          "required_count": 2,
+          "hits": 2,
+          "any_hit": true,
+          "all_required": true,
+          "first_hit_rank": 1
+        },
+        "vector": {
+          "uris": [
+            "ctx://team/engineering/hydra/kilt/2285389/0003",
+            "ctx://team/engineering/hydra/kilt/51429008/0020",
+            "ctx://team/engineering/hydra/kilt/51429008/0029"
+          ],
+          "scores": [
+            0.5696527195804949,
+            0.5019663268428147,
+            0.4632718076492004
+          ],
+          "retrieval_id": "640851d7-62b3-4f7a-8f8c-9a720c9e1e54",
+          "required_count": 2,
+          "hits": 2,
+          "any_hit": true,
+          "all_required": true,
+          "first_hit_rank": 1
+        }
+      },
+      "table_hit_delta": 0,
+      "text_anchor_hit_delta": 0
+    },
+    {
+      "case_id": "dev_42",
+      "type": "s2a",
+      "db_id": "financial",
+      "reference_tables": [
+        "client",
+        "district"
+      ],
+      "text_coverage": "core_support_located",
+      "known_text_anchors": [
+        "ctx://team/engineering/hydra/kilt/20014218/0000"
+      ],
+      "table_schema": {
+        "query": "Database: financial. Among the accounts opened, how many female customers who were born before 1950 stayed in the town associated with the Soviet football player Nikolai Yevgrafovich's last name?",
+        "keyword": {
+          "uris": [
+            "ctx://datalake/hydra/european_football_2/Player",
+            "ctx://datalake/hydra/debit_card_specializing/customers",
+            "ctx://datalake/hydra/financial/client"
+          ],
+          "scores": [
+            13.677676804204996,
+            4.178516632886505,
+            3.4980099988306437
+          ],
+          "retrieval_id": "373c73ff-ae71-4b5f-b605-7b360034e4cc",
+          "required_count": 2,
+          "hits": 1,
+          "any_hit": true,
+          "all_required": false,
+          "first_hit_rank": 3,
+          "other_database_hits": 2
+        },
+        "vector": {
+          "uris": [
+            "ctx://datalake/hydra/financial/client",
+            "ctx://datalake/hydra/financial/account",
+            "ctx://datalake/hydra/financial/disp"
+          ],
+          "scores": [
+            0.39162266254425326,
+            0.3652757784559866,
+            0.3636131232476616
+          ],
+          "retrieval_id": "ed179f05-0fe2-41b1-958d-eb716b69ab0e",
+          "required_count": 2,
+          "hits": 1,
+          "any_hit": true,
+          "all_required": false,
+          "first_hit_rank": 1,
+          "other_database_hits": 0
+        }
+      },
+      "resource": {
+        "query": "What is the last name of the Soviet football player Nikolai Yevgrafovich?",
+        "keyword": {
+          "uris": [
+            "ctx://team/engineering/hydra/kilt/32348777/0000",
+            "ctx://team/engineering/hydra/kilt/23875012/0000",
+            "ctx://team/engineering/hydra/kilt/20014218/0000"
+          ],
+          "scores": [
+            8.429352407872573,
+            7.821315947645466,
+            6.5529183411790894
+          ],
+          "retrieval_id": "73cdd8fe-545c-48d3-8fe4-8d3908782594",
+          "required_count": 1,
+          "hits": 1,
+          "any_hit": true,
+          "all_required": true,
+          "first_hit_rank": 3
+        },
+        "vector": {
+          "uris": [
+            "ctx://team/engineering/hydra/kilt/20014218/0000",
+            "ctx://team/engineering/hydra/kilt/20014218/0001",
+            "ctx://team/engineering/hydra/kilt/29017260/0000"
+          ],
+          "scores": [
+            0.6225288735312906,
+            0.49966946244239807,
+            0.4527261392094537
+          ],
+          "retrieval_id": "98028d48-5f0f-400c-ad33-1364e361b172",
+          "required_count": 1,
+          "hits": 1,
+          "any_hit": true,
+          "all_required": true,
+          "first_hit_rank": 1
+        }
+      },
+      "table_hit_delta": 0,
+      "text_anchor_hit_delta": 0
+    },
+    {
+      "case_id": "dev_43",
+      "type": "a2s",
+      "db_id": "formula_1",
+      "reference_tables": [
+        "races"
+      ],
+      "text_coverage": "core_support_located",
+      "known_text_anchors": [
+        "ctx://team/engineering/hydra/kilt/2325040/0000"
+      ],
+      "table_schema": {
+        "query": "Database: formula_1. What was the significance of the Joint Declaration on the Doctrine of Justification signed on the same date as the last round of the race in 1999?",
+        "keyword": {
+          "uris": [
+            "ctx://datalake/hydra/formula_1/qualifying",
+            "ctx://datalake/hydra/formula_1/races",
+            "ctx://datalake/hydra/formula_1/results"
+          ],
+          "scores": [
+            15.749451238509174,
+            11.157999662969653,
+            6.572132016142023
+          ],
+          "retrieval_id": "5fbecb7f-3226-48a1-9a5d-2b3689238d38",
+          "required_count": 1,
+          "hits": 1,
+          "any_hit": true,
+          "all_required": true,
+          "first_hit_rank": 2,
+          "other_database_hits": 0
+        },
+        "vector": {
+          "uris": [
+            "ctx://datalake/hydra/formula_1/results",
+            "ctx://datalake/hydra/formula_1/races",
+            "ctx://datalake/hydra/formula_1/constructorStandings"
+          ],
+          "scores": [
+            0.2540476989107492,
+            0.2466743892417489,
+            0.24315410209386545
+          ],
+          "retrieval_id": "d194e1a0-a91b-4093-a115-bdce23beb2d5",
+          "required_count": 1,
+          "hits": 1,
+          "any_hit": true,
+          "all_required": true,
+          "first_hit_rank": 2,
+          "other_database_hits": 0
+        }
+      },
+      "resource": {
+        "query": "What was the significance of the Joint Declaration on the Doctrine of Justification signed on 1999-10-31?",
+        "keyword": {
+          "uris": [
+            "ctx://team/engineering/hydra/kilt/2325040/0001",
+            "ctx://team/engineering/hydra/kilt/2325040/0000",
+            "ctx://team/engineering/hydra/kilt/41613095/0065"
+          ],
+          "scores": [
+            13.580528992365887,
+            12.06200576965272,
+            3.361316425523598
+          ],
+          "retrieval_id": "eab7541f-f45a-4d8e-a955-32741002c204",
+          "required_count": 1,
+          "hits": 1,
+          "any_hit": true,
+          "all_required": true,
+          "first_hit_rank": 2
+        },
+        "vector": {
+          "uris": [
+            "ctx://team/engineering/hydra/kilt/2325040/0000",
+            "ctx://team/engineering/hydra/kilt/2325040/0001",
+            "ctx://team/engineering/hydra/kilt/41613095/0012"
+          ],
+          "scores": [
+            0.5824162115106968,
+            0.5479009853690042,
+            0.365320013127328
+          ],
+          "retrieval_id": "3ac99beb-daa3-4d7b-99a4-0c7832fe9205",
+          "required_count": 1,
+          "hits": 1,
+          "any_hit": true,
+          "all_required": true,
+          "first_hit_rank": 1
+        }
+      },
+      "table_hit_delta": 0,
+      "text_anchor_hit_delta": 0
+    },
+    {
+      "case_id": "dev_46",
+      "type": "a2s",
+      "db_id": "financial",
+      "reference_tables": [
+        "account",
+        "district",
+        "loan"
+      ],
+      "text_coverage": "core_support_located",
+      "known_text_anchors": [
+        "ctx://team/engineering/hydra/kilt/20216/0000",
+        "ctx://team/engineering/hydra/kilt/20216/0031",
+        "ctx://team/engineering/hydra/kilt/20216/0032"
+      ],
+      "table_schema": {
+        "query": "Database: financial. What is the historical significance of the district with the highest active loan in Czechoslovakia?",
+        "keyword": {
+          "uris": [
+            "ctx://datalake/hydra/financial/loan",
+            "ctx://datalake/hydra/financial/district",
+            "ctx://datalake/hydra/financial/account"
+          ],
+          "scores": [
+            6.52757393780332,
+            5.592178388719393,
+            4.577348598566198
+          ],
+          "retrieval_id": "55883151-019a-4044-814c-575f2ceb3341",
+          "required_count": 3,
+          "hits": 3,
+          "any_hit": true,
+          "all_required": true,
+          "first_hit_rank": 1,
+          "other_database_hits": 0
+        },
+        "vector": {
+          "uris": [
+            "ctx://datalake/hydra/financial/district",
+            "ctx://datalake/hydra/financial/account",
+            "ctx://datalake/hydra/financial/trans"
+          ],
+          "scores": [
+            0.3570982430635842,
+            0.3313061594963074,
+            0.3088909501498377
+          ],
+          "retrieval_id": "433ff219-ca46-49c1-8b90-394fb15213c8",
+          "required_count": 3,
+          "hits": 2,
+          "any_hit": true,
+          "all_required": false,
+          "first_hit_rank": 1,
+          "other_database_hits": 0
+        }
+      },
+      "resource": {
+        "query": "What is the historical significance of South Moravia in Czechoslovakia?",
+        "keyword": {
+          "uris": [
+            "ctx://team/engineering/hydra/kilt/682528/0000",
+            "ctx://team/engineering/hydra/kilt/20216/0033",
+            "ctx://team/engineering/hydra/kilt/20216/0000"
+          ],
+          "scores": [
+            5.656840122305656,
+            4.36689453080731,
+            3.6658882058940714
+          ],
+          "retrieval_id": "cbfecf37-708f-4973-963c-cd1f5d8a8e58",
+          "required_count": 3,
+          "hits": 1,
+          "any_hit": true,
+          "all_required": false,
+          "first_hit_rank": 3
+        },
+        "vector": {
+          "uris": [
+            "ctx://team/engineering/hydra/kilt/682528/0000",
+            "ctx://team/engineering/hydra/kilt/20216/0000",
+            "ctx://team/engineering/hydra/kilt/20216/0031"
+          ],
+          "scores": [
+            0.5645935535430908,
+            0.5532388852011828,
+            0.5344372114203708
+          ],
+          "retrieval_id": "22610a1d-b186-4c55-bdf6-b5c51dd6591b",
+          "required_count": 3,
+          "hits": 2,
+          "any_hit": true,
+          "all_required": false,
+          "first_hit_rank": 2
+        }
+      },
+      "table_hit_delta": -1,
+      "text_anchor_hit_delta": 0
+    },
+    {
+      "case_id": "dev_55",
+      "type": "a2s",
+      "db_id": "student_club",
+      "reference_tables": [
+        "major",
+        "member"
+      ],
+      "text_coverage": "core_support_located",
+      "known_text_anchors": [
+        "ctx://team/engineering/hydra/kilt/937587/0010"
+      ],
+      "table_schema": {
+        "query": "Database: student_club. What is the relationship between the student from the Art and Design Department in the Student_Club and Peter Firth?",
+        "keyword": {
+          "uris": [
+            "ctx://datalake/hydra/student_club/budget",
+            "ctx://datalake/hydra/student_club/expense",
+            "ctx://datalake/hydra/student_club/member"
+          ],
+          "scores": [
+            6.916211559895674,
+            5.949717729753994,
+            5.891281144727063
+          ],
+          "retrieval_id": "ce6fea55-d3ef-4c50-841e-1752c8eb29e5",
+          "required_count": 2,
+          "hits": 1,
+          "any_hit": true,
+          "all_required": false,
+          "first_hit_rank": 3,
+          "other_database_hits": 0
+        },
+        "vector": {
+          "uris": [
+            "ctx://datalake/hydra/student_club/member",
+            "ctx://datalake/hydra/student_club/income",
+            "ctx://datalake/hydra/student_club/major"
+          ],
+          "scores": [
+            0.45678378512811046,
+            0.4316092858198074,
+            0.415114149173647
+          ],
+          "retrieval_id": "48a74322-6748-43ee-b692-32a4a4aefd0c",
+          "required_count": 2,
+          "hits": 2,
+          "any_hit": true,
+          "all_required": true,
+          "first_hit_rank": 1,
+          "other_database_hits": 0
+        }
+      },
+      "resource": {
+        "query": "What is the relationship between Amy Firth and Peter Firth?",
+        "keyword": {
+          "uris": [
+            "ctx://team/engineering/hydra/kilt/937587/0000",
+            "ctx://team/engineering/hydra/kilt/937587/0010",
+            "ctx://team/engineering/hydra/kilt/937587/0011"
+          ],
+          "scores": [
+            3.698726850637879,
+            2.6781806067728247,
+            2.348763635762599
+          ],
+          "retrieval_id": "ef9dd6db-a4d3-40f0-9463-4fe39e468853",
+          "required_count": 1,
+          "hits": 1,
+          "any_hit": true,
+          "all_required": true,
+          "first_hit_rank": 2
+        },
+        "vector": {
+          "uris": [
+            "ctx://team/engineering/hydra/kilt/937587/0010",
+            "ctx://team/engineering/hydra/kilt/937587/0000",
+            "ctx://team/engineering/hydra/kilt/937587/0002"
+          ],
+          "scores": [
+            0.5521543355080177,
+            0.4556896143329603,
+            0.4420283769352219
+          ],
+          "retrieval_id": "6822b55c-bdff-4e96-a3e1-d2759b1174bd",
+          "required_count": 1,
+          "hits": 1,
+          "any_hit": true,
+          "all_required": true,
+          "first_hit_rank": 1
+        }
+      },
+      "table_hit_delta": 1,
+      "text_anchor_hit_delta": 0
+    },
+    {
+      "case_id": "dev_60",
+      "type": "s2a",
+      "db_id": "financial",
+      "reference_tables": [
+        "account",
+        "district"
+      ],
+      "text_coverage": "core_support_located",
+      "known_text_anchors": [
+        "ctx://team/engineering/hydra/kilt/23844/0000"
+      ],
+      "table_schema": {
+        "query": "Database: financial. For the first client who opened his/her account in the capital of Czechia, what is his/her account ID?",
+        "keyword": {
+          "uris": [
+            "ctx://datalake/hydra/financial/loan",
+            "ctx://datalake/hydra/financial/account",
+            "ctx://datalake/hydra/financial/disp"
+          ],
+          "scores": [
+            7.447378114381539,
+            6.139607780321356,
+            5.813274241694186
+          ],
+          "retrieval_id": "7315a4e7-9506-4c64-a56e-85f678dbe040",
+          "required_count": 2,
+          "hits": 1,
+          "any_hit": true,
+          "all_required": false,
+          "first_hit_rank": 2,
+          "other_database_hits": 0
+        },
+        "vector": {
+          "uris": [
+            "ctx://datalake/hydra/financial/trans",
+            "ctx://datalake/hydra/financial/order",
+            "ctx://datalake/hydra/financial/disp"
+          ],
+          "scores": [
+            0.5214773676137873,
+            0.5135456903522421,
+            0.5107364628943293
+          ],
+          "retrieval_id": "9f72af69-6dd4-472e-ba2b-56e13dc7adc0",
+          "required_count": 2,
+          "hits": 0,
+          "any_hit": false,
+          "all_required": false,
+          "first_hit_rank": null,
+          "other_database_hits": 0
+        }
+      },
+      "resource": {
+        "query": "What is the capital of Czechia?",
+        "keyword": {
+          "uris": [
+            "ctx://team/engineering/hydra/kilt/23844/0042",
+            "ctx://team/engineering/hydra/kilt/23844/0000",
+            "ctx://team/engineering/hydra/kilt/682528/0000"
+          ],
+          "scores": [
+            2.450589993964517,
+            2.2703387411854523,
+            1.8152543282236402
+          ],
+          "retrieval_id": "060bb90b-6a99-4444-bca5-05919c99926d",
+          "required_count": 1,
+          "hits": 1,
+          "any_hit": true,
+          "all_required": true,
+          "first_hit_rank": 2
+        },
+        "vector": {
+          "uris": [
+            "ctx://team/engineering/hydra/kilt/23844/0042",
+            "ctx://team/engineering/hydra/kilt/23844/0000",
+            "ctx://team/engineering/hydra/kilt/23844/0063"
+          ],
+          "scores": [
+            0.5823850307442316,
+            0.5429734153441615,
+            0.5195414888448856
+          ],
+          "retrieval_id": "02c8edaf-2402-40c6-8335-7117ae32f8ad",
+          "required_count": 1,
+          "hits": 1,
+          "any_hit": true,
+          "all_required": true,
+          "first_hit_rank": 2
+        }
+      },
+      "table_hit_delta": -1,
+      "text_anchor_hit_delta": 0
+    },
+    {
+      "case_id": "dev_62",
+      "type": "a2s",
+      "db_id": "formula_1",
+      "reference_tables": [
+        "constructorStandings",
+        "constructors"
+      ],
+      "text_coverage": "core_support_located",
+      "known_text_anchors": [
+        "ctx://team/engineering/hydra/kilt/18564164/0001",
+        "ctx://team/engineering/hydra/kilt/738698/0000"
+      ],
+      "table_schema": {
+        "query": "Database: formula_1. Which constructor has the highest points, and what is the origin of the name of that constructor as it relates to the automotive brand?",
+        "keyword": {
+          "uris": [
+            "ctx://datalake/hydra/formula_1/qualifying",
+            "ctx://datalake/hydra/formula_1/results",
+            "ctx://datalake/hydra/formula_1/constructors"
+          ],
+          "scores": [
+            13.394587492127556,
+            9.175793773366893,
+            6.6136344152201465
+          ],
+          "retrieval_id": "8a0dd265-80fd-43db-96d6-e49f06005dbb",
+          "required_count": 2,
+          "hits": 1,
+          "any_hit": true,
+          "all_required": false,
+          "first_hit_rank": 3,
+          "other_database_hits": 0
+        },
+        "vector": {
+          "uris": [
+            "ctx://datalake/hydra/formula_1/constructors",
+            "ctx://datalake/hydra/formula_1/constructorStandings",
+            "ctx://datalake/hydra/formula_1/constructorResults"
+          ],
+          "scores": [
+            0.47292983531951904,
+            0.4213314181963034,
+            0.41571328546325725
+          ],
+          "retrieval_id": "b59dfeeb-bbee-41e5-98b4-aa3da2db2cd1",
+          "required_count": 2,
+          "hits": 2,
+          "any_hit": true,
+          "all_required": true,
+          "first_hit_rank": 1,
+          "other_database_hits": 0
+        }
+      },
+      "resource": {
+        "query": "What is the origin of the name \"Mercedes\" as it relates to the automotive brand?",
+        "keyword": {
+          "uris": [
+            "ctx://team/engineering/hydra/kilt/18564164/0000",
+            "ctx://team/engineering/hydra/kilt/18564164/0006",
+            "ctx://team/engineering/hydra/kilt/738698/0019"
+          ],
+          "scores": [
+            5.504178619501772,
+            4.597568740221316,
+            4.1151636979011705
+          ],
+          "retrieval_id": "ac3c1323-5139-47a2-bc76-3555ef96f8bc",
+          "required_count": 2,
+          "hits": 0,
+          "any_hit": false,
+          "all_required": false,
+          "first_hit_rank": null
+        },
+        "vector": {
+          "uris": [
+            "ctx://team/engineering/hydra/kilt/18564164/0003",
+            "ctx://team/engineering/hydra/kilt/18564164/0000",
+            "ctx://team/engineering/hydra/kilt/18564164/0001"
+          ],
+          "scores": [
+            0.5392636931381418,
+            0.5347423234735544,
+            0.5139807462692261
+          ],
+          "retrieval_id": "a567b4bb-398e-4ed8-b6bc-81a8895050c9",
+          "required_count": 2,
+          "hits": 1,
+          "any_hit": true,
+          "all_required": false,
+          "first_hit_rank": 3
+        }
+      },
+      "table_hit_delta": 1,
+      "text_anchor_hit_delta": 1
+    },
+    {
+      "case_id": "dev_66",
+      "type": "a2s",
+      "db_id": "student_club",
+      "reference_tables": [
+        "member",
+        "zip_code"
+      ],
+      "text_coverage": "core_support_located",
+      "known_text_anchors": [
+        "ctx://team/engineering/hydra/kilt/21648/0000",
+        "ctx://team/engineering/hydra/kilt/67234/0000"
+      ],
+      "table_schema": {
+        "query": "Database: student_club. What is the most populous city in the hometown state of Sacha Harrison?",
+        "keyword": {
+          "uris": [
+            "ctx://datalake/hydra/student_club/zip_code",
+            "ctx://datalake/hydra/student_club/member",
+            "ctx://datalake/hydra/student_club/expense"
+          ],
+          "scores": [
+            9.230289557069687,
+            3.5663433456700435,
+            3.396119105283678
+          ],
+          "retrieval_id": "4b64f42b-45b6-4ee6-9a82-1bd3949ecd1b",
+          "required_count": 2,
+          "hits": 2,
+          "any_hit": true,
+          "all_required": true,
+          "first_hit_rank": 1,
+          "other_database_hits": 0
+        },
+        "vector": {
+          "uris": [
+            "ctx://datalake/hydra/student_club/member",
+            "ctx://datalake/hydra/student_club/zip_code",
+            "ctx://datalake/hydra/student_club/event"
+          ],
+          "scores": [
+            0.36324432492256165,
+            0.3409698619192647,
+            0.3274683356285095
+          ],
+          "retrieval_id": "df83bbf8-966f-4a24-b93b-398ef9dcfc66",
+          "required_count": 2,
+          "hits": 2,
+          "any_hit": true,
+          "all_required": true,
+          "first_hit_rank": 1,
+          "other_database_hits": 0
+        }
+      },
+      "resource": {
+        "query": "What is the most populous city in New Jersey?",
+        "keyword": {
+          "uris": [
+            "ctx://team/engineering/hydra/kilt/21648/0063",
+            "ctx://team/engineering/hydra/kilt/67234/0000",
+            "ctx://team/engineering/hydra/kilt/21648/0046"
+          ],
+          "scores": [
+            3.2348176577822874,
+            3.209246492444032,
+            3.01745243394872
+          ],
+          "retrieval_id": "b1b04e86-232b-4ff1-9b5f-91788acc6c26",
+          "required_count": 2,
+          "hits": 1,
+          "any_hit": true,
+          "all_required": false,
+          "first_hit_rank": 2
+        },
+        "vector": {
+          "uris": [
+            "ctx://team/engineering/hydra/kilt/21648/0032",
+            "ctx://team/engineering/hydra/kilt/21648/0063",
+            "ctx://team/engineering/hydra/kilt/21648/0046"
+          ],
+          "scores": [
+            0.5739393576347456,
+            0.5684760721155492,
+            0.5552467968912852
+          ],
+          "retrieval_id": "66a02182-8c1f-4e3b-8d90-bf91fcef829b",
+          "required_count": 2,
+          "hits": 0,
+          "any_hit": false,
+          "all_required": false,
+          "first_hit_rank": null
+        }
+      },
+      "table_hit_delta": 0,
+      "text_anchor_hit_delta": -1
+    },
+    {
+      "case_id": "dev_68",
+      "type": "s2a",
+      "db_id": "superhero",
+      "reference_tables": [
+        "hero_power",
+        "superhero",
+        "superpower"
+      ],
+      "text_coverage": "core_support_located",
+      "known_text_anchors": [
+        "ctx://team/engineering/hydra/kilt/565879/0001"
+      ],
+      "table_schema": {
+        "query": "Database: superhero. What are the superpowers of the fictional character in \"The Incredibles\" who is married to Bob Parr and also known as Elastigirl?",
+        "keyword": {
+          "uris": [
+            "ctx://datalake/hydra/superhero/attribute",
+            "ctx://datalake/hydra/superhero/superhero",
+            "ctx://datalake/hydra/superhero/alignment"
+          ],
+          "scores": [
+            10.618900707816184,
+            8.16868372554429,
+            6.81266881920666
+          ],
+          "retrieval_id": "a510531c-d2b8-426d-8135-3bd5c5e4e0e5",
+          "required_count": 3,
+          "hits": 1,
+          "any_hit": true,
+          "all_required": false,
+          "first_hit_rank": 2,
+          "other_database_hits": 0
+        },
+        "vector": {
+          "uris": [
+            "ctx://datalake/hydra/superhero/superpower",
+            "ctx://datalake/hydra/superhero/hero_power",
+            "ctx://datalake/hydra/superhero/attribute"
+          ],
+          "scores": [
+            0.28771047069367994,
+            0.2851994803666764,
+            0.27638127381467203
+          ],
+          "retrieval_id": "f90c657f-e2b1-45d3-b641-0e998f6f65a9",
+          "required_count": 3,
+          "hits": 2,
+          "any_hit": true,
+          "all_required": false,
+          "first_hit_rank": 1,
+          "other_database_hits": 0
+        }
+      },
+      "resource": {
+        "query": "Who is the fictional character in \"The Incredibles\" who is married to Bob Parr and also known as Elastigirl?",
+        "keyword": {
+          "uris": [
+            "ctx://team/engineering/hydra/kilt/565879/0001",
+            "ctx://team/engineering/hydra/kilt/565879/0013",
+            "ctx://team/engineering/hydra/kilt/565879/0010"
+          ],
+          "scores": [
+            7.540739160841287,
+            5.011154047760206,
+            4.244705589587033
+          ],
+          "retrieval_id": "5d94d80b-f804-48ee-8b13-957084b4252c",
+          "required_count": 1,
+          "hits": 1,
+          "any_hit": true,
+          "all_required": true,
+          "first_hit_rank": 1
+        },
+        "vector": {
+          "uris": [
+            "ctx://team/engineering/hydra/kilt/565879/0013",
+            "ctx://team/engineering/hydra/kilt/565879/0014",
+            "ctx://team/engineering/hydra/kilt/565879/0001"
+          ],
+          "scores": [
+            0.6032026646612583,
+            0.5039492695346802,
+            0.4880797579193439
+          ],
+          "retrieval_id": "29a01c31-b52c-4ea6-97a5-34e82c3639c1",
+          "required_count": 1,
+          "hits": 1,
+          "any_hit": true,
+          "all_required": true,
+          "first_hit_rank": 3
+        }
+      },
+      "table_hit_delta": 1,
+      "text_anchor_hit_delta": 0
+    },
+    {
+      "case_id": "dev_72",
+      "type": "a2s",
+      "db_id": "superhero",
+      "reference_tables": [
+        "publisher",
+        "superhero"
+      ],
+      "text_coverage": "core_support_located",
+      "known_text_anchors": [
+        "ctx://team/engineering/hydra/kilt/25769371/0000",
+        "ctx://team/engineering/hydra/kilt/25769371/0001"
+      ],
+      "table_schema": {
+        "query": "Database: superhero. What is the significance of the \"Brightest Day\" storyline in the publisher of Blue Beetle II?",
+        "keyword": {
+          "uris": [
+            "ctx://datalake/hydra/superhero/superhero",
+            "ctx://datalake/hydra/superhero/attribute",
+            "ctx://datalake/hydra/superhero/publisher"
+          ],
+          "scores": [
+            4.600372355232438,
+            4.239207620004775,
+            3.5494096229077066
+          ],
+          "retrieval_id": "3bde522e-d796-480d-a2cf-f83f4f2784c9",
+          "required_count": 2,
+          "hits": 2,
+          "any_hit": true,
+          "all_required": true,
+          "first_hit_rank": 1,
+          "other_database_hits": 0
+        },
+        "vector": {
+          "uris": [
+            "ctx://datalake/hydra/superhero/publisher",
+            "ctx://datalake/hydra/superhero/superhero",
+            "ctx://datalake/hydra/superhero/alignment"
+          ],
+          "scores": [
+            0.34893725501743267,
+            0.32849086266647365,
+            0.30911348895929713
+          ],
+          "retrieval_id": "fef00098-8bc6-42a9-8d3d-d26d83e8fc13",
+          "required_count": 2,
+          "hits": 2,
+          "any_hit": true,
+          "all_required": true,
+          "first_hit_rank": 1,
+          "other_database_hits": 0
+        }
+      },
+      "resource": {
+        "query": "What is the significance of the \"Brightest Day\" storyline in DC Comics?",
+        "keyword": {
+          "uris": [
+            "ctx://team/engineering/hydra/kilt/25769371/0000",
+            "ctx://team/engineering/hydra/kilt/25769371/0012",
+            "ctx://team/engineering/hydra/kilt/25769371/0008"
+          ],
+          "scores": [
+            6.581580476769544,
+            3.2797189631694073,
+            2.832454540607234
+          ],
+          "retrieval_id": "594f1eb2-305d-4d7a-9473-84b01b10d0fd",
+          "required_count": 2,
+          "hits": 1,
+          "any_hit": true,
+          "all_required": false,
+          "first_hit_rank": 1
+        },
+        "vector": {
+          "uris": [
+            "ctx://team/engineering/hydra/kilt/25769371/0000",
+            "ctx://team/engineering/hydra/kilt/25769371/0008",
+            "ctx://team/engineering/hydra/kilt/25769371/0001"
+          ],
+          "scores": [
+            0.6496836751888095,
+            0.619721801347303,
+            0.6178385615348991
+          ],
+          "retrieval_id": "19daf633-a7c1-4358-ad7d-d567e6198b4a",
+          "required_count": 2,
+          "hits": 2,
+          "any_hit": true,
+          "all_required": true,
+          "first_hit_rank": 1
+        }
+      },
+      "table_hit_delta": 0,
+      "text_anchor_hit_delta": 0
+    }
+  ]
+}

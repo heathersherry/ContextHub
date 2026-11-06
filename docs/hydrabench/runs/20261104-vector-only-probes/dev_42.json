@@ -1,0 +1,145 @@
+{
+  "case_id": "dev_42",
+  "type": "s2a",
+  "db_id": "financial",
+  "reference_tables": [
+    "client",
+    "district"
+  ],
+  "top_k": 3,
+  "table_schema": {
+    "query": "Database: financial. Among the accounts opened, how many female customers who were born before 1950 stayed in the town associated with the Soviet football player Nikolai Yevgrafovich's last name?",
+    "response": {
+      "results": [
+        {
+          "uri": "ctx://datalake/hydra/financial/client",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 0.39162266254425326,
+          "l0_content": "Database: financial\nTable: client\nCREATE TABLE client\n(\n    client_id   INTEGER        not null\n        primary key,\n    gender      TEXT not null,\n    birth_date  DATE       not null,\n    district_id INTEGER        not null,\n    foreign key (district_id) references district (district_id)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nclient_id,,the unique number,integer,\r\ngender,,,text,\"F：female \nM：male \"\r\nbirth_date,,birth date,date,\r\ndistrict_id,location of branch,location of branch,integer,",
+          "l1_content": "Database: financial\nTable: client\nCREATE TABLE client\n(\n    client_id   INTEGER        not null\n        primary key,\n    gender      TEXT not null,\n    birth_date  DATE       not null,\n    district_id INTEGER        not null,\n    foreign key (district_id) references district (district_id)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nclient_id,,the unique number,integer,\r\ngender,,,text,\"F：female \nM：male \"\r\nbirth_date,,birth date,date,\r\ndistrict_id,location of branch,location of branch,integer,",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://datalake/hydra/financial/account",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 0.3652757784559866,
+          "l0_content": "Database: financial\nTable: account\nCREATE TABLE account\n(\n    account_id  INTEGER default 0 not null\n        primary key,\n    district_id INTEGER default 0 not null,\n    frequency   TEXT   not null,\n    date        DATE          not null,\n    foreign key (district_id) references district (district_id)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description,\r\naccount_id,account id,the id of the account,integer,,\r\ndistrict_id,location of branch,location of branch,integer ,,\r\nfrequency,frequency,frequency of the acount,text,,\"\"\"POPLATEK MESICNE\"\" stands for monthly issuance\n\"\"POPLATEK TYDNE\"\" stands for weekly issuance\n\"\"POPLATEK PO OBRATU\"\" stands for issuance after transaction\"\r\ndate,date,the creation date of the account,date,in the form YYMMDD,",
+          "l1_content": "Database: financial\nTable: account\nCREATE TABLE account\n(\n    account_id  INTEGER default 0 not null\n        primary key,\n    district_id INTEGER default 0 not null,\n    frequency   TEXT   not null,\n    date        DATE          not null,\n    foreign key (district_id) references district (district_id)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description,\r\naccount_id,account id,the id of the account,integer,,\r\ndistrict_id,location of branch,location of branch,integer ,,\r\nfrequency,frequency,frequency of the acount,text,,\"\"\"POPLATEK MESICNE\"\" stands for monthly issuance\n\"\"POPLATEK TYDNE\"\" stands for weekly issuance\n\"\"POPLATEK PO OBRATU\"\" stands for issuance after transaction\"\r\ndate,date,the creation date of the account,date,in the form YYMMDD,",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://datalake/hydra/financial/disp",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 0.3636131232476616,
+          "l0_content": "Database: financial\nTable: disp\nCREATE TABLE disp\n(\n    disp_id    INTEGER        not null\n        primary key,\n    client_id  INTEGER        not null,\n    account_id INTEGER        not null,\n    type      TEXT not null,\n    foreign key (account_id) references account (account_id),\n    foreign key (client_id) references client (client_id)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\ndisp_id,disposition id,unique number of identifying this row of record,integer,\r\nclient_id,,id number of client,integer,\r\naccount_id,,id number of account,integer,\r\ntype,,type of disposition,text,\"\"\"OWNER\"\" : \"\"USER\"\" : \"\"DISPONENT\"\"\ncommonsense evidence:\nthe account can only have the right to issue permanent orders or apply for loans\"",
+          "l1_content": "Database: financial\nTable: disp\nCREATE TABLE disp\n(\n    disp_id    INTEGER        not null\n        primary key,\n    client_id  INTEGER        not null,\n    account_id INTEGER        not null,\n    type      TEXT not null,\n    foreign key (account_id) references account (account_id),\n    foreign key (client_id) references client (client_id)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\ndisp_id,disposition id,unique number of identifying this row of record,integer,\r\nclient_id,,id number of client,integer,\r\naccount_id,,id number of account,integer,\r\ntype,,type of disposition,text,\"\"\"OWNER\"\" : \"\"USER\"\" : \"\"DISPONENT\"\"\ncommonsense evidence:\nthe account can only have the right to issue permanent orders or apply for loans\"",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        }
+      ],
+      "total": 3,
+      "retrieval_id": "ed179f05-0fe2-41b1-958d-eb716b69ab0e",
+      "stale_notices": []
+    }
+  },
+  "resource": {
+    "query": "What is the last name of the Soviet football player Nikolai Yevgrafovich?",
+    "response": {
+      "results": [
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/20014218/0000",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 0.6225288735312906,
+          "l0_content": "Nikolai Sokolov (footballer) — Abstract\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 20014218\nNikolai Yevgrafovich Sokolov () (May 12, 1897 in Moscow – December 15, 1988 in Razliv, Leningrad Oblast) was a Soviet football player.",
+          "l1_content": "Nikolai Sokolov (footballer) — Abstract\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 20014218\nNikolai Yevgrafovich Sokolov () (May 12, 1897 in Moscow – December 15, 1988 in Razliv, Leningrad Oblast) was a Soviet football player.",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/20014218/0001",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 0.49966946244239807,
+          "l0_content": "Nikolai Sokolov (footballer) — Honours.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 20014218\nBULLET::::- RSFSR champion: 1920, 1922. BULLET::::- USSR champion: 1920.",
+          "l1_content": "Nikolai Sokolov (footballer) — Honours.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 20014218\nBULLET::::- RSFSR champion: 1920, 1922. BULLET::::- USSR champion: 1920.",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/29017260/0000",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 0.4527261392094537,
+          "l0_content": "Kirill Sukhoversha — Abstract\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 29017260\nKirill Alekseyevich Sukhoversha (; born April 20, 1986) is a Russian professional football player who last played for FC Yakutiya Yakutsk.",
+          "l1_content": "Kirill Sukhoversha — Abstract\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 29017260\nKirill Alekseyevich Sukhoversha (; born April 20, 1986) is a Russian professional football player who last played for FC Yakutiya Yakutsk.",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        }
+      ],
+      "total": 3,
+      "retrieval_id": "98028d48-5f0f-400c-ad33-1364e361b172",
+      "stale_notices": []
+    }
+  },
+  "table_metrics": {
+    "required": 2,
+    "hits_at_3": 1,
+    "recall_at_3": 0.5,
+    "all_required_at_3": false,
+    "first_hit_rank": 1
+  }
+}

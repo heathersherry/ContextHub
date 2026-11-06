@@ -1,0 +1,2322 @@
+{
+  "method": "Deterministic extraction from the existing one-run-per-case traces; no new model runs or judging.",
+  "paper_source": {
+    "file": "/Users/sherrylin/Documents/PythonProjects/ContextHub/2952_Bridging_Databases_and_Do.pdf",
+    "sha256": "aec55b1a79be9daa18e7d95c47f0b2300f60db4f732e468499f2c00ee2fe5378",
+    "sections": [
+      "5.1",
+      "5.2",
+      "5.3",
+      "7.3",
+      "7.4"
+    ],
+    "tables": [
+      2,
+      3,
+      5
+    ],
+    "figure": 5
+  },
+  "definitions": {
+    "Acc_avg": "For N questions and K independent runs: sum_{i=1..N,r=1..K} correct[i,r] / (N*K). Paper uses K=8.",
+    "Best_at_k": "Fraction of questions with at least one correct answer in k independent runs. Not a deployed selector success rate and not k tool calls within one episode.",
+    "correctness": "Paper uses GPT-o4-mini semantic judgment against reference natural-language answers. Current 13/20 uses a local coding-assistant review, not that judge.",
+    "tool_calls": "Count each on_tool_start once, including parallel calls separately and the rejected 11th text search. Non-error counts are reported separately. All 20 evaluated attempts, including no-answer dev_35, remain in denominator.",
+    "both_tools": "At least one run_sql and one contexthub_search with context_type=resource. Schema-only search does not count as text retrieval. Presence does not prove correctness or dependency.",
+    "comparison_limit": "Paper uses run_sql for schema discovery as well as data queries. Our schema search/read calls must not simply be removed to make the total look comparable; APIs and fixtures differ."
+  },
+  "correctness_available": {
+    "local_single_run_reference_agreement": {
+      "correct": 13,
+      "total": 20,
+      "rate": 0.65
+    },
+    "local_single_run_by_type": {
+      "a2s": {
+        "match": 6,
+        "total": 10
+      },
+      "s2a": {
+        "match": 7,
+        "total": 10
+      }
+    },
+    "paper_GPT_o4_mini_judgment": null,
+    "Acc_avg_over_8_runs": null,
+    "Best_at_2": null,
+    "Best_at_4": null,
+    "Best_at_8": null,
+    "semantic_review_outcomes": {
+      "supported": 9,
+      "defensible_alternative": 3,
+      "no_final_answer": 1,
+      "conditional": 2,
+      "demonstrable_error": 1,
+      "unresolved_premise": 4
+    }
+  },
+  "summary": {
+    "cases": 20,
+    "attempted_tool_calls": 140,
+    "non_error_tool_calls": 139,
+    "attempted_calls_by_kind": {
+      "text_search": 43,
+      "schema_search": 40,
+      "sql": 56,
+      "context_read": 1
+    },
+    "non_error_calls_by_kind": {
+      "text_search": 42,
+      "schema_search": 40,
+      "sql": 56,
+      "context_read": 1
+    },
+    "mean_tool_attempts": 7.0,
+    "mean_non_error_tool_calls": 6.95,
+    "median_tool_attempts": 5.5,
+    "min_tool_attempts": 3,
+    "max_tool_attempts": 17,
+    "exactly_one_tool_call_cases": [],
+    "tool_attempt_distribution_counts": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 1,
+      "4": 3,
+      "5": 6,
+      "6": 4,
+      "7+": 6
+    },
+    "tool_attempt_distribution_percent": {
+      "3": 5.0,
+      "4": 15.0,
+      "5": 30.0,
+      "6": 20.0,
+      "7+": 30.0
+    },
+    "both_sql_and_text_count": 19,
+    "both_sql_and_text_percent": 95.0,
+    "both_non_error_sql_and_text_count": 19,
+    "final_answer_count": 19,
+    "mean_episode_seconds": 56.12395,
+    "median_episode_seconds": 39.49
+  },
+  "by_type": {
+    "a2s": {
+      "cases": 10,
+      "attempted_tool_calls": 76,
+      "non_error_tool_calls": 76,
+      "attempted_calls_by_kind": {
+        "text_search": 22,
+        "schema_search": 23,
+        "sql": 30,
+        "context_read": 1
+      },
+      "non_error_calls_by_kind": {
+        "text_search": 22,
+        "schema_search": 23,
+        "sql": 30,
+        "context_read": 1
+      },
+      "mean_tool_attempts": 7.6,
+      "mean_non_error_tool_calls": 7.6,
+      "median_tool_attempts": 6.0,
+      "min_tool_attempts": 4,
+      "max_tool_attempts": 12,
+      "exactly_one_tool_call_cases": [],
+      "tool_attempt_distribution_counts": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 1,
+        "5": 3,
+        "6": 2,
+        "7+": 4
+      },
+      "tool_attempt_distribution_percent": {
+        "3": 0.0,
+        "4": 10.0,
+        "5": 30.0,
+        "6": 20.0,
+        "7+": 40.0
+      },
+      "both_sql_and_text_count": 10,
+      "both_sql_and_text_percent": 100.0,
+      "both_non_error_sql_and_text_count": 10,
+      "final_answer_count": 9,
+      "mean_episode_seconds": 68.293,
+      "median_episode_seconds": 48.025000000000006
+    },
+    "s2a": {
+      "cases": 10,
+      "attempted_tool_calls": 64,
+      "non_error_tool_calls": 63,
+      "attempted_calls_by_kind": {
+        "schema_search": 17,
+        "text_search": 21,
+        "sql": 26
+      },
+      "non_error_calls_by_kind": {
+        "schema_search": 17,
+        "text_search": 20,
+        "sql": 26
+      },
+      "mean_tool_attempts": 6.4,
+      "mean_non_error_tool_calls": 6.3,
+      "median_tool_attempts": 5.0,
+      "min_tool_attempts": 3,
+      "max_tool_attempts": 17,
+      "exactly_one_tool_call_cases": [],
+      "tool_attempt_distribution_counts": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 1,
+        "4": 2,
+        "5": 3,
+        "6": 2,
+        "7+": 2
+      },
+      "tool_attempt_distribution_percent": {
+        "3": 10.0,
+        "4": 20.0,
+        "5": 30.0,
+        "6": 20.0,
+        "7+": 20.0
+      },
+      "both_sql_and_text_count": 9,
+      "both_sql_and_text_percent": 90.0,
+      "both_non_error_sql_and_text_count": 9,
+      "final_answer_count": 10,
+      "mean_episode_seconds": 43.9549,
+      "median_episode_seconds": 36.060500000000005
+    }
+  },
+  "paper_Qwen3_8B_TRACE_GRPO_context_only": {
+    "Acc_avg": 0.5391,
+    "Best_at_1": 0.5374,
+    "Best_at_2": 0.6189,
+    "Best_at_4": 0.683,
+    "Best_at_8": 0.7289,
+    "mean_tool_calls": 4.72,
+    "both_tools_percent": 94.1,
+    "call_distribution_percent": {
+      "3": 6.5,
+      "4": 41.6,
+      "5": 32.6,
+      "6": 13.4,
+      "7+": 5.7
+    }
+  },
+  "not_available_or_not_applicable": [
+    "Independent human-judge agreement study",
+    "RL hint curriculum evolution/convergence",
+    "MuSiQue 3-/4-hop generalization"
+  ],
+  "records": [
+    {
+      "case_id": "dev_43",
+      "type": "a2s",
+      "status": "completed",
+      "tool_attempts": 5,
+      "non_error_tool_calls": 5,
+      "calls_by_kind": {
+        "text_search": 2,
+        "schema_search": 1,
+        "sql": 1,
+        "context_read": 1
+      },
+      "non_error_calls_by_kind": {
+        "text_search": 2,
+        "schema_search": 1,
+        "sql": 1,
+        "context_read": 1
+      },
+      "uses_sql_and_text_search": true,
+      "has_non_error_sql_and_text_search": true,
+      "has_final_answer": true,
+      "elapsed_seconds": 36.448,
+      "calls": [
+        {
+          "kind": "text_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a539-3675-76f9-aec5-6f5e7d918e0b",
+          "input": {
+            "query": "Joint Declaration on the Doctrine of Justification",
+            "context_type": "resource"
+          },
+          "error": null,
+          "started_seconds": 6.251,
+          "finished_seconds": 6.621
+        },
+        {
+          "kind": "schema_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a539-3675-76f9-aec5-6f5ff67d8cdb",
+          "input": {
+            "query": "formula_1 races 1999 season rounds",
+            "context_type": "table_schema"
+          },
+          "error": null,
+          "started_seconds": 6.251,
+          "finished_seconds": 6.448
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a539-4746-715f-a5e5-fc88b829a11b",
+          "input": {
+            "code_query": "SELECT raceId, round, name, date FROM races WHERE year = 1999 ORDER BY round DESC LIMIT 5;"
+          },
+          "error": null,
+          "started_seconds": 10.557,
+          "finished_seconds": 10.565
+        },
+        {
+          "kind": "context_read",
+          "name": "contexthub_read",
+          "run_id": "01a1a539-6174-759f-b80b-865e22cb0a2d",
+          "input": {
+            "uri": "ctx://team/engineering/hydra/kilt/2325040/0000"
+          },
+          "error": null,
+          "started_seconds": 17.258,
+          "finished_seconds": 17.284
+        },
+        {
+          "kind": "text_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a539-6174-759f-b80b-865f588f60b6",
+          "input": {
+            "query": "Joint Declaration Doctrine of Justification signed 31 October 1999 Augsburg",
+            "context_type": "resource"
+          },
+          "error": null,
+          "started_seconds": 17.258,
+          "finished_seconds": 17.726
+        }
+      ],
+      "trace_sha256": "de040bef9008c05feda65bcf9084c75db5f3f8d68755f09918e631e96fd1546b"
+    },
+    {
+      "case_id": "dev_62",
+      "type": "a2s",
+      "status": "completed",
+      "tool_attempts": 6,
+      "non_error_tool_calls": 6,
+      "calls_by_kind": {
+        "schema_search": 2,
+        "sql": 3,
+        "text_search": 1
+      },
+      "non_error_calls_by_kind": {
+        "schema_search": 2,
+        "sql": 3,
+        "text_search": 1
+      },
+      "uses_sql_and_text_search": true,
+      "has_non_error_sql_and_text_search": true,
+      "has_final_answer": true,
+      "elapsed_seconds": 44.49,
+      "calls": [
+        {
+          "kind": "schema_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a539-346a-738e-8717-6444d1b6c8e3",
+          "input": {
+            "query": "formula_1 constructors points",
+            "context_type": "table_schema"
+          },
+          "error": null,
+          "started_seconds": 5.657,
+          "finished_seconds": 6.008
+        },
+        {
+          "kind": "schema_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a539-346a-738e-8717-64458bc5b7bb",
+          "input": {
+            "query": "formula_1 constructor standings results",
+            "context_type": "table_schema"
+          },
+          "error": null,
+          "started_seconds": 5.657,
+          "finished_seconds": 6.013
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a539-54ae-77bc-a51c-11b9e61e1d5a",
+          "input": {
+            "code_query": "SELECT c.name, SUM(cr.points) AS total_points FROM constructorResults cr JOIN constructors c ON cr.constructorId = c.constructorId GROUP BY c.constructorId ORDER BY total_points DESC LIMIT 5;"
+          },
+          "error": null,
+          "started_seconds": 13.917,
+          "finished_seconds": 13.923
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a539-54ae-77bc-a51c-11ba75c91819",
+          "input": {
+            "code_query": "SELECT c.name, MAX(cs.points) AS max_points FROM constructorStandings cs JOIN constructors c ON cs.constructorId = c.constructorId GROUP BY c.constructorId ORDER BY max_points DESC LIMIT 5;"
+          },
+          "error": null,
+          "started_seconds": 13.918,
+          "finished_seconds": 13.925
+        },
+        {
+          "kind": "text_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a539-92a1-7035-95eb-ae51d184bc47",
+          "input": {
+            "context_type": "resource",
+            "query": "Ferrari automotive brand name origin Enzo Ferrari"
+          },
+          "error": null,
+          "started_seconds": 29.776,
+          "finished_seconds": 30.202
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a539-92a2-773a-b2d6-a21de8921a7f",
+          "input": {
+            "code_query": "SELECT name, nationality, url FROM constructors WHERE name = 'Ferrari';"
+          },
+          "error": null,
+          "started_seconds": 29.777,
+          "finished_seconds": 29.78
+        }
+      ],
+      "trace_sha256": "e13bb3398bc760c90cd78e3dde279d4c8ee6ee77411212ed22300e0b505379ab"
+    },
+    {
+      "case_id": "dev_5",
+      "type": "s2a",
+      "status": "completed",
+      "tool_attempts": 3,
+      "non_error_tool_calls": 3,
+      "calls_by_kind": {
+        "schema_search": 1,
+        "text_search": 1,
+        "sql": 1
+      },
+      "non_error_calls_by_kind": {
+        "schema_search": 1,
+        "text_search": 1,
+        "sql": 1
+      },
+      "uses_sql_and_text_search": true,
+      "has_non_error_sql_and_text_search": true,
+      "has_final_answer": true,
+      "elapsed_seconds": 21.787,
+      "calls": [
+        {
+          "kind": "schema_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a539-c774-759d-9727-0cc226c20302",
+          "input": {
+            "query": "formula_1 circuits location coordinates",
+            "context_type": "table_schema"
+          },
+          "error": null,
+          "started_seconds": 6.901,
+          "finished_seconds": 7.41
+        },
+        {
+          "kind": "text_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a539-c775-7484-ab96-a1b1bc9c1b41",
+          "input": {
+            "query": "Silverstone circuit World War II RAF bomber station runways triangle",
+            "context_type": "resource"
+          },
+          "error": null,
+          "started_seconds": 6.902,
+          "finished_seconds": 7.545
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a539-e33d-745a-b010-a362e31caf0d",
+          "input": {
+            "code_query": "SELECT name, location, country, lat, lng FROM circuits WHERE name LIKE '%Silverstone%'"
+          },
+          "error": null,
+          "started_seconds": 14.013,
+          "finished_seconds": 14.017
+        }
+      ],
+      "trace_sha256": "202f40f621256212209e93c9f1b3752b948b9f035880cc9aac44ae0934e25a75"
+    },
+    {
+      "case_id": "dev_13",
+      "type": "s2a",
+      "status": "completed",
+      "tool_attempts": 6,
+      "non_error_tool_calls": 6,
+      "calls_by_kind": {
+        "text_search": 1,
+        "schema_search": 3,
+        "sql": 2
+      },
+      "non_error_calls_by_kind": {
+        "text_search": 1,
+        "schema_search": 3,
+        "sql": 2
+      },
+      "uses_sql_and_text_search": true,
+      "has_non_error_sql_and_text_search": true,
+      "has_final_answer": true,
+      "elapsed_seconds": 37.712,
+      "calls": [
+        {
+          "kind": "text_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a539-e37d-73fc-9f67-7de6928909fc",
+          "input": {
+            "query": "\"Irv the Swerve\" \"Fast Eddie\" Formula 1 driver nickname",
+            "context_type": "resource"
+          },
+          "error": null,
+          "started_seconds": 5.968,
+          "finished_seconds": 6.702
+        },
+        {
+          "kind": "schema_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a539-e37d-73fc-9f67-7de75444440a",
+          "input": {
+            "query": "formula_1 drivers results points",
+            "context_type": "table_schema"
+          },
+          "error": null,
+          "started_seconds": 5.969,
+          "finished_seconds": 6.539
+        },
+        {
+          "kind": "schema_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a539-f979-75e5-96ee-496379b0e2e6",
+          "input": {
+            "query": "formula_1 drivers table forename surname",
+            "context_type": "table_schema"
+          },
+          "error": null,
+          "started_seconds": 11.596,
+          "finished_seconds": 12.052
+        },
+        {
+          "kind": "schema_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a539-f97a-7601-9d96-07943f4169a1",
+          "input": {
+            "query": "formula_1 races table year date",
+            "context_type": "table_schema"
+          },
+          "error": null,
+          "started_seconds": 11.597,
+          "finished_seconds": 12.054
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a53a-1cfe-7299-99e6-55e9adbef0f9",
+          "input": {
+            "code_query": "SELECT AVG(r.points) AS avg_points, COUNT(*) AS races\nFROM results r\nJOIN races ra ON r.raceId = ra.raceId\nJOIN drivers d ON r.driverId = d.driverId\nWHERE d.forename = 'Eddie' AND d.surname = 'Irvine' AND ra.year = 2000;"
+          },
+          "error": null,
+          "started_seconds": 20.688,
+          "finished_seconds": 20.695
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a53a-42e8-7312-beff-399454366ab0",
+          "input": {
+            "code_query": "SELECT SUM(r.points) AS total_points, COUNT(*) AS races\nFROM results r\nJOIN races ra ON r.raceId = ra.raceId\nJOIN drivers d ON r.driverId = d.driverId\nWHERE d.forename = 'Eddie' AND d.surname = 'Irvine' AND ra.year = 2000;"
+          },
+          "error": null,
+          "started_seconds": 30.394,
+          "finished_seconds": 30.402
+        }
+      ],
+      "trace_sha256": "3714490613fe756905f744d72cbf74b803a17f85a4a3dad04e85bdd2c409dbf8"
+    },
+    {
+      "case_id": "dev_35",
+      "type": "a2s",
+      "status": "no_final_answer",
+      "tool_attempts": 12,
+      "non_error_tool_calls": 12,
+      "calls_by_kind": {
+        "schema_search": 2,
+        "sql": 7,
+        "text_search": 3
+      },
+      "non_error_calls_by_kind": {
+        "schema_search": 2,
+        "sql": 7,
+        "text_search": 3
+      },
+      "uses_sql_and_text_search": true,
+      "has_non_error_sql_and_text_search": true,
+      "has_final_answer": false,
+      "elapsed_seconds": 238.749,
+      "calls": [
+        {
+          "kind": "schema_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53a-123e-77f3-9c3c-6b408c59800c",
+          "input": {
+            "query": "superhero race",
+            "context_type": "table_schema"
+          },
+          "error": null,
+          "started_seconds": 4.254,
+          "finished_seconds": 5.488
+        },
+        {
+          "kind": "schema_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53a-123e-77f3-9c3c-6b41e3d78f60",
+          "input": {
+            "query": "superhero attribute value",
+            "context_type": "table_schema"
+          },
+          "error": null,
+          "started_seconds": 4.257,
+          "finished_seconds": 4.884
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a53a-31c6-7301-80d9-b897ec0f481e",
+          "input": {
+            "code_query": "SELECT ha.hero_id, s.superhero_name, s.race_id, r.race, ha.attribute_id, a.attribute_name, ha.attribute_value\nFROM hero_attribute ha\nJOIN superhero s ON s.id = ha.hero_id\nLEFT JOIN race r ON r.id = s.race_id\nLEFT JOIN attribute a ON a.id = ha.attribute_id\nORDER BY ha.attribute_value DESC\nLIMIT 10;"
+          },
+          "error": null,
+          "started_seconds": 12.326,
+          "finished_seconds": 12.331
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a53a-604e-7796-ba75-6936fb8d293c",
+          "input": {
+            "code_query": "SELECT COUNT(*) AS cnt, COUNT(DISTINCT hero_id) AS heroes FROM hero_attribute WHERE attribute_value = (SELECT MAX(attribute_value) FROM hero_attribute);"
+          },
+          "error": null,
+          "started_seconds": 24.237,
+          "finished_seconds": 24.24
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a53a-604e-7796-ba75-69370c101f9d",
+          "input": {
+            "code_query": "SELECT r.race, COUNT(*) AS n\nFROM hero_attribute ha\nJOIN superhero s ON s.id = ha.hero_id\nLEFT JOIN race r ON r.id = s.race_id\nWHERE ha.attribute_value = (SELECT MAX(attribute_value) FROM hero_attribute)\nGROUP BY r.race\nORDER BY n DESC;"
+          },
+          "error": null,
+          "started_seconds": 24.238,
+          "finished_seconds": 24.24
+        },
+        {
+          "kind": "text_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53b-0a96-7391-9c4a-ec4942d101ce",
+          "input": {
+            "context_type": "resource",
+            "query": "Theosophy root races role teachings"
+          },
+          "error": null,
+          "started_seconds": 67.83,
+          "finished_seconds": 68.324
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a53b-0a96-7391-9c4a-ec4aa0d0fbf5",
+          "input": {
+            "code_query": "SELECT s.id, s.superhero_name, r.race, SUM(ha.attribute_value) AS total\nFROM superhero s\nJOIN hero_attribute ha ON ha.hero_id = s.id\nLEFT JOIN race r ON r.id = s.race_id\nGROUP BY s.id\nORDER BY total DESC\nLIMIT 5;"
+          },
+          "error": null,
+          "started_seconds": 67.831,
+          "finished_seconds": 67.835
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a53b-5b69-741a-a4dc-ec5c4e57f44d",
+          "input": {
+            "code_query": "SELECT s.superhero_name, r.race, ha.attribute_value\nFROM hero_attribute ha\nINNER JOIN superhero s ON s.id = ha.hero_id\nINNER JOIN race r ON r.id = s.race_id\nORDER BY ha.attribute_value DESC\nLIMIT 1;"
+          },
+          "error": null,
+          "started_seconds": 88.52,
+          "finished_seconds": 88.525
+        },
+        {
+          "kind": "text_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53b-5b69-741a-a4dc-ec5d9edf587d",
+          "input": {
+            "context_type": "resource",
+            "query": "Theosophy fifth root race Aryan humanity role"
+          },
+          "error": null,
+          "started_seconds": 88.521,
+          "finished_seconds": 88.929
+        },
+        {
+          "kind": "text_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53b-b5ea-73f3-a7b3-72f41edafbdb",
+          "input": {
+            "context_type": "resource",
+            "query": "Theosophy human evolution purpose of humanity Earth rounds"
+          },
+          "error": null,
+          "started_seconds": 111.689,
+          "finished_seconds": 112.181
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a53c-31d3-71e0-9341-e241fac80609",
+          "input": {
+            "code_query": "SELECT r.race, s.superhero_name, ha.attribute_value\nFROM hero_attribute ha\nJOIN superhero s ON s.id = ha.hero_id\nJOIN race r ON s.race_id = r.id\nORDER BY ha.attribute_value DESC\nLIMIT 5;"
+          },
+          "error": null,
+          "started_seconds": 143.41,
+          "finished_seconds": 143.416
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a53c-31d3-71e0-9341-e2424d8c1b07",
+          "input": {
+            "code_query": "SELECT r.race, s.superhero_name, ha.attribute_value\nFROM superhero s\nJOIN hero_attribute ha ON s.id = ha.hero_id\nJOIN race r ON s.race_id = r.id\nORDER BY ha.attribute_value DESC\nLIMIT 5;"
+          },
+          "error": null,
+          "started_seconds": 143.411,
+          "finished_seconds": 143.416
+        }
+      ],
+      "trace_sha256": "a69c5e679e632a9da238a42cd60c8e2ef39902ad5e97a026e024d2dbe0260a5d"
+    },
+    {
+      "case_id": "dev_72",
+      "type": "a2s",
+      "status": "completed",
+      "tool_attempts": 4,
+      "non_error_tool_calls": 4,
+      "calls_by_kind": {
+        "schema_search": 2,
+        "sql": 1,
+        "text_search": 1
+      },
+      "non_error_calls_by_kind": {
+        "schema_search": 2,
+        "sql": 1,
+        "text_search": 1
+      },
+      "uses_sql_and_text_search": true,
+      "has_non_error_sql_and_text_search": true,
+      "has_final_answer": true,
+      "elapsed_seconds": 22.905,
+      "calls": [
+        {
+          "kind": "schema_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53a-7660-755d-9436-e8061dbeef99",
+          "input": {
+            "query": "superhero database superhero table publisher",
+            "context_type": "table_schema"
+          },
+          "error": null,
+          "started_seconds": 5.851,
+          "finished_seconds": 6.297
+        },
+        {
+          "kind": "schema_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53a-7661-74e4-a9a3-488b7e3e97b1",
+          "input": {
+            "query": "superhero publisher table",
+            "context_type": "table_schema"
+          },
+          "error": null,
+          "started_seconds": 5.852,
+          "finished_seconds": 6.307
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a53a-8698-73c8-9cb5-7640a0a92d48",
+          "input": {
+            "code_query": "SELECT s.superhero_name, s.publisher_id, p.publisher_name FROM superhero s JOIN publisher p ON s.publisher_id = p.id WHERE s.superhero_name LIKE '%Blue Beetle%'"
+          },
+          "error": null,
+          "started_seconds": 10.002,
+          "finished_seconds": 10.005
+        },
+        {
+          "kind": "text_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53a-94ad-73dc-b87a-d772c5a55fc9",
+          "input": {
+            "context_type": "resource",
+            "query": "Brightest Day storyline DC Comics significance"
+          },
+          "error": null,
+          "started_seconds": 13.608,
+          "finished_seconds": 14.196
+        }
+      ],
+      "trace_sha256": "24e6074afe34a829531ce7c7655bcc98b4816fb71a5b46b011b860fc8fce2d16"
+    },
+    {
+      "case_id": "dev_10",
+      "type": "s2a",
+      "status": "completed",
+      "tool_attempts": 4,
+      "non_error_tool_calls": 4,
+      "calls_by_kind": {
+        "schema_search": 2,
+        "sql": 2
+      },
+      "non_error_calls_by_kind": {
+        "schema_search": 2,
+        "sql": 2
+      },
+      "uses_sql_and_text_search": false,
+      "has_non_error_sql_and_text_search": false,
+      "has_final_answer": true,
+      "elapsed_seconds": 19.802,
+      "calls": [
+        {
+          "kind": "schema_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53a-d436-74b1-b6e2-8abf60488e2d",
+          "input": {
+            "query": "superhero database superhero table weight",
+            "context_type": "table_schema"
+          },
+          "error": null,
+          "started_seconds": 6.962,
+          "finished_seconds": 7.324
+        },
+        {
+          "kind": "schema_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53a-d436-74b1-b6e2-8ac0a3ce92df",
+          "input": {
+            "query": "superhero database alter ego superhero_name",
+            "context_type": "table_schema"
+          },
+          "error": null,
+          "started_seconds": 6.963,
+          "finished_seconds": 7.343
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a53a-f30e-737d-bc5f-5ce141e708b1",
+          "input": {
+            "code_query": "SELECT id, superhero_name, full_name, weight_kg FROM superhero WHERE full_name LIKE '%Charles Chandler%' OR superhero_name LIKE '%Charles Chandler%'"
+          },
+          "error": null,
+          "started_seconds": 14.859,
+          "finished_seconds": 14.863
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a53a-f30e-737d-bc5f-5ce2106ee352",
+          "input": {
+            "code_query": "SELECT id, superhero_name, full_name, weight_kg, alignment_id FROM superhero WHERE superhero_name LIKE '%Abomination%' OR full_name LIKE '%Abomination%'"
+          },
+          "error": null,
+          "started_seconds": 14.86,
+          "finished_seconds": 14.864
+        }
+      ],
+      "trace_sha256": "a5161e46b173599ffec47c8d6960e85187c83cb66264e5ed8ab5cf60491b4086"
+    },
+    {
+      "case_id": "dev_68",
+      "type": "s2a",
+      "status": "completed",
+      "tool_attempts": 5,
+      "non_error_tool_calls": 5,
+      "calls_by_kind": {
+        "schema_search": 2,
+        "sql": 2,
+        "text_search": 1
+      },
+      "non_error_calls_by_kind": {
+        "schema_search": 2,
+        "sql": 2,
+        "text_search": 1
+      },
+      "uses_sql_and_text_search": true,
+      "has_non_error_sql_and_text_search": true,
+      "has_final_answer": true,
+      "elapsed_seconds": 24.131,
+      "calls": [
+        {
+          "kind": "schema_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53b-209b-7156-b39d-147512180aa0",
+          "input": {
+            "query": "superhero database superhero table",
+            "context_type": "table_schema"
+          },
+          "error": null,
+          "started_seconds": 6.713,
+          "finished_seconds": 7.08
+        },
+        {
+          "kind": "schema_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53b-209b-7156-b39d-1476438ac6cc",
+          "input": {
+            "query": "superpower powers table superhero database",
+            "context_type": "table_schema"
+          },
+          "error": null,
+          "started_seconds": 6.714,
+          "finished_seconds": 7.087
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a53b-39c6-7235-910e-624075d33735",
+          "input": {
+            "code_query": "SELECT id, superhero_name, full_name FROM superhero WHERE superhero_name LIKE '%Elasti%' OR full_name LIKE '%Parr%' OR superhero_name LIKE '%Parr%'"
+          },
+          "error": null,
+          "started_seconds": 13.156,
+          "finished_seconds": 13.159
+        },
+        {
+          "kind": "text_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53b-39c6-7235-910e-6241cb756e3a",
+          "input": {
+            "query": "Elastigirl Helen Parr The Incredibles married Bob Parr",
+            "context_type": "resource"
+          },
+          "error": null,
+          "started_seconds": 13.156,
+          "finished_seconds": 13.688
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a53b-4a21-74b7-bd53-f93e50e0c53e",
+          "input": {
+            "code_query": "SELECT sp.power_name FROM hero_power hp JOIN superpower sp ON sp.id = hp.power_id WHERE hp.hero_id = 242 ORDER BY sp.power_name"
+          },
+          "error": null,
+          "started_seconds": 17.343,
+          "finished_seconds": 17.345
+        }
+      ],
+      "trace_sha256": "3e2dc0441c6b989c77a2c4ceb2993d922e8d235b4af05208d2187159907d8742"
+    },
+    {
+      "case_id": "dev_26",
+      "type": "a2s",
+      "status": "completed",
+      "tool_attempts": 9,
+      "non_error_tool_calls": 9,
+      "calls_by_kind": {
+        "text_search": 1,
+        "schema_search": 1,
+        "sql": 7
+      },
+      "non_error_calls_by_kind": {
+        "text_search": 1,
+        "schema_search": 1,
+        "sql": 7
+      },
+      "uses_sql_and_text_search": true,
+      "has_non_error_sql_and_text_search": true,
+      "has_final_answer": true,
+      "elapsed_seconds": 77.589,
+      "calls": [
+        {
+          "kind": "text_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53b-7e2b-75f0-90ad-5a392f057597",
+          "input": {
+            "query": "Holm-Bonferroni method advantage over Bonferroni correction",
+            "context_type": "resource"
+          },
+          "error": null,
+          "started_seconds": 6.13,
+          "finished_seconds": 6.934
+        },
+        {
+          "kind": "schema_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53b-7e2b-75f0-90ad-5a3ac4034efc",
+          "input": {
+            "query": "codebase_community posts users views",
+            "context_type": "table_schema"
+          },
+          "error": null,
+          "started_seconds": 6.131,
+          "finished_seconds": 6.584
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a53b-938a-762a-b75f-90b0eff4dc3b",
+          "input": {
+            "code_query": "SELECT p.Id, p.Title, p.ViewCount, p.PostTypeId, substr(p.Body, 1, 800) AS BodyPreview\nFROM posts p JOIN users u ON p.OwnerUserId = u.Id\nWHERE u.DisplayName LIKE '%Harvey Motulsky%'\nORDER BY p.ViewCount DESC LIMIT 5;"
+          },
+          "error": null,
+          "started_seconds": 11.601,
+          "finished_seconds": 11.885
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a53b-c373-7040-8940-edb835bc7d36",
+          "input": {
+            "code_query": "SELECT p.Id, p.Score, substr(p.Body, 1, 2500) AS Body\nFROM posts p\nWHERE p.ParentId = 109\nORDER BY p.Score DESC;"
+          },
+          "error": null,
+          "started_seconds": 23.866,
+          "finished_seconds": 24.12
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a53b-c373-7040-8940-edb9ed5698b9",
+          "input": {
+            "code_query": "SELECT c.Id, c.Score, c.Text\nFROM comments c\nWHERE c.PostId = 109;"
+          },
+          "error": null,
+          "started_seconds": 23.867,
+          "finished_seconds": 24.122
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a53b-f3eb-705f-a2e3-685744abf2be",
+          "input": {
+            "code_query": "SELECT Id, Title, ViewCount, Body FROM posts WHERE Id = 109;"
+          },
+          "error": null,
+          "started_seconds": 36.274,
+          "finished_seconds": 36.279
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a53b-f3eb-705f-a2e3-6858a0a72413",
+          "input": {
+            "code_query": "SELECT p.Id, p.Title, p.ViewCount\nFROM posts p JOIN users u ON p.OwnerUserId = u.Id\nWHERE u.DisplayName LIKE '%Harvey Motulsky%' AND (p.Body LIKE '%Bonferroni%' OR p.Title LIKE '%Bonferroni%')\nORDER BY p.ViewCount DESC LIMIT 10;"
+          },
+          "error": null,
+          "started_seconds": 36.275,
+          "finished_seconds": 36.506
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a53c-2fd7-713c-afba-0aa3d3d029f6",
+          "input": {
+            "code_query": "SELECT Id, Title, ViewCount, ParentId, PostTypeId, substr(Body, 1, 2500) AS Body FROM posts WHERE Id = 86885;"
+          },
+          "error": null,
+          "started_seconds": 51.614,
+          "finished_seconds": 51.618
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a53c-2fd7-713c-afba-0aa4295ea6ae",
+          "input": {
+            "code_query": "SELECT u.Id, u.DisplayName, u.Reputation, COUNT(p.Id) AS nPosts, MAX(p.ViewCount) AS maxViews\nFROM users u LEFT JOIN posts p ON p.OwnerUserId = u.Id\nWHERE u.DisplayName LIKE '%Harvey%'\nGROUP BY u.Id;"
+          },
+          "error": null,
+          "started_seconds": 51.615,
+          "finished_seconds": 51.719
+        }
+      ],
+      "trace_sha256": "a146188dd0040c2195ae8ca42c3432bdf4a1fd9629a49b70395a7783db6dedf9"
+    },
+    {
+      "case_id": "dev_31",
+      "type": "a2s",
+      "status": "completed",
+      "tool_attempts": 5,
+      "non_error_tool_calls": 5,
+      "calls_by_kind": {
+        "schema_search": 2,
+        "sql": 1,
+        "text_search": 2
+      },
+      "non_error_calls_by_kind": {
+        "schema_search": 2,
+        "sql": 1,
+        "text_search": 2
+      },
+      "uses_sql_and_text_search": true,
+      "has_non_error_sql_and_text_search": true,
+      "has_final_answer": true,
+      "elapsed_seconds": 25.693,
+      "calls": [
+        {
+          "kind": "schema_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53c-aba8-755c-afa3-f5bc06a2eea0",
+          "input": {
+            "query": "codebase_community posts users",
+            "context_type": "table_schema"
+          },
+          "error": null,
+          "started_seconds": 5.519,
+          "finished_seconds": 5.977
+        },
+        {
+          "kind": "schema_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53c-aba8-755c-afa3-f5bd4ba9949c",
+          "input": {
+            "query": "codebase_community post owner location",
+            "context_type": "table_schema"
+          },
+          "error": null,
+          "started_seconds": 5.52,
+          "finished_seconds": 5.964
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a53c-bcb7-7585-9ba2-2ef847d02c2c",
+          "input": {
+            "code_query": "SELECT p.Id, p.Title, p.OwnerUserId, u.DisplayName, u.Location FROM posts p LEFT JOIN users u ON p.OwnerUserId = u.Id WHERE p.Title LIKE '%Eliciting priors from experts%'"
+          },
+          "error": null,
+          "started_seconds": 9.885,
+          "finished_seconds": 9.918
+        },
+        {
+          "kind": "text_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53c-ca95-7425-80dd-d395b2081470",
+          "input": {
+            "context_type": "resource",
+            "query": "United Kingdom form of government"
+          },
+          "error": null,
+          "started_seconds": 13.436,
+          "finished_seconds": 14.033
+        },
+        {
+          "kind": "text_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53c-dc7b-71a4-b9f9-3055aa4973f3",
+          "input": {
+            "context_type": "resource",
+            "query": "United Kingdom constitutional monarchy parliamentary democracy unitary"
+          },
+          "error": null,
+          "started_seconds": 18.018,
+          "finished_seconds": 18.321
+        }
+      ],
+      "trace_sha256": "c57c67ca1874fb44d63a392445f30490b314508ceb504cdc7a036d3ca469508c"
+    },
+    {
+      "case_id": "dev_6",
+      "type": "s2a",
+      "status": "completed",
+      "tool_attempts": 17,
+      "non_error_tool_calls": 16,
+      "calls_by_kind": {
+        "schema_search": 1,
+        "text_search": 11,
+        "sql": 5
+      },
+      "non_error_calls_by_kind": {
+        "schema_search": 1,
+        "text_search": 10,
+        "sql": 5
+      },
+      "uses_sql_and_text_search": true,
+      "has_non_error_sql_and_text_search": true,
+      "has_final_answer": true,
+      "elapsed_seconds": 95.794,
+      "calls": [
+        {
+          "kind": "schema_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53d-0ec7-7570-856e-7456795fad68",
+          "input": {
+            "query": "codebase_community users badges",
+            "context_type": "table_schema"
+          },
+          "error": null,
+          "started_seconds": 4.996,
+          "finished_seconds": 5.529
+        },
+        {
+          "kind": "text_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53d-0ec7-7570-856e-74575796ad91",
+          "input": {
+            "query": "Indian Half-bred horse type country primarily found",
+            "context_type": "resource"
+          },
+          "error": null,
+          "started_seconds": 4.997,
+          "finished_seconds": 5.531
+        },
+        {
+          "kind": "text_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53d-247b-76c0-9d35-312989c3dd3a",
+          "input": {
+            "context_type": "resource",
+            "query": "Indian Half-bred horse breed India"
+          },
+          "error": null,
+          "started_seconds": 10.552,
+          "finished_seconds": 11.061
+        },
+        {
+          "kind": "text_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53d-247b-76c0-9d35-312adaa75c7e",
+          "input": {
+            "context_type": "resource",
+            "query": "Half-bred horse type primarily found country"
+          },
+          "error": null,
+          "started_seconds": 10.554,
+          "finished_seconds": 10.986
+        },
+        {
+          "kind": "text_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53d-3b03-712d-87b8-88c69e56d55d",
+          "input": {
+            "context_type": "resource",
+            "query": "\"Indian Half-bred\" horse"
+          },
+          "error": null,
+          "started_seconds": 16.32,
+          "finished_seconds": 17.017
+        },
+        {
+          "kind": "text_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53d-3b03-712d-87b8-88c73cc60856",
+          "input": {
+            "context_type": "resource",
+            "query": "horse types India half-bred cavalry remount"
+          },
+          "error": null,
+          "started_seconds": 16.323,
+          "finished_seconds": 17.014
+        },
+        {
+          "kind": "text_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53d-5345-71b7-a48f-d2b138772465",
+          "input": {
+            "context_type": "resource",
+            "query": "Indian Half-bred horse breed developed India warmblood"
+          },
+          "error": null,
+          "started_seconds": 22.531,
+          "finished_seconds": 24.075
+        },
+        {
+          "kind": "text_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53d-5345-71b7-a48f-d2b23a7ee153",
+          "input": {
+            "context_type": "resource",
+            "query": "list of horse breeds India"
+          },
+          "error": null,
+          "started_seconds": 22.536,
+          "finished_seconds": 25.789
+        },
+        {
+          "kind": "text_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53d-780c-72c0-9f80-64d1e805c869",
+          "input": {
+            "context_type": "resource",
+            "query": "Indian Half-bred horse breed country of origin"
+          },
+          "error": null,
+          "started_seconds": 31.945,
+          "finished_seconds": 32.418
+        },
+        {
+          "kind": "text_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53d-780c-72c0-9f80-64d22fe15fac",
+          "input": {
+            "context_type": "resource",
+            "query": "Half-bred horse breed origin India Thoroughbred cross"
+          },
+          "error": null,
+          "started_seconds": 31.948,
+          "finished_seconds": 32.422
+        },
+        {
+          "kind": "text_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53d-9108-7771-a523-986c50016c43",
+          "input": {
+            "context_type": "resource",
+            "query": "Half-bred horse breed type"
+          },
+          "error": null,
+          "started_seconds": 38.341,
+          "finished_seconds": 38.724
+        },
+        {
+          "kind": "text_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53d-9108-7771-a523-986d087f9add",
+          "input": {
+            "context_type": "resource",
+            "query": "Indian horse breeds Marwari Kathiawari Zanskari Manipuri pony"
+          },
+          "error": "The 10-call resource search budget is exhausted.",
+          "started_seconds": 38.343,
+          "finished_seconds": 38.346
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a53d-d6d1-7398-adac-b9d9164e6321",
+          "input": {
+            "code_query": "SELECT Location, COUNT(*) AS n FROM users WHERE Location LIKE '%India%' GROUP BY Location ORDER BY n DESC LIMIT 50"
+          },
+          "error": null,
+          "started_seconds": 56.206,
+          "finished_seconds": 56.218
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a53d-d6d1-7398-adac-b9daee05bb02",
+          "input": {
+            "code_query": "SELECT Name, COUNT(*) AS n FROM badges WHERE LOWER(Name) LIKE '%teacher%' GROUP BY Name"
+          },
+          "error": null,
+          "started_seconds": 56.208,
+          "finished_seconds": 56.232
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a53e-1ecf-7288-bb15-1633e28e886a",
+          "input": {
+            "code_query": "SELECT COUNT(DISTINCT u.Id) AS user_count\nFROM users u\nJOIN badges b ON b.UserId = u.Id\nWHERE b.Name = 'Teacher'\n  AND (LOWER(u.Location) = 'india'\n       OR LOWER(u.Location) LIKE '%, india'\n       OR LOWER(u.Location) LIKE '%, india,%'\n       OR LOWER(u.Location) LIKE '% ,india'\n       OR LOWER(u.Location) LIKE '%,india')"
+          },
+          "error": null,
+          "started_seconds": 74.635,
+          "finished_seconds": 74.658
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a53e-1ed0-759b-9f0d-291f164d9964",
+          "input": {
+            "code_query": "SELECT COUNT(DISTINCT u.Id) AS user_count_loose\nFROM users u\nJOIN badges b ON b.UserId = u.Id\nWHERE b.Name = 'Teacher' AND u.Location LIKE '%India%'"
+          },
+          "error": null,
+          "started_seconds": 74.64,
+          "finished_seconds": 74.656
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a53e-352d-76a0-99dc-a9bbac7e11b8",
+          "input": {
+            "code_query": "SELECT u.Id, u.Location\nFROM users u\nJOIN badges b ON b.UserId = u.Id\nWHERE b.Name = 'Teacher' AND u.Location LIKE '%India%'\n  AND NOT (LOWER(u.Location) = 'india'\n       OR LOWER(u.Location) LIKE '%, india'\n       OR LOWER(u.Location) LIKE '%, india,%'\n       OR LOWER(u.Location) LIKE '% ,india'\n       OR LOWER(u.Location) LIKE '%,india')"
+          },
+          "error": null,
+          "started_seconds": 80.359,
+          "finished_seconds": 80.374
+        }
+      ],
+      "trace_sha256": "7b6e6f658bbb0e1c68f3814c0063a153621f5d384e589affdb80de03fd645c2c"
+    },
+    {
+      "case_id": "dev_20",
+      "type": "s2a",
+      "status": "completed",
+      "tool_attempts": 4,
+      "non_error_tool_calls": 4,
+      "calls_by_kind": {
+        "text_search": 1,
+        "schema_search": 1,
+        "sql": 2
+      },
+      "non_error_calls_by_kind": {
+        "text_search": 1,
+        "schema_search": 1,
+        "sql": 2
+      },
+      "uses_sql_and_text_search": true,
+      "has_non_error_sql_and_text_search": true,
+      "has_final_answer": true,
+      "elapsed_seconds": 52.969,
+      "calls": [
+        {
+          "kind": "text_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53d-b9dc-75bb-9b2c-6e2cfdd9d9d5",
+          "input": {
+            "query": "Leonard Rosenfeld art showings exhibitions city",
+            "context_type": "resource"
+          },
+          "error": null,
+          "started_seconds": 4.642,
+          "finished_seconds": 5.081
+        },
+        {
+          "kind": "schema_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53d-b9dd-766c-bcb9-d97c0e344c83",
+          "input": {
+            "query": "codebase_community users table",
+            "context_type": "table_schema"
+          },
+          "error": null,
+          "started_seconds": 4.643,
+          "finished_seconds": 4.973
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a53d-f5f3-76b3-a710-580155362200",
+          "input": {
+            "code_query": "SELECT Location, COUNT(*) AS cnt FROM users WHERE Location LIKE '%New York%' GROUP BY Location ORDER BY cnt DESC LIMIT 50"
+          },
+          "error": null,
+          "started_seconds": 20.025,
+          "finished_seconds": 20.033
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a53e-31e2-738c-891b-000041fcdac0",
+          "input": {
+            "code_query": "SELECT COUNT(Id) AS total FROM users WHERE Location LIKE '%New York%'"
+          },
+          "error": null,
+          "started_seconds": 35.364,
+          "finished_seconds": 35.372
+        }
+      ],
+      "trace_sha256": "3a19ae7323c31af21e6affe206bfc72fb449427ae0724b53f6e7a9d89db09d21"
+    },
+    {
+      "case_id": "dev_32",
+      "type": "a2s",
+      "status": "completed",
+      "tool_attempts": 12,
+      "non_error_tool_calls": 12,
+      "calls_by_kind": {
+        "schema_search": 3,
+        "sql": 1,
+        "text_search": 8
+      },
+      "non_error_calls_by_kind": {
+        "schema_search": 3,
+        "sql": 1,
+        "text_search": 8
+      },
+      "uses_sql_and_text_search": true,
+      "has_non_error_sql_and_text_search": true,
+      "has_final_answer": true,
+      "elapsed_seconds": 96.986,
+      "calls": [
+        {
+          "kind": "schema_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53e-8481-747d-bd53-b3f457bd1e14",
+          "input": {
+            "query": "financial database card type client credit card",
+            "context_type": "table_schema"
+          },
+          "error": null,
+          "started_seconds": 4.831,
+          "finished_seconds": 5.247
+        },
+        {
+          "kind": "schema_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53e-8481-747d-bd53-b3f5b3c72911",
+          "input": {
+            "query": "financial database client disposition account",
+            "context_type": "table_schema"
+          },
+          "error": null,
+          "started_seconds": 4.832,
+          "finished_seconds": 5.235
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a53e-9ae3-753a-98d0-9b7f969d882f",
+          "input": {
+            "code_query": "SELECT T1.card_id, T1.type, T1.issued FROM card AS T1 INNER JOIN disp AS T2 ON T1.disp_id = T2.disp_id WHERE T2.client_id = 13539"
+          },
+          "error": null,
+          "started_seconds": 10.561,
+          "finished_seconds": 10.563
+        },
+        {
+          "kind": "text_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53e-acdb-7539-9148-0f4d34f25fca",
+          "input": {
+            "query": "junior credit card financial management features benefits",
+            "context_type": "resource"
+          },
+          "error": null,
+          "started_seconds": 15.161,
+          "finished_seconds": 15.743
+        },
+        {
+          "kind": "text_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53e-acdb-7539-9148-0f4eff352e03",
+          "input": {
+            "query": "junior class credit card vs classic gold credit card differences",
+            "context_type": "resource"
+          },
+          "error": null,
+          "started_seconds": 15.163,
+          "finished_seconds": 16.667
+        },
+        {
+          "kind": "text_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53e-cd5a-7251-9fbf-3422d6435ae1",
+          "input": {
+            "query": "junior credit card young cardholders limited features spending control",
+            "context_type": "resource"
+          },
+          "error": null,
+          "started_seconds": 23.48,
+          "finished_seconds": 24.01
+        },
+        {
+          "kind": "text_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53e-cd5a-7251-9fbf-3423362a431f",
+          "input": {
+            "query": "financial database credit card types junior classic gold description",
+            "context_type": "resource"
+          },
+          "error": null,
+          "started_seconds": 23.481,
+          "finished_seconds": 24.012
+        },
+        {
+          "kind": "text_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53e-f289-71d7-b55a-fa2780da5207",
+          "input": {
+            "query": "junior card teenagers young people basic credit card no rewards lower limit",
+            "context_type": "resource"
+          },
+          "error": null,
+          "started_seconds": 32.999,
+          "finished_seconds": 33.271
+        },
+        {
+          "kind": "text_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53e-f28a-73ea-a2ad-1f0ffb25513d",
+          "input": {
+            "query": "junior",
+            "context_type": "resource"
+          },
+          "error": null,
+          "started_seconds": 33.001,
+          "finished_seconds": 33.473
+        },
+        {
+          "kind": "text_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53f-300d-70ab-971b-2476eb15e842",
+          "input": {
+            "query": "credit card types charge card standard gold premium benefits comparison",
+            "context_type": "resource"
+          },
+          "error": null,
+          "started_seconds": 48.746,
+          "finished_seconds": 49.247
+        },
+        {
+          "kind": "text_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53f-300d-70ab-971b-24773c237416",
+          "input": {
+            "query": "\"junior credit card\"",
+            "context_type": "resource"
+          },
+          "error": null,
+          "started_seconds": 48.747,
+          "finished_seconds": 49.23
+        },
+        {
+          "kind": "schema_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53f-9b07-771e-8803-8c22a11aaf8a",
+          "input": {
+            "query": "financial client table birth date gender district",
+            "context_type": "table_schema"
+          },
+          "error": null,
+          "started_seconds": 76.133,
+          "finished_seconds": 76.473
+        }
+      ],
+      "trace_sha256": "9a104a8c7d8088d026478f24d6173423948e7fe79086b29fc891ecfc8f356119"
+    },
+    {
+      "case_id": "dev_46",
+      "type": "a2s",
+      "status": "completed",
+      "tool_attempts": 6,
+      "non_error_tool_calls": 6,
+      "calls_by_kind": {
+        "schema_search": 2,
+        "sql": 2,
+        "text_search": 2
+      },
+      "non_error_calls_by_kind": {
+        "schema_search": 2,
+        "sql": 2,
+        "text_search": 2
+      },
+      "uses_sql_and_text_search": true,
+      "has_non_error_sql_and_text_search": true,
+      "has_final_answer": true,
+      "elapsed_seconds": 51.56,
+      "calls": [
+        {
+          "kind": "schema_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53e-97ae-7176-b7f3-622a14d9cc0f",
+          "input": {
+            "query": "financial loan table schema",
+            "context_type": "table_schema"
+          },
+          "error": null,
+          "started_seconds": 8.422,
+          "finished_seconds": 8.584
+        },
+        {
+          "kind": "schema_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53e-97ae-7176-b7f3-622b8cbe78ef",
+          "input": {
+            "query": "financial district table schema",
+            "context_type": "table_schema"
+          },
+          "error": null,
+          "started_seconds": 8.423,
+          "finished_seconds": 8.599
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a53e-d1a2-7640-a8d6-c1ac87c67a28",
+          "input": {
+            "code_query": "SELECT l.loan_id, l.amount, l.status, d.district_id, d.A2 AS district_name, d.A3 AS region\nFROM loan l\nJOIN account a ON l.account_id = a.account_id\nJOIN district d ON a.district_id = d.district_id\nWHERE l.status IN ('C','D')\nORDER BY l.amount DESC\nLIMIT 5;"
+          },
+          "error": null,
+          "started_seconds": 23.258,
+          "finished_seconds": 23.261
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a53e-d1a2-7640-a8d6-c1ad7bd3fa83",
+          "input": {
+            "code_query": "SELECT l.loan_id, l.amount, l.status, d.district_id, d.A2 AS district_name, d.A3 AS region\nFROM loan l\nJOIN account a ON l.account_id = a.account_id\nJOIN district d ON a.district_id = d.district_id\nWHERE l.status = 'C'\nORDER BY l.amount DESC\nLIMIT 5;"
+          },
+          "error": null,
+          "started_seconds": 23.26,
+          "finished_seconds": 23.263
+        },
+        {
+          "kind": "text_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53e-e5ca-7351-b18f-5387917bf4d2",
+          "input": {
+            "query": "Brno historical significance Czechoslovakia",
+            "context_type": "resource"
+          },
+          "error": null,
+          "started_seconds": 28.418,
+          "finished_seconds": 28.931
+        },
+        {
+          "kind": "text_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53e-f98b-73f8-b038-9272ab770e38",
+          "input": {
+            "query": "Brno history capital Moravia",
+            "context_type": "resource"
+          },
+          "error": null,
+          "started_seconds": 33.475,
+          "finished_seconds": 33.75
+        }
+      ],
+      "trace_sha256": "3cac0c13d66cf5cba0ab7de727cdaa8f44f0b870174150cef86095ca293640d1"
+    },
+    {
+      "case_id": "dev_42",
+      "type": "s2a",
+      "status": "completed",
+      "tool_attempts": 6,
+      "non_error_tool_calls": 6,
+      "calls_by_kind": {
+        "schema_search": 2,
+        "text_search": 1,
+        "sql": 3
+      },
+      "non_error_calls_by_kind": {
+        "schema_search": 2,
+        "text_search": 1,
+        "sql": 3
+      },
+      "uses_sql_and_text_search": true,
+      "has_non_error_sql_and_text_search": true,
+      "has_final_answer": true,
+      "elapsed_seconds": 41.268,
+      "calls": [
+        {
+          "kind": "schema_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53f-5ed8-738d-9a5d-e1c02fe194e7",
+          "input": {
+            "query": "financial database account client disposition district town",
+            "context_type": "table_schema"
+          },
+          "error": null,
+          "started_seconds": 7.809,
+          "finished_seconds": 8.191
+        },
+        {
+          "kind": "text_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53f-5ed8-738d-9a5d-e1c1602daae2",
+          "input": {
+            "query": "Nikolai Yevgrafovich Soviet football player",
+            "context_type": "resource"
+          },
+          "error": null,
+          "started_seconds": 7.81,
+          "finished_seconds": 8.3
+        },
+        {
+          "kind": "schema_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53f-7047-76fe-b145-4c7927443d0b",
+          "input": {
+            "query": "financial district table A2 town name",
+            "context_type": "table_schema"
+          },
+          "error": null,
+          "started_seconds": 12.271,
+          "finished_seconds": 12.441
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a53f-96ec-70a1-8c84-542ae6a85467",
+          "input": {
+            "code_query": "SELECT district_id, A2 FROM district WHERE A2 LIKE '%okolov%'"
+          },
+          "error": null,
+          "started_seconds": 22.165,
+          "finished_seconds": 22.169
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a53f-96ec-70a1-8c84-542b129053ae",
+          "input": {
+            "code_query": "SELECT MIN(birth_date), MAX(birth_date) FROM client WHERE gender='F'"
+          },
+          "error": null,
+          "started_seconds": 22.166,
+          "finished_seconds": 22.171
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a53f-b1b0-75d7-81c5-a27ccd9af587",
+          "input": {
+            "code_query": "SELECT COUNT(DISTINCT c.client_id) AS cnt\nFROM client c\nJOIN disp d ON c.client_id = d.client_id\nJOIN district dt ON c.district_id = dt.district_id\nWHERE c.gender = 'F'\n  AND c.birth_date < '1950-01-01'\n  AND dt.A2 = 'Sokolov'"
+          },
+          "error": null,
+          "started_seconds": 29.017,
+          "finished_seconds": 29.023
+        }
+      ],
+      "trace_sha256": "0776701b3e53aadfe6fa148f2c32f73ca7a6bc0e816fb22d79a243060180bc85"
+    },
+    {
+      "case_id": "dev_60",
+      "type": "s2a",
+      "status": "completed",
+      "tool_attempts": 5,
+      "non_error_tool_calls": 5,
+      "calls_by_kind": {
+        "schema_search": 2,
+        "text_search": 1,
+        "sql": 2
+      },
+      "non_error_calls_by_kind": {
+        "schema_search": 2,
+        "text_search": 1,
+        "sql": 2
+      },
+      "uses_sql_and_text_search": true,
+      "has_non_error_sql_and_text_search": true,
+      "has_final_answer": true,
+      "elapsed_seconds": 34.409,
+      "calls": [
+        {
+          "kind": "schema_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53f-f374-76c6-8930-4f502807525f",
+          "input": {
+            "query": "financial account client district",
+            "context_type": "table_schema"
+          },
+          "error": null,
+          "started_seconds": 4.549,
+          "finished_seconds": 5.02
+        },
+        {
+          "kind": "text_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53f-f374-76c6-8930-4f519696846e",
+          "input": {
+            "query": "capital of Czechia",
+            "context_type": "resource"
+          },
+          "error": null,
+          "started_seconds": 4.549,
+          "finished_seconds": 5.3
+        },
+        {
+          "kind": "schema_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a540-06da-7599-af1a-a50339c5a1da",
+          "input": {
+            "query": "financial district table A2 name region",
+            "context_type": "table_schema"
+          },
+          "error": null,
+          "started_seconds": 9.514,
+          "finished_seconds": 9.733
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a540-2845-72b5-9776-1b9b7007343d",
+          "input": {
+            "code_query": "SELECT district_id, A2, A3 FROM district WHERE A2 LIKE '%rag%' OR A3 LIKE '%rag%'"
+          },
+          "error": null,
+          "started_seconds": 18.069,
+          "finished_seconds": 18.072
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a540-4616-733d-83e4-1e4ce50cc804",
+          "input": {
+            "code_query": "SELECT account_id, district_id, date FROM account WHERE district_id = 1 ORDER BY date ASC LIMIT 5"
+          },
+          "error": null,
+          "started_seconds": 25.702,
+          "finished_seconds": 25.708
+        }
+      ],
+      "trace_sha256": "d17db603fcd36bb4fe79309c227b183dabb3e859c950fa125ad10e165016551f"
+    },
+    {
+      "case_id": "dev_55",
+      "type": "a2s",
+      "status": "completed",
+      "tool_attempts": 12,
+      "non_error_tool_calls": 12,
+      "calls_by_kind": {
+        "schema_search": 5,
+        "sql": 6,
+        "text_search": 1
+      },
+      "non_error_calls_by_kind": {
+        "schema_search": 5,
+        "sql": 6,
+        "text_search": 1
+      },
+      "uses_sql_and_text_search": true,
+      "has_non_error_sql_and_text_search": true,
+      "has_final_answer": true,
+      "elapsed_seconds": 64.085,
+      "calls": [
+        {
+          "kind": "schema_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53f-f967-725c-863d-1d049494b2d6",
+          "input": {
+            "query": "student_club members department",
+            "context_type": "table_schema"
+          },
+          "error": null,
+          "started_seconds": 3.301,
+          "finished_seconds": 3.494
+        },
+        {
+          "kind": "schema_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a53f-f967-725c-863d-1d05f3a78571",
+          "input": {
+            "query": "student_club student table",
+            "context_type": "table_schema"
+          },
+          "error": null,
+          "started_seconds": 3.302,
+          "finished_seconds": 3.471
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a540-13cb-7167-9f01-c98bfcc8f3a5",
+          "input": {
+            "code_query": "SELECT m.member_id, m.first_name, m.last_name, m.position, mj.major_name, mj.department FROM member m JOIN major mj ON m.link_to_major = mj.major_id WHERE mj.department LIKE '%Art%Design%'"
+          },
+          "error": null,
+          "started_seconds": 10.057,
+          "finished_seconds": 10.062
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a540-13cb-7167-9f01-c98cb5c46e7d",
+          "input": {
+            "code_query": "SELECT member_id, first_name, last_name, position, link_to_major FROM member WHERE first_name = 'Peter' AND last_name = 'Firth'"
+          },
+          "error": null,
+          "started_seconds": 10.058,
+          "finished_seconds": 10.061
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a540-34d1-7312-9785-2fad1b213b88",
+          "input": {
+            "code_query": "SELECT member_id, first_name, last_name, position, link_to_major FROM member WHERE last_name = 'Firth' OR first_name LIKE '%Peter%'"
+          },
+          "error": null,
+          "started_seconds": 18.511,
+          "finished_seconds": 18.515
+        },
+        {
+          "kind": "schema_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a540-34d1-7312-9785-2fae84d55f51",
+          "input": {
+            "query": "student_club zip_code table",
+            "context_type": "table_schema"
+          },
+          "error": null,
+          "started_seconds": 18.512,
+          "finished_seconds": 18.977
+        },
+        {
+          "kind": "schema_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a540-5cd6-70ac-97a5-6b9d0f31bc46",
+          "input": {
+            "context_type": "table_schema",
+            "query": "student_club attendance event participant"
+          },
+          "error": null,
+          "started_seconds": 28.756,
+          "finished_seconds": 29.238
+        },
+        {
+          "kind": "schema_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a540-5cd6-70ac-97a5-6b9e37a462ae",
+          "input": {
+            "context_type": "table_schema",
+            "query": "student_club contact person name"
+          },
+          "error": null,
+          "started_seconds": 28.757,
+          "finished_seconds": 29.235
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a540-7c37-706f-8e41-1cf9e982ee80",
+          "input": {
+            "code_query": "SELECT member_id, first_name, last_name, email, phone, zip FROM member WHERE first_name LIKE '%Peter%' OR last_name LIKE '%Peter%' OR email LIKE '%Peter%'"
+          },
+          "error": null,
+          "started_seconds": 36.789,
+          "finished_seconds": 36.794
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a540-7c37-706f-8e41-1cfa5f83d6d6",
+          "input": {
+            "code_query": "SELECT member_id, first_name, last_name, zip FROM member WHERE last_name = 'Firth'"
+          },
+          "error": null,
+          "started_seconds": 36.79,
+          "finished_seconds": 36.793
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a540-9dc7-73e4-a9b9-d68631fb9318",
+          "input": {
+            "code_query": "SELECT zip_code, type, city, county, state, short_state FROM zip_code WHERE zip_code = 21042"
+          },
+          "error": null,
+          "started_seconds": 45.381,
+          "finished_seconds": 45.385
+        },
+        {
+          "kind": "text_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a540-9dc7-73e4-a9b9-d6874c5271af",
+          "input": {
+            "context_type": "resource",
+            "query": "Peter Firth"
+          },
+          "error": null,
+          "started_seconds": 45.382,
+          "finished_seconds": 45.667
+        }
+      ],
+      "trace_sha256": "d1a8e24a3961621d9092677619c5621d3546b11456aed3452e0e9186d691ba11"
+    },
+    {
+      "case_id": "dev_66",
+      "type": "a2s",
+      "status": "completed",
+      "tool_attempts": 5,
+      "non_error_tool_calls": 5,
+      "calls_by_kind": {
+        "schema_search": 3,
+        "sql": 1,
+        "text_search": 1
+      },
+      "non_error_calls_by_kind": {
+        "schema_search": 3,
+        "sql": 1,
+        "text_search": 1
+      },
+      "uses_sql_and_text_search": true,
+      "has_non_error_sql_and_text_search": true,
+      "has_final_answer": true,
+      "elapsed_seconds": 24.425,
+      "calls": [
+        {
+          "kind": "schema_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a540-7821-7563-8494-a506182cf6a2",
+          "input": {
+            "query": "student_club member hometown state",
+            "context_type": "table_schema"
+          },
+          "error": null,
+          "started_seconds": 4.1,
+          "finished_seconds": 4.457
+        },
+        {
+          "kind": "schema_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a540-7821-7563-8494-a50707686959",
+          "input": {
+            "query": "student_club city population",
+            "context_type": "table_schema"
+          },
+          "error": null,
+          "started_seconds": 4.101,
+          "finished_seconds": 4.441
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a540-9057-7237-8f01-5f4145236de9",
+          "input": {
+            "code_query": "SELECT m.member_id, m.first_name, m.last_name, m.zip, z.city, z.state, z.short_state FROM member m JOIN zip_code z ON m.zip = z.zip_code WHERE m.first_name = 'Sacha' AND m.last_name = 'Harrison';"
+          },
+          "error": null,
+          "started_seconds": 10.298,
+          "finished_seconds": 10.303
+        },
+        {
+          "kind": "schema_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a540-9058-7637-9c47-0d19f4dd2d5b",
+          "input": {
+            "query": "student_club population city state table",
+            "context_type": "table_schema"
+          },
+          "error": null,
+          "started_seconds": 10.3,
+          "finished_seconds": 10.682
+        },
+        {
+          "kind": "text_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a540-ab52-7569-a1e1-efd513b881a5",
+          "input": {
+            "query": "most populous city New Jersey Newark population",
+            "context_type": "resource"
+          },
+          "error": null,
+          "started_seconds": 17.204,
+          "finished_seconds": 17.468
+        }
+      ],
+      "trace_sha256": "c1f2ae197119ad2661788c82f00ac6dff0942e3a7d284046847f43c6babb6658"
+    },
+    {
+      "case_id": "dev_0",
+      "type": "s2a",
+      "status": "completed",
+      "tool_attempts": 9,
+      "non_error_tool_calls": 9,
+      "calls_by_kind": {
+        "schema_search": 2,
+        "text_search": 3,
+        "sql": 4
+      },
+      "non_error_calls_by_kind": {
+        "schema_search": 2,
+        "text_search": 3,
+        "sql": 4
+      },
+      "uses_sql_and_text_search": true,
+      "has_non_error_sql_and_text_search": true,
+      "has_final_answer": true,
+      "elapsed_seconds": 81.273,
+      "calls": [
+        {
+          "kind": "schema_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a540-da6b-7036-90e5-4f2f8ce90e2e",
+          "input": {
+            "query": "student_club organization event member",
+            "context_type": "table_schema"
+          },
+          "error": null,
+          "started_seconds": 4.828,
+          "finished_seconds": 5.2
+        },
+        {
+          "kind": "schema_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a540-da6b-7036-90e5-4f30d994e212",
+          "input": {
+            "query": "student_club event attendance",
+            "context_type": "table_schema"
+          },
+          "error": null,
+          "started_seconds": 4.829,
+          "finished_seconds": 5.156
+        },
+        {
+          "kind": "text_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a541-04a3-744a-a6b5-ca3a9086aa06",
+          "input": {
+            "query": "student club American University of Science and Technology 900 E. Washington St promote student interests",
+            "context_type": "resource"
+          },
+          "error": null,
+          "started_seconds": 15.636,
+          "finished_seconds": 16.171
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a541-04a3-744a-a6b5-ca3b8fda0a9a",
+          "input": {
+            "code_query": "SELECT member_id, first_name, last_name, position FROM member WHERE position LIKE '%resident%'"
+          },
+          "error": null,
+          "started_seconds": 15.638,
+          "finished_seconds": 15.641
+        },
+        {
+          "kind": "text_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a541-2ea3-7574-8cb4-703c235c96b9",
+          "input": {
+            "query": "American University of Science and Technology 900 E. Washington St location address",
+            "context_type": "resource"
+          },
+          "error": null,
+          "started_seconds": 26.389,
+          "finished_seconds": 26.847
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a541-2ea3-7574-8cb4-703d4e59d4e1",
+          "input": {
+            "code_query": "SELECT e.event_id, e.event_name, e.type, e.event_date FROM event e JOIN attendance a ON a.link_to_event = e.event_id WHERE a.link_to_member = 'recD078PnS3x2doBe'"
+          },
+          "error": null,
+          "started_seconds": 26.391,
+          "finished_seconds": 26.393
+        },
+        {
+          "kind": "text_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a541-b6a2-72be-a52b-d44385d53fc6",
+          "input": {
+            "query": "\"900 E. Washington\" student club database description",
+            "context_type": "resource"
+          },
+          "error": null,
+          "started_seconds": 61.204,
+          "finished_seconds": 61.814
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a541-b6a2-72be-a52b-d4445dfe06cd",
+          "input": {
+            "code_query": "SELECT e.event_id, e.event_name, e.type, e.location, e.status FROM event e JOIN attendance a ON a.link_to_event = e.event_id WHERE a.link_to_member = 'recD078PnS3x2doBe' AND lower(e.type) = 'social'"
+          },
+          "error": null,
+          "started_seconds": 61.205,
+          "finished_seconds": 61.209
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a541-de2a-74d9-9236-18afe97dae61",
+          "input": {
+            "code_query": "SELECT event_id, event_name, type, location, status FROM event WHERE location LIKE '%900 E. Washington%'"
+          },
+          "error": null,
+          "started_seconds": 71.324,
+          "finished_seconds": 71.328
+        }
+      ],
+      "trace_sha256": "302423e6efd132e2cb04d6e519dc98524aef8911b58d0167ee004b1c1c441755"
+    },
+    {
+      "case_id": "dev_11",
+      "type": "s2a",
+      "status": "completed",
+      "tool_attempts": 5,
+      "non_error_tool_calls": 5,
+      "calls_by_kind": {
+        "schema_search": 1,
+        "text_search": 1,
+        "sql": 3
+      },
+      "non_error_calls_by_kind": {
+        "schema_search": 1,
+        "text_search": 1,
+        "sql": 3
+      },
+      "uses_sql_and_text_search": true,
+      "has_non_error_sql_and_text_search": true,
+      "has_final_answer": true,
+      "elapsed_seconds": 30.404,
+      "calls": [
+        {
+          "kind": "schema_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a541-05fa-7557-9fbd-c008595146a5",
+          "input": {
+            "query": "student_club member major table",
+            "context_type": "table_schema"
+          },
+          "error": null,
+          "started_seconds": 7.964,
+          "finished_seconds": 8.364
+        },
+        {
+          "kind": "text_search",
+          "name": "contexthub_search",
+          "run_id": "01a1a541-05fa-7557-9fbd-c009d38465c7",
+          "input": {
+            "query": "second highest political position Afghanistan",
+            "context_type": "resource"
+          },
+          "error": null,
+          "started_seconds": 7.965,
+          "finished_seconds": 8.492
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a541-357e-734d-a9b5-f6aa5f18036e",
+          "input": {
+            "code_query": "SELECT DISTINCT position FROM member;"
+          },
+          "error": null,
+          "started_seconds": 20.129,
+          "finished_seconds": 20.131
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a541-357e-734d-a9b5-f6ab78597542",
+          "input": {
+            "code_query": "SELECT member_id, first_name, last_name, position, link_to_major FROM member WHERE position LIKE '%Vice%' OR position LIKE '%vice%';"
+          },
+          "error": null,
+          "started_seconds": 20.13,
+          "finished_seconds": 20.133
+        },
+        {
+          "kind": "sql",
+          "name": "run_sql",
+          "run_id": "01a1a541-4905-764c-b27d-dfd14a489c91",
+          "input": {
+            "code_query": "SELECT major_id, major_name FROM major WHERE major_id = 'rec9CqGCGV8Y8rOSY';"
+          },
+          "error": null,
+          "started_seconds": 25.127,
+          "finished_seconds": 25.13
+        }
+      ],
+      "trace_sha256": "3a9ca2d420af619ce9735d81058285330719d88774077b1ef53600a34a3f6b70"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "snapshot_sha256": "0cf1c8af3cb4b384c080850d9ea0a4e587cd7fecc55f58ba6fd0580ad1a4526d",
+  "counts": [
+    {
+      "context_type": "resource",
+      "count": 18265,
+      "embedded": 18265
+    },
+    {
+      "context_type": "table_schema",
+      "count": 75,
+      "embedded": 75
+    }
+  ],
+  "embedding_model": "text-embedding-v4",
+  "embedding_dimensions": 1536,
+  "rerank_strategy": "keyword",
+  "indexing_seconds": 241.901,
+  "import": "Frozen fixture, configured batch embedding client, tenant-scoped PgRepository; no retrieval changes"
+}

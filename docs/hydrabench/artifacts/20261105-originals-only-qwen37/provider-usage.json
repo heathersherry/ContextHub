@@ -1,0 +1,35 @@
+[
+  {
+    "model": "qwen3.7-text-embedding",
+    "dimensions": 1536,
+    "response_model": "qwen3.7-text-embedding",
+    "input_count": 3,
+    "status_code": 200,
+    "usage": {
+      "prompt_tokens": 131,
+      "total_tokens": 131
+    }
+  },
+  {
+    "model": "qwen3.7-text-embedding",
+    "dimensions": 1536,
+    "response_model": "qwen3.7-text-embedding",
+    "input_count": 10,
+    "status_code": 200,
+    "usage": {
+      "prompt_tokens": 2896,
+      "total_tokens": 2896
+    }
+  },
+  {
+    "model": "qwen3.7-text-embedding",
+    "dimensions": 1536,
+    "response_model": "qwen3.7-text-embedding",
+    "input_count": 6,
+    "status_code": 200,
+    "usage": {
+      "prompt_tokens": 1769,
+      "total_tokens": 1769
+    }
+  }
+]

@@ -1,0 +1,50 @@
+{
+  "counts": [
+    {
+      "context_type": "resource",
+      "count": 18265,
+      "embedded": 18265,
+      "long_document_paths": 0,
+      "adopted_count": 0,
+      "ignored_count": 0,
+      "content_and_vector_fingerprint": "658e37c223c53c10c167b1a644298d7d"
+    },
+    {
+      "context_type": "table_schema",
+      "count": 75,
+      "embedded": 75,
+      "long_document_paths": 0,
+      "adopted_count": 0,
+      "ignored_count": 0,
+      "content_and_vector_fingerprint": "b41fe8d9640dfb28ef0be0a97d21d08d"
+    }
+  ],
+  "settings": {
+    "rerank_strategy": "none",
+    "embedding_model": "text-embedding-v4",
+    "embedding_dimensions": 1536,
+    "search_over_retrieve_factor": 3,
+    "embedding_endpoint_host": "dashscope-intl.aliyuncs.com",
+    "propagation_enabled": false,
+    "lifecycle_enabled": false,
+    "chat_model": "qwen3.8-2.4t-a95b",
+    "chat_model_used": false
+  },
+  "sha256": {
+    "integrations/hydrabench/probe.py": "08d33d00a32896440e5104e4b8ad685c850f81e040d77c021338594cf8076135",
+    "data/hydrabench-expanded/selected-private.json": "9994346eba2db49c1bfb73e2da61294cf481b907369f4657672469dfc14d5188",
+    "data/hydrabench-expanded/text-support-labels.json": "473f38317f8fca6d6a2ebaadb076725d97593889333f19686c8b8ed53aabe8b0",
+    "src/contexthub/config.py": "1540f2d077682fda829ccbd6a51b69f8efccfe1105b65ad626df72c83685fbf3",
+    "src/contexthub/main.py": "725e439a185904c94a13dc7e718e82b99dc179924e2ec0cb86519af150082491",
+    "src/contexthub/retrieval/router.py": "e7e440b3d3f765d86f9baeda24e0d15ba15a0dabc5ea927f171b3f4789b8db66",
+    "src/contexthub/retrieval/rerank.py": "36a5979ddc97c02548d9fa68351efda45aeba22168d199547839907dad2cfe6a",
+    "src/contexthub/services/retrieval_service.py": "b85bb1c58c4eaaa7a13b190f536b71434d0c07f8a1367aa3ae1b7d5a8eb4790a"
+  },
+  "packages": {
+    "asyncpg": "0.32.0",
+    "httpx": "0.28.1",
+    "openai": "3.42.1",
+    "pydantic": "2.14.2",
+    "uvicorn": "0.54.0"
+  }
+}

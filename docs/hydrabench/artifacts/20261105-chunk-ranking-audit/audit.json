@@ -1,0 +1,1146 @@
+{
+  "time_hong_kong": "2026-11-05T15:46:01.821416+08:00",
+  "provider_calls": 0,
+  "database_access": "read-only transaction",
+  "code_and_original_artifacts_unchanged": true,
+  "requested_models": [
+    "text-embedding-v4"
+  ],
+  "wire_request_from_client_code": {
+    "fields": [
+      "input",
+      "model"
+    ],
+    "dimensions": "omitted",
+    "text_type": "omitted",
+    "instruct": "omitted"
+  },
+  "vector_count": 16,
+  "source_sha256": "17571bc69825350c0f464fb9e4ff1478f3dc0fc4f7d6c6cb9f7836783bae808c",
+  "input_checks": [
+    {
+      "section_id": 2,
+      "title": "Microarchitecture",
+      "range": [
+        0,
+        573
+      ],
+      "body_characters": 573,
+      "embedding_characters": 592,
+      "request_batch": 1,
+      "request_index": 0,
+      "request_sha256": "ba251de19a808d6f0fed7120b3077f43f42ecc51d38c6e8e491597d6adb5e911",
+      "vector": {
+        "dimensions": 1536,
+        "nonzero_prefix_length": 1024,
+        "norm": 1.0000000307967944,
+        "finite": true
+      },
+      "paragraph_characters": [
+        19,
+        42,
+        21,
+        386,
+        95
+      ]
+    },
+    {
+      "section_id": 3,
+      "title": "Relation to instruction set architecture.",
+      "range": [
+        573,
+        3111
+      ],
+      "body_characters": 2538,
+      "embedding_characters": 2601,
+      "request_batch": 1,
+      "request_index": 1,
+      "request_sha256": "db4addb38bee880e4b903b4e5cdd85d22e1da68f853105ef5d8475497740c216",
+      "vector": {
+        "dimensions": 1536,
+        "nonzero_prefix_length": 1024,
+        "norm": 1.000000096329269,
+        "finite": true
+      },
+      "paragraph_characters": [
+        44,
+        370,
+        440,
+        905,
+        648,
+        119
+      ]
+    },
+    {
+      "section_id": 4,
+      "title": "Aspects of microarchitecture.",
+      "range": [
+        3111,
+        4924
+      ],
+      "body_characters": 1813,
+      "embedding_characters": 1864,
+      "request_batch": 1,
+      "request_index": 2,
+      "request_sha256": "d09af843969f9396b08ca41385b25723703811d4bc0248e7b1084db5627cf277",
+      "vector": {
+        "dimensions": 1536,
+        "nonzero_prefix_length": 1024,
+        "norm": 1.0000000583194268,
+        "finite": true
+      },
+      "paragraph_characters": [
+        32,
+        611,
+        489,
+        257,
+        414
+      ]
+    },
+    {
+      "section_id": 5,
+      "title": "Microarchitectural concepts.",
+      "range": [
+        4924,
+        4957
+      ],
+      "body_characters": 33,
+      "embedding_characters": 83,
+      "request_batch": 1,
+      "request_index": 3,
+      "request_sha256": "dadf06e37facbfb371cf592618c8527618bbbf4678e9b11b67c06230ae34d18a",
+      "vector": {
+        "dimensions": 1536,
+        "nonzero_prefix_length": 1024,
+        "norm": 0.9999999728523694,
+        "finite": true
+      },
+      "paragraph_characters": [
+        31
+      ]
+    },
+    {
+      "section_id": 6,
+      "title": "Instruction cycles.",
+      "range": [
+        4957,
+        5393
+      ],
+      "body_characters": 436,
+      "embedding_characters": 508,
+      "request_batch": 1,
+      "request_index": 4,
+      "request_sha256": "9ff7421c2bc8f74c02808b084f44800a46d3e5fdba7888aacdac8bf0f8e938d9",
+      "vector": {
+        "dimensions": 1536,
+        "nonzero_prefix_length": 1024,
+        "norm": 0.9999999574271706,
+        "finite": true
+      },
+      "paragraph_characters": [
+        23,
+        127,
+        46,
+        79,
+        36,
+        34,
+        77
+      ]
+    },
+    {
+      "section_id": 7,
+      "title": "Multicycle Microarchitecture.",
+      "range": [
+        5393,
+        7303
+      ],
+      "body_characters": 1910,
+      "embedding_characters": 1992,
+      "request_batch": 1,
+      "request_index": 5,
+      "request_sha256": "409739f90934910924df33413fe1b76e3d8bb35acc4ecb90142ba7ed255dabf0",
+      "vector": {
+        "dimensions": 1536,
+        "nonzero_prefix_length": 1024,
+        "norm": 1.0000000001648208,
+        "finite": true
+      },
+      "paragraph_characters": [
+        33,
+        615,
+        404,
+        850
+      ]
+    },
+    {
+      "section_id": 8,
+      "title": "Increasing execution speed.",
+      "range": [
+        7303,
+        8317
+      ],
+      "body_characters": 1014,
+      "embedding_characters": 1094,
+      "request_batch": 1,
+      "request_index": 6,
+      "request_sha256": "0673115e1f2f2c4045bdccaa0132cdc10ae983d95768787b6508191d5d82bf39",
+      "vector": {
+        "dimensions": 1536,
+        "nonzero_prefix_length": 1024,
+        "norm": 1.000000013248389,
+        "finite": true
+      },
+      "paragraph_characters": [
+        31,
+        979
+      ]
+    },
+    {
+      "section_id": 9,
+      "title": "Instruction set choice.",
+      "range": [
+        8317,
+        9617
+      ],
+      "body_characters": 1300,
+      "embedding_characters": 1376,
+      "request_batch": 1,
+      "request_index": 7,
+      "request_sha256": "fa5445f1ca9ac2ad3ef8794f4637081f71a9ff692898ef35a5c6ce919fb4ad6a",
+      "vector": {
+        "dimensions": 1536,
+        "nonzero_prefix_length": 1024,
+        "norm": 1.0000000636605209,
+        "finite": true
+      },
+      "paragraph_characters": [
+        27,
+        539,
+        728
+      ]
+    },
+    {
+      "section_id": 10,
+      "title": "Instruction pipelining.",
+      "range": [
+        9617,
+        11920
+      ],
+      "body_characters": 2303,
+      "embedding_characters": 2379,
+      "request_batch": 1,
+      "request_index": 8,
+      "request_sha256": "55350ae9327d608404feee1453724d2bdf3105e090540aa07c1687901d98656b",
+      "vector": {
+        "dimensions": 1536,
+        "nonzero_prefix_length": 1024,
+        "norm": 1.0000000825914483,
+        "finite": true
+      },
+      "paragraph_characters": [
+        27,
+        375,
+        522,
+        688,
+        681
+      ]
+    },
+    {
+      "section_id": 11,
+      "title": "Cache.",
+      "range": [
+        11920,
+        13335
+      ],
+      "body_characters": 1415,
+      "embedding_characters": 1474,
+      "request_batch": 1,
+      "request_index": 9,
+      "request_sha256": "ffb41680d8085935e4a3ae88e3cbb96b6499bbe746652030c74df5b45062c0e3",
+      "vector": {
+        "dimensions": 1536,
+        "nonzero_prefix_length": 1024,
+        "norm": 1.0000000691753124,
+        "finite": true
+      },
+      "paragraph_characters": [
+        10,
+        602,
+        356,
+        439
+      ]
+    },
+    {
+      "section_id": 12,
+      "title": "Branch prediction.",
+      "range": [
+        13335,
+        15121
+      ],
+      "body_characters": 1786,
+      "embedding_characters": 1857,
+      "request_batch": 2,
+      "request_index": 0,
+      "request_sha256": "49a2a1d892526ff4645f433f7eda2aadeec6fa775bbb398f9cd594949b142eb7",
+      "vector": {
+        "dimensions": 1536,
+        "nonzero_prefix_length": 1024,
+        "norm": 1.0000000373567202,
+        "finite": true
+      },
+      "paragraph_characters": [
+        22,
+        858,
+        900
+      ]
+    },
+    {
+      "section_id": 13,
+      "title": "Superscalar.",
+      "range": [
+        15121,
+        16310
+      ],
+      "body_characters": 1189,
+      "embedding_characters": 1254,
+      "request_batch": 2,
+      "request_index": 1,
+      "request_sha256": "0c3282fea6baba7e259976341c3535bb9c7e478abdc48b7fb000e5454f98201c",
+      "vector": {
+        "dimensions": 1536,
+        "nonzero_prefix_length": 1024,
+        "norm": 1.0000000137792506,
+        "finite": true
+      },
+      "paragraph_characters": [
+        16,
+        185,
+        525,
+        455
+      ]
+    },
+    {
+      "section_id": 14,
+      "title": "Out-of-order execution.",
+      "range": [
+        16310,
+        17132
+      ],
+      "body_characters": 822,
+      "embedding_characters": 898,
+      "request_batch": 2,
+      "request_index": 2,
+      "request_sha256": "b866c8d4045cf2bdae6b9732aac8e76c4a44f0d8882db2ece2a979c70852c020",
+      "vector": {
+        "dimensions": 1536,
+        "nonzero_prefix_length": 1024,
+        "norm": 1.0000000592005194,
+        "finite": true
+      },
+      "paragraph_characters": [
+        27,
+        791
+      ]
+    },
+    {
+      "section_id": 15,
+      "title": "Register renaming.",
+      "range": [
+        17132,
+        17627
+      ],
+      "body_characters": 495,
+      "embedding_characters": 566,
+      "request_batch": 2,
+      "request_index": 3,
+      "request_sha256": "c54c1b4ab4503628e0adf6904c63cd449c30f970648e2ebb8f808b7d755ab72c",
+      "vector": {
+        "dimensions": 1536,
+        "nonzero_prefix_length": 1024,
+        "norm": 0.999999973081708,
+        "finite": true
+      },
+      "paragraph_characters": [
+        22,
+        469
+      ]
+    },
+    {
+      "section_id": 16,
+      "title": "Multiprocessing and multithreading.",
+      "range": [
+        17627,
+        20817
+      ],
+      "body_characters": 3190,
+      "embedding_characters": 3278,
+      "request_batch": 2,
+      "request_index": 4,
+      "request_sha256": "b5bfe873a8ca31ebbab299581accf896678367f0f4fb21c682c5be0d103f1b43",
+      "vector": {
+        "dimensions": 1536,
+        "nonzero_prefix_length": 1024,
+        "norm": 1.0000000615030722,
+        "finite": true
+      },
+      "paragraph_characters": [
+        39,
+        654,
+        452,
+        424,
+        611,
+        426,
+        386,
+        182
+      ]
+    },
+    {
+      "section_id": 17,
+      "title": "See also.",
+      "range": [
+        20817,
+        21522
+      ],
+      "body_characters": 705,
+      "embedding_characters": 736,
+      "request_batch": 2,
+      "request_index": 5,
+      "request_sha256": "e4363fb63d5581b8f4a5f83a5aef2baf5999c28f9af822fdde068b7070afcf5c",
+      "vector": {
+        "dimensions": 1536,
+        "nonzero_prefix_length": 1024,
+        "norm": 1.0000000527859179,
+        "finite": true
+      },
+      "paragraph_characters": [
+        12,
+        46,
+        48,
+        26,
+        27,
+        42,
+        22,
+        47,
+        33,
+        32,
+        36,
+        34,
+        20,
+        33,
+        25,
+        24,
+        47,
+        16,
+        19,
+        29,
+        47
+      ]
+    }
+  ],
+  "max_sql_vs_python_cosine_error": 1.2289816281318977e-07,
+  "max_zero_padding_cosine_error": 0,
+  "offline_response_alignment_test": [
+    {
+      "response_items": 10,
+      "reversed_response_array": "correctly_restored_by_index"
+    },
+    {
+      "response_items": 6,
+      "reversed_response_array": "correctly_restored_by_index"
+    }
+  ],
+  "historical_evidence_limit": "Raw provider response embeddings, response model/version, per-item response indices and response hashes were not saved. Correct mapping follows code inspection and local mock, not a byte-for-byte replay of the historical provider response.",
+  "queries": [
+    {
+      "query": "1986 VAX 8800",
+      "query_vector": {
+        "dimensions": 1536,
+        "nonzero_prefix_length": 1024,
+        "norm": 1.000000025484068,
+        "finite": true
+      },
+      "keywords": [
+        "1986",
+        "vax",
+        "8800"
+      ],
+      "current_vector_limit": 3,
+      "lexical_candidates": 1,
+      "current_winner": 10,
+      "untruncated_winner_arithmetic_only": 10,
+      "ranked_rows": [
+        {
+          "section_id": 7,
+          "title": "Multicycle Microarchitecture.",
+          "range": [
+            5393,
+            7303
+          ],
+          "vector_rank": 1,
+          "cosine": 0.30935277063884614,
+          "lexical_rank": null,
+          "lexical_score": null,
+          "literal_matches": [],
+          "substring_only_matches": [],
+          "current_rrf": 0.01639344262295082,
+          "untruncated_rrf_arithmetic_only": 0.01639344262295082
+        },
+        {
+          "section_id": 8,
+          "title": "Increasing execution speed.",
+          "range": [
+            7303,
+            8317
+          ],
+          "vector_rank": 2,
+          "cosine": 0.2818471131987191,
+          "lexical_rank": null,
+          "lexical_score": null,
+          "literal_matches": [],
+          "substring_only_matches": [],
+          "current_rrf": 0.016129032258064516,
+          "untruncated_rrf_arithmetic_only": 0.016129032258064516
+        },
+        {
+          "section_id": 9,
+          "title": "Instruction set choice.",
+          "range": [
+            8317,
+            9617
+          ],
+          "vector_rank": 3,
+          "cosine": 0.27131710808106324,
+          "lexical_rank": null,
+          "lexical_score": null,
+          "literal_matches": [],
+          "substring_only_matches": [],
+          "current_rrf": 0.015873015873015872,
+          "untruncated_rrf_arithmetic_only": 0.015873015873015872
+        },
+        {
+          "section_id": 13,
+          "title": "Superscalar.",
+          "range": [
+            15121,
+            16310
+          ],
+          "vector_rank": 4,
+          "cosine": 0.27014940865718096,
+          "lexical_rank": null,
+          "lexical_score": null,
+          "literal_matches": [],
+          "substring_only_matches": [],
+          "current_rrf": 0,
+          "untruncated_rrf_arithmetic_only": 0.015625
+        },
+        {
+          "section_id": 3,
+          "title": "Relation to instruction set architecture.",
+          "range": [
+            573,
+            3111
+          ],
+          "vector_rank": 5,
+          "cosine": 0.2699286482221869,
+          "lexical_rank": null,
+          "lexical_score": null,
+          "literal_matches": [],
+          "substring_only_matches": [],
+          "current_rrf": 0,
+          "untruncated_rrf_arithmetic_only": 0.015384615384615385
+        },
+        {
+          "section_id": 10,
+          "title": "Instruction pipelining.",
+          "range": [
+            9617,
+            11920
+          ],
+          "vector_rank": 6,
+          "cosine": 0.2676841913126671,
+          "lexical_rank": 1,
+          "lexical_score": 3.0025985275010827,
+          "literal_matches": [
+            "1986",
+            "vax",
+            "8800"
+          ],
+          "substring_only_matches": [],
+          "current_rrf": 0.01639344262295082,
+          "untruncated_rrf_arithmetic_only": 0.031544957774465976
+        },
+        {
+          "section_id": 2,
+          "title": "Microarchitecture",
+          "range": [
+            0,
+            573
+          ],
+          "vector_rank": 7,
+          "cosine": 0.2644848571545057,
+          "lexical_rank": null,
+          "lexical_score": null,
+          "literal_matches": [],
+          "substring_only_matches": [],
+          "current_rrf": 0,
+          "untruncated_rrf_arithmetic_only": 0.014925373134328358
+        },
+        {
+          "section_id": 5,
+          "title": "Microarchitectural concepts.",
+          "range": [
+            4924,
+            4957
+          ],
+          "vector_rank": 8,
+          "cosine": 0.260737290596436,
+          "lexical_rank": null,
+          "lexical_score": null,
+          "literal_matches": [],
+          "substring_only_matches": [],
+          "current_rrf": 0,
+          "untruncated_rrf_arithmetic_only": 0.014705882352941176
+        },
+        {
+          "section_id": 17,
+          "title": "See also.",
+          "range": [
+            20817,
+            21522
+          ],
+          "vector_rank": 9,
+          "cosine": 0.2605375829171061,
+          "lexical_rank": null,
+          "lexical_score": null,
+          "literal_matches": [],
+          "substring_only_matches": [],
+          "current_rrf": 0,
+          "untruncated_rrf_arithmetic_only": 0.014492753623188406
+        },
+        {
+          "section_id": 6,
+          "title": "Instruction cycles.",
+          "range": [
+            4957,
+            5393
+          ],
+          "vector_rank": 10,
+          "cosine": 0.2507280870079187,
+          "lexical_rank": null,
+          "lexical_score": null,
+          "literal_matches": [],
+          "substring_only_matches": [],
+          "current_rrf": 0,
+          "untruncated_rrf_arithmetic_only": 0.014285714285714285
+        },
+        {
+          "section_id": 16,
+          "title": "Multiprocessing and multithreading.",
+          "range": [
+            17627,
+            20817
+          ],
+          "vector_rank": 11,
+          "cosine": 0.24909272039067648,
+          "lexical_rank": null,
+          "lexical_score": null,
+          "literal_matches": [],
+          "substring_only_matches": [],
+          "current_rrf": 0,
+          "untruncated_rrf_arithmetic_only": 0.014084507042253521
+        },
+        {
+          "section_id": 4,
+          "title": "Aspects of microarchitecture.",
+          "range": [
+            3111,
+            4924
+          ],
+          "vector_rank": 12,
+          "cosine": 0.23593473668436982,
+          "lexical_rank": null,
+          "lexical_score": null,
+          "literal_matches": [],
+          "substring_only_matches": [],
+          "current_rrf": 0,
+          "untruncated_rrf_arithmetic_only": 0.013888888888888888
+        },
+        {
+          "section_id": 12,
+          "title": "Branch prediction.",
+          "range": [
+            13335,
+            15121
+          ],
+          "vector_rank": 13,
+          "cosine": 0.23265896963418314,
+          "lexical_rank": null,
+          "lexical_score": null,
+          "literal_matches": [],
+          "substring_only_matches": [],
+          "current_rrf": 0,
+          "untruncated_rrf_arithmetic_only": 0.0136986301369863
+        },
+        {
+          "section_id": 15,
+          "title": "Register renaming.",
+          "range": [
+            17132,
+            17627
+          ],
+          "vector_rank": 14,
+          "cosine": 0.22580861155542925,
+          "lexical_rank": null,
+          "lexical_score": null,
+          "literal_matches": [],
+          "substring_only_matches": [],
+          "current_rrf": 0,
+          "untruncated_rrf_arithmetic_only": 0.013513513513513514
+        },
+        {
+          "section_id": 14,
+          "title": "Out-of-order execution.",
+          "range": [
+            16310,
+            17132
+          ],
+          "vector_rank": 15,
+          "cosine": 0.2233595650315729,
+          "lexical_rank": null,
+          "lexical_score": null,
+          "literal_matches": [],
+          "substring_only_matches": [],
+          "current_rrf": 0,
+          "untruncated_rrf_arithmetic_only": 0.013333333333333334
+        },
+        {
+          "section_id": 11,
+          "title": "Cache.",
+          "range": [
+            11920,
+            13335
+          ],
+          "vector_rank": 16,
+          "cosine": 0.22247746920988956,
+          "lexical_rank": null,
+          "lexical_score": null,
+          "literal_matches": [],
+          "substring_only_matches": [],
+          "current_rrf": 0,
+          "untruncated_rrf_arithmetic_only": 0.013157894736842105
+        }
+      ]
+    },
+    {
+      "query": "How can a CPU make progress on several instructions at once by handling different stages simultaneously?",
+      "query_vector": {
+        "dimensions": 1536,
+        "nonzero_prefix_length": 1024,
+        "norm": 1.0000000215952591,
+        "finite": true
+      },
+      "keywords": [
+        "can",
+        "cpu",
+        "make",
+        "progress",
+        "several",
+        "instructions",
+        "once",
+        "handling",
+        "different",
+        "stages",
+        "simultaneously"
+      ],
+      "current_vector_limit": 3,
+      "lexical_candidates": 16,
+      "current_winner": 12,
+      "untruncated_winner_arithmetic_only": 12,
+      "ranked_rows": [
+        {
+          "section_id": 6,
+          "title": "Instruction cycles.",
+          "range": [
+            4957,
+            5393
+          ],
+          "vector_rank": 1,
+          "cosine": 0.65087742197315,
+          "lexical_rank": 15,
+          "lexical_score": 1.002288329519451,
+          "literal_matches": [
+            "cpu"
+          ],
+          "substring_only_matches": [
+            {
+              "term": "cpu",
+              "examples": [
+                "n general, all cpus, single-chip "
+              ]
+            }
+          ],
+          "current_rrf": 0.029726775956284153,
+          "untruncated_rrf_arithmetic_only": 0.029726775956284153
+        },
+        {
+          "section_id": 12,
+          "title": "Branch prediction.",
+          "range": [
+            13335,
+            15121
+          ],
+          "vector_rank": 2,
+          "cosine": 0.5727569470128822,
+          "lexical_rank": 2,
+          "lexical_score": 5.003904071388734,
+          "literal_matches": [
+            "can",
+            "make",
+            "several",
+            "instructions",
+            "stages"
+          ],
+          "substring_only_matches": [
+            {
+              "term": "make",
+              "examples": [
+                "e the hardware makes educated gues"
+              ]
+            }
+          ],
+          "current_rrf": 0.03225806451612903,
+          "untruncated_rrf_arithmetic_only": 0.03225806451612903
+        },
+        {
+          "section_id": 8,
+          "title": "Increasing execution speed.",
+          "range": [
+            7303,
+            8317
+          ],
+          "vector_rank": 3,
+          "cosine": 0.561595319679233,
+          "lexical_rank": 9,
+          "lexical_score": 3.0039292730844793,
+          "literal_matches": [
+            "cpu",
+            "progress",
+            "instructions"
+          ],
+          "substring_only_matches": [
+            {
+              "term": "progress",
+              "examples": [
+                " manufacturing progressed, more and mo"
+              ]
+            }
+          ],
+          "current_rrf": 0.03036576949620428,
+          "untruncated_rrf_arithmetic_only": 0.03036576949620428
+        },
+        {
+          "section_id": 14,
+          "title": "Out-of-order execution.",
+          "range": [
+            16310,
+            17132
+          ],
+          "vector_rank": 4,
+          "cosine": 0.5519052646512016,
+          "lexical_rank": 16,
+          "lexical_score": 1.0012150668286757,
+          "literal_matches": [
+            "make"
+          ],
+          "substring_only_matches": [],
+          "current_rrf": 0.013157894736842105,
+          "untruncated_rrf_arithmetic_only": 0.028782894736842105
+        },
+        {
+          "section_id": 7,
+          "title": "Multicycle Microarchitecture.",
+          "range": [
+            5393,
+            7303
+          ],
+          "vector_rank": 5,
+          "cosine": 0.5356327816453043,
+          "lexical_rank": 6,
+          "lexical_score": 4.0036515388628064,
+          "literal_matches": [
+            "can",
+            "several",
+            "instructions",
+            "stages"
+          ],
+          "substring_only_matches": [],
+          "current_rrf": 0.015151515151515152,
+          "untruncated_rrf_arithmetic_only": 0.030536130536130537
+        },
+        {
+          "section_id": 16,
+          "title": "Multiprocessing and multithreading.",
+          "range": [
+            17627,
+            20817
+          ],
+          "vector_rank": 6,
+          "cosine": 0.5071140232603553,
+          "lexical_rank": 1,
+          "lexical_score": 7.00592084761608,
+          "literal_matches": [
+            "can",
+            "cpu",
+            "make",
+            "instructions",
+            "once",
+            "different",
+            "simultaneously"
+          ],
+          "substring_only_matches": [],
+          "current_rrf": 0.01639344262295082,
+          "untruncated_rrf_arithmetic_only": 0.031544957774465976
+        },
+        {
+          "section_id": 10,
+          "title": "Instruction pipelining.",
+          "range": [
+            9617,
+            11920
+          ],
+          "vector_rank": 7,
+          "cosine": 0.5042646360730131,
+          "lexical_rank": 10,
+          "lexical_score": 3.003892733564014,
+          "literal_matches": [
+            "cpu",
+            "make",
+            "instructions"
+          ],
+          "substring_only_matches": [
+            {
+              "term": "make",
+              "examples": [
+                " faster.\n\nrisc makes pipelines sma"
+              ]
+            }
+          ],
+          "current_rrf": 0.014285714285714285,
+          "untruncated_rrf_arithmetic_only": 0.029211087420042643
+        },
+        {
+          "section_id": 13,
+          "title": "Superscalar.",
+          "range": [
+            15121,
+            16310
+          ],
+          "vector_rank": 8,
+          "cosine": 0.5004914892917278,
+          "lexical_rank": 4,
+          "lexical_score": 4.005020920502092,
+          "literal_matches": [
+            "instructions",
+            "once",
+            "different",
+            "simultaneously"
+          ],
+          "substring_only_matches": [
+            {
+              "term": "once",
+              "examples": [
+                "o support the concepts outlined ab"
+              ]
+            }
+          ],
+          "current_rrf": 0.015625,
+          "untruncated_rrf_arithmetic_only": 0.030330882352941176
+        },
+        {
+          "section_id": 15,
+          "title": "Register renaming.",
+          "range": [
+            17132,
+            17627
+          ],
+          "vector_rank": 9,
+          "cosine": 0.49680560632099474,
+          "lexical_rank": 8,
+          "lexical_score": 3.0119760479041915,
+          "literal_matches": [
+            "can",
+            "instructions",
+            "different"
+          ],
+          "substring_only_matches": [],
+          "current_rrf": 0.014705882352941176,
+          "untruncated_rrf_arithmetic_only": 0.02919863597612958
+        },
+        {
+          "section_id": 4,
+          "title": "Aspects of microarchitecture.",
+          "range": [
+            3111,
+            4924
+          ],
+          "vector_rank": 10,
+          "cosine": 0.49589024951791677,
+          "lexical_rank": 3,
+          "lexical_score": 5.003846153846154,
+          "literal_matches": [
+            "can",
+            "several",
+            "instructions",
+            "different",
+            "stages"
+          ],
+          "substring_only_matches": [],
+          "current_rrf": 0.015873015873015872,
+          "untruncated_rrf_arithmetic_only": 0.030158730158730156
+        },
+        {
+          "section_id": 9,
+          "title": "Instruction set choice.",
+          "range": [
+            8317,
+            9617
+          ],
+          "vector_rank": 11,
+          "cosine": 0.4530487153406079,
+          "lexical_rank": 5,
+          "lexical_score": 4.003831417624521,
+          "literal_matches": [
+            "can",
+            "cpu",
+            "several",
+            "instructions"
+          ],
+          "substring_only_matches": [
+            {
+              "term": "can",
+              "examples": [
+                "in fact significantly simpler tha"
+              ]
+            }
+          ],
+          "current_rrf": 0.015384615384615385,
+          "untruncated_rrf_arithmetic_only": 0.02946912242686891
+        },
+        {
+          "section_id": 3,
+          "title": "Relation to instruction set architecture.",
+          "range": [
+            573,
+            3111
+          ],
+          "vector_rank": 12,
+          "cosine": 0.44553714336387473,
+          "lexical_rank": 7,
+          "lexical_score": 4.001966181675186,
+          "literal_matches": [
+            "can",
+            "several",
+            "different",
+            "simultaneously"
+          ],
+          "substring_only_matches": [],
+          "current_rrf": 0.014925373134328358,
+          "untruncated_rrf_arithmetic_only": 0.028814262023217248
+        },
+        {
+          "section_id": 11,
+          "title": "Cache.",
+          "range": [
+            11920,
+            13335
+          ],
+          "vector_rank": 13,
+          "cosine": 0.41474860310277856,
+          "lexical_rank": 11,
+          "lexical_score": 3.0035211267605635,
+          "literal_matches": [
+            "can",
+            "cpu",
+            "make"
+          ],
+          "substring_only_matches": [],
+          "current_rrf": 0.014084507042253521,
+          "untruncated_rrf_arithmetic_only": 0.027783137179239824
+        },
+        {
+          "section_id": 2,
+          "title": "Microarchitecture",
+          "range": [
+            0,
+            573
+          ],
+          "vector_rank": 14,
+          "cosine": 0.3886829896048911,
+          "lexical_rank": 14,
+          "lexical_score": 1.0034782608695652,
+          "literal_matches": [
+            "different"
+          ],
+          "substring_only_matches": [],
+          "current_rrf": 0.013513513513513514,
+          "untruncated_rrf_arithmetic_only": 0.02702702702702703
+        },
+        {
+          "section_id": 17,
+          "title": "See also.",
+          "range": [
+            20817,
+            21522
+          ],
+          "vector_rank": 15,
+          "cosine": 0.3529014636457632,
+          "lexical_rank": 13,
+          "lexical_score": 1.0042372881355932,
+          "literal_matches": [
+            "cpu"
+          ],
+          "substring_only_matches": [],
+          "current_rrf": 0.0136986301369863,
+          "untruncated_rrf_arithmetic_only": 0.027031963470319637
+        },
+        {
+          "section_id": 5,
+          "title": "Microarchitectural concepts.",
+          "range": [
+            4924,
+            4957
+          ],
+          "vector_rank": 16,
+          "cosine": 0.3254717175042054,
+          "lexical_rank": 12,
+          "lexical_score": 1.0294117647058822,
+          "literal_matches": [
+            "once"
+          ],
+          "substring_only_matches": [
+            {
+              "term": "once",
+              "examples": [
+                "architectural concepts.\n\n"
+              ]
+            }
+          ],
+          "current_rrf": 0.013888888888888888,
+          "untruncated_rrf_arithmetic_only": 0.027046783625730993
+        }
+      ]
+    }
+  ],
+  "database_before": {
+    "contexts": "5edb94f41b3f63e2a144120176b998d3353c686aee69e984d8f09b311a22cc2f",
+    "document_sections": "e8b65fb0e807190ac24bb5a15f7556a94cfff1990ccec3277663987cb701f70a",
+    "document_chunk_embeddings": "468d41fa9f1a2268e1c62f3af46071e9a8099f7660dd4146cb04b1441c6df8e2",
+    "retrieval_trace": "df2f120f9f14e0814979a06c471f76384dff81b666b12bb4446a5f1da820b185"
+  },
+  "database_after": {
+    "contexts": "5edb94f41b3f63e2a144120176b998d3353c686aee69e984d8f09b311a22cc2f",
+    "document_sections": "e8b65fb0e807190ac24bb5a15f7556a94cfff1990ccec3277663987cb701f70a",
+    "document_chunk_embeddings": "468d41fa9f1a2268e1c62f3af46071e9a8099f7660dd4146cb04b1441c6df8e2",
+    "retrieval_trace": "df2f120f9f14e0814979a06c471f76384dff81b666b12bb4446a5f1da820b185"
+  }
+}

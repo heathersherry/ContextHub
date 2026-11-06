@@ -1,0 +1,26 @@
+[
+  {
+    "route": "/compatible-mode/v1/chat/completions",
+    "status_code": 200,
+    "model": "qwen3.8-27b",
+    "usage": {
+      "completion_tokens": 1181,
+      "completion_tokens_details": {},
+      "prompt_tokens": 5460,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "text_tokens": 5460
+      },
+      "total_tokens": 6641
+    }
+  },
+  {
+    "route": "/compatible-mode/v1/embeddings",
+    "status_code": 200,
+    "model": "text-embedding-v4",
+    "usage": {
+      "prompt_tokens": 56,
+      "total_tokens": 56
+    }
+  }
+]

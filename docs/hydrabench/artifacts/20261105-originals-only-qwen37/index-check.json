@@ -1,0 +1,9 @@
+{
+  "chunks": 16,
+  "dimensions": 1536,
+  "all_provider_response_indexes_match_stored_vectors": true,
+  "zero_padding": false,
+  "source_characters": 21522,
+  "source_sha256": "17571bc69825350c0f464fb9e4ff1478f3dc0fc4f7d6c6cb9f7836783bae808c",
+  "completed_at": "2026-11-05T16:41:56.517486+08:00"
+}

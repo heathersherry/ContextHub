@@ -1,0 +1,84 @@
+{
+  "kind": "unstructured_document",
+  "source_title": "Klaus Grutzka",
+  "source_url": "https://huggingface.co/datasets/s-nlp/kilt",
+  "source_characters": 6893,
+  "source_sha256": "5d1bbd4901ca9cb3f99c55c7994601e0a0a2e8cf8fb260b1f7040a835b21816b",
+  "query": "Sybil Lancaster 2011",
+  "storage_before": null,
+  "storage_after": {
+    "uri": "ctx://resources/hydra-layer-validation/klaus-grutzka",
+    "l0_content": "Document: klaus-grutzka",
+    "l1_content": null,
+    "l2_content": null,
+    "file_path": "/Users/sherrylin/.codex/worktrees/hydra-smoke/ContextHub/docs/hydrabench/artifacts/20261105-document-layers-offline/documents/e89adb92cb7b6d22",
+    "version": 1,
+    "tags": [
+      "kilt-2019",
+      "wikipedia-id:31331172",
+      "source-sha256:5d1bbd4901ca9cb3f99c55c7994601e0a0a2e8cf8fb260b1f7040a835b21816b"
+    ]
+  },
+  "agent_input_after": {
+    "results": [
+      {
+        "uri": "ctx://resources/hydra-layer-validation/klaus-grutzka",
+        "context_type": "resource",
+        "scope": "team",
+        "owner_space": "",
+        "score": 0.01639344262295082,
+        "status": "active",
+        "version": 1,
+        "validity_status": "fresh",
+        "tags": [
+          "kilt-2019",
+          "wikipedia-id:31331172",
+          "source-sha256:5d1bbd4901ca9cb3f99c55c7994601e0a0a2e8cf8fb260b1f7040a835b21816b"
+        ],
+        "section_id": 19,
+        "retrieval_strategy": "keyword",
+        "content": " once busy with huge steel mills and railroad tracks, needed to provide raw materials. Here in the North East the remaining, abandoned steel mills can be found in Bethlehem, Pennsylvania, as well as several other locations, bearing witness to the once magnificent grandeur of the American steel industry. Fewer contracts meant looking for a shift in direction for Grutzka. The world-famous Hill School in Pottstown, Pa, was the answer. He was offered a position as an assistant professor in the Arts Department. For about 8 years he remained there, made many new friends and even more admirers. One of his former students was a young Brazilian artist, who referred to Grutzka as one of his most important artistic influences. This young man went on to design the twin Laser Display, “Tribute in Light”, commemorating the 9/11 attack on the site where the twin towers once proudly stood, bearing testament to the American Spirit.\n\nAfter several years of teaching at the “Hill School”, he and his wife Sybil moved to Lancaster in Pennsylvania, where this extremely productive artist continued his creative work for more than 20 years until his passing in March, 2011",
+        "content_level": "snippet"
+      }
+    ],
+    "total": 1,
+    "retrieval_id": "0356ef71-5b52-403b-9b06-68c09bd61a93",
+    "stale_notices": []
+  },
+  "section_read": {
+    "context_id": "d8f55571-3e51-4306-a883-07f4eaec46b8",
+    "section_id": 19,
+    "title": "Section 1",
+    "content": "Klaus Guido Grutzka (February 9, 1923, in Breslau (Wroclaw), Upper Silesia, Germany – March 28, 2011, in Lancaster, Pennsylvania, US) was a German artist.\n\nHis father, Johan (Jan) Grutzka, (Grudska) was born in Krakau (Kraków), Upper Silesia. He began working as a young man in a coal mine and enjoyed drawing and painting in his spare time. His artistic talents came to the attention of a local nobel man who decided to sponsor young Grudska. Throughout his career he painted industrial motives as well as the insides of Catholic churches. (Frescos ?)\n\nJohann Grudska met his wife Helene, they got married and had two children, one a girl, named her Marianne and a son, whom they named Klaus Guido. As a young man, Klaus moved from Breslau to Kiel, a Baltic harbor town and one of the major naval ports in Germany, the Baltic port at the end of the Kiel Canal. There, around 1940, he joined the Kriegsmarine as an officer’s candidate. During his navy time he underwent training as an engineer. First on a destroyer, which was attacked and sank and he barely survived this harrowing experience. His next command was that of a Chief Engineer on a German submarine, in charge of its massive diesel engines.\n\nAt the end of the war the crew of his U-boot as well as the crews of many other U-boots became P.O.W. He had married his first wife, Eva, née Koenn, in Kiel, around the end of 1942. They had a son, Claus, who was born in 1945. Before the son was born, Klaus Grutzka went into P.O.W. camp in Scotland. These German navy soldiers were told that they had to transfer the U-boots to a Scottish port, Stranraer in order to scuttle the vessels off of the Scottish shoreline. He remained a P.O.W for a while, but then returned to Kiel, to his wife and young son.\n\nArt and painting had always been in his blood, a talent inherited from his father. Klaus then enrolled in the prestigious “Muthesius Werkschule” in Kiel and a formal art study for several years. During that time period he already began to make a name for himself in the local art world. He started illustrating local volumes of books about the region, and participated repeatedly in the annual poster competition for the world-famous sailing event, the Kiel Week. One of his posters was accepted as one of the ambassadors for this very prestigious sailing event.\n\nHis interest in heavy machinery, shipbuilding and Diesel engines had continued during his studies in Kiel. After divorcing his first wife, Eva, he met the love of his life, Sybilla Hamilton, an Irish-born journalist and language instructor. Together they moved to Essen, a city in the center of the “Ruhrgebiet”. This area was the absolute center of Germany’s coal mining and steel mill industry. For several years he worked for energy giants RWE, Krupp and the a href=\"Dortmund%20%28beer%29%0ADortmund%20Union%20Brewery\"Dortmund (beer)\n\nDortmund Union Brewery/a. Amongst others, he designed the world-famous logo for the Union Brewery, the stylized capital \"U\" logo, still used on every bottle, can and barrel the brewery produced.\n\nDuring that period of his life he took two significant fact finding journeys. One brought him to Moscow in what was then the USSR and the second one enabled him to discover parts of North America.\n\nHe instantly was completely fascinated by this magnificent Metropolis New York City. A friend and fellow alumnus from the Muthesius Werkschule, Eberhard Lüthke, had immigrated to America earlier. Lüthke had suggested they should join him and his wife in this young, exciting country.\n\nUpon his return to Essen, he and his wife, Irish-born Sybil started packing for the move to the New World. All of their belongings, including an old, pretty well used VW Beetle were packed into freight containers and shipped to New York, In 1963 they together set foot on this continent, which would become their home for the rest of both of their fascinating lives. At first they settled in an apartment in Astoria, a neighborhood by the East River, where many German immigrants had already begun to settle.\n\nTogether they began to explore this new fascinating world, its skyscrapers and factories, steel mills and coal mines.\n\nLater they became friends with another German immigrant in New Jersey who offered to rent to them half of her house in Hoboken, New Jersey. They had struck gold. The view from that house overlooked the Hudson River and Manhattan with the gigantic George Washington Bridge to the left. The many paintings and line drawings Grutzka produced during that period are proof of his total fascination with that area and the ever-changing scenery before him every day.\n\nAt that time he developed important contacts with the steel magazine “33”. He produced over 100 covers for that magazine, which got widespread recognition in the Art world as well as the Steel industry.\n\nHe also partnered with Richard “Dick” Deily, a steal industry researcher. Together they published an internationally acclaimed newsletter, “IISS” Institute for Iron and Steel Studies.\n\nAt that same time he also taught at the DuCret School of Art in Plainfield, New Jersey\n\nHe also developed new contacts with the Hess Corporation in Woodbridge, New Jersey, as well as Exxon, then still called ESSO and, most importantly for him, Bethlehem Steel. He traveled nationwide, produced contract work for several major international oil and steel corporations. All this time the cover for “33” was still one of his most significant achievements. His most important client was Bethlehem Steel, where he established archival paintings of steel mills which shortly after he completed his paintings, were pretty much all dismantled. In Pittsburgh, huge tracts of land alongside of the Susquehanna River, once busy with huge steel mills and railroad tracks, needed to provide raw materials. Here in the North East the remaining, abandoned steel mills can be found in Bethlehem, Pennsylvania, as well as several other locations, bearing witness to the once magnificent grandeur of the American steel industry. Fewer contracts meant looking for a shift in direction for Grutzka. The world-famous Hill School in Pottstown, Pa, was the answer. He was offered a position as an assistant professor in the Arts Department. For about 8 years he remained there, made many new friends and even more admirers. One of his former students was a young Brazilian artist, who referred to Grutzka as one of his most important artistic influences. This young man went on to design the twin Laser Display, “Tribute in Light”, commemorating the 9/11 attack on the site where the twin towers once proudly stood, bearing testament to the American Spirit.\n\nAfter several years of teaching at the “Hill School”, he and his wife Sybil moved to Lancaster in Pennsylvania, where this extremely productive artist continued his creative work for more than 20 years until his passing in March, 2011",
+    "start_offset": 0,
+    "end_offset": 6893
+  },
+  "after_size": {
+    "characters": 1713,
+    "estimated_tokens_chars_div_4": 428.25
+  },
+  "section_count": 2,
+  "sections": [
+    {
+      "section_id": 18,
+      "parent_id": null,
+      "title": "Document",
+      "depth": 0,
+      "summary": "Klaus Guido Grutzka (February 9, 1923, in Breslau (Wroclaw), Upper Silesia, Germany – March 28, 2011, in Lancaster, Pennsylvania, US) was a German artist. His father, Johan (Jan) Grutzka, (Grudska) wa",
+      "start_offset": 0,
+      "end_offset": 6893,
+      "token_count": 1723
+    },
+    {
+      "section_id": 19,
+      "parent_id": 18,
+      "title": "Section 1",
+      "depth": 1,
+      "summary": "Klaus Guido Grutzka (February 9, 1923, in Breslau (Wroclaw), Upper Silesia, Germany – March 28, 2011, in Lancaster, Pennsylvania, US) was a German artist. His father, Johan (Jan) Grutzka, (Grudska) wa",
+      "start_offset": 0,
+      "end_offset": 6893,
+      "token_count": 1723
+    }
+  ],
+  "limitation": "New source probe with no historical before payload; no generation or embedding provider calls."
+}

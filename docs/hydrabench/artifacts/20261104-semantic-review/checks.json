@@ -1,0 +1,28 @@
+{
+  "cases": 20,
+  "agent_sql_replayed_identically": 56,
+  "reference_sql_replayed": 20,
+  "additional_queries": 15,
+  "observed_search_result_occurrences_verified": 246,
+  "observed_unique_documents_verified": 131,
+  "all_40_original_trace_hashes_unchanged": true,
+  "database_sha256_before": {
+    "formula_1": "17185981cd747f6cdc374cb02a6096db3130e6ec2ddc582fe1686a28fb4c4c8a",
+    "superhero": "75e94a2c3236ee3bb2c01fb97a1c4b4c1c269bcefd4eab1d04be323d2d0825b1",
+    "codebase_community": "92101be6d2a9f6adceea59d38f6d1c556087f9eea1432432a21268cb1348036d",
+    "financial": "d15d89cdb068a202b6f2b99342af44dffc1d52545b39ceaf62efdc0ba570101e",
+    "student_club": "eb89bcfe97eefa386a27904ec5aa15159811a7eac894ec659a36e48fa9f76b77"
+  },
+  "database_sha256_after": {
+    "formula_1": "17185981cd747f6cdc374cb02a6096db3130e6ec2ddc582fe1686a28fb4c4c8a",
+    "superhero": "75e94a2c3236ee3bb2c01fb97a1c4b4c1c269bcefd4eab1d04be323d2d0825b1",
+    "codebase_community": "92101be6d2a9f6adceea59d38f6d1c556087f9eea1432432a21268cb1348036d",
+    "financial": "d15d89cdb068a202b6f2b99342af44dffc1d52545b39ceaf62efdc0ba570101e",
+    "student_club": "eb89bcfe97eefa386a27904ec5aa15159811a7eac894ec659a36e48fa9f76b77"
+  },
+  "source_sha256": {
+    "docs/hydrabench/artifacts/20261104-mixed-qwen/analysis.json": "b4eb7740e1c5010bbb440e23c935e610d2c2f33eca12957ee954cccc0827c4cc",
+    "data/hydrabench-expanded/index/index-records.jsonl": "0cf1c8af3cb4b384c080850d9ea0a4e587cd7fecc55f58ba6fd0580ad1a4526d"
+  },
+  "half_bred_name_occurrences_in_frozen_passages": []
+}

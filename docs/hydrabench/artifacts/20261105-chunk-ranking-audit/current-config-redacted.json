@@ -1,0 +1,7 @@
+{
+  "embedding_model": "text-embedding-v4",
+  "embedding_dimensions": "1536",
+  "endpoint_host": "dashscope-intl.aliyuncs.com",
+  "endpoint_path": "/compatible-mode/v1",
+  "historical_endpoint_note": "Current configuration and runner inspected; prior usage artifacts recorded request model/path but not the endpoint host."
+}

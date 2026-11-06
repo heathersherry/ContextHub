@@ -1,0 +1,145 @@
+{
+  "case_id": "dev_60",
+  "type": "s2a",
+  "db_id": "financial",
+  "reference_tables": [
+    "account",
+    "district"
+  ],
+  "top_k": 3,
+  "table_schema": {
+    "query": "Database: financial. For the first client who opened his/her account in the capital of Czechia, what is his/her account ID?",
+    "response": {
+      "results": [
+        {
+          "uri": "ctx://datalake/hydra/financial/loan",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 7.447378114381539,
+          "l0_content": "Database: financial\nTable: loan\nCREATE TABLE loan\n(\n    loan_id    INTEGER default 0 not null\n        primary key,\n    account_id INTEGER           not null,\n    date       DATE          not null,\n    amount     INTEGER           not null,\n    duration   INTEGER           not null,\n    payments   REAL not null,\n    status     TEXT    not null,\n    foreign key (account_id) references account (account_id)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nloan_id,,the id number identifying the loan data,integer,\r\naccount_id,,the id number identifying the account,integer,\r\ndate,,the date when the loan is approved,date,\r\namount,,approved amount,integer,unit：US dollar\r\nduration,,loan duration,integer,unit：month\r\npayments,monthly payments,monthly payments,real,unit：month\r\nstatus,,repayment status,text,\"'A' stands for contract finished, no problems;\n'B' stands for contract finished, loan not paid;\n'C' stands for running contract, OK so far;\n'D' stands for running contract, client in debt\"",
+          "l1_content": "Database: financial\nTable: loan\nCREATE TABLE loan\n(\n    loan_id    INTEGER default 0 not null\n        primary key,\n    account_id INTEGER           not null,\n    date       DATE          not null,\n    amount     INTEGER           not null,\n    duration   INTEGER           not null,\n    payments   REAL not null,\n    status     TEXT    not null,\n    foreign key (account_id) references account (account_id)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nloan_id,,the id number identifying the loan data,integer,\r\naccount_id,,the id number identifying the account,integer,\r\ndate,,the date when the loan is approved,date,\r\namount,,approved amount,integer,unit：US dollar\r\nduration,,loan duration,integer,unit：month\r\npayments,monthly payments,monthly payments,real,unit：month\r\nstatus,,repayment status,text,\"'A' stands for contract finished, no problems;\n'B' stands for contract finished, loan not paid;\n'C' stands for running contract, OK so far;\n'D' stands for running contract, client in debt\"",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://datalake/hydra/financial/account",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 6.139607780321356,
+          "l0_content": "Database: financial\nTable: account\nCREATE TABLE account\n(\n    account_id  INTEGER default 0 not null\n        primary key,\n    district_id INTEGER default 0 not null,\n    frequency   TEXT   not null,\n    date        DATE          not null,\n    foreign key (district_id) references district (district_id)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description,\r\naccount_id,account id,the id of the account,integer,,\r\ndistrict_id,location of branch,location of branch,integer ,,\r\nfrequency,frequency,frequency of the acount,text,,\"\"\"POPLATEK MESICNE\"\" stands for monthly issuance\n\"\"POPLATEK TYDNE\"\" stands for weekly issuance\n\"\"POPLATEK PO OBRATU\"\" stands for issuance after transaction\"\r\ndate,date,the creation date of the account,date,in the form YYMMDD,",
+          "l1_content": "Database: financial\nTable: account\nCREATE TABLE account\n(\n    account_id  INTEGER default 0 not null\n        primary key,\n    district_id INTEGER default 0 not null,\n    frequency   TEXT   not null,\n    date        DATE          not null,\n    foreign key (district_id) references district (district_id)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description,\r\naccount_id,account id,the id of the account,integer,,\r\ndistrict_id,location of branch,location of branch,integer ,,\r\nfrequency,frequency,frequency of the acount,text,,\"\"\"POPLATEK MESICNE\"\" stands for monthly issuance\n\"\"POPLATEK TYDNE\"\" stands for weekly issuance\n\"\"POPLATEK PO OBRATU\"\" stands for issuance after transaction\"\r\ndate,date,the creation date of the account,date,in the form YYMMDD,",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://datalake/hydra/financial/disp",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 5.813274241694186,
+          "l0_content": "Database: financial\nTable: disp\nCREATE TABLE disp\n(\n    disp_id    INTEGER        not null\n        primary key,\n    client_id  INTEGER        not null,\n    account_id INTEGER        not null,\n    type      TEXT not null,\n    foreign key (account_id) references account (account_id),\n    foreign key (client_id) references client (client_id)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\ndisp_id,disposition id,unique number of identifying this row of record,integer,\r\nclient_id,,id number of client,integer,\r\naccount_id,,id number of account,integer,\r\ntype,,type of disposition,text,\"\"\"OWNER\"\" : \"\"USER\"\" : \"\"DISPONENT\"\"\ncommonsense evidence:\nthe account can only have the right to issue permanent orders or apply for loans\"",
+          "l1_content": "Database: financial\nTable: disp\nCREATE TABLE disp\n(\n    disp_id    INTEGER        not null\n        primary key,\n    client_id  INTEGER        not null,\n    account_id INTEGER        not null,\n    type      TEXT not null,\n    foreign key (account_id) references account (account_id),\n    foreign key (client_id) references client (client_id)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\ndisp_id,disposition id,unique number of identifying this row of record,integer,\r\nclient_id,,id number of client,integer,\r\naccount_id,,id number of account,integer,\r\ntype,,type of disposition,text,\"\"\"OWNER\"\" : \"\"USER\"\" : \"\"DISPONENT\"\"\ncommonsense evidence:\nthe account can only have the right to issue permanent orders or apply for loans\"",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        }
+      ],
+      "total": 3,
+      "retrieval_id": "7315a4e7-9506-4c64-a56e-85f678dbe040",
+      "stale_notices": []
+    }
+  },
+  "resource": {
+    "query": "What is the capital of Czechia?",
+    "response": {
+      "results": [
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/23844/0042",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 2.450589993964517,
+          "l0_content": "Prague — Administration.:Administrative division.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 23844\nPrague is the capital of Czechia and as such is the regular seat of its central authorities. Since November 24, 1990, it is de facto again a statutory town, but has a specific status of the municipality and the region at the same time. Prague also houses the administrative institutions of the Central Bohemia Region. Until 1949, all administrative districts of Prague were formed by the whole one or more cadastral unit, municipality or town.",
+          "l1_content": "Prague — Administration.:Administrative division.\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 23844\nPrague is the capital of Czechia and as such is the regular seat of its central authorities. Since November 24, 1990, it is de facto again a statutory town, but has a specific status of the municipality and the region at the same time. Prague also houses the administrative institutions of the Central Bohemia Region. Until 1949, all administrative districts of Prague were formed by the whole one or more cadastral unit, municipality or town.",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/23844/0000",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 2.2703387411854523,
+          "l0_content": "Prague — Abstract\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 23844\nPrague (; , ) is the capital and largest city in Czechia, the 14th largest city in the European Union and the historical capital of Bohemia. Situated in the northwest of Czechia on the Vltava river, Prague is home to about 1.3 million people, while its metropolitan area is estimated to have a population of 2.6 million. The city has a temperate climate, with warm summers and chilly winters.\nPrague is a political, cultural and economic centre of central Europe complete with a rich history. Founded during the Romanesque and flourishing by the Gothic, Renaissance and Baroque eras, Prague was the capital of the Kingdom of Bohemia and the main residence of several Holy Roman Emperors, most notably of Charles IV (r. 1346–1378).\nIt was an important city to the Habsburg Monarchy and its Austro-Hungarian Empire. The city played major roles in the Bohemian and Protestant Reformation, the Thirty Years' War and in 20th-century history as the capital of Czechoslovakia during both World Wars and the post-war Communist era.\nPrague is home to a number of well-known cultural attractions, many of which survived the violence and destruction of 20th-century Europe. Main attractions include Prague Castle, Charles Bridge, Old Town Square with the Prague astronomical clock, the Jewish Quarter, Petřín hill and Vyšehrad. Since 1992, the extensive historic centre of Prague has been included in the UNESCO list of World Heritage Sites.\nThe city has more than ten major museums, along with numerous theatres, galleries, cinemas and other historical exhibits. An extensive modern public transportation system connects the city. It is home to a wide range of public and private schools, including Charles University in Prague, the oldest university in Central Europe.\nPrague is classified as an \"Alpha −\" global city according to GaWC studies and ranked sixth in the Tripadvisor world list of best destinations in 2016. In 2019, the city was ranked as 69th most liveable city in the world, second in the former Eastern Bloc to Berlin. Its rich history makes it a popular tourist destination and as of 2017, the city receives more than 8.5 million international visitors annually. Prague is the fourth most visited European city after London, Paris and Rome.",
+          "l1_content": "Prague — Abstract\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 23844\nPrague (; , ) is the capital and largest city in Czechia, the 14th largest city in the European Union and the historical capital of Bohemia. Situated in the northwest of Czechia on the Vltava river, Prague is home to about 1.3 million people, while its metropolitan area is estimated to have a population of 2.6 million. The city has a temperate climate, with warm summers and chilly winters.\nPrague is a political, cultural and economic centre of central Europe complete with a rich history. Founded during the Romanesque and flourishing by the Gothic, Renaissance and Baroque eras, Prague was the capital of the Kingdom of Bohemia and the main residence of several Holy Roman Emperors, most notably of Charles IV (r. 1346–1378).\nIt was an important city to the Habsburg Monarchy and its Austro-Hungarian Empire. The city played major roles in the Bohemian and Protestant Reformation, the Thirty Years' War and in 20th-century history as the capital of Czechoslovakia during both World Wars and the post-war Communist era.\nPrague is home to a number of well-known cultural attractions, many of which survived the violence and destruction of 20th-century Europe. Main attractions include Prague Castle, Charles Bridge, Old Town Square with the Prague astronomical clock, the Jewish Quarter, Petřín hill and Vyšehrad. Since 1992, the extensive historic centre of Prague has been included in the UNESCO list of World Heritage Sites.\nThe city has more than ten major museums, along with numerous theatres, galleries, cinemas and other historical exhibits. An extensive modern public transportation system connects the city. It is home to a wide range of public and private schools, including Charles University in Prague, the oldest university in Central Europe.\nPrague is classified as an \"Alpha −\" global city according to GaWC studies and ranked sixth in the Tripadvisor world list of best destinations in 2016. In 2019, the city was ranked as 69th most liveable city in the world, second in the former Eastern Bloc to Berlin. Its rich history makes it a popular tourist destination and as of 2017, the city receives more than 8.5 million international visitors annually. Prague is the fourth most visited European city after London, Paris and Rome.",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/682528/0000",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 1.8152543282236402,
+          "l0_content": "South Moravian Region — Abstract\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 682528\nThe South Moravian Region (; ; ) is an administrative unit () of the Czech Republic, located in the south-western part of its historical region of Moravia (an exception is Jobova Lhota which belongs to Bohemia). Its capital is Brno, the 2nd largest city in the Czech Republic. It is bordered by the South Bohemian Region (west), Vysočina Region (north-west), Pardubice Region (north), Olomouc Region (north east), Zlín Region (east), Trenčín and Trnava Regions, Slovakia (south east) and Lower Austria, Austria (south).",
+          "l1_content": "South Moravian Region — Abstract\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 682528\nThe South Moravian Region (; ; ) is an administrative unit () of the Czech Republic, located in the south-western part of its historical region of Moravia (an exception is Jobova Lhota which belongs to Bohemia). Its capital is Brno, the 2nd largest city in the Czech Republic. It is bordered by the South Bohemian Region (west), Vysočina Region (north-west), Pardubice Region (north), Olomouc Region (north east), Zlín Region (east), Trenčín and Trnava Regions, Slovakia (south east) and Lower Austria, Austria (south).",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        }
+      ],
+      "total": 3,
+      "retrieval_id": "060bb90b-6a99-4444-bca5-05919c99926d",
+      "stale_notices": []
+    }
+  },
+  "table_metrics": {
+    "required": 2,
+    "hits_at_3": 1,
+    "recall_at_3": 0.5,
+    "all_required_at_3": false,
+    "first_hit_rank": 2
+  }
+}

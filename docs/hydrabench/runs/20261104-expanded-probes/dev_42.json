@@ -1,0 +1,145 @@
+{
+  "case_id": "dev_42",
+  "type": "s2a",
+  "db_id": "financial",
+  "reference_tables": [
+    "client",
+    "district"
+  ],
+  "top_k": 3,
+  "table_schema": {
+    "query": "Database: financial. Among the accounts opened, how many female customers who were born before 1950 stayed in the town associated with the Soviet football player Nikolai Yevgrafovich's last name?",
+    "response": {
+      "results": [
+        {
+          "uri": "ctx://datalake/hydra/european_football_2/Player",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 13.677676804204996,
+          "l0_content": "Database: european_football_2\nTable: Player\nCREATE TABLE `Player` (\n\t`id`\tINTEGER PRIMARY KEY AUTOINCREMENT,\n\t`player_api_id`\tINTEGER UNIQUE,\n\t`player_name`\tTEXT,\n\t`player_fifa_api_id`\tINTEGER UNIQUE,\n\t`birthday`\tTEXT,\n\t`height`\tINTEGER,\n\t`weight`\tINTEGER\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nid,,the unique id for players,integer,\r\nplayer_api_id,player api id,the id of the player api,integer,\r\nplayer_name,player name,player name,text,\r\nplayer_fifa_api_id,player federation international football association api id,the id of the player fifa api,integer,\r\nbirthday,,the player's birthday,text,\"e.g. 1992-02-29 00:00:00 \ncommonsense reasoning: \nPlayer A is older than player B means that A's birthday is earlier than B's\"\r\nheight,,the player's height,integer,\r\nweight,,the player's weight,integer,",
+          "l1_content": "Database: european_football_2\nTable: Player\nCREATE TABLE `Player` (\n\t`id`\tINTEGER PRIMARY KEY AUTOINCREMENT,\n\t`player_api_id`\tINTEGER UNIQUE,\n\t`player_name`\tTEXT,\n\t`player_fifa_api_id`\tINTEGER UNIQUE,\n\t`birthday`\tTEXT,\n\t`height`\tINTEGER,\n\t`weight`\tINTEGER\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nid,,the unique id for players,integer,\r\nplayer_api_id,player api id,the id of the player api,integer,\r\nplayer_name,player name,player name,text,\r\nplayer_fifa_api_id,player federation international football association api id,the id of the player fifa api,integer,\r\nbirthday,,the player's birthday,text,\"e.g. 1992-02-29 00:00:00 \ncommonsense reasoning: \nPlayer A is older than player B means that A's birthday is earlier than B's\"\r\nheight,,the player's height,integer,\r\nweight,,the player's weight,integer,",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://datalake/hydra/debit_card_specializing/customers",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 4.178516632886505,
+          "l0_content": "Database: debit_card_specializing\nTable: customers\nCREATE TABLE customers\n(\n    CustomerID INTEGER UNIQUE     not null\n        primary key,\n    Segment    TEXT null,\n    Currency   TEXT null\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nCustomerID,,identification of the customer,integer,\r\nSegment,client segment,client segment,text,\r\nCurrency,,Currency,text,",
+          "l1_content": "Database: debit_card_specializing\nTable: customers\nCREATE TABLE customers\n(\n    CustomerID INTEGER UNIQUE     not null\n        primary key,\n    Segment    TEXT null,\n    Currency   TEXT null\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nCustomerID,,identification of the customer,integer,\r\nSegment,client segment,client segment,text,\r\nCurrency,,Currency,text,",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://datalake/hydra/financial/client",
+          "context_type": "table_schema",
+          "scope": "datalake",
+          "owner_space": null,
+          "score": 3.4980099988306437,
+          "l0_content": "Database: financial\nTable: client\nCREATE TABLE client\n(\n    client_id   INTEGER        not null\n        primary key,\n    gender      TEXT not null,\n    birth_date  DATE       not null,\n    district_id INTEGER        not null,\n    foreign key (district_id) references district (district_id)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nclient_id,,the unique number,integer,\r\ngender,,,text,\"F：female \nM：male \"\r\nbirth_date,,birth date,date,\r\ndistrict_id,location of branch,location of branch,integer,",
+          "l1_content": "Database: financial\nTable: client\nCREATE TABLE client\n(\n    client_id   INTEGER        not null\n        primary key,\n    gender      TEXT not null,\n    birth_date  DATE       not null,\n    district_id INTEGER        not null,\n    foreign key (district_id) references district (district_id)\n)\n\nOriginal BIRD column descriptions:\noriginal_column_name,column_name,column_description,data_format,value_description\r\nclient_id,,the unique number,integer,\r\ngender,,,text,\"F：female \nM：male \"\r\nbirth_date,,birth date,date,\r\ndistrict_id,location of branch,location of branch,integer,",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        }
+      ],
+      "total": 3,
+      "retrieval_id": "373c73ff-ae71-4b5f-b605-7b360034e4cc",
+      "stale_notices": []
+    }
+  },
+  "resource": {
+    "query": "What is the last name of the Soviet football player Nikolai Yevgrafovich?",
+    "response": {
+      "results": [
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/32348777/0000",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 8.429352407872573,
+          "l0_content": "1991–92 Soviet League season — Abstract\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 32348777\nThe 1991–92 Soviet League season was the 46th and final season of the Soviet Championship League, the top level of ice hockey in the Soviet Union. This season was also known as the first and only one of the Ice Hockey Championship of the Commonwealth of Independent States (CIS), as the Soviet Union dissolved during the season, and the championship was continued by the Commonwealth of Independent States. 16 teams participated in the league, and Dynamo Moscow won the championship.",
+          "l1_content": "1991–92 Soviet League season — Abstract\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 32348777\nThe 1991–92 Soviet League season was the 46th and final season of the Soviet Championship League, the top level of ice hockey in the Soviet Union. This season was also known as the first and only one of the Ice Hockey Championship of the Commonwealth of Independent States (CIS), as the Soviet Union dissolved during the season, and the championship was continued by the Commonwealth of Independent States. 16 teams participated in the league, and Dynamo Moscow won the championship.",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/23875012/0000",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 7.821315947645466,
+          "l0_content": "Ilya Ilyin (footballer) — Abstract\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 23875012\nIlya Mikhailovich Ilyin (; born 10 August 1982) is a Russian professional football player. He last played for FC Tyumen.\nHe played for the main squad of FC Rotor Volgograd in the Russian Cup.",
+          "l1_content": "Ilya Ilyin (footballer) — Abstract\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 23875012\nIlya Mikhailovich Ilyin (; born 10 August 1982) is a Russian professional football player. He last played for FC Tyumen.\nHe played for the main squad of FC Rotor Volgograd in the Russian Cup.",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        },
+        {
+          "uri": "ctx://team/engineering/hydra/kilt/20014218/0000",
+          "context_type": "resource",
+          "scope": "team",
+          "owner_space": "engineering",
+          "score": 6.5529183411790894,
+          "l0_content": "Nikolai Sokolov (footballer) — Abstract\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 20014218\nNikolai Yevgrafovich Sokolov () (May 12, 1897 in Moscow – December 15, 1988 in Razliv, Leningrad Oblast) was a Soviet football player.",
+          "l1_content": "Nikolai Sokolov (footballer) — Abstract\nhttps://huggingface.co/datasets/s-nlp/kilt\nWikipedia ID: 20014218\nNikolai Yevgrafovich Sokolov () (May 12, 1897 in Moscow – December 15, 1988 in Razliv, Leningrad Oblast) was a Soviet football player.",
+          "l2_content": null,
+          "status": "active",
+          "version": 1,
+          "tags": [
+            "hydrabench-expanded"
+          ],
+          "snippet": null,
+          "section_id": null,
+          "retrieval_strategy": null
+        }
+      ],
+      "total": 3,
+      "retrieval_id": "73cdd8fe-545c-48d3-8fe4-8d3908782594",
+      "stale_notices": []
+    }
+  },
+  "table_metrics": {
+    "required": 2,
+    "hits_at_3": 1,
+    "recall_at_3": 0.5,
+    "all_required_at_3": false,
+    "first_hit_rank": 3
+  }
+}
