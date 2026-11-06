@@ -70,3 +70,7 @@ roadmap/
 # Run logs
 integrations/agentleak/runs/
 integrations/memebench/runs/
+
+# Local HyDRA source assets
+data/hydrabench/
+data/hydrabench-expanded/
